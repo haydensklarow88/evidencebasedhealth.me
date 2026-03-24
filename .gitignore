@@ -1,0 +1,11 @@
+# Logs and OS files
+*.log
+.DS_Store
+Thumbs.db
+
+# Editor directories
+.vscode/
+.idea/
+
+# Node modules (if ever added)
+node_modules/

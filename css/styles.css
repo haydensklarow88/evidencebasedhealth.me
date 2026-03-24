@@ -1,0 +1,381 @@
+/* =========================================
+   Evidence Based Health — Stylesheet
+   ========================================= */
+
+/* --- Reset & Base ----------------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+  color: #1e293b;
+  background: #ffffff;
+}
+
+/* --- Utility ---------------------------- */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.bg-light {
+  background: #f0f9ff;
+}
+
+/* --- Typography ------------------------- */
+h1, h2, h3 {
+  font-weight: 700;
+  line-height: 1.3;
+  color: #0f172a;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* --- Buttons ---------------------------- */
+.btn {
+  display: inline-block;
+  padding: 0.75rem 1.75rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  border: 2px solid transparent;
+  margin: 0.4rem 0.25rem;
+}
+
+.btn-primary {
+  background: #0284c7;
+  color: #ffffff;
+  border-color: #0284c7;
+}
+
+.btn-primary:hover {
+  background: #0369a1;
+  border-color: #0369a1;
+}
+
+.btn-outline {
+  background: transparent;
+  color: #0284c7;
+  border-color: #0284c7;
+}
+
+.btn-outline:hover {
+  background: #e0f2fe;
+}
+
+/* --- Navigation ------------------------- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #ffffff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.logo {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #0284c7;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.logo-icon {
+  font-size: 1.4rem;
+  color: #0ea5e9;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+}
+
+.nav-links a {
+  font-weight: 500;
+  color: #334155;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover {
+  color: #0284c7;
+}
+
+.nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.6rem;
+  cursor: pointer;
+  color: #334155;
+}
+
+/* --- Hero ------------------------------- */
+.hero {
+  background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 50%, #0c4a6e 100%);
+  color: #ffffff;
+  padding: 6rem 0;
+  text-align: center;
+}
+
+.hero-content h1 {
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  color: #ffffff;
+  margin-bottom: 1.2rem;
+}
+
+.hero-subtitle {
+  font-size: 1.2rem;
+  color: #e0f2fe;
+  max-width: 640px;
+  margin: 0 auto 2rem;
+}
+
+/* --- Sections --------------------------- */
+.section {
+  padding: 5rem 0;
+}
+
+.section-title {
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.section-text {
+  text-align: center;
+  color: #475569;
+  max-width: 680px;
+  margin: 0 auto 3rem;
+  font-size: 1.05rem;
+}
+
+/* --- About Cards ------------------------ */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+.card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  transition: box-shadow 0.2s;
+}
+
+.card:hover {
+  box-shadow: 0 6px 20px rgba(2, 132, 199, 0.12);
+}
+
+.card-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.card h3 {
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.card p {
+  color: #64748b;
+  font-size: 0.95rem;
+}
+
+/* --- Topics Grid ------------------------ */
+.topics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.topic-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 1.5rem 1rem;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  font-weight: 600;
+  color: #0f172a;
+  text-align: center;
+  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.topic-card:hover {
+  background: #e0f2fe;
+  border-color: #0284c7;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.1);
+}
+
+.topic-icon {
+  font-size: 2rem;
+}
+
+/* --- Resources -------------------------- */
+.resource-list {
+  list-style: none;
+  max-width: 560px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.resource-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1rem;
+  color: #334155;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  padding: 0.85rem 1.2rem;
+  border-radius: 8px;
+}
+
+.resource-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #0284c7;
+  flex-shrink: 0;
+}
+
+/* --- Contact Form ----------------------- */
+.contact-container {
+  max-width: 680px;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.form-group label {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #334155;
+}
+
+.form-group input,
+.form-group textarea {
+  padding: 0.75rem 1rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  color: #1e293b;
+  background: #f8fafc;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  resize: vertical;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #0284c7;
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+}
+
+.form-status {
+  font-size: 0.95rem;
+  color: #16a34a;
+  min-height: 1.5rem;
+}
+
+/* --- Footer ----------------------------- */
+.site-footer {
+  background: #0f172a;
+  color: #94a3b8;
+  padding: 2.5rem 0;
+}
+
+.footer-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.9rem;
+}
+
+.footer-links {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+}
+
+.footer-links a {
+  color: #94a3b8;
+  transition: color 0.2s;
+}
+
+.footer-links a:hover {
+  color: #e2e8f0;
+}
+
+/* --- Responsive ------------------------- */
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 64px;
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    padding: 1rem 1.5rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    gap: 1rem;
+  }
+
+  .nav-links.open {
+    display: flex;
+  }
+
+  .nav-toggle {
+    display: block;
+  }
+
+  .footer-inner {
+    flex-direction: column;
+    text-align: center;
+  }
+}

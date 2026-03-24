@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Evidence-Based Health — trusted, science-backed health information for everyone." />
+  <title>Evidence Based Health</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header class="site-header">
+    <nav class="navbar container">
+      <a href="index.html" class="logo">
+        <span class="logo-icon">&#10010;</span> Evidence Based Health
+      </a>
+      <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#topics">Topics</a></li>
+        <li><a href="#resources">Resources</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Toggle navigation" onclick="toggleMenu()">&#9776;</button>
+    </nav>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container hero-content">
+      <h1>Health Information You Can Trust</h1>
+      <p class="hero-subtitle">
+        Evidence-based insights drawn from peer-reviewed research, delivered in plain language.
+      </p>
+      <a href="#topics" class="btn btn-primary">Explore Topics</a>
+      <a href="#about" class="btn btn-outline">Learn More</a>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about" class="section bg-light">
+    <div class="container">
+      <h2 class="section-title">What Is Evidence-Based Health?</h2>
+      <p class="section-text">
+        Evidence-based health integrates the best available research, clinical expertise, and
+        individual patient values to guide decisions about health and wellness. Our goal is to
+        cut through misinformation and give you clear, research-backed answers.
+      </p>
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-icon">&#128270;</div>
+          <h3>Research-Driven</h3>
+          <p>Every claim is backed by peer-reviewed studies and systematic reviews.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#128221;</div>
+          <h3>Plain Language</h3>
+          <p>Complex medical science translated into clear, actionable information.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#9989;</div>
+          <h3>Regularly Updated</h3>
+          <p>Content is reviewed and updated as new evidence emerges.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Topics -->
+  <section id="topics" class="section">
+    <div class="container">
+      <h2 class="section-title">Health Topics</h2>
+      <p class="section-text">Browse our growing library of evidence-based health content.</p>
+      <div class="topics-grid">
+        <a href="#" class="topic-card">
+          <span class="topic-icon">&#129310;</span>
+          <span>Nutrition &amp; Diet</span>
+        </a>
+        <a href="#" class="topic-card">
+          <span class="topic-icon">&#127939;</span>
+          <span>Exercise &amp; Fitness</span>
+        </a>
+        <a href="#" class="topic-card">
+          <span class="topic-icon">&#129504;</span>
+          <span>Mental Health</span>
+        </a>
+        <a href="#" class="topic-card">
+          <span class="topic-icon">&#128148;</span>
+          <span>Heart Health</span>
+        </a>
+        <a href="#" class="topic-card">
+          <span class="topic-icon">&#128170;</span>
+          <span>Preventive Care</span>
+        </a>
+        <a href="#" class="topic-card">
+          <span class="topic-icon">&#128138;</span>
+          <span>Medications</span>
+        </a>
+        <a href="#" class="topic-card">
+          <span class="topic-icon">&#127774;</span>
+          <span>Sleep Science</span>
+        </a>
+        <a href="#" class="topic-card">
+          <span class="topic-icon">&#127807;</span>
+          <span>Supplements</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Resources -->
+  <section id="resources" class="section bg-light">
+    <div class="container">
+      <h2 class="section-title">Trusted Resources</h2>
+      <p class="section-text">We reference and link to these authoritative sources.</p>
+      <ul class="resource-list">
+        <li><span class="resource-dot"></span>PubMed / MEDLINE — National Library of Medicine</li>
+        <li><span class="resource-dot"></span>Cochrane Reviews — Systematic review database</li>
+        <li><span class="resource-dot"></span>CDC — Centers for Disease Control and Prevention</li>
+        <li><span class="resource-dot"></span>WHO — World Health Organization</li>
+        <li><span class="resource-dot"></span>NIH — National Institutes of Health</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="section">
+    <div class="container contact-container">
+      <h2 class="section-title">Get in Touch</h2>
+      <p class="section-text">Have a question, suggestion, or topic request? We'd love to hear from you.</p>
+      <form class="contact-form" onsubmit="handleSubmit(event)">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" placeholder="Your name" required />
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="your@email.com" required />
+        </div>
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" rows="5" placeholder="Your message..." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Send Message</button>
+        <p id="form-status" class="form-status"></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>&copy; 2026 EvidenceBasedHealth.me — For informational purposes only. Not medical advice.</p>
+      <ul class="footer-links">
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Use</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
