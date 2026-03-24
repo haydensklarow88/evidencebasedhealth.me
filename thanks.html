@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>You&rsquo;re in &mdash; Evidence-Based Health</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f1a14; --ink-mid: #2d3d35; --ink-light: #5c6e65; --ink-faint: #9aada3;
+    --paper: #f7f5f0; --paper-warm: #ede9e1; --paper-card: #ffffff;
+    --accent: #1a5c3a; --accent-mid: #2d7a52; --accent-light: #e8f2ec; --accent-rule: #c2d9cb;
+    --serif: 'Libre Baskerville', Georgia, serif; --sans: 'DM Sans', system-ui, sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 16px; }
+  body { background: var(--paper); color: var(--ink); font-family: var(--sans); font-weight: 300; line-height: 1.7; -webkit-font-smoothing: antialiased; min-height: 100vh; display: flex; flex-direction: column; }
+  nav {
+    background: rgba(247,245,240,0.95); border-bottom: 1px solid var(--paper-warm);
+    padding: 0 2rem; height: 60px; display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-logo { font-family: var(--serif); font-size: 0.95rem; color: var(--accent); font-style: italic; text-decoration: none; }
+  .nav-logo span { font-style: normal; font-weight: 700; }
+  main {
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    padding: 4rem 2rem;
+  }
+  .thanks-card {
+    background: var(--paper-card); border: 1px solid var(--paper-warm);
+    border-radius: 4px; padding: 3rem 2.5rem; max-width: 500px; width: 100%;
+    box-shadow: 0 8px 40px rgba(15,26,20,0.06); position: relative; overflow: hidden;
+    text-align: center;
+    animation: fadeUp 0.6s ease forwards;
+  }
+  .thanks-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-mid));
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .check-circle {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: var(--accent-light); border: 2px solid var(--accent-rule);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1.5rem; font-size: 1.4rem; color: var(--accent);
+  }
+  h1 { font-family: var(--serif); font-size: 1.6rem; font-weight: 700; color: var(--ink); margin-bottom: 0.8rem; letter-spacing: -0.02em; }
+  .sub { font-size: 0.97rem; color: var(--ink-mid); margin-bottom: 2rem; line-height: 1.75; }
+  .expect-list { list-style: none; margin-bottom: 2rem; text-align: left; }
+  .expect-list li {
+    font-size: 0.88rem; color: var(--ink-mid); padding: 0.45rem 0;
+    display: flex; align-items: flex-start; gap: 0.65rem;
+    border-bottom: 1px solid var(--paper-warm);
+  }
+  .expect-list li:last-child { border-bottom: none; }
+  .expect-list li::before { content: '→'; color: var(--accent-mid); font-size: 0.8rem; flex-shrink: 0; margin-top: 1px; }
+  .back-link {
+    display: inline-block; font-size: 0.82rem; font-weight: 500; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--accent); text-decoration: none;
+    border: 1px solid var(--accent); padding: 0.55rem 1.4rem; border-radius: 2px;
+    transition: background 0.2s, color 0.2s;
+  }
+  .back-link:hover { background: var(--accent); color: #fff; }
+  footer {
+    background: var(--paper-warm); border-top: 1px solid var(--paper-warm);
+    padding: 1.5rem 2rem; text-align: center; font-size: 0.75rem; color: var(--ink-faint);
+  }
+  footer a { color: var(--ink-light); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo"><span>Evidence&#8209;Based</span> Health</a>
+</nav>
+
+<main>
+  <div class="thanks-card">
+    <div class="check-circle">&#10003;</div>
+    <h1>You&rsquo;re subscribed.</h1>
+    <p class="sub">Check your inbox for a welcome email. Your first brief will arrive soon.</p>
+    <ul class="expect-list">
+      <li>2&ndash;3 evidence-based insights per week on hormones, fitness &amp; metabolic health</li>
+      <li>1 small experiment worth trying this week</li>
+      <li>1 conversation starter for the people you care about</li>
+      <li>No spam. No agenda. Unsubscribe anytime via any email.</li>
+    </ul>
+    <a href="index.html" class="back-link">Back to home</a>
+  </div>
+</main>
+
+<footer>
+  <p>&copy; 2025 Evidence-Based Health &nbsp;&middot;&nbsp; <a href="privacy.html">Privacy Policy</a> &nbsp;&middot;&nbsp; <a href="disclaimer.html">Disclaimer</a></p>
+</footer>
+
+</body>
+</html>

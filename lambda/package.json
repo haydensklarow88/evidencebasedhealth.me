@@ -1,0 +1,11 @@
+{
+  "name": "subscribe-handler",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Lambda handler for /subscribe endpoint",
+  "main": "subscribeHandler.mjs",
+  "dependencies": {
+    "@aws-sdk/client-pinpoint-sms-voice-v2": "^3.600.0"
+  },
+  "devDependencies": {}
+}

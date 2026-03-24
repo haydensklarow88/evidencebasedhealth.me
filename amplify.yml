@@ -1,0 +1,24 @@
+# Amplify app ID: d3acqmakdczqsj
+# Site URL:       https://main.d3acqmakdczqsj.amplifyapp.com
+# Custom domain:  https://evidencebasedhealth.me  (after DNS propagates)
+
+version: 1
+frontend:
+  phases:
+    build:
+      commands:
+        # Install Lambda dependencies so they're available when you zip/deploy
+        - cd lambda && npm ci --omit=dev && cd ..
+  artifacts:
+    baseDirectory: /
+    files:
+      - index.html
+      - thanks.html
+      - privacy.html
+      - disclaimer.html
+      - css/**/*
+      - js/**/*
+  cache:
+    paths:
+      - lambda/node_modules/**/*
+
