@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Portal — Evidence-Based Health</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f1a14;
+    --ink-mid: #2d3d35;
+    --ink-light: #5c6e65;
+    --ink-faint: #9aada3;
+    --paper: #f7f5f0;
+    --paper-warm: #ede9e1;
+    --paper-card: #ffffff;
+    --accent: #1a5c3a;
+    --accent-mid: #2d7a52;
+    --accent-light: #e8f2ec;
+    --accent-rule: #c2d9cb;
+    --red-soft: #c9412a;
+    --serif: 'Libre Baskerville', Georgia, serif;
+    --sans: 'DM Sans', system-ui, sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 16px; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-weight: 400;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Login ──────────────────────────────────────────────────── */
+  #login-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+  .login-card {
+    background: var(--paper-card);
+    border: 1px solid var(--paper-warm);
+    border-radius: 12px;
+    padding: 2.75rem 2.5rem;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 4px 32px rgba(0,0,0,0.06);
+  }
+  .login-logo {
+    font-family: var(--serif);
+    font-size: 1rem;
+    color: var(--accent);
+    font-style: italic;
+    margin-bottom: 0.35rem;
+  }
+  .login-logo span { font-style: normal; font-weight: 700; }
+  .login-subtitle {
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 2rem;
+  }
+  .login-card input[type="password"] {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--paper-warm);
+    border-radius: 6px;
+    font-family: var(--sans);
+    font-size: 1rem;
+    color: var(--ink);
+    background: var(--paper);
+    margin-bottom: 0.75rem;
+    transition: border-color 0.2s;
+  }
+  .login-card input:focus { outline: none; border-color: var(--accent-mid); background: #fff; }
+  .btn-login {
+    width: 100%;
+    padding: 0.85rem;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-family: var(--sans);
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-login:hover { background: var(--accent-mid); }
+  .login-error { margin-top: 1rem; font-size: 0.84rem; color: var(--red-soft); min-height: 1.2em; }
+
+  /* ── Dashboard nav ──────────────────────────────────────────── */
+  #dashboard { display: none; }
+  #dash-nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(247,245,240,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--paper-warm);
+    height: 58px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2rem;
+  }
+  .dash-logo { font-family: var(--serif); font-size: 0.93rem; color: var(--accent); font-style: italic; }
+  .dash-logo span { font-style: normal; font-weight: 700; }
+  .dash-right { display: flex; align-items: center; gap: 0.85rem; }
+  .dash-badge {
+    font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+    background: var(--accent-light); color: var(--accent);
+    padding: 0.22rem 0.55rem; border-radius: 3px;
+  }
+  .btn-logout {
+    font-size: 0.78rem; color: var(--ink-light); background: none; border: none;
+    cursor: pointer; font-family: var(--sans); padding: 0.3rem 0.6rem;
+    border-radius: 4px; transition: background 0.15s;
+  }
+  .btn-logout:hover { background: var(--paper-warm); }
+
+  /* ── Content & Tabs ─────────────────────────────────────────── */
+  .dash-content { max-width: 1220px; margin: 0 auto; padding: 76px 2rem 4rem; }
+  .tabs { display: flex; border-bottom: 2px solid var(--paper-warm); margin-bottom: 2.25rem; }
+  .tab-btn {
+    padding: 0.8rem 1.65rem;
+    font-family: var(--sans); font-size: 0.88rem; font-weight: 500;
+    color: var(--ink-light); background: none; border: none;
+    border-bottom: 2px solid transparent; margin-bottom: -2px;
+    cursor: pointer; transition: color 0.2s, border-color 0.2s;
+    letter-spacing: 0.03em;
+  }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab-btn:hover:not(.active) { color: var(--ink-mid); }
+
+  /* ── Panel grid ─────────────────────────────────────────────── */
+  .panel-grid { display: grid; grid-template-columns: 1fr 370px; gap: 2.25rem; align-items: start; }
+  @media (max-width: 920px) { .panel-grid { grid-template-columns: 1fr; } }
+
+  /* ── Form card ──────────────────────────────────────────────── */
+  .form-card {
+    background: var(--paper-card);
+    border: 1px solid var(--paper-warm);
+    border-radius: 10px;
+    padding: 1.6rem 1.75rem;
+    margin-bottom: 1.1rem;
+  }
+  .card-title {
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.13em;
+    text-transform: uppercase; color: var(--ink-light); margin-bottom: 1.2rem;
+  }
+  .form-row { margin-bottom: 1.05rem; }
+  .form-row:last-child { margin-bottom: 0; }
+  .form-row label {
+    display: block; font-size: 0.82rem; font-weight: 500;
+    color: var(--ink-mid); margin-bottom: 0.38rem;
+  }
+  .form-row .hint { float: right; font-size: 0.73rem; color: var(--ink-faint); font-weight: 300; }
+  .form-row input[type="text"],
+  .form-row input[type="number"],
+  .form-row input[type="url"],
+  .form-row select,
+  .form-row textarea {
+    width: 100%; padding: 0.68rem 0.9rem;
+    border: 1px solid var(--paper-warm); border-radius: 6px;
+    font-family: var(--sans); font-size: 0.88rem; color: var(--ink);
+    background: var(--paper); transition: border-color 0.2s, background 0.2s;
+    resize: vertical;
+  }
+  .form-row input:focus, .form-row select:focus, .form-row textarea:focus {
+    outline: none; border-color: var(--accent-mid); background: #fff;
+  }
+  .form-inline { display: flex; gap: 1rem; }
+  .form-inline .form-row { flex: 1; }
+  .char-count { text-align: right; font-size: 0.7rem; color: var(--ink-faint); margin-top: 0.22rem; }
+  .char-count.warn { color: var(--red-soft); }
+
+  /* ── Interests ──────────────────────────────────────────────── */
+  .interest-search-row { display: flex; gap: 0.5rem; margin-bottom: 0.65rem; }
+  .interest-search-row input { flex: 1; }
+  .btn-sm {
+    padding: 0.65rem 1rem; background: var(--accent-light); color: var(--accent);
+    border: 1px solid var(--accent-rule); border-radius: 6px;
+    font-family: var(--sans); font-size: 0.78rem; font-weight: 500;
+    cursor: pointer; white-space: nowrap; transition: background 0.15s;
+  }
+  .btn-sm:hover { background: var(--accent-rule); }
+  .pills { display: flex; flex-wrap: wrap; gap: 0.35rem; min-height: 0; }
+  .pill-result {
+    display: inline-flex; align-items: center; gap: 0.25rem;
+    padding: 0.22rem 0.6rem; border: 1px solid var(--accent-rule);
+    border-radius: 100px; font-size: 0.76rem; color: var(--accent);
+    cursor: pointer; transition: background 0.12s;
+  }
+  .pill-result:hover { background: var(--accent-light); }
+  .pill-selected {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    padding: 0.22rem 0.6rem; background: var(--accent-light);
+    border: 1px solid var(--accent-rule); border-radius: 100px;
+    font-size: 0.76rem; color: var(--ink-mid);
+  }
+  .pill-selected button {
+    background: none; border: none; cursor: pointer;
+    color: var(--ink-light); font-size: 0.88rem; line-height: 1;
+    padding: 0; display: flex; align-items: center;
+  }
+  .pill-selected button:hover { color: var(--red-soft); }
+  .interest-hint { font-size: 0.77rem; color: var(--ink-faint); padding: 0.2rem 0; }
+
+  /* ── Submit & status ────────────────────────────────────────── */
+  .btn-submit {
+    width: 100%; padding: 0.95rem; background: var(--accent); color: #fff;
+    border: none; border-radius: 7px; font-family: var(--sans);
+    font-size: 0.88rem; font-weight: 500; letter-spacing: 0.07em;
+    text-transform: uppercase; cursor: pointer; transition: background 0.2s;
+  }
+  .btn-submit:hover { background: var(--accent-mid); }
+  .btn-submit:disabled { background: var(--ink-faint); cursor: not-allowed; }
+  .status-bar {
+    padding: 0.8rem 1rem; border-radius: 7px; font-size: 0.86rem;
+    margin-top: 0.85rem; display: none; line-height: 1.5;
+  }
+  .status-bar.success { display: block; background: var(--accent-light); border: 1px solid var(--accent-rule); color: var(--accent); }
+  .status-bar.error   { display: block; background: #fef2f2; border: 1px solid #fecaca; color: var(--red-soft); }
+  .status-bar.loading { display: block; background: var(--paper-warm); border: 1px solid var(--paper-warm); color: var(--ink-light); }
+  .status-bar a { color: inherit; text-decoration: underline; }
+  .status-bar code { background: rgba(0,0,0,0.06); padding: 0.1rem 0.3rem; border-radius: 3px; font-size: 0.82em; }
+
+  /* ── Facebook ad preview ────────────────────────────────────── */
+  .preview-sticky { position: sticky; top: 72px; }
+  .preview-label { font-size: 0.69rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-light); margin-bottom: 0.65rem; }
+  .fb-card {
+    background: #fff; border: 1px solid #ddd; border-radius: 8px;
+    overflow: hidden; font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+  }
+  .fb-header { display: flex; align-items: center; gap: 0.55rem; padding: 0.8rem 0.85rem 0.45rem; }
+  .fb-avatar {
+    width: 34px; height: 34px; border-radius: 50%; background: var(--accent-light);
+    display: flex; align-items: center; justify-content: center; font-size: 0.95rem; flex-shrink: 0;
+  }
+  .fb-page-name { font-size: 0.81rem; font-weight: 600; color: #050505; line-height: 1.25; }
+  .fb-sponsored { font-size: 0.69rem; color: #65676b; }
+  .fb-primary-text {
+    padding: 0.3rem 0.85rem 0.7rem; font-size: 0.85rem; color: #050505;
+    line-height: 1.45; min-height: 2.2rem; white-space: pre-wrap; word-break: break-word;
+  }
+  .fb-img-wrap img { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; }
+  .fb-img-placeholder {
+    width: 100%; aspect-ratio: 16/9;
+    background: linear-gradient(135deg, var(--accent-light) 0%, var(--paper-warm) 100%);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem; letter-spacing: 0.08em; color: var(--accent-rule); text-transform: uppercase;
+  }
+  .fb-link-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.6rem 0.85rem; background: #f0f2f5; border-top: 1px solid #ddd;
+  }
+  .fb-link-info { flex: 1; overflow: hidden; }
+  .fb-link-domain { font-size: 0.69rem; color: #65676b; text-transform: uppercase; letter-spacing: 0.04em; }
+  .fb-link-headline {
+    font-size: 0.85rem; font-weight: 600; color: #050505;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;
+  }
+  .fb-link-desc {
+    font-size: 0.72rem; color: #65676b;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;
+  }
+  .fb-cta {
+    flex-shrink: 0; margin-left: 0.6rem; padding: 0.42rem 0.75rem;
+    background: #e4e6eb; border: none; border-radius: 6px;
+    font-size: 0.8rem; font-weight: 600; color: #050505; cursor: default;
+  }
+  .fb-actions { display: flex; border-top: 1px solid #ddd; }
+  .fb-action { flex: 1; padding: 0.55rem; text-align: center; font-size: 0.79rem; font-weight: 600; color: #65676b; border: none; background: none; cursor: default; }
+  .preview-note { font-size: 0.71rem; color: var(--ink-faint); margin-top: 0.65rem; line-height: 1.5; }
+
+  /* ── Google output ──────────────────────────────────────────── */
+  .google-output { display: none; margin-top: 1.5rem; }
+  .google-output.visible { display: block; }
+  .output-card {
+    background: var(--paper-card); border: 1px solid var(--paper-warm);
+    border-radius: 10px; padding: 1.5rem 1.6rem; margin-bottom: 1rem;
+  }
+  .output-card:last-child { margin-bottom: 0; }
+  .output-card h3 { font-size: 0.69rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-light); margin-bottom: 1rem; }
+  .copy-block {
+    position: relative; background: var(--paper); border: 1px solid var(--paper-warm);
+    border-radius: 6px; padding: 0.8rem 2.8rem 0.8rem 0.85rem;
+    font-size: 0.85rem; color: var(--ink-mid); line-height: 1.65;
+  }
+  .copy-btn {
+    position: absolute; top: 0.45rem; right: 0.45rem;
+    padding: 0.18rem 0.5rem; font-size: 0.68rem;
+    background: var(--accent-light); color: var(--accent);
+    border: 1px solid var(--accent-rule); border-radius: 4px;
+    cursor: pointer; font-family: var(--sans); font-weight: 500;
+    white-space: nowrap; transition: background 0.12s;
+  }
+  .copy-btn:hover { background: var(--accent-rule); }
+  .copy-btn.copied { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .kw-pill {
+    display: inline-block; background: var(--paper-warm);
+    border-radius: 4px; padding: 0.18rem 0.5rem;
+    font-size: 0.8rem; color: var(--ink-mid); margin: 0.18rem;
+  }
+  .ad-row { font-size: 0.85rem; color: var(--ink-mid); margin-bottom: 0.3rem; display: flex; gap: 0.5rem; align-items: baseline; }
+  .ad-row-label { font-size: 0.67rem; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-faint); min-width: 22px; }
+  .step-list { list-style: none; counter-reset: steps; }
+  .step-list li { counter-increment: steps; display: flex; gap: 0.7rem; font-size: 0.86rem; color: var(--ink-mid); margin-bottom: 0.45rem; align-items: flex-start; }
+  .step-list li::before {
+    content: counter(steps); display: flex; align-items: center; justify-content: center;
+    width: 20px; height: 20px; border-radius: 50%;
+    background: var(--accent-light); color: var(--accent);
+    font-size: 0.69rem; font-weight: 700; flex-shrink: 0; margin-top: 0.13rem;
+  }
+  .open-google-btn {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    padding: 0.65rem 1.2rem; background: var(--accent); color: #fff;
+    border-radius: 7px; font-family: var(--sans); font-size: 0.85rem;
+    font-weight: 500; text-decoration: none; transition: background 0.2s; margin-top: 1.25rem;
+  }
+  .open-google-btn:hover { background: var(--accent-mid); }
+</style>
+</head>
+<body>
+
+<!-- ── Login ────────────────────────────────────────────────────── -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo"><span>EBH</span> Admin Portal</div>
+    <div class="login-subtitle">Ad Manager</div>
+    <form id="login-form" autocomplete="off">
+      <input type="password" id="admin-pw" placeholder="Admin password" autocomplete="current-password">
+      <button type="submit" class="btn-login">Access Portal</button>
+    </form>
+    <p class="login-error" id="login-error"></p>
+  </div>
+</div>
+
+<!-- ── Dashboard ────────────────────────────────────────────────── -->
+<div id="dashboard">
+  <nav id="dash-nav">
+    <div class="dash-logo"><span>EBH</span> Admin</div>
+    <div class="dash-right">
+      <span class="dash-badge">Ad Manager</span>
+      <button class="btn-logout" id="btn-logout">Sign out</button>
+    </div>
+  </nav>
+
+  <div class="dash-content">
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="meta">Meta Ads</button>
+      <button class="tab-btn" data-tab="google">Google Ads</button>
+    </div>
+
+    <!-- ══ META PANEL ══════════════════════════════════════════════ -->
+    <div id="panel-meta">
+      <div class="panel-grid">
+
+        <!-- Form column -->
+        <div>
+          <!-- Campaign settings -->
+          <div class="form-card">
+            <div class="card-title">Campaign Settings</div>
+            <div class="form-row">
+              <label for="m-name">Campaign Name</label>
+              <input type="text" id="m-name" placeholder="e.g. EBH Newsletter – Spring 2026" autocomplete="off">
+            </div>
+            <div class="form-inline">
+              <div class="form-row">
+                <label for="m-objective">Objective</label>
+                <select id="m-objective">
+                  <option value="OUTCOME_TRAFFIC">Traffic (clicks to site)</option>
+                  <option value="OUTCOME_LEADS">Leads</option>
+                  <option value="OUTCOME_AWARENESS">Awareness</option>
+                </select>
+              </div>
+              <div class="form-row">
+                <label for="m-budget">Daily Budget ($)</label>
+                <input type="number" id="m-budget" placeholder="15" min="1" step="1">
+              </div>
+            </div>
+          </div>
+
+          <!-- Targeting -->
+          <div class="form-card">
+            <div class="card-title">Audience Targeting</div>
+            <div class="form-inline">
+              <div class="form-row">
+                <label for="m-age-min">Min Age</label>
+                <select id="m-age-min"></select>
+              </div>
+              <div class="form-row">
+                <label for="m-age-max">Max Age</label>
+                <select id="m-age-max"></select>
+              </div>
+            </div>
+            <div class="form-row">
+              <label for="m-countries">Countries <span class="hint">comma-separated 2-letter codes</span></label>
+              <input type="text" id="m-countries" value="US" placeholder="US, CA, GB">
+            </div>
+            <div class="form-row">
+              <label>Interests <span class="hint">optional — search Meta's interest library</span></label>
+              <div class="interest-search-row">
+                <input type="text" id="interest-q" placeholder="e.g. preventive healthcare" autocomplete="off">
+                <button type="button" class="btn-sm" id="btn-interest-search">Search</button>
+              </div>
+              <div id="interest-results" class="pills" style="margin-bottom:0.5rem;"></div>
+              <div id="selected-interests" class="pills"></div>
+            </div>
+          </div>
+
+          <!-- Ad Copy -->
+          <div class="form-card">
+            <div class="card-title">Ad Copy</div>
+            <div class="form-row">
+              <label for="m-primary-text">Primary Text <span class="hint">125 chars</span></label>
+              <textarea id="m-primary-text" rows="3" placeholder="Most people don't know when they're due for cancer screening. We fix that — evidence-based, plain-language, no hype. Free weekly brief."></textarea>
+              <div class="char-count" id="cc-primary">0 / 125</div>
+            </div>
+            <div class="form-row">
+              <label for="m-headline">Headline <span class="hint">40 chars</span></label>
+              <input type="text" id="m-headline" placeholder="Free Evidence-Based Health Brief">
+              <div class="char-count" id="cc-headline">0 / 40</div>
+            </div>
+            <div class="form-row">
+              <label for="m-description">Description <span class="hint">optional, 30 chars</span></label>
+              <input type="text" id="m-description" placeholder="Science. No agenda.">
+              <div class="char-count" id="cc-desc">0 / 30</div>
+            </div>
+            <div class="form-row">
+              <label for="m-image-url">Image URL <span class="hint">leave blank to use site OG image</span></label>
+              <input type="url" id="m-image-url" placeholder="https://…">
+            </div>
+            <div class="form-row">
+              <label for="m-dest-url">Destination URL</label>
+              <input type="url" id="m-dest-url" value="https://evidencebasedhealth.me">
+            </div>
+          </div>
+
+          <button class="btn-submit" id="btn-create-meta">Create Meta Campaign (Paused)</button>
+          <div class="status-bar" id="meta-status"></div>
+        </div><!-- end form column -->
+
+        <!-- Preview column -->
+        <div class="preview-sticky">
+          <div class="preview-label">Live Preview — Facebook</div>
+          <div class="fb-card">
+            <div class="fb-header">
+              <div class="fb-avatar">🌿</div>
+              <div>
+                <div class="fb-page-name">Evidence-Based Health</div>
+                <div class="fb-sponsored">Sponsored · 🌐</div>
+              </div>
+            </div>
+            <div class="fb-primary-text" id="prev-text">Your primary text will appear here…</div>
+            <div class="fb-img-wrap" id="prev-img-wrap">
+              <div class="fb-img-placeholder">Ad image</div>
+            </div>
+            <div class="fb-link-row">
+              <div class="fb-link-info">
+                <div class="fb-link-domain" id="prev-domain">EVIDENCEBASEDHEALTH.ME</div>
+                <div class="fb-link-headline" id="prev-headline">Free Evidence-Based Health Brief</div>
+                <div class="fb-link-desc" id="prev-desc">Science. No agenda.</div>
+              </div>
+              <div class="fb-cta">Sign Up</div>
+            </div>
+            <div class="fb-actions">
+              <div class="fb-action">👍 Like</div>
+              <div class="fb-action">💬 Comment</div>
+              <div class="fb-action">↗ Share</div>
+            </div>
+          </div>
+          <p class="preview-note">Campaigns are created in <strong>Paused</strong> status — review in Ads Manager before activating.</p>
+        </div><!-- end preview column -->
+
+      </div><!-- end panel-grid -->
+    </div><!-- end panel-meta -->
+
+    <!-- ══ GOOGLE PANEL ════════════════════════════════════════════ -->
+    <div id="panel-google" style="display:none">
+      <div style="max-width:700px">
+
+        <div class="form-card">
+          <div class="card-title">Campaign Settings</div>
+          <div class="form-inline">
+            <div class="form-row">
+              <label for="g-name">Campaign Name</label>
+              <input type="text" id="g-name" placeholder="EBH Newsletter – Search" autocomplete="off">
+            </div>
+            <div class="form-row">
+              <label for="g-budget">Daily Budget ($)</label>
+              <input type="number" id="g-budget" placeholder="15" min="1">
+            </div>
+          </div>
+          <div class="form-row">
+            <label for="g-final-url">Final URL</label>
+            <input type="url" id="g-final-url" value="https://evidencebasedhealth.me">
+          </div>
+        </div>
+
+        <div class="form-card">
+          <div class="card-title">Keywords <span style="font-weight:300;letter-spacing:0;text-transform:none;font-size:0.77rem;color:var(--ink-faint)"> — one per line, no match type symbols needed</span></div>
+          <div class="form-row">
+            <textarea id="g-keywords" rows="7" placeholder="evidence based health newsletter&#10;cancer screening recommendations&#10;colorectal cancer screening age&#10;when to get a colonoscopy&#10;preventive health tips&#10;hormone health newsletter&#10;metabolic health resources"></textarea>
+          </div>
+        </div>
+
+        <div class="form-card">
+          <div class="card-title">Headlines <span style="font-weight:300;letter-spacing:0;text-transform:none;font-size:0.77rem;color:var(--ink-faint)"> — 3 to 15, max 30 chars each</span></div>
+          <div id="g-headlines-wrap"></div>
+          <button type="button" class="btn-sm" id="btn-add-h" style="margin-top:0.5rem;">+ Add Headline</button>
+        </div>
+
+        <div class="form-card">
+          <div class="card-title">Descriptions <span style="font-weight:300;letter-spacing:0;text-transform:none;font-size:0.77rem;color:var(--ink-faint)"> — 2 to 4, max 90 chars each</span></div>
+          <div id="g-desc-wrap"></div>
+          <button type="button" class="btn-sm" id="btn-add-d" style="margin-top:0.5rem;">+ Add Description</button>
+        </div>
+
+        <button class="btn-submit" id="btn-gen-google">Generate Campaign Brief</button>
+        <div class="status-bar" id="google-status"></div>
+
+        <!-- Output -->
+        <div class="google-output" id="google-output">
+
+          <div class="output-card">
+            <h3>Setup Steps</h3>
+            <ul class="step-list" id="go-steps"></ul>
+          </div>
+
+          <div class="output-card">
+            <h3>Campaign Summary</h3>
+            <div class="copy-block" id="go-campaign">
+              <button class="copy-btn" data-block="go-campaign">Copy</button>
+              <div id="go-campaign-inner"></div>
+            </div>
+          </div>
+
+          <div class="output-card">
+            <h3>Keywords</h3>
+            <div id="go-kw-pills"></div>
+          </div>
+
+          <div class="output-card">
+            <h3>Headlines</h3>
+            <div class="copy-block" id="go-headlines">
+              <button class="copy-btn" data-block="go-headlines">Copy</button>
+              <div id="go-headlines-inner"></div>
+            </div>
+          </div>
+
+          <div class="output-card">
+            <h3>Descriptions</h3>
+            <div class="copy-block" id="go-descs">
+              <button class="copy-btn" data-block="go-descs">Copy</button>
+              <div id="go-descs-inner"></div>
+            </div>
+          </div>
+
+          <a href="https://ads.google.com" target="_blank" rel="noopener" class="open-google-btn">
+            Open Google Ads ↗
+          </a>
+
+        </div><!-- end google-output -->
+      </div>
+    </div><!-- end panel-google -->
+
+  </div><!-- end dash-content -->
+</div><!-- end dashboard -->
+
+<script>
+const API = 'https://lvsofp8c9g.execute-api.us-east-1.amazonaws.com/prod';
+let   token = localStorage.getItem('ebh_admin_token');
+let   selectedInterests = [];
+
+/* ── Auth helpers ──────────────────────────────────────────────── */
+function authHeaders() {
+  return { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` };
+}
+function showStatus(id, type, html) {
+  const el = document.getElementById(id);
+  el.className = `status-bar ${type}`;
+  el.innerHTML = html;
+}
+
+/* ── Boot: skip login if token exists ──────────────────────────── */
+function boot() {
+  if (token) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('dashboard').style.display    = 'block';
+  }
+}
+boot();
+
+/* ── Login ─────────────────────────────────────────────────────── */
+document.getElementById('login-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const pw  = document.getElementById('admin-pw').value;
+  const err = document.getElementById('login-error');
+  err.textContent = '';
+  try {
+    const res  = await fetch(`${API}/admin-auth`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pw }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Login failed');
+    token = data.token;
+    localStorage.setItem('ebh_admin_token', token);
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('dashboard').style.display    = 'block';
+  } catch (ex) { err.textContent = ex.message; }
+});
+
+document.getElementById('btn-logout').addEventListener('click', () => {
+  localStorage.removeItem('ebh_admin_token');
+  token = null;
+  document.getElementById('dashboard').style.display    = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('admin-pw').value = '';
+});
+
+/* ── Tabs ──────────────────────────────────────────────────────── */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const t = btn.dataset.tab;
+    document.getElementById('panel-meta').style.display   = t === 'meta'   ? '' : 'none';
+    document.getElementById('panel-google').style.display = t === 'google' ? '' : 'none';
+  });
+});
+
+/* ── Age selects ───────────────────────────────────────────────── */
+['m-age-min', 'm-age-max'].forEach((id, idx) => {
+  const sel = document.getElementById(id);
+  for (let i = 18; i <= 65; i++) {
+    const label = (idx === 1 && i === 65) ? '65+' : i;
+    const def   = idx === 0 ? i === 35 : i === 65;
+    sel.add(new Option(label, i, def, def));
+  }
+});
+
+/* ── Char counters ─────────────────────────────────────────────── */
+function charCounter(inputId, countId, max) {
+  const inp = document.getElementById(inputId);
+  const cnt = document.getElementById(countId);
+  const upd = () => {
+    const n = inp.value.length;
+    cnt.textContent = `${n} / ${max}`;
+    cnt.className   = `char-count${n > max ? ' warn' : ''}`;
+  };
+  inp.addEventListener('input', upd);
+  upd();
+}
+charCounter('m-primary-text', 'cc-primary',  125);
+charCounter('m-headline',     'cc-headline', 40);
+charCounter('m-description',  'cc-desc',     30);
+
+/* ── Live preview ──────────────────────────────────────────────── */
+document.getElementById('m-primary-text').addEventListener('input', e => {
+  document.getElementById('prev-text').textContent = e.target.value || 'Your primary text will appear here…';
+});
+document.getElementById('m-headline').addEventListener('input', e => {
+  document.getElementById('prev-headline').textContent = e.target.value || 'Free Evidence-Based Health Brief';
+});
+document.getElementById('m-description').addEventListener('input', e => {
+  document.getElementById('prev-desc').textContent = e.target.value;
+});
+document.getElementById('m-dest-url').addEventListener('input', e => {
+  try {
+    document.getElementById('prev-domain').textContent = new URL(e.target.value).hostname.toUpperCase();
+  } catch {}
+});
+document.getElementById('m-image-url').addEventListener('input', e => {
+  const wrap = document.getElementById('prev-img-wrap');
+  const url  = e.target.value.trim();
+  wrap.innerHTML = url
+    ? `<img src="${url}" alt="Ad image" onerror="this.style.display='none'">`
+    : '<div class="fb-img-placeholder">Ad image</div>';
+});
+
+/* ── Interests ─────────────────────────────────────────────────── */
+function renderSelected() {
+  const c = document.getElementById('selected-interests');
+  c.innerHTML = selectedInterests.map(i =>
+    `<span class="pill-selected">${i.name}<button data-id="${i.id}" title="Remove">×</button></span>`
+  ).join('');
+  c.querySelectorAll('button').forEach(b => {
+    b.addEventListener('click', () => {
+      selectedInterests = selectedInterests.filter(x => x.id !== b.dataset.id);
+      renderSelected();
+    });
+  });
+}
+
+document.getElementById('btn-interest-search').addEventListener('click', async () => {
+  const q       = document.getElementById('interest-q').value.trim();
+  const results = document.getElementById('interest-results');
+  if (!q) return;
+  results.innerHTML = '<span class="interest-hint">Searching…</span>';
+  try {
+    const res  = await fetch(`${API}/meta-interests?q=${encodeURIComponent(q)}`, { headers: authHeaders() });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Search failed');
+    const items = Array.isArray(data) ? data : [];
+    if (!items.length) { results.innerHTML = '<span class="interest-hint">No results — try a different term</span>'; return; }
+    results.innerHTML = items.map(i =>
+      `<span class="pill-result" data-id="${i.id}" data-name="${i.name}">+ ${i.name}</span>`
+    ).join('');
+    results.querySelectorAll('.pill-result').forEach(p => {
+      p.addEventListener('click', () => {
+        if (selectedInterests.length >= 10) return;
+        if (!selectedInterests.find(x => x.id === p.dataset.id)) {
+          selectedInterests.push({ id: p.dataset.id, name: p.dataset.name });
+          renderSelected();
+        }
+      });
+    });
+  } catch (ex) { results.innerHTML = `<span class="interest-hint">${ex.message}</span>`; }
+});
+document.getElementById('interest-q').addEventListener('keydown', e => {
+  if (e.key === 'Enter') { e.preventDefault(); document.getElementById('btn-interest-search').click(); }
+});
+
+/* ── Create Meta Campaign ──────────────────────────────────────── */
+document.getElementById('btn-create-meta').addEventListener('click', async () => {
+  const btn = document.getElementById('btn-create-meta');
+  const campaignName  = document.getElementById('m-name').value.trim();
+  const objective     = document.getElementById('m-objective').value;
+  const dailyBudget   = parseFloat(document.getElementById('m-budget').value);
+  const ageMin        = parseInt(document.getElementById('m-age-min').value);
+  const ageMax        = parseInt(document.getElementById('m-age-max').value);
+  const countries     = document.getElementById('m-countries').value.split(',').map(s => s.trim().toUpperCase()).filter(Boolean);
+  const primaryText   = document.getElementById('m-primary-text').value.trim();
+  const headline      = document.getElementById('m-headline').value.trim();
+  const description   = document.getElementById('m-description').value.trim();
+  const destinationUrl = document.getElementById('m-dest-url').value.trim();
+  const imageUrl      = document.getElementById('m-image-url').value.trim();
+
+  if (!campaignName || !dailyBudget || !primaryText || !headline) {
+    showStatus('meta-status', 'error', 'Campaign name, budget, primary text, and headline are required.');
+    return;
+  }
+
+  btn.disabled = true;
+  showStatus('meta-status', 'loading', 'Creating campaign on Meta… (typically 10–15 seconds)');
+
+  try {
+    const res  = await fetch(`${API}/create-meta-ad`, {
+      method: 'POST',
+      headers: authHeaders(),
+      body: JSON.stringify({
+        campaignName, objective, dailyBudget, ageMin, ageMax, countries,
+        interests: selectedInterests, primaryText, headline, description, destinationUrl, imageUrl,
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Ad creation failed');
+    showStatus('meta-status', 'success',
+      `✓ Campaign created (paused). Campaign ID: <code>${data.campaign_id}</code> · <a href="${data.review_url}" target="_blank" rel="noopener">Review in Ads Manager ↗</a>`
+    );
+  } catch (ex) {
+    showStatus('meta-status', 'error', `Error: ${ex.message}`);
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+/* ── Google dynamic fields ─────────────────────────────────────── */
+function addInputRow(containerId, placeholder, maxLen) {
+  const container = document.getElementById(containerId);
+  const idx       = container.querySelectorAll('.form-row').length + 1;
+  const row       = document.createElement('div');
+  row.className   = 'form-row';
+  row.innerHTML   = `
+    <input type="text" placeholder="${placeholder.replace('N', idx)}" maxlength="${maxLen}" autocomplete="off">
+    <div class="char-count">0 / ${maxLen}</div>`;
+  const inp = row.querySelector('input');
+  const cnt = row.querySelector('.char-count');
+  inp.addEventListener('input', () => {
+    const n = inp.value.length;
+    cnt.textContent = `${n} / ${maxLen}`;
+    cnt.className   = `char-count${n > maxLen ? ' warn' : ''}`;
+  });
+  container.appendChild(row);
+  return inp;
+}
+
+const defaultHeadlines = [
+  'Free Evidence-Based Brief', 'Science-Backed Health Insights',
+  'Know When to Get Screened',  'No Hype. Just the Evidence.',
+  'Weekly Health Brief — Free',
+];
+const defaultDescs = [
+  'Plain-language summaries of the latest research on hormones, strength, and metabolic health.',
+  'From an acute care surgery PA. Evidence-based, no agenda. Free weekly newsletter.',
+];
+defaultHeadlines.forEach(h => {
+  const inp = addInputRow('g-headlines-wrap', 'Headline N (30 chars max)', 30);
+  inp.value = h; inp.dispatchEvent(new Event('input'));
+});
+defaultDescs.forEach(d => {
+  const inp = addInputRow('g-desc-wrap', 'Description N (90 chars max)', 90);
+  inp.value = d; inp.dispatchEvent(new Event('input'));
+});
+
+document.getElementById('btn-add-h').addEventListener('click', () => {
+  if (document.querySelectorAll('#g-headlines-wrap .form-row').length < 15)
+    addInputRow('g-headlines-wrap', 'Headline N (30 chars max)', 30);
+});
+document.getElementById('btn-add-d').addEventListener('click', () => {
+  if (document.querySelectorAll('#g-desc-wrap .form-row').length < 4)
+    addInputRow('g-desc-wrap', 'Description N (90 chars max)', 90);
+});
+
+/* ── Generate Google Brief ─────────────────────────────────────── */
+document.getElementById('btn-gen-google').addEventListener('click', async () => {
+  const btn          = document.getElementById('btn-gen-google');
+  const campaignName = document.getElementById('g-name').value.trim();
+  const dailyBudget  = parseFloat(document.getElementById('g-budget').value);
+  const finalUrl     = document.getElementById('g-final-url').value.trim();
+  const keywords     = document.getElementById('g-keywords').value.split('\n').map(s => s.trim()).filter(Boolean);
+  const headlines    = Array.from(document.querySelectorAll('#g-headlines-wrap input')).map(i => i.value.trim()).filter(Boolean);
+  const descriptions = Array.from(document.querySelectorAll('#g-desc-wrap input')).map(i => i.value.trim()).filter(Boolean);
+
+  if (!campaignName || !dailyBudget || headlines.length < 3 || descriptions.length < 2) {
+    showStatus('google-status', 'error', 'Enter campaign name, budget, at least 3 headlines, and 2 descriptions.');
+    return;
+  }
+
+  btn.disabled = true;
+  showStatus('google-status', 'loading', 'Generating brief…');
+
+  try {
+    const res  = await fetch(`${API}/generate-google-brief`, {
+      method: 'POST',
+      headers: authHeaders(),
+      body: JSON.stringify({ campaignName, dailyBudget, keywords, headlines, descriptions, finalUrl }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed');
+
+    const b = data.brief;
+    document.getElementById('google-status').className = 'status-bar';
+
+    // Steps
+    document.getElementById('go-steps').innerHTML =
+      b.setupInstructions.map(s => `<li><span>${s}</span></li>`).join('');
+
+    // Campaign summary
+    document.getElementById('go-campaign-inner').innerHTML = [
+      `Name: ${b.campaign.name}`,
+      `Type: ${b.campaign.type} | Network: ${b.campaign.network}`,
+      `Budget: ${b.campaign.dailyBudget} | Bidding: ${b.campaign.biddingStrategy}`,
+      `Final URL: ${b.responsiveSearchAd.finalUrl}`,
+    ].map(l => `<div>${l}</div>`).join('');
+
+    // Keywords
+    document.getElementById('go-kw-pills').innerHTML =
+      b.adGroup.keywords.map(k => `<span class="kw-pill">${k.keyword}</span>`).join('');
+
+    // Headlines
+    document.getElementById('go-headlines-inner').innerHTML =
+      b.responsiveSearchAd.headlines.map((h, i) =>
+        `<div class="ad-row"><span class="ad-row-label">H${i+1}</span><span>${h}</span></div>`
+      ).join('');
+
+    // Descriptions
+    document.getElementById('go-descs-inner').innerHTML =
+      b.responsiveSearchAd.descriptions.map((d, i) =>
+        `<div class="ad-row"><span class="ad-row-label">D${i+1}</span><span>${d}</span></div>`
+      ).join('');
+
+    document.getElementById('google-output').classList.add('visible');
+    document.getElementById('google-output').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } catch (ex) {
+    showStatus('google-status', 'error', `Error: ${ex.message}`);
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+/* ── Copy buttons ──────────────────────────────────────────────── */
+document.addEventListener('click', e => {
+  const btn = e.target.closest('.copy-btn');
+  if (!btn) return;
+  const block = document.getElementById(btn.dataset.block);
+  // Get text content excluding the button text itself
+  const clone = block.cloneNode(true);
+  clone.querySelector('.copy-btn')?.remove();
+  const text = clone.innerText.trim();
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+});
+</script>
+</body>
+</html>
