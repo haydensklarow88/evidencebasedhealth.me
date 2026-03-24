@@ -1,0 +1,261 @@
+// lambda/reminderHandler.mjs
+//
+// EventBridge-triggered Lambda — runs on a schedule (e.g., daily at 8am UTC)
+// Scans PreventionProfiles and sends age-appropriate screening reminders.
+//
+// Required env vars:
+//   PREVENTION_TABLE     — PreventionProfiles
+//   SES_FROM             — hello@evidencebasedhealth.me
+//   SITE_ORIGIN          — https://evidencebasedhealth.me
+//   SMS_ENABLED          — "true"
+//   SMS_ORIGINATION_ID   — phone-aa451571172f48d2b48072b3b0a0d5b2
+//
+// IAM permissions needed on execution role:
+//   dynamodb:Scan         on PreventionProfiles
+//   dynamodb:UpdateItem   on PreventionProfiles
+//   ses:SendEmail
+//   sms-voice:SendTextMessage
+
+import { DynamoDBClient, ScanCommand, UpdateItemCommand } from '@aws-sdk/client-dynamodb';
+import { SESClient, SendEmailCommand }                   from '@aws-sdk/client-ses';
+import { PinpointSMSVoiceV2Client, SendTextMessageCommand } from '@aws-sdk/client-pinpoint-sms-voice-v2';
+
+const db    = new DynamoDBClient({});
+const ses   = new SESClient({});
+const smsV2 = new PinpointSMSVoiceV2Client({});
+
+const TABLE              = process.env.PREVENTION_TABLE     || 'PreventionProfiles';
+const FROM               = process.env.SES_FROM             || 'hello@evidencebasedhealth.me';
+const ORIGIN             = process.env.SITE_ORIGIN          || 'https://evidencebasedhealth.me';
+const SMS_ORIGINATION_ID = process.env.SMS_ORIGINATION_ID   || 'phone-aa451571172f48d2b48072b3b0a0d5b2';
+const SMS_ENABLED        = process.env.SMS_ENABLED === 'true';
+
+// Minimum months between reminders per topic (avoid repeat nagging)
+const REMINDER_INTERVAL_MONTHS = 12;
+
+function monthsAgo(isoString) {
+  if (!isoString) return Infinity;
+  return (Date.now() - new Date(isoString).getTime()) / (1000 * 60 * 60 * 24 * 30.4);
+}
+
+// ── Reminder rule definitions ─────────────────────────────────────────────
+// Each rule: { topic, organ, ageMin, ageMax, lastReminderAttr, emailSubject, emailBody, smsBody }
+function buildReminders(age, organs, riskFlags) {
+  const reminders = [];
+
+  // COLORECTAL
+  if (organs.includes('colon')) {
+    const highRisk   = riskFlags.includes('crc-family') || riskFlags.includes('crc-polyps');
+    const startAge   = highRisk ? 40 : 45;
+    if (age >= startAge - 2 && age <= 76) {
+      const statusText = age < startAge
+        ? `You're approximately ${startAge - age} year${startAge - age > 1 ? 's' : ''} away from the recommended start age for colorectal cancer screening.`
+        : `You're in the active window for colorectal cancer screening.`;
+      reminders.push({
+        topic:             'colorectal',
+        lastReminderAttr:  'lastColorectalReminder',
+        emailSubject:      'Reminder: colorectal cancer screening — Evidence-Based Health',
+        emailBody: `<p>${statusText}</p>
+          <p>Colorectal cancer is highly treatable when caught early. Options include a <strong>FIT test</strong> (annual stool test), <strong>Cologuard</strong> (stool DNA, every 1–3 years), or <strong>colonoscopy</strong> (every 10 years if normal).</p>
+          <p><strong>3 questions to ask your clinician:</strong></p>
+          <ul style="padding-left:1.2rem;color:#2d3d35;font-size:0.93rem;line-height:1.75">
+            <li>Which screening test makes the most sense for my history?</li>
+            <li>How often should I screen based on my risk level?</li>
+            <li>Is a FIT test or colonoscopy a better starting point?</li>
+          </ul>`,
+        smsBody: `Prevention reminder: Based on your age, it may be time to ask your clinician about colorectal cancer screening (FIT test or colonoscopy). Call their office or check your patient portal. Reply STOP to opt out. Not medical advice. — evidencebasedhealth.me`,
+      });
+    }
+  }
+
+  // CERVICAL
+  if (organs.includes('cervix')) {
+    const highRisk = riskFlags.includes('cervix-hpv');
+    if (age >= 21 && age <= 66) {
+      reminders.push({
+        topic:             'cervical',
+        lastReminderAttr:  'lastCervicalReminder',
+        emailSubject:      'Reminder: cervical cancer screening — Evidence-Based Health',
+        emailBody: `<p>You're in the age range for cervical cancer screening.</p>
+          <p>${age < 30
+            ? 'Most guidelines recommend a <strong>Pap test every 3 years</strong> for people aged 21–29 with a cervix.'
+            : 'Most guidelines recommend a <strong>Pap + HPV co-test every 5 years</strong> (or Pap alone every 3 years) for people aged 30–65 with a cervix.'
+          }${highRisk ? ' Your history of abnormal results or HPV may require more frequent follow-up.' : ''}</p>
+          <p><strong>Questions to ask your clinician:</strong></p>
+          <ul style="padding-left:1.2rem;color:#2d3d35;font-size:0.93rem;line-height:1.75">
+            <li>When was my last Pap test and am I due for one?</li>
+            <li>Should I get Pap alone, HPV alone, or a co-test?</li>
+          </ul>`,
+        smsBody: `Prevention reminder: Based on your age, it may be time to check if you're due for cervical cancer screening (Pap or HPV test). Contact your clinician. Reply STOP to opt out. Not medical advice. — evidencebasedhealth.me`,
+      });
+    }
+  }
+
+  // PROSTATE
+  if (organs.includes('prostate')) {
+    if (age >= 48 && age <= 71) {
+      reminders.push({
+        topic:             'prostate',
+        lastReminderAttr:  'lastProstateReminder',
+        emailSubject:      'Reminder: prostate cancer screening discussion — Evidence-Based Health',
+        emailBody: `<p>You're in the age range when most guidelines recommend a <strong>shared decision-making conversation</strong> about PSA (prostate-specific antigen) screening with your clinician.</p>
+          <p>PSA testing has real benefits and real trade-offs — it's not a simple yes/no. The goal is an informed discussion, not a skipped appointment.</p>
+          <p><strong>Questions to bring up:</strong></p>
+          <ul style="padding-left:1.2rem;color:#2d3d35;font-size:0.93rem;line-height:1.75">
+            <li>What are the pros and cons of PSA screening at my age?</li>
+            <li>Does my family history or race change when I should start?</li>
+            <li>If I get a PSA, what does an elevated result mean?</li>
+          </ul>`,
+        smsBody: `Prevention reminder: At your age, many guidelines recommend discussing PSA screening with your clinician. It's a quick conversation worth having. Reply STOP to opt out. Not medical advice. — evidencebasedhealth.me`,
+      });
+    }
+  }
+
+  // BREAST
+  if (organs.includes('breasts')) {
+    const highRisk = riskFlags.includes('breast-family') || riskFlags.includes('brca');
+    const startAge = highRisk ? 30 : 40;
+    if (age >= startAge && age <= 76) {
+      reminders.push({
+        topic:             'breast',
+        lastReminderAttr:  'lastBreastReminder',
+        emailSubject:      'Reminder: breast cancer screening — Evidence-Based Health',
+        emailBody: `<p>${highRisk
+            ? 'Given your family history or BRCA status, you may be on an enhanced screening protocol (annual mammogram ± MRI). Make sure you\'re up to date.'
+            : age < 50
+              ? 'You\'re in the age range where guidelines vary. The USPSTF (2024) recommends starting mammography at 40; the ACS recommends discussing it at 40 and beginning no later than 45.'
+              : 'You\'re in the active screening window for breast cancer. Most guidelines recommend mammography every 1–2 years for average-risk people aged 50–74.'
+          }</p>
+          <p><strong>Questions to ask your clinician:</strong></p>
+          <ul style="padding-left:1.2rem;color:#2d3d35;font-size:0.93rem;line-height:1.75">
+            <li>Am I due for a mammogram?</li>
+            <li>Should I screen annually or every 2 years?</li>
+            ${highRisk ? '<li>Do I need MRI in addition to mammography?</li>' : '<li>Does my breast density affect my screening plan?</li>'}
+          </ul>`,
+        smsBody: `Prevention reminder: Based on your age, it may be time for a mammogram or breast screening check-in. Contact your clinician. Reply STOP to opt out. Not medical advice. — evidencebasedhealth.me`,
+      });
+    }
+  }
+
+  return reminders;
+}
+
+// ── Email template wrapper ─────────────────────────────────────────────────
+function wrapEmail(subject, bodyHtml, yob, origin) {
+  const age = new Date().getFullYear() - yob;
+  return `<!DOCTYPE html>
+<html><head><meta charset="UTF-8"></head>
+<body style="font-family:'DM Sans',system-ui,sans-serif;background:#f7f5f0;margin:0;padding:0">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f7f5f0;padding:40px 20px">
+  <tr><td align="center">
+    <table width="100%" style="max-width:560px;background:#fff;border:1px solid #ede9e1;border-radius:4px;overflow:hidden">
+      <tr><td style="background:linear-gradient(90deg,#1a5c3a,#2d7a52);height:4px;font-size:0;line-height:0">&nbsp;</td></tr>
+      <tr><td style="padding:36px 40px 28px">
+        <p style="font-size:0.72rem;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:#2d7a52;margin:0 0 12px">Prevention Reminder</p>
+        <h1 style="font-family:Georgia,serif;font-size:1.4rem;color:#0f1a14;margin:0 0 20px;line-height:1.3">${subject.replace(' — Evidence-Based Health', '')}</h1>
+        <div style="font-size:0.93rem;color:#2d3d35;line-height:1.75;margin-bottom:24px">
+          ${bodyHtml}
+        </div>
+        <p style="font-size:0.85rem;color:#5c6e65;line-height:1.65;font-style:italic;margin-bottom:24px">
+          This reminder is based on your birth year (${yob}, approx. age ${age}) and the anatomy profile you saved. It is educational only — not personalized medical advice. Always confirm timing and approach with your own clinician.
+        </p>
+        <a href="${origin}/prevention-roadmap.html" style="display:inline-block;background:#1a5c3a;color:#fff;padding:12px 24px;border-radius:2px;text-decoration:none;font-size:0.85rem;font-weight:500;letter-spacing:0.05em">View your roadmap &rarr;</a>
+      </td></tr>
+      <tr><td style="padding:20px 40px;background:#f7f5f0;border-top:1px solid #ede9e1;font-size:0.75rem;color:#9aada3;line-height:1.6">
+        Educational content only. Not medical advice. To stop reminders, reply to this email with "STOP" or contact <a href="mailto:hello@evidencebasedhealth.me" style="color:#5c6e65">hello@evidencebasedhealth.me</a>. To delete your prevention profile, email us any time.
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
+</body></html>`;
+}
+
+// ── Main handler ───────────────────────────────────────────────────────────
+export async function handler() {
+  const now     = new Date().toISOString();
+  const curYear = new Date().getFullYear();
+  let sent      = 0;
+  let errors    = 0;
+  let lastKey   = undefined;
+
+  do {
+    const resp = await db.send(new ScanCommand({
+      TableName:  TABLE,
+      ExclusiveStartKey: lastKey,
+    }));
+
+    for (const item of (resp.Items || [])) {
+      const email      = item.email?.S;
+      const yob        = parseInt(item.yearOfBirth?.N, 10);
+      const organs     = (item.organs?.L || []).map(o => o.S);
+      const riskFlags  = (item.riskFlags?.L || []).map(r => r.S);
+      const emailCons  = item.emailConsent?.BOOL ?? false;
+      const smsCons    = item.smsConsent?.BOOL ?? false;
+      const phone      = item.phone?.S || null;
+
+      if (!email || !emailCons || isNaN(yob)) continue;
+
+      const age       = curYear - yob;
+      const reminders = buildReminders(age, organs, riskFlags);
+
+      for (const reminder of reminders) {
+        const lastSentIso = item[reminder.lastReminderAttr]?.S;
+        if (monthsAgo(lastSentIso) < REMINDER_INTERVAL_MONTHS) continue;
+
+        // Send email
+        if (emailCons) {
+          try {
+            await ses.send(new SendEmailCommand({
+              Source:      FROM,
+              Destination: { ToAddresses: [email] },
+              Message: {
+                Subject: { Data: reminder.emailSubject, Charset: 'UTF-8' },
+                Body: {
+                  Html: { Data: wrapEmail(reminder.emailSubject, reminder.emailBody, yob, ORIGIN), Charset: 'UTF-8' },
+                  Text: { Data: `${reminder.emailSubject}\n\n${reminder.smsBody}\n\nVisit: ${ORIGIN}/prevention-roadmap.html\n\nNot medical advice. To stop reminders reply STOP.`, Charset: 'UTF-8' },
+                },
+              },
+            }));
+            sent++;
+          } catch (err) {
+            console.error(`Email error for ${email}:`, err);
+            errors++;
+          }
+        }
+
+        // Send SMS
+        if (SMS_ENABLED && smsCons && phone) {
+          try {
+            await smsV2.send(new SendTextMessageCommand({
+              DestinationPhoneNumber: phone,
+              OriginationIdentity:    SMS_ORIGINATION_ID,
+              MessageBody:            reminder.smsBody,
+              MessageType:            'TRANSACTIONAL',
+            }));
+          } catch (err) {
+            console.error(`SMS error for ${email}:`, err);
+          }
+        }
+
+        // Update last reminder timestamp
+        try {
+          await db.send(new UpdateItemCommand({
+            TableName: TABLE,
+            Key:       { email: { S: email } },
+            UpdateExpression: `SET #attr = :now, updatedAt = :now`,
+            ExpressionAttributeNames:  { '#attr': reminder.lastReminderAttr },
+            ExpressionAttributeValues: { ':now': { S: now } },
+          }));
+        } catch (err) {
+          console.error(`DynamoDB update error for ${email}:`, err);
+        }
+      }
+    }
+
+    lastKey = resp.LastEvaluatedKey;
+  } while (lastKey);
+
+  const summary = `Reminders run complete. Sent: ${sent}, Errors: ${errors}`;
+  console.log(summary);
+  return { statusCode: 200, body: summary };
+}

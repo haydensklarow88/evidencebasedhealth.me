@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="A free, personalized prevention roadmap based on your age and anatomy. Find out which cancer screenings and preventive conversations are most relevant for you right now.">
+<meta property="og:title" content="Prevention Roadmap — Evidence-Based Health">
+<meta property="og:description" content="See which cancer screenings and preventive conversations match your age and anatomy. Free, private, evidence-based.">
+<meta property="og:url" content="https://evidencebasedhealth.me/prevention-roadmap.html">
+<meta property="og:type" content="website">
+<title>Prevention Roadmap &mdash; Evidence-Based Health</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f1a14;
+    --ink-mid: #2d3d35;
+    --ink-light: #5c6e65;
+    --ink-faint: #9aada3;
+    --paper: #f7f5f0;
+    --paper-warm: #ede9e1;
+    --paper-card: #ffffff;
+    --accent: #1a5c3a;
+    --accent-mid: #2d7a52;
+    --accent-light: #e8f2ec;
+    --accent-rule: #c2d9cb;
+    --red-soft: #c9412a;
+    --serif: 'Libre Baskerville', Georgia, serif;
+    --sans: 'DM Sans', system-ui, sans-serif;
+    --max: 760px;
+    --max-wide: 1100px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 16px; scroll-behavior: smooth; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-weight: 300;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── NAV ── */
+  nav {
+    background: rgba(247,245,240,0.95);
+    border-bottom: 1px solid var(--paper-warm);
+    padding: 0 2rem;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+  }
+  .nav-logo { font-family: var(--serif); font-size: 0.95rem; color: var(--accent); font-style: italic; text-decoration: none; letter-spacing: 0.01em; }
+  .nav-logo span { font-style: normal; font-weight: 700; }
+  .nav-cta {
+    font-family: var(--sans); font-size: 0.8rem; font-weight: 500;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent);
+    text-decoration: none; border: 1px solid var(--accent);
+    padding: 0.45rem 1.1rem; border-radius: 2px;
+    transition: background 0.2s, color 0.2s;
+  }
+  .nav-cta:hover { background: var(--accent); color: #fff; }
+
+  /* ── PAGE HERO ── */
+  .page-hero {
+    background: var(--paper-card);
+    border-bottom: 1px solid var(--paper-warm);
+    padding: 4rem 2rem 3.5rem;
+  }
+  .page-hero-inner {
+    max-width: var(--max);
+    margin: 0 auto;
+  }
+  .page-label {
+    font-size: 0.7rem; font-weight: 500; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--accent-mid); margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 0.7rem;
+  }
+  .page-label::before { content: ''; display: block; width: 24px; height: 1px; background: var(--accent-mid); }
+  h1 {
+    font-family: var(--serif);
+    font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--ink);
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+  }
+  h1 em { font-style: italic; color: var(--accent); }
+  .hero-sub {
+    font-size: 1.05rem;
+    color: var(--ink-mid);
+    line-height: 1.75;
+    max-width: 600px;
+    margin-bottom: 1.5rem;
+  }
+
+  /* ── EDUCATION DISCLAIMER BOX ── */
+  .edu-notice {
+    background: var(--accent-light);
+    border: 1px solid var(--accent-rule);
+    border-left: 3px solid var(--accent);
+    border-radius: 3px;
+    padding: 1rem 1.4rem;
+    max-width: var(--max);
+    margin: 0 auto 0;
+  }
+  .edu-notice p {
+    font-size: 0.85rem;
+    color: var(--ink-mid);
+    line-height: 1.65;
+  }
+  .edu-notice strong { color: var(--ink); font-weight: 500; }
+
+  /* ── MAIN CONTENT ── */
+  main { max-width: var(--max); margin: 0 auto; padding: 3rem 2rem 5rem; }
+
+  /* ── QUESTIONNAIRE CARD ── */
+  .q-card {
+    background: var(--paper-card);
+    border: 1px solid var(--paper-warm);
+    border-radius: 4px;
+    padding: 2.4rem;
+    box-shadow: 0 4px 24px rgba(15,26,20,0.05);
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+  .q-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-mid));
+  }
+
+  .q-card h2 {
+    font-family: var(--serif);
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 0.4rem;
+  }
+  .q-card .q-sub {
+    font-size: 0.88rem;
+    color: var(--ink-light);
+    margin-bottom: 2rem;
+  }
+
+  .field-group { margin-bottom: 1.8rem; }
+  .field-group:last-of-type { margin-bottom: 0; }
+
+  .field-label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--ink-mid);
+    margin-bottom: 0.7rem;
+  }
+  .field-hint {
+    font-size: 0.78rem;
+    color: var(--ink-faint);
+    margin-top: -0.4rem;
+    margin-bottom: 0.8rem;
+    font-style: italic;
+  }
+
+  input[type="number"] {
+    width: 140px;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--paper-warm);
+    border-radius: 2px;
+    font-family: var(--sans);
+    font-size: 0.95rem;
+    font-weight: 300;
+    background: var(--paper);
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  input[type="number"]:focus { border-color: var(--accent-mid); }
+  input[type="number"]::placeholder { color: var(--ink-faint); }
+
+  .radio-group, .check-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+  .radio-row, .check-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+    padding: 0.7rem 1rem;
+    border: 1px solid var(--paper-warm);
+    border-radius: 2px;
+    background: var(--paper);
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    font-size: 0.92rem;
+    color: var(--ink-mid);
+    line-height: 1.5;
+  }
+  .radio-row:hover, .check-row:hover { border-color: var(--accent-rule); background: var(--accent-light); }
+  .radio-row input, .check-row input {
+    margin-top: 2px;
+    flex-shrink: 0;
+    accent-color: var(--accent);
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+  }
+  .radio-row.selected, .check-row.selected {
+    border-color: var(--accent);
+    background: var(--accent-light);
+  }
+
+  .risk-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    color: var(--accent-mid);
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: var(--sans);
+    padding: 0;
+    margin-bottom: 0.8rem;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .risk-optional {
+    display: none;
+    margin-top: 0.5rem;
+  }
+  .risk-optional.open { display: block; }
+
+  .divider { height: 1px; background: var(--paper-warm); margin: 1.8rem 0; }
+
+  .btn-primary {
+    width: 100%;
+    padding: 0.95rem 1.5rem;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 2px;
+    font-family: var(--sans);
+    font-size: 0.88rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    margin-top: 1.8rem;
+  }
+  .btn-primary:hover { background: var(--accent-mid); transform: translateY(-1px); }
+  .btn-primary:active { transform: translateY(0); }
+
+  /* ── RESULTS SECTION ── */
+  #results {
+    display: none;
+    margin-bottom: 2rem;
+  }
+  #results.visible { display: block; }
+
+  .results-card {
+    background: var(--paper-card);
+    border: 1px solid var(--accent-rule);
+    border-radius: 4px;
+    padding: 2.4rem;
+    box-shadow: 0 4px 24px rgba(15,26,20,0.06);
+    position: relative;
+  }
+  .results-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-mid));
+  }
+
+  .results-card h2 {
+    font-family: var(--serif);
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 0.4rem;
+  }
+  .results-summary {
+    font-size: 0.88rem;
+    color: var(--ink-light);
+    margin-bottom: 1.6rem;
+  }
+
+  .screening-list { list-style: none; display: flex; flex-direction: column; gap: 1rem; }
+
+  .screening-item {
+    border: 1px solid var(--paper-warm);
+    border-radius: 3px;
+    padding: 1.3rem 1.5rem;
+    background: var(--paper);
+  }
+  .screening-item.urgent { border-color: var(--accent-rule); background: var(--accent-light); }
+
+  .screening-header {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 0.5rem;
+  }
+  .screening-badge {
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    flex-shrink: 0;
+  }
+  .badge-due { background: var(--accent); color: #fff; }
+  .badge-soon { background: #e8a040; color: #fff; }
+  .badge-discuss { background: var(--paper-warm); color: var(--ink-mid); }
+  .badge-decision { background: #dce8f5; color: #1a4a7a; }
+
+  .screening-title {
+    font-family: var(--serif);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .screening-body {
+    font-size: 0.9rem;
+    color: var(--ink-mid);
+    line-height: 1.7;
+  }
+  .screening-body strong { color: var(--ink); font-weight: 500; }
+
+  .ask-list {
+    margin-top: 0.8rem;
+    padding-left: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  .ask-list li {
+    font-size: 0.85rem;
+    color: var(--ink-light);
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+  .ask-list li::before {
+    content: '→';
+    color: var(--accent-mid);
+    flex-shrink: 0;
+    font-size: 0.8rem;
+    margin-top: 1px;
+  }
+
+  .results-disclaimer {
+    margin-top: 1.5rem;
+    padding: 1rem 1.4rem;
+    background: var(--paper-warm);
+    border-radius: 2px;
+    font-size: 0.8rem;
+    color: var(--ink-light);
+    line-height: 1.65;
+  }
+  .no-results-msg {
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--ink-light);
+    font-size: 0.95rem;
+    line-height: 1.75;
+  }
+
+  /* ── PROFILE OPT-IN ── */
+  #opt-in {
+    display: none;
+    margin-bottom: 2rem;
+  }
+  #opt-in.visible { display: block; }
+
+  .optin-card {
+    background: var(--paper-card);
+    border: 1px solid var(--paper-warm);
+    border-radius: 4px;
+    padding: 2.4rem;
+    box-shadow: 0 4px 24px rgba(15,26,20,0.05);
+  }
+  .optin-card h2 {
+    font-family: var(--serif);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 0.4rem;
+  }
+  .optin-sub {
+    font-size: 0.88rem;
+    color: var(--ink-light);
+    margin-bottom: 1.6rem;
+    line-height: 1.65;
+  }
+
+  .input-field {
+    width: 100%;
+    padding: 0.82rem 1rem;
+    border: 1px solid var(--paper-warm);
+    border-radius: 2px;
+    font-family: var(--sans);
+    font-size: 0.9rem;
+    font-weight: 300;
+    background: var(--paper);
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s;
+    margin-bottom: 0.65rem;
+  }
+  .input-field::placeholder { color: var(--ink-faint); }
+  .input-field:focus { border-color: var(--accent-mid); }
+
+  .consent-row {
+    display: flex; align-items: flex-start; gap: 0.6rem;
+    font-size: 0.78rem; color: var(--ink-light); line-height: 1.55; cursor: pointer;
+    margin-bottom: 0.5rem;
+  }
+  .consent-row input[type="checkbox"] {
+    margin-top: 2px; flex-shrink: 0; accent-color: var(--accent);
+    width: 14px; height: 14px; cursor: pointer;
+  }
+  .consent-fine {
+    font-size: 0.72rem; color: var(--ink-faint); line-height: 1.6; margin-top: 0.4rem;
+  }
+  .consent-fine a { color: var(--ink-light); text-decoration: underline; }
+
+  .optin-success {
+    display: none;
+    padding: 1.4rem;
+    background: var(--accent-light);
+    border: 1px solid var(--accent-rule);
+    border-radius: 3px;
+    text-align: center;
+  }
+  .optin-success.visible { display: block; }
+  .optin-success p {
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--accent);
+    font-size: 1rem;
+  }
+
+  /* ── LEGAL/INFO SECTION ── */
+  .info-section {
+    background: var(--paper-warm);
+    border: 1px solid var(--paper-warm);
+    border-radius: 3px;
+    padding: 1.5rem 2rem;
+    margin-bottom: 2rem;
+  }
+  .info-section h3 {
+    font-family: var(--serif);
+    font-size: 0.97rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 0.6rem;
+  }
+  .info-section p {
+    font-size: 0.85rem;
+    color: var(--ink-light);
+    line-height: 1.7;
+  }
+  .info-section a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--paper-warm);
+    border-top: 1px solid var(--paper-warm);
+    padding: 2rem;
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--ink-faint);
+    line-height: 1.7;
+  }
+  footer a { color: var(--ink-light); text-decoration: none; }
+  footer a:hover { color: var(--accent); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .q-card, .results-card, .optin-card { padding: 1.6rem; }
+    h1 { font-size: 1.7rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo"><span>Evidence&#8209;Based</span> Health</a>
+  <a href="index.html#subscribe" class="nav-cta">Get the brief</a>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="page-label">Prevention Roadmap</div>
+    <h1>What should <em>you</em> be talking to your clinician about?</h1>
+    <p class="hero-sub">Answer a few quick questions about your age and anatomy. We&rsquo;ll show you which cancer screenings and preventive conversations are most relevant for you right now, according to current guidelines.</p>
+  </div>
+</div>
+
+<!-- EDU NOTICE -->
+<div style="background: var(--paper); padding: 1.5rem 2rem 0;">
+  <div class="edu-notice">
+    <p><strong>Education only.</strong> This tool uses your answers to surface general prevention topics based on widely accepted US guidelines. It does not diagnose, recommend treatment, or replace personalized advice from your own clinician. Think of it as a conversation starter, not a clinical opinion.</p>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<main>
+
+  <!-- QUESTIONNAIRE -->
+  <div class="q-card" id="questionnaire">
+    <h2>Tell us about yourself</h2>
+    <p class="q-sub">Takes about 60 seconds. Nothing is stored until you choose to save your profile below.</p>
+
+    <form id="roadmap-form" onsubmit="computeRoadmap(event)">
+
+      <!-- Year of birth -->
+      <div class="field-group">
+        <label class="field-label" for="yob">Year of birth</label>
+        <p class="field-hint">We use birth year instead of exact age to minimize data sensitivity.</p>
+        <input type="number" id="yob" name="yob" placeholder="e.g. 1982" min="1920" max="2010" required>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Sex at birth -->
+      <div class="field-group">
+        <span class="field-label">Sex assigned at birth</span>
+        <p class="field-hint">Used only to apply the right screening guidelines where they differ by reproductive biology.</p>
+        <div class="radio-group" id="sex-group">
+          <label class="radio-row">
+            <input type="radio" name="sex" value="male" required>
+            Male
+          </label>
+          <label class="radio-row">
+            <input type="radio" name="sex" value="female">
+            Female
+          </label>
+          <label class="radio-row">
+            <input type="radio" name="sex" value="intersex">
+            Intersex / another biological variation
+          </label>
+          <label class="radio-row">
+            <input type="radio" name="sex" value="prefer-not">
+            Prefer not to say
+          </label>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Anatomy checkboxes -->
+      <div class="field-group">
+        <span class="field-label">Organs / anatomy <span style="text-transform:none;letter-spacing:0;font-weight:300;color:var(--ink-faint)">(check all that apply)</span></span>
+        <p class="field-hint">Some screenings are organ-specific. Select what&rsquo;s relevant to your body.</p>
+        <div class="check-group" id="organs-group">
+          <label class="check-row">
+            <input type="checkbox" name="organs" value="colon">
+            I have a colon
+          </label>
+          <label class="check-row">
+            <input type="checkbox" name="organs" value="cervix">
+            I have a cervix
+          </label>
+          <label class="check-row">
+            <input type="checkbox" name="organs" value="prostate">
+            I have a prostate
+          </label>
+          <label class="check-row">
+            <input type="checkbox" name="organs" value="breasts">
+            I have breasts / chest tissue
+          </label>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Optional risk flags -->
+      <div class="field-group">
+        <span class="field-label">Optional: known risk factors <span style="text-transform:none;letter-spacing:0;font-weight:300;color:var(--ink-faint)">(check any that apply)</span></span>
+        <p class="field-hint">These may shift the age at which screenings are recommended.</p>
+        <div class="check-group">
+          <label class="check-row">
+            <input type="checkbox" name="risk" value="crc-family">
+            A first-degree relative (parent, sibling, child) was diagnosed with colorectal cancer or advanced colon polyps before age 60
+          </label>
+          <label class="check-row">
+            <input type="checkbox" name="risk" value="crc-polyps">
+            I&rsquo;ve had colon polyps before
+          </label>
+          <label class="check-row">
+            <input type="checkbox" name="risk" value="cervix-hpv">
+            History of abnormal Pap / HPV or cervical dysplasia
+          </label>
+          <label class="check-row">
+            <input type="checkbox" name="risk" value="breast-family">
+            First-degree relative diagnosed with breast cancer
+          </label>
+          <label class="check-row">
+            <input type="checkbox" name="risk" value="brca">
+            Known BRCA1/BRCA2 gene variant (self or close family)
+          </label>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-primary">Show my prevention roadmap &rarr;</button>
+    </form>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results">
+    <div class="results-card">
+      <h2>Your prevention roadmap</h2>
+      <p class="results-summary" id="results-summary"></p>
+      <ul class="screening-list" id="screening-list"></ul>
+      <div class="results-disclaimer">
+        Everyone&rsquo;s situation is different. Timing, frequency, and the right screening test depend on your full medical history, which only your clinician knows. Use this as a conversation starter &mdash; not a final decision tool.
+      </div>
+    </div>
+  </div>
+
+  <!-- PROFILE OPT-IN -->
+  <div id="opt-in">
+    <div class="optin-card">
+      <h2>Want reminders when screenings are coming up?</h2>
+      <p class="optin-sub">Enter your email (and optionally your phone number) and we&rsquo;ll send simple, evidence-based nudges when you&rsquo;re approaching key screening ages. No spam. No selling your data. Occasional messages only.</p>
+
+      <div id="optin-success" class="optin-success">
+        <p>&#10003; &nbsp;You&rsquo;re set &mdash; we&rsquo;ll send a reminder when a screening is coming up for you.</p>
+      </div>
+
+      <form id="optin-form" onsubmit="handleOptIn(event)">
+        <input type="email" class="input-field" name="email" placeholder="your@email.com" required autocomplete="email">
+        <input type="tel" class="input-field" name="phone" placeholder="Phone (optional) &mdash; e.g. +1 555 000 1234" autocomplete="tel">
+
+        <label class="consent-row">
+          <input type="checkbox" name="emailConsent" checked>
+          <span>Send me email reminders when I&rsquo;m approaching a screening age</span>
+        </label>
+        <label class="consent-row">
+          <input type="checkbox" name="smsConsent">
+          <span>Also send SMS reminders. Msg &amp; data rates may apply. Reply STOP to opt out.</span>
+        </label>
+        <label class="consent-row">
+          <input type="checkbox" name="remarketingConsent">
+          <span>I&rsquo;m okay with my hashed email being used to show me relevant ads on Google &amp; Meta.</span>
+        </label>
+
+        <p class="consent-fine" style="margin-top:0.7rem;margin-bottom:1rem">
+          By saving your profile you agree to receive occasional educational reminder emails. Unsubscribe anytime via any email or by <a href="mailto:hello@evidencebasedhealth.me">contacting us</a>. We do not share your data with third parties for marketing. <a href="privacy.html">Privacy Policy</a> &middot; <a href="disclaimer.html">Disclaimer</a>
+        </p>
+
+        <button type="submit" class="btn-primary">Save my profile &amp; get reminders &rarr;</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- INFO FOOTER -->
+  <div class="info-section">
+    <h3>About these guidelines</h3>
+    <p>Recommendations are drawn from US Preventive Services Task Force (USPSTF), American Cancer Society (ACS), and ACR guidelines for average-risk adults. High-risk individuals (strong family history, prior polyps, genetic variants, prior abnormal results) often need to start earlier or screen more frequently &mdash; discuss with your clinician. Guidelines are updated periodically; always verify with your own provider.</p>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <p><strong>evidencebasedhealth.me</strong></p>
+  <p style="margin-top:0.4rem">
+    &copy; 2025 Evidence-Based Health &nbsp;&middot;&nbsp;
+    <a href="privacy.html">Privacy Policy</a> &nbsp;&middot;&nbsp;
+    <a href="disclaimer.html">Disclaimer</a> &nbsp;&middot;&nbsp;
+    <a href="mailto:hello@evidencebasedhealth.me">hello@evidencebasedhealth.me</a>
+  </p>
+  <p style="margin-top:0.3rem">Educational content only. Not medical advice. Not a substitute for care from your clinician.</p>
+</footer>
+
+<script>
+  // ── CONFIG ────────────────────────────────────────────────────────────────
+  const PREVENTION_API = 'https://lvsofp8c9g.execute-api.us-east-1.amazonaws.com/prod/prevention-profile';
+  // ─────────────────────────────────────────────────────────────────────────
+
+  // Highlight selected radio/checkbox rows
+  document.querySelectorAll('.radio-row input, .check-row input').forEach(input => {
+    input.addEventListener('change', () => {
+      if (input.type === 'radio') {
+        document.querySelectorAll(`input[name="${input.name}"]`).forEach(r => {
+          r.closest('.radio-row').classList.toggle('selected', r.checked);
+        });
+      } else {
+        input.closest('.check-row').classList.toggle('selected', input.checked);
+      }
+    });
+  });
+
+  // ── PREVENTION LOGIC ─────────────────────────────────────────────────────
+  function computeRoadmap(e) {
+    e.preventDefault();
+
+    const yob    = parseInt(document.getElementById('yob').value, 10);
+    const age    = new Date().getFullYear() - yob;
+    const sex    = document.querySelector('input[name="sex"]:checked')?.value || '';
+    const organs = [...document.querySelectorAll('input[name="organs"]:checked')].map(i => i.value);
+    const risks  = [...document.querySelectorAll('input[name="risk"]:checked')].map(i => i.value);
+
+    if (isNaN(age) || age < 18 || age > 120) {
+      alert('Please enter a valid year of birth.');
+      return;
+    }
+
+    const items = [];
+
+    // ── COLORECTAL ──────────────────────────────────────────────────────────
+    if (organs.includes('colon')) {
+      const highRisk = risks.includes('crc-family') || risks.includes('crc-polyps');
+      const startAge = highRisk ? 40 : 45;
+
+      if (age >= startAge && age <= 75) {
+        items.push({
+          badge: 'due',
+          label: 'Due now',
+          title: 'Colorectal cancer screening',
+          body: `Based on your age${highRisk ? ' and risk factors' : ''}, you&rsquo;re in the window where most guidelines recommend active colorectal cancer screening. Options include a <strong>FIT test</strong> (stool test, annually), <strong>Cologuard</strong> (stool DNA, every 1&ndash;3 years), or <strong>colonoscopy</strong> (every 10 years if normal).`,
+          asks: [
+            'Which screening test makes the most sense for me given my history?',
+            'How often should I be screened based on my risk level?',
+            'Is a FIT test or colonoscopy more appropriate as a starting point?',
+          ]
+        });
+      } else if (age >= startAge - 5 && age < startAge) {
+        items.push({
+          badge: 'soon',
+          label: 'Coming up soon',
+          title: 'Colorectal cancer screening',
+          body: `You&rsquo;re approaching the age when most guidelines recommend starting colorectal cancer screening${highRisk ? ' &mdash; and your risk factors may mean starting <strong>earlier</strong>' : ''}. It&rsquo;s a good time to start the conversation before you reach that window.`,
+          asks: [
+            'What screening options are available and what's the difference?',
+            'Should I start earlier given my family history or other factors?',
+          ]
+        });
+      } else if (age > 75) {
+        items.push({
+          badge: 'discuss',
+          label: 'Discuss with clinician',
+          title: 'Colorectal cancer screening',
+          body: 'Most guidelines suggest that decisions about continuing colorectal screening after age 75 should be made individually based on your prior screening history, overall health, and life expectancy. This is worth a specific conversation with your clinician.',
+          asks: [
+            'Based on my prior screenings and health, should I continue screening?',
+          ]
+        });
+      }
+    }
+
+    // ── CERVICAL ────────────────────────────────────────────────────────────
+    if (organs.includes('cervix')) {
+      const highRisk = risks.includes('cervix-hpv');
+
+      if (age >= 21 && age <= 29) {
+        items.push({
+          badge: 'due',
+          label: 'Active screening age',
+          title: 'Cervical cancer screening (Pap test)',
+          body: `For people aged 21&ndash;29 with a cervix, most guidelines recommend a <strong>Pap test every 3 years</strong>. HPV testing alone is not recommended in this age group for average-risk individuals.${highRisk ? ' With your history of abnormal results, your clinician may suggest more frequent follow-up.' : ''}`,
+          asks: [
+            'When was my last Pap test and am I due for another?',
+            highRisk ? 'Given my HPV/dysplasia history, how often should I be screened?' : 'Is Pap alone or Pap + HPV co-testing better for me?',
+          ]
+        });
+      } else if (age >= 30 && age <= 65) {
+        items.push({
+          badge: 'due',
+          label: 'Active screening age',
+          title: 'Cervical cancer screening (Pap + HPV)',
+          body: `For people aged 30&ndash;65 with a cervix, most guidelines recommend a <strong>Pap + HPV co-test every 5 years</strong> (or Pap alone every 3 years, or hrHPV alone every 5 years).${highRisk ? ' Your history of abnormal results or HPV may require more frequent follow-up &mdash; confirm the right interval with your clinician.' : ''}`,
+          asks: [
+            'Which cervical screening strategy is right for me &mdash; Pap, HPV, or co-test?',
+            'Given my last results, when am I due?',
+          ]
+        });
+      } else if (age > 65) {
+        items.push({
+          badge: 'discuss',
+          label: 'Discuss with clinician',
+          title: 'Cervical cancer screening',
+          body: `Most guidelines recommend stopping cervical screening after age 65 if you have had adequate prior negative results. If you&rsquo;ve never been screened or have had abnormal recent results, continued screening may still be appropriate.`,
+          asks: [
+            'Based on my screening history, can I stop cervical cancer screening?',
+          ]
+        });
+      }
+    }
+
+    // ── PROSTATE ────────────────────────────────────────────────────────────
+    if (organs.includes('prostate')) {
+      if (age >= 45 && age < 50) {
+        items.push({
+          badge: 'soon',
+          label: 'Coming up',
+          title: 'Prostate cancer screening (PSA) &mdash; shared decision-making',
+          body: `You&rsquo;re approaching the age range when most guidelines recommend a <strong>shared decision-making conversation</strong> about PSA (prostate-specific antigen) screening. PSA testing has real benefits and real trade-offs; guidelines don&rsquo;t recommend routine testing without an informed discussion first.`,
+          asks: [
+            'What are the pros and cons of PSA screening for someone my age?',
+            'Does my family history or race/ethnicity change when I should start?',
+          ]
+        });
+      } else if (age >= 50 && age <= 70) {
+        items.push({
+          badge: 'decision',
+          label: 'Decision point',
+          title: 'Prostate cancer screening (PSA) &mdash; shared decision-making',
+          body: `Most guidelines recommend that people with prostates aged 50&ndash;70 <strong>talk with their clinician</strong> about PSA screening. The decision involves weighing detection benefits against the risk of overdiagnosis and overtreatment. This is a genuinely nuanced clinical conversation &mdash; not a skip.`,
+          asks: [
+            'Given my overall health and values, should I get a baseline PSA?',
+            'What does my risk look like based on my age, race, and family history?',
+            'If my PSA is elevated, what are the next steps?',
+          ]
+        });
+      } else if (age > 70) {
+        items.push({
+          badge: 'discuss',
+          label: 'Discuss with clinician',
+          title: 'Prostate cancer screening (PSA)',
+          body: `Most guidelines suggest that routine PSA screening offers diminishing benefit after age 70&ndash;75, and decisions at this stage are highly individual. If you&rsquo;ve not yet had a PSA discussion, it&rsquo;s still worth mentioning to your clinician.`,
+          asks: [
+            'At my age, would PSA screening change my management in a meaningful way?',
+          ]
+        });
+      }
+    }
+
+    // ── BREAST / CHEST TISSUE ───────────────────────────────────────────────
+    if (organs.includes('breasts')) {
+      const highRisk = risks.includes('breast-family') || risks.includes('brca');
+
+      if (highRisk && age >= 30) {
+        items.push({
+          badge: 'due',
+          label: 'High-risk: discuss now',
+          title: 'Breast cancer screening &mdash; high-risk pathway',
+          body: `Given your family history or BRCA status, you may qualify for <strong>earlier or more intensive screening</strong> (annual mammography starting at 30, or MRI in addition to mammography). This is an important conversation to have with your clinician soon if you haven&rsquo;t already.`,
+          asks: [
+            'Do I qualify for genetic counseling or BRCA testing?',
+            'Should I be on an annual MRI + mammogram protocol given my risk?',
+            'What is my lifetime breast cancer risk estimate?',
+          ]
+        });
+      } else if (age >= 40 && age < 50) {
+        items.push({
+          badge: 'soon',
+          label: 'Coming up / discuss',
+          title: 'Breast cancer screening (mammography)',
+          body: `Guidelines vary for the 40&ndash;49 age range. The USPSTF (2024) now recommends starting mammography at <strong>40</strong> for average-risk women; the ACS recommends discussing it at 40 and beginning no later than 45. The right starting point depends on your personal risk and preferences.`,
+          asks: [
+            'Should I start mammography now, or wait until 45 or 50?',
+            'What does my breast density or family history mean for my approach?',
+          ]
+        });
+      } else if (age >= 50 && age <= 74) {
+        items.push({
+          badge: 'due',
+          label: 'Active screening age',
+          title: 'Breast cancer screening (mammography)',
+          body: `Most guidelines agree on <strong>biennial (every 2 years) mammography</strong> for average-risk people with breasts aged 50&ndash;74, with some guidelines recommending annual screening. Your clinician can help determine the right frequency based on breast density and personal risk factors.`,
+          asks: [
+            'Am I due for a mammogram?',
+            'Should I be screened annually or every 2 years?',
+            'Does my breast density affect my screening plan?',
+          ]
+        });
+      } else if (age > 74) {
+        items.push({
+          badge: 'discuss',
+          label: 'Discuss with clinician',
+          title: 'Breast cancer screening (mammography)',
+          body: `Decisions about continuing mammography after age 74&ndash;75 are individualized, based on prior results, overall health, and life expectancy. Have this conversation with your clinician.`,
+          asks: [
+            'Based on my health and prior results, should I continue mammograms?',
+          ]
+        });
+      }
+    }
+
+    // ── RENDER ──────────────────────────────────────────────────────────────
+    const resultsEl   = document.getElementById('results');
+    const summaryEl   = document.getElementById('results-summary');
+    const listEl      = document.getElementById('screening-list');
+    const optInEl     = document.getElementById('opt-in');
+
+    listEl.innerHTML  = '';
+    resultsEl.classList.add('visible');
+
+    if (items.length === 0) {
+      summaryEl.textContent = '';
+      listEl.innerHTML = `<li><p class="no-results-msg">Based on your answers, we don&rsquo;t have specific screening topics to surface right now &mdash; either your age is outside the typical screening windows, or the anatomy selections didn&rsquo;t match active guidelines. If something feels off, bring it up with your clinician anyway.</p></li>`;
+    } else {
+      summaryEl.textContent = `Based on your birth year (${yob}, approx. age ${age}) and the anatomy you selected, here are ${items.length} topic${items.length > 1 ? 's' : ''} to consider discussing with your clinician.`;
+      items.forEach(item => {
+        const li = document.createElement('li');
+        li.className = 'screening-item' + (item.badge === 'due' ? ' urgent' : '');
+        li.innerHTML = `
+          <div class="screening-header">
+            <span class="screening-badge badge-${item.badge}">${item.label}</span>
+            <span class="screening-title">${item.title}</span>
+          </div>
+          <div class="screening-body"><p>${item.body}</p>
+            ${item.asks.length ? `<p style="margin-top:0.7rem;font-size:0.82rem;color:var(--ink-light);font-weight:500">Questions to ask your clinician:</p>
+            <ul class="ask-list">${item.asks.map(a => `<li>${a}</li>`).join('')}</ul>` : ''}
+          </div>`;
+        listEl.appendChild(li);
+      });
+    }
+
+    // Stash computed data so the opt-in form can send it
+    window._roadmapData = { yob, sexAtBirth: sex, organs, riskFlags: risks };
+
+    // Show opt-in
+    optInEl.classList.add('visible');
+
+    // Scroll to results
+    resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // ── PROFILE OPT-IN SUBMIT ────────────────────────────────────────────────
+  async function handleOptIn(e) {
+    e.preventDefault();
+    const form = e.target;
+    const btn  = form.querySelector('button[type="submit"]');
+    const rd   = window._roadmapData || {};
+
+    const payload = {
+      email:               form.email.value.trim(),
+      phone:               form.phone.value.trim() || null,
+      yearOfBirth:         rd.yob,
+      sexAtBirth:          rd.sexAtBirth,
+      organs:              rd.organs || [],
+      riskFlags:           rd.riskFlags || [],
+      emailConsent:        form.emailConsent.checked,
+      smsConsent:          form.smsConsent.checked,
+      remarketingConsent:  form.remarketingConsent.checked,
+      sourcePath:          '/prevention-roadmap',
+      userAgent:           navigator.userAgent,
+    };
+
+    btn.textContent = 'Saving\u2026';
+    btn.disabled = true;
+
+    try {
+      const res = await fetch(PREVENTION_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      form.style.display = 'none';
+      document.getElementById('optin-success').classList.add('visible');
+    } catch (err) {
+      console.error('Opt-in error:', err);
+      btn.textContent = 'Sorry, something went wrong. Try again.';
+      btn.style.background = '#c9412a';
+      btn.disabled = false;
+    }
+  }
+</script>
+
+</body>
+</html>
