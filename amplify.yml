@@ -12,10 +12,7 @@ frontend:
   artifacts:
     baseDirectory: /
     files:
-      - index.html
-      - thanks.html
-      - privacy.html
-      - disclaimer.html
+      - '**/*.html'
       - css/**/*
       - js/**/*
   cache:
