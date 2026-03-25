@@ -268,6 +268,28 @@
   .conn-how-title { font-size:0.72rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-light);margin-bottom:0.6rem; }
   .conn-steps { padding-left:1.2rem;font-size:0.82rem;color:var(--ink-mid);line-height:1.7; }
   .conn-steps code { background:var(--paper-warm);padding:0.1rem 0.35rem;border-radius:3px;font-size:0.8em; }
+
+  /* ── Site Analytics (GA4) ── */
+  .ga4-section { margin-top:1.5rem; background:var(--paper-card); border:1px solid var(--border); border-radius:10px; overflow:hidden; }
+  .ga4-section-header { display:flex; align-items:center; justify-content:space-between; padding:0.85rem 1rem; border-bottom:1px solid var(--border); font-weight:600; font-size:0.92rem; }
+  .ga4-inner { padding:1rem; }
+  .ga4-totals { display:grid; grid-template-columns:repeat(3,1fr); gap:0.7rem; margin-bottom:1.1rem; }
+  .ga4-stat { background:var(--paper); border:1px solid var(--border); border-radius:8px; padding:0.75rem 1rem; text-align:center; }
+  .ga4-stat-val { font-size:1.55rem; font-weight:700; color:var(--accent); }
+  .ga4-stat-lbl { font-size:0.73rem; color:var(--ink-faint); margin-top:0.2rem; }
+  .ga4-tables { display:grid; grid-template-columns:1fr 1fr; gap:0.9rem; }
+  @media(max-width:600px) { .ga4-tables { grid-template-columns:1fr; } .ga4-totals { grid-template-columns:repeat(2,1fr); } }
+  .ga4-table-card { background:var(--paper); border:1px solid var(--border); border-radius:8px; overflow:hidden; }
+  .ga4-table-title { font-size:0.78rem; font-weight:600; padding:0.5rem 0.75rem; border-bottom:1px solid var(--border); background:var(--paper-warm); color:var(--ink-mid); }
+  .ga4-table td, .ga4-table th { padding:0.35rem 0.75rem; font-size:0.78rem; border-bottom:1px solid var(--border); }
+  .ga4-table th { color:var(--ink-faint); font-weight:500; background:var(--paper-warm); }
+  .ga4-table tr:last-child td { border-bottom:none; }
+  /* keyword pill */
+  .kw-pill { display:inline-block; background:var(--paper); border:1px solid var(--border); border-radius:12px; padding:0.15rem 0.55rem; font-size:0.75rem; color:var(--ink-mid); margin:0.1rem; }
+  /* campaign details expand row */
+  .camp-detail-row { display:none; background:var(--paper); }
+  .camp-detail-row.open { display:table-row; }
+  .camp-detail-cell { padding:0.65rem 0.9rem; font-size:0.8rem; color:var(--ink-mid); }
 </style>
 </head>
 <body>
@@ -356,6 +378,17 @@
           </div>
         </div>
       </div>
+
+      <!-- Site Analytics -->
+      <div class="ga4-section">
+        <div class="ga4-section-header">
+          <span>📊 Site Analytics — Last 30 Days</span>
+          <button type="button" class="btn-sm" id="btn-load-ga4" style="padding:0.35rem 0.9rem;font-size:0.8rem">↻ Load</button>
+        </div>
+        <div id="ga4-wrap" class="ga4-inner">
+          <p style="font-size:0.83rem;color:var(--ink-faint);margin:0">Click Load to pull live data from Google Analytics.</p>
+        </div>
+      </div>
     </div>
 
     <!-- ══ CLIENTS PANEL ══ -->
@@ -391,7 +424,7 @@
       <!-- ── META SUB-PANEL ── -->
       <div id="sub-meta">
     <!-- ══ META PANEL ══ -->
-    <div id="panel-meta" style="display:none">
+    <div id="panel-meta">
       <div class="client-sel-bar">
         <div class="client-sel-dot" id="meta-sel-dot"></div>
         <span class="client-sel-label">Client:</span>
@@ -569,6 +602,14 @@
               <div>Campaign ID: <code id="go-cid" style="background:var(--paper);padding:0.1rem 0.4rem;border-radius:3px;font-size:0.85em"></code></div>
               <div>Ad Group ID: <code id="go-agid" style="background:var(--paper);padding:0.1rem 0.4rem;border-radius:3px;font-size:0.85em"></code></div>
               <div>Account: <span id="go-account"></span></div>
+            </div>
+            <div id="go-keywords-wrap" style="display:none;margin-top:0.9rem">
+              <div style="font-size:0.8rem;font-weight:600;color:var(--ink-mid);margin-bottom:0.4rem">Keywords added:</div>
+              <div id="go-keywords" style="display:flex;flex-wrap:wrap;gap:0.35rem"></div>
+            </div>
+            <div id="go-headlines-wrap" style="display:none;margin-top:0.75rem">
+              <div style="font-size:0.8rem;font-weight:600;color:var(--ink-mid);margin-bottom:0.4rem">RSA headlines added:</div>
+              <ol id="go-headlines" style="margin:0;padding-left:1.2rem;font-size:0.83rem;color:var(--ink-mid);line-height:1.7"></ol>
             </div>
             <a id="go-review-link" href="#" target="_blank" rel="noopener" class="open-google-btn" style="display:inline-flex;margin-top:1rem">Review in Google Ads ↗</a>
           </div>
@@ -1403,6 +1444,20 @@ document.getElementById('btn-gen-google').addEventListener('click', async () => 
     document.getElementById('go-cid').textContent     = data.campaignId;
     document.getElementById('go-agid').textContent    = data.adGroupId;
     document.getElementById('go-account').textContent = data.customer_id;
+    // Keywords
+    const kwWrap = document.getElementById('go-keywords-wrap');
+    const kwDiv  = document.getElementById('go-keywords');
+    if (data.keywords?.length) {
+      kwDiv.innerHTML = data.keywords.map(k => `<span class="kw-pill">${esc(k)}</span>`).join('');
+      kwWrap.style.display = '';
+    } else { kwWrap.style.display = 'none'; }
+    // Headlines
+    const hlWrap = document.getElementById('go-headlines-wrap');
+    const hlList = document.getElementById('go-headlines');
+    if (data.headlines?.length) {
+      hlList.innerHTML = data.headlines.slice(0,5).map(h => `<li>${esc(h)}</li>`).join('');
+      hlWrap.style.display = '';
+    } else { hlWrap.style.display = 'none'; }
     const link = document.getElementById('go-review-link');
     link.href = data.review_url;
     document.getElementById('google-output').classList.add('visible');
@@ -1441,14 +1496,17 @@ async function loadCampaigns() {
       return;
     }
     wrap.innerHTML = `
-      <table class="campaigns-table">
+      <table class="campaigns-table" id="camp-table">
         <thead><tr>
           <th>Campaign</th><th>Status</th><th>Daily Budget</th><th>Actions</th>
         </tr></thead>
         <tbody>
           ${campaigns.map(c => `
             <tr data-cid="${esc(c.id)}">
-              <td>${esc(c.name)}</td>
+              <td>
+                <button class="camp-btn" data-action="DETAILS" title="View ad groups &amp; keywords" style="margin-right:0.4rem;font-size:0.72rem;padding:0.15rem 0.45rem">▸</button>
+                ${esc(c.name)}
+              </td>
               <td><span class="camp-status ${(c.status||'').toLowerCase()}">${esc(c.status||'—')}</span></td>
               <td>${c.dailyBudget ? `$${esc(c.dailyBudget)}` : '—'}</td>
               <td><div class="camp-actions">
@@ -1457,6 +1515,11 @@ async function loadCampaigns() {
                   : `<button class="camp-btn" data-action="PAUSED">⏸ Pause</button>`}
                 <button class="camp-btn danger" data-action="DELETE">✕ Delete</button>
               </div></td>
+            </tr>
+            <tr class="camp-detail-row" id="detail-${esc(c.id)}">
+              <td class="camp-detail-cell" colspan="4">
+                <em style="color:var(--ink-faint);font-size:0.78rem">Click ▸ to load ad groups, keywords &amp; headlines…</em>
+              </td>
             </tr>`).join('')}
         </tbody>
       </table>`;
@@ -1468,14 +1531,46 @@ async function loadCampaigns() {
 document.getElementById('btn-load-campaigns').addEventListener('click', loadCampaigns);
 
 document.getElementById('campaigns-list-wrap').addEventListener('click', async e => {
-  const btn = e.target.closest('.camp-btn'); if (!btn) return;
-  const row       = btn.closest('tr');
+  const campBtn = e.target.closest('.camp-btn'); if (!campBtn) return;
+  const row       = campBtn.closest('tr');
   const campaignId = row?.dataset.cid;
-  const action    = btn.dataset.action;
+  const action    = campBtn.dataset.action;
   const clientId  = document.getElementById('google-client-sel').value || undefined;
   if (!campaignId) return;
+
+  if (action === 'DETAILS') {
+    const detailRow = document.getElementById(`detail-${campaignId}`);
+    if (!detailRow) return;
+    if (detailRow.classList.contains('open')) { detailRow.classList.remove('open'); campBtn.textContent = '▸'; return; }
+    detailRow.classList.add('open');
+    campBtn.textContent = '▾';
+    const cell = detailRow.querySelector('.camp-detail-cell');
+    cell.innerHTML = '<em style="color:var(--ink-faint);font-size:0.78rem">Loading…</em>';
+    try {
+      const qs   = `campaignId=${encodeURIComponent(campaignId)}${clientId ? `&clientId=${encodeURIComponent(clientId)}` : ''}`;
+      const res  = await fetch(`${API}/list-campaign-ads?${qs}`, { headers: authHeaders() });
+      const d    = await res.json();
+      if (!res.ok) throw new Error(d.error || 'Failed');
+      const kwHtml = (d.keywords || []).length
+        ? d.keywords.map(k => `<span class="kw-pill">${esc(k.text)} <span style="font-size:0.68rem;opacity:0.6">${esc((k.matchType||'').replace('_',' ').toLowerCase())}</span></span>`).join('')
+        : '<em style="font-size:0.78rem;color:var(--ink-faint)">No keywords found</em>';
+      const adHtml = (d.ads || []).map(a =>
+        `<div style="margin-top:0.5rem"><strong style="font-size:0.78rem">${esc(a.adGroup)}</strong><br>`
+        + a.headlines.slice(0,3).map(h => `<span style="font-size:0.78rem;color:var(--ink-mid)">"${esc(h)}"</span>`).join(' | ') + '</div>'
+      ).join('') || '<em style="font-size:0.78rem;color:var(--ink-faint)">No ads found</em>';
+      cell.innerHTML = `
+        <div style="font-size:0.78rem;font-weight:600;color:var(--ink-mid);margin-bottom:0.4rem">Keywords:</div>
+        <div style="margin-bottom:0.75rem">${kwHtml}</div>
+        <div style="font-size:0.78rem;font-weight:600;color:var(--ink-mid);margin-bottom:0.3rem">Ad Headlines:</div>
+        ${adHtml}`;
+    } catch (ex) {
+      cell.innerHTML = `<em style="color:var(--red-soft);font-size:0.78rem">Error: ${esc(ex.message)}</em>`;
+    }
+    return;
+  }
+
   if (action === 'DELETE' && !confirm('Permanently delete this campaign? This cannot be undone.')) return;
-  btn.disabled = true;
+  campBtn.disabled = true;
   try {
     const endpoint = action === 'DELETE' ? '/delete-google-campaign' : '/toggle-google-campaign';
     const payload  = action === 'DELETE' ? { campaignId, clientId } : { campaignId, action, clientId };
@@ -1485,8 +1580,53 @@ document.getElementById('campaigns-list-wrap').addEventListener('click', async e
     loadCampaigns(); // refresh list
   } catch (ex) {
     alert(`Error: ${ex.message}`);
-    btn.disabled = false;
+    campBtn.disabled = false;
   }
+});
+
+/* ── GA4 Site Analytics ── */
+document.getElementById('btn-load-ga4').addEventListener('click', async () => {
+  const wrap = document.getElementById('ga4-wrap');
+  const btn  = document.getElementById('btn-load-ga4');
+  btn.disabled = true;
+  wrap.innerHTML = '<p style="font-size:0.83rem;color:var(--ink-faint);margin:0">Loading analytics…</p>';
+  try {
+    const res  = await fetch(`${API}/ga4-report`, { headers: authHeaders() });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed');
+    const t = data.totals || {};
+    const trafficRows = (data.traffic || []).slice(0,8).map(r =>
+      `<tr><td>${esc(r.dims[0] || '—')}</td><td>${Number(r.metrics[0]).toLocaleString()}</td><td>${Number(r.metrics[1]).toLocaleString()}</td></tr>`).join('');
+    const cityRows = (data.cities || []).slice(0,8).map(r =>
+      `<tr><td>${esc(r.dims[0])}, ${esc(r.dims[1])}</td><td>${Number(r.metrics[0]).toLocaleString()}</td></tr>`).join('');
+    const ageRows = (data.ages || []).map(r =>
+      `<tr><td>${esc(r.dims[0] || 'Unknown')}</td><td>${Number(r.metrics[0]).toLocaleString()}</td></tr>`).join('');
+    wrap.innerHTML = `
+      <div class="ga4-totals">
+        <div class="ga4-stat"><div class="ga4-stat-val">${Number(t.sessions||0).toLocaleString()}</div><div class="ga4-stat-lbl">Sessions</div></div>
+        <div class="ga4-stat"><div class="ga4-stat-val">${Number(t.users||0).toLocaleString()}</div><div class="ga4-stat-lbl">Users</div></div>
+        <div class="ga4-stat"><div class="ga4-stat-val">${Number(t.newUsers||0).toLocaleString()}</div><div class="ga4-stat-lbl">New Users</div></div>
+      </div>
+      <div class="ga4-tables">
+        <div class="ga4-table-card">
+          <div class="ga4-table-title">Traffic Sources</div>
+          <table class="ga4-table" style="width:100%"><thead><tr><th>Source / Medium</th><th>Sessions</th><th>Users</th></tr></thead>
+          <tbody>${trafficRows || '<tr><td colspan="3" style="color:var(--ink-faint)">No data</td></tr>'}</tbody></table>
+        </div>
+        <div class="ga4-table-card">
+          <div class="ga4-table-title">Top Cities</div>
+          <table class="ga4-table" style="width:100%"><thead><tr><th>City</th><th>Sessions</th></tr></thead>
+          <tbody>${cityRows || '<tr><td colspan="2" style="color:var(--ink-faint)">No data</td></tr>'}</tbody></table>
+        </div>
+        <div class="ga4-table-card">
+          <div class="ga4-table-title">Age Brackets</div>
+          <table class="ga4-table" style="width:100%"><thead><tr><th>Age</th><th>Sessions</th></tr></thead>
+          <tbody>${ageRows || '<tr><td colspan="2" style="color:var(--ink-faint)">No data</td></tr>'}</tbody></table>
+        </div>
+      </div>`;
+  } catch (ex) {
+    wrap.innerHTML = `<p style="font-size:0.83rem;color:var(--red-soft);margin:0">Error: ${esc(ex.message)}</p>`;
+  } finally { btn.disabled = false; }
 });
 
 /* ── Copy buttons ── */
