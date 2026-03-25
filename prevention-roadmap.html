@@ -662,6 +662,10 @@
             <input type="checkbox" name="risk" value="smoker-ldct">
             Current smoker OR quit within the last 15 years, with &ge;20 pack-year history (e.g., 1 pack/day &times; 20 years, or 2 packs/day &times; 10 years)
           </label>
+          <label class="check-row">
+            <input type="checkbox" name="risk" value="aaa-family">
+            First-degree relative (parent, sibling, child) diagnosed with abdominal aortic aneurysm (AAA)
+          </label>
         </div>
       </div>
 
@@ -841,14 +845,16 @@
       } else if (age > 75) {
         items.push({
           badge: 'discuss',
-          label: 'Discuss with clinician',
-          title: 'Colorectal cancer screening',
-          body: 'Most guidelines suggest that decisions about continuing colorectal screening after age 75 should be made individually based on your prior screening history, overall health, and life expectancy. This is worth a specific conversation with your clinician.',
+          label: 'Individualized decision (Grade C)',
+          title: 'Colorectal cancer screening &mdash; ages 76&ndash;85',
+          body: `The USPSTF (2021, Grade C) recommends that decisions about continuing colorectal cancer screening between ages 76&ndash;85 be <strong>individualized</strong> based on prior screening history, overall health, and life expectancy. If you&rsquo;ve never been screened, screening is more likely to provide benefit. If you&rsquo;re up to date and in average health, the benefit is likely small.`,
           asks: [
-            'Based on my prior screenings and health, should I continue screening?',
+            'Based on my prior screenings and current health, does continued screening make sense for me?',
+            'What would a positive result change about my care at this stage?',
           ]
         });
-      }
+      } else if (age > 85) {
+        // No card — USPSTF recommends against screening above 85
     }
 
     // ── CERVICAL ────────────────────────────────────────────────────────────
@@ -1068,29 +1074,46 @@
     }
 
     // ── ABDOMINAL AORTIC ANEURYSM ────────────────────────────────────────────
-    // Source: USPSTF 2019 Grade B — one-time abdominal ultrasound, men 65–75 who ever smoked
-    if (risks.includes('ever-smoker') && organs.includes('prostate')) {
-      if (age >= 63 && age < 65) {
+    // Source: USPSTF 2019 Grade B  — one-time US, men 65–75 who EVER smoked
+    //         USPSTF 2019 Grade C  — selective, men 65–75 who NEVER smoked (consider if FDR AAA)
+    //         ACC/AHA 2022 Class I — any person ≥65 with first-degree relative with AAA
+    const aaaMale   = organs.includes('prostate');
+    const aaaSmoked = risks.includes('ever-smoker');
+    const aaaFamily = risks.includes('aaa-family');
+
+    if (aaaMale || aaaFamily) {
+      if (aaaSmoked && aaaMale) {
+        // Grade B — strongest recommendation
+        if (age >= 63 && age < 65) {
+          items.push({
+            badge: 'soon', label: 'Coming up at 65',
+            title: 'Abdominal aortic aneurysm (AAA) screening',
+            body: `The USPSTF (2019, <strong>Grade B</strong>) recommends a <strong>one-time abdominal ultrasound</strong> for AAA for men aged 65&ndash;75 who have ever smoked. You&rsquo;re approaching this age &mdash; flag it with your clinician now so it&rsquo;s on the calendar.`,
+            asks: ['Am I due for a one-time AAA ultrasound at age 65?', 'What would be done if an aneurysm is found?']
+          });
+        } else if (age >= 65 && age <= 75) {
+          items.push({
+            badge: 'due', label: 'One-time screening due',
+            title: 'Abdominal aortic aneurysm (AAA) screening',
+            body: `The USPSTF (2019, <strong>Grade B</strong>) recommends a <strong>one-time abdominal ultrasound</strong> for AAA for men aged 65&ndash;75 who have ever smoked. AAA prevalence in this group is 4&ndash;8%. If normal, no repeat screening is needed. The ultrasound is painless and typically covered by insurance.`,
+            asks: ['Have I had a one-time AAA ultrasound screening? If not, can we schedule one?', 'If an aneurysm is found, what are monitoring and treatment options?']
+          });
+        }
+      } else if (aaaMale && !aaaSmoked && aaaFamily && age >= 65 && age <= 75) {
+        // ACC/AHA 2022 Class I — FDR with AAA regardless of smoking; also USPSTF Grade C for never-smoker men
         items.push({
-          badge: 'soon',
-          label: 'Coming up at 65',
-          title: 'Abdominal aortic aneurysm (AAA) screening',
-          body: `The USPSTF (2019, Grade B) recommends a <strong>one-time abdominal ultrasound to screen for AAA</strong> for men aged 65&ndash;75 who have ever smoked. You&rsquo;re approaching this age &mdash; flag it with your primary care clinician now so it&rsquo;s scheduled at your next visit after you turn 65.`,
-          asks: [
-            'Am I due for a one-time AAA ultrasound screening?',
-            'What would be done if an aneurysm is found?',
-          ]
+          badge: 'due', label: 'Screening recommended',
+          title: 'Abdominal aortic aneurysm (AAA) screening &mdash; family history',
+          body: `With a first-degree relative with AAA, the ACC/AHA (2022, Class I) recommends an <strong>abdominal ultrasound to screen for AAA</strong>. The USPSTF also supports selective screening (Grade C) for men aged 65&ndash;75 who have never smoked when there is a family history.`,
+          asks: ['Given my family history, should I have an AAA ultrasound?', 'What aortic diameter would trigger monitoring or referral?']
         });
-      } else if (age >= 65 && age <= 75) {
+      } else if (aaaFamily && age >= 65 && age <= 75) {
+        // ACC/AHA Class I for any sex with FDR
         items.push({
-          badge: 'due',
-          label: 'One-time screening due',
-          title: 'Abdominal aortic aneurysm (AAA) screening',
-          body: `The USPSTF (2019, Grade B) recommends a <strong>one-time abdominal ultrasound to screen for AAA</strong> for men aged 65&ndash;75 who have ever smoked. AAA prevalence in this group is 4&ndash;8%. The ultrasound is painless, takes about 10 minutes, and is typically covered by insurance.`,
-          asks: [
-            'Have I had an AAA ultrasound screening? If not, can we schedule one?',
-            'If my aorta is enlarged but not yet requiring repair, how often should I be monitored?',
-          ]
+          badge: 'discuss', label: 'Discuss with clinician',
+          title: 'Abdominal aortic aneurysm (AAA) screening &mdash; family history',
+          body: `The ACC/AHA (2022, Class I) recommends abdominal ultrasound screening for AAA in people aged 65 and older with a <strong>first-degree relative with AAA</strong>. Even without a personal smoking history, family history meaningfully increases risk.`,
+          asks: ['Given my family history of AAA, should I be screened with an abdominal ultrasound?']
         });
       }
     }
@@ -1122,6 +1145,97 @@
           ]
         });
       }
+    }
+
+    // ── UNIVERSAL SCREENINGS ──────────────────────────────────────────────────
+    // These apply to all adults regardless of organ selection, based on age only.
+
+    // HEPATITIS C (HCV) — USPSTF 2020 Grade B — one-time screening ages 18–79
+    if (age >= 18 && age <= 79) {
+      items.push({
+        badge: 'due',
+        label: 'One-time screening',
+        title: 'Hepatitis C virus (HCV) screening',
+        body: `The USPSTF (2020, <strong>Grade B</strong>) recommends <strong>one-time HCV screening for all adults aged 18&ndash;79</strong>. Most people with HCV have no symptoms; untreated, it can lead to cirrhosis and liver cancer over decades. A simple blood test (anti-HCV antibody) is the first step &mdash; and if positive, direct-acting antivirals now cure &gt;95% of cases. If you&rsquo;ve already been tested and were negative (with no subsequent exposures), no repeat test is typically needed.`,
+        asks: [
+          'Have I ever been tested for hepatitis C? If not, can we order a test today?',
+          'If my anti-HCV test is positive, what are the next steps?',
+        ]
+      });
+    }
+
+    // HIV — USPSTF 2019 Grade A — at least once, ages 15–65
+    if (age >= 15 && age <= 65) {
+      items.push({
+        badge: 'due',
+        label: 'At least once',
+        title: 'HIV screening',
+        body: `The USPSTF (2019, <strong>Grade A</strong>) recommends HIV screening for all adults aged 15&ndash;65 <strong>at least once</strong>. For people at higher risk (multiple partners, inconsistent condom use, injection drug use, or a partner with HIV), more frequent testing is recommended. HIV is now a manageable chronic condition when caught early, and treatment prevents transmission.`,
+        asks: [
+          'Have I ever been tested for HIV? If not, can we include it in my next labs?',
+          'Based on my risk factors, how often should I be tested?',
+          'If I am at ongoing risk, should I discuss PrEP (pre-exposure prophylaxis)?',
+        ]
+      });
+    }
+
+    // HYPERTENSION — USPSTF 2021 Grade A — all adults ≥18; annually ≥40 or high-risk
+    if (age >= 18) {
+      items.push({
+        badge: age >= 40 ? 'due' : 'due',
+        label: age >= 40 ? 'Annual check' : 'Every 3–5 years',
+        title: 'Blood pressure screening (hypertension)',
+        body: `The USPSTF (2021, <strong>Grade A</strong>) recommends blood pressure screening for <strong>all adults aged 18 and older</strong>. For adults aged 40 and older, or those at increased risk (Black race, high-normal readings, overweight/obese), <strong>annual screening</strong> is recommended. For lower-risk adults aged 18&ndash;39, every 3&ndash;5 years is sufficient. Blood pressure screening is typically done at any routine clinical visit. If elevated readings are found outside a clinical setting, confirmation with ambulatory or home monitoring is recommended before starting treatment.`,
+        asks: [
+          'When was my last blood pressure check, and what were the numbers?',
+          age >= 40 ? 'Is my blood pressure in a healthy range? Should I monitor at home between visits?' : 'Based on my risk factors, how often should I have my blood pressure checked?',
+        ]
+      });
+    }
+
+    // LIPIDS — ACC/AHA 2026 — start age 19, every 5 yr; more frequent if risk factors
+    if (age >= 19) {
+      items.push({
+        badge: 'due',
+        label: age < 40 ? 'Every 4–6 years' : 'Every 1–5 years',
+        title: 'Cholesterol / lipid panel',
+        body: `The ACC/AHA (2026 guidelines) recommend a <strong>fasting or non-fasting lipid panel starting at age 19</strong>, repeated at least every 4&ndash;6 years for average-risk adults. More frequent testing (every 1&ndash;2 years) is indicated if you have risk factors like diabetes, hypertension, obesity, smoking, or a family history of early heart disease. Lipid levels are a key input into cardiovascular risk calculators that guide prevention decisions.`,
+        asks: [
+          'When was my last lipid panel, and what were my LDL, HDL, and triglycerides?',
+          'Based on my lipid levels and other risk factors, what is my 10-year cardiovascular risk?',
+          'Do I need a statin or other lipid-lowering therapy?',
+        ]
+      });
+    }
+
+    // DIABETES / PREDIABETES — USPSTF 2021 Grade B — ages 35–70; ADA starts at 35
+    if (age >= 35 && age <= 70) {
+      items.push({
+        badge: 'due',
+        label: 'Every 3 years if normal',
+        title: 'Prediabetes and type 2 diabetes screening',
+        body: `The USPSTF (2021, <strong>Grade B</strong>) recommends screening for prediabetes and type 2 diabetes for adults aged 35&ndash;70 who have overweight or obesity (BMI &ge;25; &ge;23 for Asian Americans). The ADA recommends testing all adults starting at age 35 regardless of weight. Screening options include fasting glucose, HbA1c, or oral glucose tolerance test &mdash; ask your clinician which is best for your next labs.`,
+        asks: [
+          'Based on my weight and other risk factors, should I be screened for prediabetes or diabetes?',
+          'What is my HbA1c or fasting glucose, and what does it mean?',
+          'If I have prediabetes, what lifestyle changes can reverse or delay diabetes?',
+        ]
+      });
+    }
+
+    // FALL RISK — CDC STEADI / AGS / USPSTF Grade B — adults ≥65, annually
+    if (age >= 65) {
+      items.push({
+        badge: 'due',
+        label: 'Annual assessment',
+        title: 'Fall risk screening',
+        body: `The USPSTF (Grade B) and CDC STEADI protocol recommend <strong>annual fall risk screening for adults aged 65 and older</strong>. Falls are the leading cause of injury in older adults. Screening involves asking about recent falls, gait or balance difficulties, and fear of falling. If concern is identified, a multifactorial assessment follows &mdash; covering medications, vision, orthostatic blood pressure, home safety, and vitamin D status.`,
+        asks: [
+          'In the past year, have I fallen or felt unsteady when walking?',
+          'Should I have a formal balance or gait assessment?',
+          'Are any of my current medications increasing my fall risk?',
+        ]
+      });
     }
 
     // ── RENDER ──────────────────────────────────────────────────────────────

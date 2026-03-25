@@ -209,6 +209,66 @@ function buildReminders(age, organs, riskFlags) {
       smsBody: `Prevention reminder: Men 65–75 who ever smoked should have a one-time abdominal ultrasound to screen for aortic aneurysm (USPSTF Grade B). Ask your clinician. Reply STOP to opt out. Not medical advice. — evidencebasedhealth.me`,
     });
   }
+
+  // HEPATITIS C (HCV)
+  // Source: USPSTF 2020 Grade B — one-time screening, ages 18–79
+  // Uses a very long interval (9999 months) so the reminder fires at most once ever.
+  if (age >= 18 && age <= 79) {
+    reminders.push({
+      topic:            'hcv',
+      lastReminderAttr: 'lastHCVReminder',
+      intervalOverride: 9999,
+      emailSubject:     'Reminder: hepatitis C (HCV) screening — Evidence-Based Health',
+      emailBody: `<p>The USPSTF (2020, <strong>Grade B</strong>) recommends <strong>one-time hepatitis C screening</strong> for all adults aged 18–79. Most people with HCV have no symptoms for years or decades, but untreated infection can cause cirrhosis and liver cancer. Modern direct-acting antivirals cure more than 95% of cases.</p>
+        <p>If you have already had a negative HCV test and have had no new exposures, no further screening is needed.</p>
+        <p><strong>Questions to ask your clinician:</strong></p>
+        <ul style="padding-left:1.2rem;color:#2d3d35;font-size:0.93rem;line-height:1.75">
+          <li>Have I ever been tested for hepatitis C?</li>
+          <li>If my anti-HCV antibody test is positive, what is the next step?</li>
+        </ul>`,
+      smsBody: `Prevention reminder: The USPSTF recommends one-time hepatitis C (HCV) screening for all adults 18–79 (Grade B). Ask your clinician if you have been tested. Reply STOP to opt out. Not medical advice. — evidencebasedhealth.me`,
+    });
+  }
+
+  // HIV
+  // Source: USPSTF 2019 Grade A — at least once, ages 15–65; more often if higher risk
+  // Uses a very long interval (9999 months) so the reminder fires at most once ever.
+  if (age >= 15 && age <= 65) {
+    reminders.push({
+      topic:            'hiv',
+      lastReminderAttr: 'lastHIVReminder',
+      intervalOverride: 9999,
+      emailSubject:     'Reminder: HIV screening — Evidence-Based Health',
+      emailBody: `<p>The USPSTF (2019, <strong>Grade A</strong>) recommends HIV screening for <strong>all adults aged 15–65 at least once</strong>. HIV is now a manageable chronic condition when detected early, and treatment virtually eliminates transmission risk. People with ongoing risk factors should test more frequently.</p>
+        <p><strong>Questions to ask your clinician:</strong></p>
+        <ul style="padding-left:1.2rem;color:#2d3d35;font-size:0.93rem;line-height:1.75">
+          <li>Have I ever been tested for HIV?</li>
+          <li>Based on my risk factors, how often should I be tested?</li>
+          <li>Should I discuss PrEP (pre-exposure prophylaxis)?</li>
+        </ul>`,
+      smsBody: `Prevention reminder: The USPSTF (Grade A) recommends HIV screening at least once for all adults 15–65. Ask your clinician if you have been tested. Reply STOP to opt out. Not medical advice. — evidencebasedhealth.me`,
+    });
+  }
+
+  // DIABETES / PREDIABETES
+  // Source: USPSTF 2021 Grade B — ages 35–70; ADA recommends all adults ≥35
+  if (age >= 35 && age <= 70) {
+    reminders.push({
+      topic:            'diabetes',
+      lastReminderAttr: 'lastDiabetesReminder',
+      emailSubject:     'Reminder: prediabetes and diabetes screening — Evidence-Based Health',
+      emailBody: `<p>The USPSTF (2021, <strong>Grade B</strong>) recommends screening for prediabetes and type 2 diabetes for adults aged 35–70 who are overweight or obese (BMI ≥25). The ADA recommends testing all adults starting at age 35. Catching prediabetes early allows lifestyle changes that can delay or prevent progression to diabetes.</p>
+        <p>Screening options include HbA1c, fasting plasma glucose, or oral glucose tolerance test — most can be added to routine lab work.</p>
+        <p><strong>Questions to ask your clinician:</strong></p>
+        <ul style="padding-left:1.2rem;color:#2d3d35;font-size:0.93rem;line-height:1.75">
+          <li>What is my current HbA1c or fasting glucose?</li>
+          <li>Am I at risk for prediabetes or diabetes?</li>
+          <li>If I have prediabetes, what steps can I take now?</li>
+        </ul>`,
+      smsBody: `Prevention reminder: Screening for prediabetes and type 2 diabetes is recommended for adults 35–70 (USPSTF Grade B). Ask your clinician. Reply STOP to opt out. Not medical advice. — evidencebasedhealth.me`,
+    });
+  }
+
     if (age >= startAge && age <= 76) {
       reminders.push({
         topic:             'breast',
@@ -294,7 +354,8 @@ export async function handler() {
 
       for (const reminder of reminders) {
         const lastSentIso = item[reminder.lastReminderAttr]?.S;
-        if (monthsAgo(lastSentIso) < REMINDER_INTERVAL_MONTHS) continue;
+        const interval = reminder.intervalOverride ?? REMINDER_INTERVAL_MONTHS;
+        if (monthsAgo(lastSentIso) < interval) continue;
 
         // Send email
         if (emailCons) {
