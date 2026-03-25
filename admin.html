@@ -803,6 +803,13 @@
       <div class="form-row"><label for="d-t-appid">App ID <span class="hint">optional</span></label><input type="text" id="d-t-appid" placeholder="Optional" autocomplete="off"></div>
     </div>
 
+    <!-- Reporting -->
+    <div class="drawer-section">
+      <div class="drawer-section-title">Reporting</div>
+      <div class="form-row"><label for="d-looker">Looker Studio Report URL <span class="hint">optional</span></label><input type="url" id="d-looker" placeholder="https://lookerstudio.google.com/reporting/…" autocomplete="off"></div>
+      <div class="form-row"><label for="d-ga4id">GA4 Property ID <span class="hint">optional — numbers only</span></label><input type="text" id="d-ga4id" placeholder="e.g. 530012579" autocomplete="off"></div>
+    </div>
+
     <!-- Custom -->
     <div class="drawer-section">
       <div class="drawer-section-title">Custom / Other Accounts</div>
@@ -954,6 +961,7 @@ function renderClientGrid() {
       <div class="client-card-actions">
         <button class="client-action" onclick="openDrawer('${esc(c.clientId)}')">Edit</button>
         <button class="client-action primary" onclick="useClientForAds('${esc(c.clientId)}')">Create Ad</button>
+        ${c.lookerUrl ? `<a class="client-action" href="${esc(c.lookerUrl)}" target="_blank" rel="noopener" style="text-decoration:none;text-align:center">📊 Report</a>` : ''}
       </div>
     </div>`;
   }).join('');
@@ -1108,8 +1116,10 @@ function openDrawer(clientId = null) {
 
   // Reset / fill fields
   const p = client?.platforms || {};
-  document.getElementById('d-name').value       = client?.name  || '';
-  document.getElementById('d-notes').value      = client?.notes || '';
+  document.getElementById('d-name').value       = client?.name          || '';
+  document.getElementById('d-notes').value      = client?.notes         || '';
+  document.getElementById('d-looker').value     = client?.lookerUrl     || '';
+  document.getElementById('d-ga4id').value      = client?.ga4PropertyId || '';
   selectedColor = client?.color || '#1a5c3a';
   document.getElementById('d-color').value = selectedColor;
   buildColorSwatches();
@@ -1196,6 +1206,8 @@ document.getElementById('btn-save-client').addEventListener('click', async () =>
     const payload = {
       name, color: document.getElementById('d-color').value,
       notes: document.getElementById('d-notes').value.trim(),
+      lookerUrl:     document.getElementById('d-looker').value.trim() || undefined,
+      ga4PropertyId: document.getElementById('d-ga4id').value.trim()  || undefined,
       platforms: getDrawerPlatforms(),
       ...(editingClientId && { clientId: editingClientId }),
     };
