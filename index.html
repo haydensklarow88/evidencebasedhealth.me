@@ -1,18 +1,19 @@
-<!DOCTYPE html>
+﻿﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Weekly evidence-based insights on hormones, strength, and metabolic health — from an acute care surgery PA. Plain language, no hype, no agenda.">
-<meta property="og:title" content="Evidence-Based Health — Hormones, Strength &amp; Metabolic Health">
+<meta name="description" content="Weekly evidence-based insights on hormones, strength, and metabolic health â€” from an acute care surgery PA. Plain language, no hype, no agenda.">
+<meta property="og:title" content="Evidence-Based Health â€” Hormones, Strength &amp; Metabolic Health">
 <meta property="og:description" content="Weekly insights on TRT, peptides, GLP-1s, fitness, and metabolic health. Evidence-based. No agenda.">
 <meta property="og:url" content="https://evidencebasedhealth.me">
 <meta property="og:type" content="website">
-<title>Evidence-Based Health — Hormones, Strength &amp; Metabolic Health</title>
+<title>Evidence-Based Health â€” Hormones, Strength &amp; Metabolic Health</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
 <style>
+  /* stripped-down single-purpose signup page */
   :root {
     --ink: #0f1a14;
     --ink-mid: #2d3d35;
@@ -25,17 +26,13 @@
     --accent-mid: #2d7a52;
     --accent-light: #e8f2ec;
     --accent-rule: #c2d9cb;
-    --red-soft: #c9412a;
     --serif: 'Libre Baskerville', Georgia, serif;
     --sans: 'DM Sans', system-ui, sans-serif;
-    --max: 860px;
-    --max-wide: 1100px;
+    --max: 520px;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  html { font-size: 16px; scroll-behavior: smooth; }
-
+  html { font-size: 16px; }
   body {
     background: var(--paper);
     color: var(--ink);
@@ -43,17 +40,20 @@
     font-weight: 300;
     line-height: 1.7;
     -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
   }
 
-  /* ── NAV ── */
+  /* â”€â”€ NAV â”€â”€ */
   nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    background: rgba(247,245,240,0.92);
-    backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--paper-warm);
     padding: 0 2rem;
-    height: 60px;
-    display: flex; align-items: center; justify-content: space-between;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
   }
   .nav-logo {
     font-family: var(--serif);
@@ -63,162 +63,91 @@
     letter-spacing: 0.01em;
   }
   .nav-logo span { font-style: normal; font-weight: 700; }
-  .nav-cta {
-    font-family: var(--sans);
+  .nav-link {
     font-size: 0.8rem;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--accent);
+    font-weight: 400;
+    color: var(--ink-light);
     text-decoration: none;
-    border: 1px solid var(--accent);
-    padding: 0.45rem 1.1rem;
-    border-radius: 2px;
-    transition: background 0.2s, color 0.2s;
+    letter-spacing: 0.02em;
   }
-  .nav-cta:hover { background: var(--accent); color: #fff; }
+  .nav-link:hover { color: var(--accent); }
 
-  /* ── HERO ── */
-  .hero {
-    padding-top: 120px;
-    padding-bottom: 80px;
-    max-width: var(--max-wide);
-    margin: 0 auto;
-    padding-left: 2rem;
-    padding-right: 2rem;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 5rem;
+  /* â”€â”€ PAGE â”€â”€ */
+  .page {
+    flex: 1;
+    display: flex;
     align-items: center;
-    min-height: 92vh;
+    justify-content: center;
+    padding: 4rem 2rem 5rem;
+  }
+  .page-inner {
+    width: 100%;
+    max-width: var(--max);
   }
 
-  .hero-left { opacity: 0; animation: fadeUp 0.8s ease forwards; }
-  .hero-right { opacity: 0; animation: fadeUp 0.8s ease 0.25s forwards; }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(28px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
+  /* â”€â”€ EYEBROW â”€â”€ */
   .eyebrow {
     display: inline-flex;
     align-items: center;
-    gap: 0.6rem;
-    font-size: 0.72rem;
+    gap: 0.55rem;
+    font-size: 0.7rem;
     font-weight: 500;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.15em;
     text-transform: uppercase;
     color: var(--accent-mid);
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.4rem;
   }
   .eyebrow::before {
     content: '';
     display: block;
-    width: 28px; height: 1px;
+    width: 24px; height: 1px;
     background: var(--accent-mid);
   }
 
+  /* â”€â”€ HEADLINE â”€â”€ */
   h1 {
     font-family: var(--serif);
-    font-size: clamp(2rem, 4vw, 3rem);
+    font-size: clamp(1.75rem, 5vw, 2.5rem);
     line-height: 1.2;
     font-weight: 700;
     color: var(--ink);
-    margin-bottom: 1.4rem;
     letter-spacing: -0.02em;
+    margin-bottom: 1rem;
   }
-  h1 em {
-    font-style: italic;
-    color: var(--accent);
-  }
+  h1 em { font-style: italic; color: var(--accent); }
 
-  .hero-sub {
+  .sub {
     font-size: 1.05rem;
     color: var(--ink-mid);
     line-height: 1.75;
-    margin-bottom: 2rem;
+    margin-bottom: 1.6rem;
     font-weight: 300;
   }
 
-  .hero-divider {
-    width: 40px; height: 2px;
-    background: var(--accent-rule);
-    margin-bottom: 1.5rem;
-  }
-
-  .hero-oneliner {
-    font-family: var(--serif);
-    font-style: italic;
-    font-size: 0.97rem;
-    color: var(--ink-light);
-    line-height: 1.8;
+  /* â”€â”€ CREDENTIAL LINE â”€â”€ */
+  .cred {
     border-left: 2px solid var(--accent-rule);
-    padding-left: 1.2rem;
+    padding-left: 1rem;
+    margin-bottom: 2.2rem;
   }
-
-  /* ── CTA CARD ── */
-  .cta-card {
-    background: var(--paper-card);
-    border: 1px solid var(--paper-warm);
-    border-radius: 4px;
-    padding: 2.4rem;
-    box-shadow: 0 8px 40px rgba(15,26,20,0.06);
-    position: relative;
-    overflow: hidden;
-  }
-  .cta-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--accent), var(--accent-mid));
-  }
-
-  .cta-card h2 {
-    font-family: var(--serif);
-    font-size: 1.25rem;
-    font-weight: 700;
-    margin-bottom: 0.4rem;
-    color: var(--ink);
-  }
-
-  .cta-card .card-sub {
-    font-size: 0.88rem;
+  .cred p {
+    font-size: 0.82rem;
     color: var(--ink-light);
-    margin-bottom: 1.4rem;
+    line-height: 1.6;
   }
+  .cred strong { font-weight: 500; color: var(--ink-mid); }
 
-  .topic-list {
-    list-style: none;
-    margin-bottom: 1.6rem;
-  }
-  .topic-list li {
-    font-size: 0.85rem;
-    color: var(--ink-mid);
-    padding: 0.35rem 0;
-    display: flex;
-    align-items: flex-start;
-    gap: 0.65rem;
-  }
-  .topic-list li::before {
-    content: '→';
-    color: var(--accent-mid);
-    font-size: 0.8rem;
-    flex-shrink: 0;
-    margin-top: 1px;
-  }
-
-  .email-form { display: flex; flex-direction: column; gap: 0.65rem; }
+  /* â”€â”€ FORM â”€â”€ */
+  .email-form { display: flex; flex-direction: column; gap: 0.6rem; }
   .email-form input[type="email"] {
     width: 100%;
     padding: 0.85rem 1rem;
     border: 1px solid var(--paper-warm);
     border-radius: 2px;
     font-family: var(--sans);
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     font-weight: 300;
-    background: var(--paper);
+    background: var(--paper-card);
     color: var(--ink);
     outline: none;
     transition: border-color 0.2s;
@@ -228,367 +157,60 @@
 
   .btn-primary {
     width: 100%;
-    padding: 0.9rem 1.5rem;
+    padding: 0.95rem 1.5rem;
     background: var(--accent);
     color: #fff;
     border: none;
     border-radius: 2px;
     font-family: var(--sans);
-    font-size: 0.85rem;
+    font-size: 0.88rem;
     font-weight: 500;
     letter-spacing: 0.05em;
     cursor: pointer;
-    transition: background 0.2s, transform 0.15s;
+    transition: background 0.2s;
+    margin-top: 0.25rem;
   }
-  .btn-primary:hover { background: var(--accent-mid); transform: translateY(-1px); }
-  .btn-primary:active { transform: translateY(0); }
+  .btn-primary:hover { background: var(--accent-mid); }
 
-  .form-reassurance {
-    font-size: 0.75rem;
-    color: var(--ink-faint);
-    text-align: center;
-    margin-top: 0.3rem;
-    line-height: 1.5;
-  }
-
-  /* ── SECTION SHARED ── */
-  section { padding: 80px 2rem; }
-
-  .section-inner {
-    max-width: var(--max);
-    margin: 0 auto;
-  }
-
-  .section-label {
-    font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--accent-mid);
-    margin-bottom: 2rem;
-    display: flex;
-    align-items: center;
-    gap: 0.7rem;
-  }
-  .section-label::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--paper-warm);
-    max-width: 60px;
-  }
-
-  h2.section-title {
-    font-family: var(--serif);
-    font-size: clamp(1.6rem, 3vw, 2.2rem);
-    font-weight: 700;
-    line-height: 1.25;
-    color: var(--ink);
-    margin-bottom: 1.8rem;
-    letter-spacing: -0.02em;
-  }
-
-  .section-body {
-    font-size: 1rem;
-    color: var(--ink-mid);
-    line-height: 1.8;
-  }
-  .section-body p { margin-bottom: 1.2rem; }
-  .section-body p:last-child { margin-bottom: 0; }
-
-  /* ── WHY SECTION ── */
-  .why-section { background: var(--paper-card); border-top: 1px solid var(--paper-warm); border-bottom: 1px solid var(--paper-warm); }
-
-  .seat-list {
-    margin: 2rem 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-  }
-  .seat-item {
-    display: grid;
-    grid-template-columns: 3rem 1fr;
-    gap: 1rem;
-    padding: 1.4rem 0;
-    border-bottom: 1px solid var(--paper-warm);
-    align-items: start;
-    opacity: 0;
-    animation: fadeUp 0.6s ease forwards;
-  }
-  .seat-item:nth-child(1) { animation-delay: 0.1s; }
-  .seat-item:nth-child(2) { animation-delay: 0.2s; }
-  .seat-item:nth-child(3) { animation-delay: 0.3s; }
-  .seat-item:last-child { border-bottom: none; }
-
-  .seat-num {
-    font-family: var(--serif);
-    font-size: 1.5rem;
-    color: var(--accent-rule);
-    font-weight: 700;
-    line-height: 1;
-    padding-top: 0.2rem;
-  }
-  .seat-text { font-size: 0.97rem; color: var(--ink-mid); line-height: 1.75; }
-  .seat-text strong { color: var(--ink); font-weight: 500; }
-
-  .inclusive-box {
-    margin-top: 2.5rem;
-    background: var(--accent-light);
-    border: 1px solid var(--accent-rule);
-    border-radius: 3px;
-    padding: 1.6rem 2rem;
-  }
-  .inclusive-box h3 {
-    font-family: var(--serif);
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--accent);
-    margin-bottom: 0.7rem;
-    font-style: italic;
-  }
-  .inclusive-box p {
-    font-size: 0.9rem;
-    color: var(--ink-mid);
-    line-height: 1.75;
-  }
-
-  /* ── WHAT YOU GET ── */
-  .what-section { background: var(--paper); }
-
-  .get-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.2rem;
-    margin-top: 2rem;
-  }
-
-  .get-card {
-    background: var(--paper-card);
-    border: 1px solid var(--paper-warm);
-    border-radius: 3px;
-    padding: 1.5rem;
-    position: relative;
-  }
-  .get-card .get-icon {
-    width: 36px; height: 36px;
-    border-radius: 50%;
-    background: var(--accent-light);
-    display: flex; align-items: center; justify-content: center;
-    margin-bottom: 1rem;
-    font-size: 1rem;
-  }
-  .get-card h4 {
-    font-family: var(--serif);
-    font-size: 0.97rem;
-    font-weight: 700;
-    color: var(--ink);
-    margin-bottom: 0.5rem;
-  }
-  .get-card p {
-    font-size: 0.85rem;
-    color: var(--ink-light);
-    line-height: 1.7;
-  }
-
-  .pillar-block {
-    margin-top: 2.8rem;
-    padding-top: 2rem;
-    border-top: 1px solid var(--paper-warm);
-  }
-  .pillar-block-label {
-    font-family: var(--sans);
-    font-size: 0.72rem;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--ink-faint);
-    margin-bottom: 1.4rem;
-  }
-  .pillar-list {
-    display: flex;
-    flex-direction: column;
-  }
-  .pillar-item {
-    display: grid;
-    grid-template-columns: 2.2rem 1fr;
-    align-items: baseline;
-    gap: 1rem;
-    padding: 0.95rem 0;
-    border-bottom: 1px solid var(--paper-warm);
-  }
-  .pillar-item:last-child { border-bottom: none; }
-  .pillar-num {
-    font-family: var(--serif);
-    font-size: 0.78rem;
-    font-weight: 700;
-    color: var(--accent-rule);
-    letter-spacing: 0.02em;
-  }
-  .pillar-title {
-    font-family: var(--sans);
-    font-size: 0.95rem;
-    font-weight: 400;
-    color: var(--ink-mid);
-    line-height: 1.5;
-  }
-  .pillar-title strong {
-    font-weight: 500;
-    color: var(--ink);
-  }
-
-  /* ── WHO I AM ── */
-  .who-section {
-    background: var(--ink);
-    color: var(--paper);
-  }
-  .who-section .section-label { color: var(--accent-rule); }
-  .who-section .section-label::after { background: rgba(255,255,255,0.1); }
-  .who-section h2.section-title { color: var(--paper); }
-
-  .who-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-    align-items: start;
-  }
-
-  .who-body { font-size: 0.97rem; color: rgba(247,245,240,0.75); line-height: 1.85; }
-  .who-body p { margin-bottom: 1.2rem; }
-  .who-body p:last-child { margin-bottom: 0; }
-
-  .who-aside {
-    padding: 2rem;
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 3px;
-    background: rgba(255,255,255,0.03);
-  }
-  .who-aside .credential {
-    display: flex;
-    flex-direction: column;
-    gap: 1.2rem;
-  }
-  .cred-item {
-    display: flex;
-    gap: 1rem;
-    align-items: flex-start;
-  }
-  .cred-marker {
-    width: 2px;
-    background: var(--accent-mid);
-    flex-shrink: 0;
-    align-self: stretch;
-    min-height: 20px;
-  }
-  .cred-text {
-    font-size: 0.85rem;
-    color: rgba(247,245,240,0.65);
-    line-height: 1.65;
-  }
-  .cred-text strong { color: var(--paper); font-weight: 500; }
-
-  .bias-line {
-    margin-top: 2rem;
-    padding: 1.4rem;
-    border: 1px solid rgba(194,217,203,0.25);
-    border-radius: 2px;
-    background: rgba(26,92,58,0.15);
-  }
-  .bias-line p {
-    font-family: var(--serif);
-    font-style: italic;
-    font-size: 0.95rem;
-    color: var(--accent-rule);
-    line-height: 1.75;
-  }
-
-  /* ── SECOND CTA ── */
-  .second-cta {
-    background: var(--paper);
-    text-align: center;
-  }
-  .second-cta .section-inner { max-width: 600px; }
-  .second-cta .section-label { justify-content: center; }
-  .second-cta .section-label::after { display: none; }
-  .second-cta h2.section-title { text-align: center; }
-  .second-cta .section-body { color: var(--ink-light); font-size: 0.97rem; margin-bottom: 2rem; }
-
-  .second-cta .email-form { max-width: 420px; margin: 0 auto; }
-  .second-cta .email-form input { text-align: center; }
-
-  .disclaimer {
-    font-size: 0.73rem;
-    color: var(--ink-faint);
-    margin-top: 1rem;
-    line-height: 1.6;
-    max-width: 480px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  /* ── FOOTER ── */
-  footer {
-    background: var(--paper-warm);
-    border-top: 1px solid var(--paper-warm);
-    padding: 2rem;
-    text-align: center;
-    font-size: 0.78rem;
-    color: var(--ink-faint);
-    line-height: 1.7;
-  }
-  footer a { color: var(--ink-light); text-decoration: none; }
-  footer a:hover { color: var(--accent); }
-
-  /* ── SCROLL REVEAL ── */
-  .reveal {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
-  }
-  .reveal.visible {
-    opacity: 1;
-    transform: none;
-  }
-
-  /* ── RESPONSIVE ── */
-  @media (max-width: 768px) {
-    .hero {
-      grid-template-columns: 1fr;
-      gap: 3rem;
-      min-height: auto;
-      padding-top: 100px;
-    }
-    .who-grid, .get-grid, .topics-columns {
-      grid-template-columns: 1fr;
-    }
-    .who-aside { margin-top: 0; }
-  }
-
-  /* ── CONSENT FORM ELEMENTS ── */
+  /* â”€â”€ CONSENT â”€â”€ */
   .consent-row {
     display: flex;
     align-items: flex-start;
     gap: 0.6rem;
-    font-size: 0.78rem;
+    font-size: 0.77rem;
     color: var(--ink-light);
-    line-height: 1.55;
+    line-height: 1.5;
     cursor: pointer;
   }
   .consent-row input[type="checkbox"] {
     margin-top: 2px;
     flex-shrink: 0;
     accent-color: var(--accent);
-    width: 14px;
-    height: 14px;
+    width: 13px; height: 13px;
     cursor: pointer;
   }
-  .consent-fine {
-    font-size: 0.72rem;
+  .fine {
+    font-size: 0.71rem;
     color: var(--ink-faint);
     line-height: 1.6;
+    margin-top: 0.5rem;
+    text-align: center;
   }
-  .consent-fine a { color: var(--ink-light); text-decoration: underline; }
+  .fine a { color: var(--ink-light); text-decoration: underline; text-underline-offset: 2px; }
 
-  /* ── COOKIE BANNER ── */
+  /* -- FOOTER -- */
+  /* -- FOOTER -- */
+    border-top: 1px solid var(--paper-warm);
+    padding: 1.5rem 2rem;
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--ink-faint);
+    flex-shrink: 0;
+  }
+  /* -- FOOTER -- */
+  /* -- FOOTER -- */
+
+  /* â”€â”€ COOKIE BANNER â”€â”€ */
   .cookie-banner {
     position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
     background: var(--ink);
@@ -596,7 +218,7 @@
     padding: 1.2rem 2rem;
   }
   .cookie-inner {
-    max-width: var(--max-wide);
+    max-width: 1100px;
     margin: 0 auto;
     display: flex;
     align-items: center;
@@ -623,17 +245,9 @@
     border: 1px solid;
     transition: background 0.2s, color 0.2s;
   }
-  .cookie-btn-secondary {
-    background: transparent;
-    color: rgba(247,245,240,0.65);
-    border-color: rgba(255,255,255,0.2);
-  }
+  .cookie-btn-secondary { background: transparent; color: rgba(247,245,240,0.65); border-color: rgba(255,255,255,0.2); }
   .cookie-btn-secondary:hover { background: rgba(255,255,255,0.08); color: #fff; }
-  .cookie-btn-primary {
-    background: var(--accent);
-    color: #fff;
-    border-color: var(--accent);
-  }
+  .cookie-btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
   .cookie-btn-primary:hover { background: var(--accent-mid); }
   @media (max-width: 600px) {
     .cookie-inner { flex-direction: column; gap: 1rem; }
@@ -647,199 +261,45 @@
 <!-- NAV -->
 <nav>
   <div class="nav-logo"><span>Evidence&#8209;Based</span> Health</div>
-  <a href="prevention-roadmap.html" class="nav-cta" style="margin-right:0.5rem;background:var(--accent-light);color:var(--accent);border-color:var(--accent-rule)">Prevention Roadmap</a>
-  <a href="#subscribe" class="nav-cta">Get the brief</a>
+  <a href="prevention-roadmap.html" class="nav-link">Prevention Roadmap &rarr;</a>
 </nav>
 
-<!-- HERO -->
-<div class="hero">
-  <div class="hero-left">
+<!-- HERO + SIGNUP -->
+<div class="page">
+  <div class="page-inner">
     <div class="eyebrow">Weekly health education</div>
-    <h1>Evidence&#8209;Based <em>Hormones,</em> Strength, and Metabolic Health</h1>
-    <p class="hero-sub">From the acute care hospital to your inbox: real&#8209;world advice on hormones, fitness, and long&#8209;term health &mdash; for men, women, and trans and non&#8209;binary people &mdash; without the hype.</p>
-    <div class="hero-divider"></div>
-    <p class="hero-oneliner">I&rsquo;m an acute care surgery PA and 2024 National PA of the Year for innovation. I take care of people in the hospital when things have already gone very wrong. Here, I share what I&rsquo;ve seen and learned &mdash; using evidence&#8209;based medicine &mdash; to help you lower your chances of ever needing that kind of care.</p>
-  </div>
+    <h1>Hormones, strength, and metabolic health &mdash; <em>without the hype.</em></h1>
+    <p class="sub">One short email a week. Evidence&#8209;based. Plain language. No products, no agenda.</p>
 
-  <div class="hero-right" id="subscribe">
-    <div class="cta-card">
-      <h2>Get 1 short email a week</h2>
-      <p class="card-sub">2&ndash;3 plain&#8209;language tips on what actually moves the needle:</p>
-      <ul class="topic-list">
-        <li>Hormones &mdash; TRT, peptides, GLP&#8209;1s, and more</li>
-        <li>Strength, fitness, and recovery</li>
-        <li>Diet, gut health, sleep, stress, and mental health</li>
-      </ul>
-      <form class="email-form" onsubmit="handleSubmit(event)">
-        <input type="email" name="email" placeholder="your@email.com" required autocomplete="email">
-        <label class="consent-row">
-          <input type="checkbox" name="smsConsent">
-          <span>Also send me occasional SMS updates. Msg &amp; data rates may apply. Reply STOP to opt out.</span>
-        </label>
-        <label class="consent-row">
-          <input type="checkbox" name="remarketingConsent">
-          <span>I&rsquo;m okay with my hashed email being used (in hashed form) to show me relevant ads on other platforms.</span>
-        </label>
-        <button type="submit" class="btn-primary">Get the weekly 3&#8209;minute brief &rarr;</button>
-      </form>
-      <p class="consent-fine" style="text-align:center;margin-top:0.5rem">By subscribing you agree to receive a weekly educational email. Unsubscribe anytime via any email. <a href="privacy.html">Privacy Policy</a> &middot; <a href="disclaimer.html">Disclaimer</a></p>
+    <div class="cred">
+      <p><strong>Acute Care Surgery PA&thinsp;&middot;&thinsp;10+ years</strong> managing surgical emergencies in-hospital &mdash; diverticulitis, SBOs, appendicitis, gallbladder disease.</p>
+      <p style="margin-top:0.25rem"><strong>2024 National PA of the Year for Innovation (AAPA)</strong> &mdash; lifestyle medicine first, always.</p>
     </div>
+
+    <form id="subscribe" class="email-form" onsubmit="handleSubmit(event)">
+      <input type="email" name="email" placeholder="your@email.com" required autocomplete="email">
+      <label class="consent-row">
+        <input type="checkbox" name="smsConsent">
+        <span>Also send me occasional SMS updates. Msg &amp; data rates may apply. Reply STOP to opt out.</span>
+      </label>
+      <label class="consent-row">
+        <input type="checkbox" name="remarketingConsent">
+        <span>I&rsquo;m okay with my email being used (in hashed form) to show me relevant ads on other platforms.</span>
+      </label>
+      <button type="submit" class="btn-primary">Get the weekly brief &rarr;</button>
+    </form>
+    <p class="fine">By subscribing you agree to receive a weekly educational email. Unsubscribe anytime. <a href="privacy.html">Privacy Policy</a> &middot; <a href="disclaimer.html">Disclaimer</a></p>
   </div>
 </div>
 
-<!-- WHY THIS EXISTS -->
-<section class="why-section">
-  <div class="section-inner">
-    <div class="section-label reveal">Why this exists</div>
-    <h2 class="section-title reveal">Most hormone and fitness content<br>is either marketing or bro science.</h2>
-    <p class="section-body reveal">A lot of medical writing is so dense it&rsquo;s hard to use in real life. I sit in a different seat.</p>
-
-    <div class="seat-list">
-      <div class="seat-item reveal">
-        <div class="seat-num">01</div>
-        <div class="seat-text">I&rsquo;ve spent <strong>10+ years in acute care</strong> reading CTs, MRIs, X&#8209;rays, and labs on people with diverticulitis, gallbladder disease, appendicitis, small&#8209;bowel obstructions, and other emergencies. I see what happens when silent disease and everyday choices pile up over time.</div>
-      </div>
-      <div class="seat-item reveal">
-        <div class="seat-num">02</div>
-        <div class="seat-text">I use <strong>lifestyle medicine as the foundation</strong> &mdash; food, movement, sleep, stress, relationships, meaning &mdash; and place TRT, peptides, GLP&#8209;1s, and other medications inside that framework, not above it.</div>
-      </div>
-      <div class="seat-item reveal">
-        <div class="seat-num">03</div>
-        <div class="seat-text">I <strong>translate up&#8209;to&#8209;date medical literature</strong> into 2&ndash;3 clear points you can actually use yourself or discuss with your own clinicians, friends, and family.</div>
-      </div>
-    </div>
-
-    <div class="inclusive-box reveal">
-      <h3>Intentionally inclusive</h3>
-      <p>This space is for men, women, and trans and non&#8209;binary people. I focus on bodies, organs, and goals &mdash; not assumptions. When it matters, I&rsquo;ll be specific (&ldquo;people on testosterone,&rdquo; &ldquo;people with prostates,&rdquo; &ldquo;people with uteruses&rdquo;) because different bodies and treatments deserve precise information. This is not personal medical advice. It&rsquo;s the kind of straight talk I wish more people heard 10&ndash;20 years before they ever need an acute care team.</p>
-    </div>
-  </div>
-</section>
-
-<!-- WHAT YOU GET -->
-<section class="what-section">
-  <div class="section-inner">
-    <div class="section-label reveal">What you get when you subscribe</div>
-    <h2 class="section-title reveal">One brief email. Once a week.<br>Actually useful.</h2>
-
-    <div class="get-grid">
-      <div class="get-card reveal">
-        <div class="get-icon">&#10022;</div>
-        <h4>2&ndash;3 things to know or do</h4>
-        <p>Simple, actionable guidance on hormones, metabolic health, and everyday habits &mdash; rooted in current medical evidence.</p>
-      </div>
-      <div class="get-card reveal">
-        <div class="get-icon">&#9677;</div>
-        <h4>1 tiny experiment</h4>
-        <p>Small enough to actually try &mdash; a 10&#8209;minute walk after a meal, a protein target, a simple sleep change.</p>
-      </div>
-      <div class="get-card reveal">
-        <div class="get-icon">&#9671;</div>
-        <h4>1 conversation starter</h4>
-        <p>Something you can use with a partner, friend, or family member to open up better health conversations.</p>
-      </div>
-      <div class="get-card reveal">
-        <div class="get-icon">&mdash;</div>
-        <h4>No agenda</h4>
-        <p>No products to sell, no supplements to push. Just the honest signal extracted from the noise.</p>
-      </div>
-    </div>
-
-    <div class="pillar-block reveal">
-      <div class="pillar-block-label">Core pillars</div>
-      <div class="pillar-list">
-        <div class="pillar-item">
-          <span class="pillar-num">01</span>
-          <span class="pillar-title"><strong>Hormones</strong></span>
-        </div>
-        <div class="pillar-item">
-          <span class="pillar-num">02</span>
-          <span class="pillar-title"><strong>Strength and body composition</strong></span>
-        </div>
-        <div class="pillar-item">
-          <span class="pillar-num">03</span>
-          <span class="pillar-title"><strong>Metabolic health</strong></span>
-        </div>
-        <div class="pillar-item">
-          <span class="pillar-num">04</span>
-          <span class="pillar-title"><strong>Preventive screening and early detection</strong></span>
-        </div>
-        <div class="pillar-item">
-          <span class="pillar-num">05</span>
-          <span class="pillar-title"><strong>Clear education</strong> so patients understand what their numbers and risks actually mean</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- WHO I AM -->
-<section class="who-section">
-  <div class="section-inner">
-    <div class="who-grid">
-      <div>
-        <div class="section-label">Who&rsquo;s behind this</div>
-        <h2 class="section-title reveal">A PA who sees what happens when prevention doesn&rsquo;t work.</h2>
-        <div class="who-body reveal">
-          <p>I&rsquo;m a physician assistant in acute care surgery with over a decade of experience managing hospitalized patients at their sickest. I spend my days looking at imaging and labs on people with acute surgical emergencies &mdash; and taking care of them and their families when everything is on the line.</p>
-          <p>In 2024, I was named <strong style="color:#f7f5f0">National PA of the Year for innovation</strong>. Now I&rsquo;m using that same mindset to help people understand their bodies earlier, in plain language, so fewer of them ever need the level of care I provide.</p>
-        </div>
-        <div class="bias-line reveal">
-          <p>&ldquo;My bias is simple: Stronger, better&#8209;fed, better&#8209;rested, less&#8209;stressed people do better &mdash; with or without medications.&rdquo;</p>
-        </div>
-      </div>
-
-      <div class="who-aside reveal">
-        <div class="credential">
-          <div class="cred-item">
-            <div class="cred-marker"></div>
-            <div class="cred-text"><strong>Acute Care Surgery PA</strong><br>10+ years managing hospitalized patients through surgical emergencies &mdash; diverticulitis, SBOs, appendicitis, gallbladder disease, and more.</div>
-          </div>
-          <div class="cred-item">
-            <div class="cred-marker"></div>
-            <div class="cred-text"><strong>2024 National PA of the Year &mdash; Innovation</strong><br>Recognized nationally for bringing new thinking to patient care and healthcare delivery.</div>
-          </div>
-          <div class="cred-item">
-            <div class="cred-marker"></div>
-            <div class="cred-text"><strong>Founder, RealTimeRx</strong><br>A platform connecting patients with independent local pharmacies to locate hard&#8209;to&#8209;find medications &mdash; born from seeing what happens when the system fails.</div>
-          </div>
-          <div class="cred-item">
-            <div class="cred-marker"></div>
-            <div class="cred-text"><strong>Lifestyle medicine first</strong><br>Food, movement, sleep, stress &mdash; then medications where evidence supports them. Always in that order.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- SECOND CTA -->
-<section class="second-cta">
-  <div class="section-inner">
-    <div class="section-label">Ready?</div>
-    <h2 class="section-title reveal">Get smarter about hormones, strength, and long&#8209;term health &mdash; without doom&#8209;scrolling.</h2>
-    <div class="section-body reveal">
-      <p>Join the weekly brief. One email. Three minutes. Evidence-based and written in plain language by a clinician who&rsquo;s seen what&rsquo;s at stake.</p>
-    </div>
-    <form class="email-form reveal" onsubmit="handleSubmit(event)">
-      <input type="email" name="email" placeholder="your@email.com" required autocomplete="email">
-      <button type="submit" class="btn-primary">Join the weekly brief &rarr;</button>
-    </form>
-    <p class="disclaimer">By subscribing you agree to receive a weekly educational email. Unsubscribe anytime via any email.<br>Weekly education only. Not individual medical advice. <a href="privacy.html">Privacy Policy</a> &middot; <a href="disclaimer.html">Disclaimer</a></p>
-  </div>
-</section>
-
 <!-- FOOTER -->
-<footer>
-  <p><strong>evidencebasedhealth.me</strong></p>
-  <p style="margin-top:0.4rem">
-    &copy; 2025 Evidence-Based Health &nbsp;&middot;&nbsp;
-    <a href="privacy.html">Privacy Policy</a> &nbsp;&middot;&nbsp;
-    <a href="disclaimer.html">Disclaimer</a> &nbsp;&middot;&nbsp;
-    <a href="mailto:info@evidencebasedhealth.me">info@evidencebasedhealth.me</a>
-  </p>
-  <p style="margin-top:0.3rem">Educational content only. Not medical advice.</p>
-</footer>
+  /* -- FOOTER -- */
+  &copy; 2025 Evidence-Based Health &nbsp;&middot;&nbsp;
+  <a href="privacy.html">Privacy Policy</a> &nbsp;&middot;&nbsp;
+  <a href="disclaimer.html">Disclaimer</a> &nbsp;&middot;&nbsp;
+  <a href="mailto:info@evidencebasedhealth.me">info@evidencebasedhealth.me</a>
+  &nbsp;&middot;&nbsp; Educational content only. Not medical advice.
+  /* -- FOOTER -- */
 
 <!-- COOKIE CONSENT BANNER -->
 <div id="cookie-banner" class="cookie-banner" role="dialog" aria-label="Cookie consent" style="display:none">
@@ -853,14 +313,11 @@
 </div>
 
 <script>
-  // ── CONFIG — fill in after AWS setup ──────────────────────────────────────
   const API_ENDPOINT    = 'https://lvsofp8c9g.execute-api.us-east-1.amazonaws.com/prod/subscribe';
   const META_PIXEL_ID   = '4452359758334243';
   const GOOGLE_ADS_ID   = 'AW-18001526983';
   const GOOGLE_CONV_LBL = 'YOUR_CONVERSION_LABEL';
-  // ─────────────────────────────────────────────────────────────────────────
 
-  // ── COOKIE CONSENT ──
   function getConsent() { return localStorage.getItem('cookieConsent'); }
 
   function setConsent(level) {
@@ -878,9 +335,7 @@
     }
   }
 
-  // ── LOAD TRACKING SCRIPTS (only after marketing consent) ──
   function loadMarketingScripts() {
-    // Meta Pixel
     if (!window.fbq && META_PIXEL_ID !== 'YOUR_META_PIXEL_ID') {
       !function(f,b,e,v,n,t,s){
         if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -894,7 +349,6 @@
       fbq('init', META_PIXEL_ID);
       fbq('track', 'PageView');
     }
-    // Google Ads / gtag
     if (!window.gtag && GOOGLE_ADS_ID !== 'AW-XXXXXXXXX') {
       const s = document.createElement('script');
       s.async = true;
@@ -918,28 +372,26 @@
     }
   }
 
-  // ── FORM SUBMIT ──
   async function handleSubmit(e) {
     e.preventDefault();
-    const form   = e.target;
-    const btn    = form.querySelector('button[type="submit"]');
+    const form       = e.target;
+    const btn        = form.querySelector('button[type="submit"]');
     const emailInput = form.querySelector('input[type="email"]');
-    const smsBox  = form.querySelector('input[name="smsConsent"]');
-    const remBox  = form.querySelector('input[name="remarketingConsent"]');
+    const smsBox     = form.querySelector('input[name="smsConsent"]');
+    const remBox     = form.querySelector('input[name="remarketingConsent"]');
 
     const payload = {
-      email:               emailInput.value.trim(),
-      smsConsent:          smsBox  ? smsBox.checked  : false,
-      remarketingConsent:  remBox  ? remBox.checked  : false,
-      sourcePath:          window.location.pathname,
-      userAgent:           navigator.userAgent
+      email:              emailInput.value.trim(),
+      smsConsent:         smsBox ? smsBox.checked : false,
+      remarketingConsent: remBox ? remBox.checked : false,
+      sourcePath:         window.location.pathname,
+      userAgent:          navigator.userAgent
     };
 
     btn.textContent = 'Subscribing\u2026';
     btn.disabled = true;
     emailInput.disabled = true;
 
-    // Skip real fetch if placeholder endpoint
     if (API_ENDPOINT.includes('YOUR_API_ID')) {
       setTimeout(() => {
         btn.textContent = '\u2713 You\u2019re in \u2014 check your inbox';
@@ -966,18 +418,6 @@
     }
   }
 
-  // ── SCROLL REVEAL ──
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('visible');
-        observer.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.12 });
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-  // ── INIT ──
   initConsent();
 </script>
 </body>
