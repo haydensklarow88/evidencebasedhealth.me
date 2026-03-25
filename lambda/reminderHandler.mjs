@@ -142,11 +142,73 @@ function buildReminders(age, organs, riskFlags) {
 
   // BREAST
   // Sources: USPSTF 2024 Grade B — biennial mammography start age 40, continue through 74
-  //          ACS 2023 — annual mammo ages 45–54, biennial 55+; start at 40 for avg-risk optional
-  //          ACS high-risk (BRCA/family): annual mammo + MRI starting at 25–30
+  //          NCCN — BRCA carriers: annual MRI from age 25, annual mammo from age 30
+  //          ACS 2023 — ≥20% lifetime risk: annual MRI + mammo from age 30
   if (organs.includes('breasts')) {
-    const highRisk = riskFlags.includes('breast-family') || riskFlags.includes('brca');
-    const startAge = highRisk ? 30 : 40;
+    const brcaRisk   = riskFlags.includes('brca');
+    const familyRisk = riskFlags.includes('breast-family');
+    const highRisk   = brcaRisk || familyRisk;
+    const startAge   = brcaRisk ? 25 : familyRisk ? 30 : 40;
+    if (age >= startAge && age <= 76) {
+      reminders.push({
+        topic:             'breast',
+        lastReminderAttr:  'lastBreastReminder',
+        emailSubject:      'Reminder: breast cancer screening — Evidence-Based Health',
+        emailBody: `<p>${brcaRisk
+            ? `With a BRCA1/BRCA2 variant, NCCN recommends <strong>annual breast MRI starting at age 25</strong> and <strong>annual mammography starting at age 30</strong>.${age < 30 ? ' At your age, annual MRI is the primary screening tool.' : ' Both annual MRI and mammography are recommended at your age.'}`
+            : familyRisk
+              ? 'Given your family history, you may qualify for <strong>annual MRI + annual mammography starting at age 30</strong> (ACS, ≥20% lifetime risk). Ask your clinician to calculate your lifetime risk with a validated model.'
+              : age < 50
+                ? 'You are in the age range where guidelines vary. The USPSTF (2024) recommends starting mammography at 40; the ACS recommends discussing it at 40 and beginning no later than 45.'
+                : 'You are in the active screening window for breast cancer. Most guidelines recommend mammography every 1–2 years for average-risk people aged 50–74.'
+          }</p>
+          <p><strong>Questions to ask your clinician:</strong></p>
+          <ul style="padding-left:1.2rem;color:#2d3d35;font-size:0.93rem;line-height:1.75">
+            <li>Am I due for a mammogram${brcaRisk || familyRisk ? ' and/or breast MRI' : ''}?</li>
+            <li>Should I screen annually or every 2 years?</li>
+            ${highRisk ? '<li>Do I need MRI in addition to mammography?</li>' : '<li>Does my breast density affect my screening plan?</li>'}
+          </ul>`,
+        smsBody: `Prevention reminder: Based on your age${highRisk ? ' and risk factors' : ''}, it may be time for a mammogram or breast screening check-in. Contact your clinician. Reply STOP to opt out. Not medical advice. — evidencebasedhealth.me`,
+      });
+    }
+  }
+
+  // LUNG CANCER
+  // Source: USPSTF 2021 Grade B — annual LDCT ages 50–80, ≥20 pack-years, current or quit <15 yr
+  if (riskFlags.includes('smoker-ldct') && age >= 50 && age <= 80) {
+    reminders.push({
+      topic:             'lung',
+      lastReminderAttr:  'lastLungReminder',
+      emailSubject:      'Reminder: annual lung cancer screening (LDCT) — Evidence-Based Health',
+      emailBody: `<p>Based on your smoking history, the USPSTF (2021, Grade B) recommends <strong>annual low-dose CT (LDCT) of the chest</strong> for adults aged 50–80 with a ≥20 pack-year history who currently smoke or have quit within the past 15 years.</p>
+        <p>Annual LDCT is covered by Medicare and most insurance with no cost-sharing when ordered for eligible patients. Screening should stop if you quit &gt;15 years ago or develop a condition that limits treatment options.</p>
+        <p><strong>Questions to ask your clinician:</strong></p>
+        <ul style="padding-left:1.2rem;color:#2d3d35;font-size:0.93rem;line-height:1.75">
+          <li>Am I enrolled in an annual LDCT lung cancer screening program?</li>
+          <li>How do I find a lung cancer screening center covered by my insurance?</li>
+          <li>What happens if a lung nodule is found on my CT?</li>
+        </ul>`,
+      smsBody: `Prevention reminder: Based on your smoking history, annual low-dose CT lung cancer screening is recommended (USPSTF Grade B, ages 50–80). Ask your clinician about scheduling. Reply STOP to opt out. Not medical advice. — evidencebasedhealth.me`,
+    });
+  }
+
+  // ABDOMINAL AORTIC ANEURYSM
+  // Source: USPSTF 2019 Grade B — one-time abdominal ultrasound, men 65–75 who ever smoked
+  if (riskFlags.includes('ever-smoker') && organs.includes('prostate') && age >= 65 && age <= 75) {
+    reminders.push({
+      topic:             'aaa',
+      lastReminderAttr:  'lastAAAReminder',
+      emailSubject:      'Reminder: abdominal aortic aneurysm (AAA) screening — Evidence-Based Health',
+      emailBody: `<p>The USPSTF (2019, Grade B) recommends a <strong>one-time abdominal ultrasound to screen for abdominal aortic aneurysm (AAA)</strong> for men aged 65–75 who have ever smoked. AAA is often silent until rupture — this single ultrasound can be life-saving.</p>
+        <p>The scan is quick, painless, and typically covered by insurance. If you have already had this done, no further routine screening is required unless an aneurysm was found.</p>
+        <p><strong>Questions to ask your clinician:</strong></p>
+        <ul style="padding-left:1.2rem;color:#2d3d35;font-size:0.93rem;line-height:1.75">
+          <li>Have I had a one-time AAA ultrasound yet? If not, can we order one?</li>
+          <li>If an aneurysm is found, what are the monitoring and treatment options?</li>
+        </ul>`,
+      smsBody: `Prevention reminder: Men 65–75 who ever smoked should have a one-time abdominal ultrasound to screen for aortic aneurysm (USPSTF Grade B). Ask your clinician. Reply STOP to opt out. Not medical advice. — evidencebasedhealth.me`,
+    });
+  }
     if (age >= startAge && age <= 76) {
       reminders.push({
         topic:             'breast',

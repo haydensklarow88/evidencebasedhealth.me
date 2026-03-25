@@ -654,6 +654,14 @@
             <input type="checkbox" name="risk" value="prostate-family">
             First-degree relative (father, brother) diagnosed with prostate cancer
           </label>
+          <label class="check-row">
+            <input type="checkbox" name="risk" value="ever-smoker">
+            Current or former cigarette smoker (any amount)
+          </label>
+          <label class="check-row">
+            <input type="checkbox" name="risk" value="smoker-ldct">
+            Current smoker OR quit within the last 15 years, with &ge;20 pack-year history (e.g., 1 pack/day &times; 20 years, or 2 packs/day &times; 10 years)
+          </label>
         </div>
       </div>
 
@@ -795,12 +803,12 @@
       const highRisk  = !lynchRisk && (risks.includes('crc-family') || risks.includes('crc-polyps'));
       const startAge  = lynchRisk ? 25 : highRisk ? 40 : 45;
 
-      if (lynchRisk && age >= 20 && age <= 75) {
+      if (lynchRisk && age >= 18 && age <= 75) {
         items.push({
           badge: 'due',
           label: 'High-risk: Lynch syndrome',
           title: 'Colorectal cancer screening &mdash; Lynch syndrome protocol',
-          body: `With Lynch syndrome, guidelines (ACG, NCCN) recommend <strong>colonoscopy every 1&ndash;2 years starting at age 20&ndash;25</strong> &mdash; far earlier and more frequently than average-risk screening. FIT tests and Cologuard are <em>not</em> adequate substitutes for colonoscopy in this setting.`,
+          body: `With Lynch syndrome, NCCN recommends <strong>colonoscopy every 1&ndash;2 years</strong> starting well before the average-risk window &mdash; and the exact age depends on your specific gene variant: <strong>MLH1/MSH2</strong> start at age 20&ndash;25; <strong>MSH6</strong> at 25&ndash;30; <strong>PMS2</strong> at 30&ndash;35 (lower penetrance). FIT tests and Cologuard are <em>not</em> adequate substitutes for colonoscopy in Lynch syndrome.`,`
           asks: [
             'Am I on an annual or biennial colonoscopy schedule given my Lynch syndrome?',
             'Which Lynch gene variant do I have, and does that affect my interval?',
@@ -888,71 +896,113 @@
     if (organs.includes('prostate')) {
       const prostateHighRisk = risks.includes('prostate-family');
 
+      // USPSTF 2018: Grade C SDM ages 55–69; Grade D (against routine) ≥70
+      // ACS 2023: high-risk (family history) → begin SDM at 40–45
       if (prostateHighRisk && age >= 38 && age < 45) {
         items.push({
           badge: 'due',
           label: 'High-risk: discuss now',
           title: 'Prostate cancer screening (PSA) &mdash; high-risk',
-          body: `With a first-degree relative diagnosed with prostate cancer, the ACS recommends starting a <strong>shared decision-making conversation about PSA screening at age 40&ndash;45</strong>. This is earlier than average-risk guidance &mdash; a conversation with your clinician before age 45 is warranted.`,
+          body: `With a first-degree relative diagnosed with prostate cancer, the ACS recommends starting a <strong>shared decision-making conversation about PSA screening at age 40&ndash;45</strong> &mdash; earlier than average-risk guidance. A conversation with your clinician before age 45 is warranted.`,
           asks: [
             'Given my family history, when should I start PSA screening discussions?',
             'What baseline PSA would be reassuring vs. concerning for my age?',
             'Should I also discuss genetic testing (BRCA2, HOXB13) for hereditary prostate cancer risk?',
           ]
         });
-      } else if (age >= (prostateHighRisk ? 40 : 45) && age < 50) {
+      } else if (prostateHighRisk && age >= 45 && age <= 75) {
         items.push({
-          badge: 'soon',
-          label: prostateHighRisk ? 'High-risk: discuss now' : 'Coming up',
-          title: 'Prostate cancer screening (PSA) &mdash; shared decision-making',
-          body: `You&rsquo;re approaching the age range when most guidelines recommend a <strong>shared decision-making conversation</strong> about PSA (prostate-specific antigen) screening. PSA testing has real benefits and real trade-offs; guidelines don&rsquo;t recommend routine testing without an informed discussion first.`,
+          badge: 'due',
+          label: 'High-risk: active window',
+          title: 'Prostate cancer screening (PSA) &mdash; high-risk',
+          body: `Given your family history, most guidelines (ACS 2023, NCCN) recommend continuing a <strong>shared decision-making conversation about PSA screening through age 75</strong>. Work with your clinician to determine the right interval for you.`,
           asks: [
-            'What are the pros and cons of PSA screening for someone my age?',
-            'Does my family history or race/ethnicity change when I should start?',
+            'How often should I have a PSA check given my family history?',
+            'At what PSA level would my clinician recommend further workup?',
           ]
         });
-      } else if (age >= 50 && age <= 70) {
+      } else if (!prostateHighRisk && age >= 53 && age < 55) {
+        items.push({
+          badge: 'soon',
+          label: 'Coming up',
+          title: 'Prostate cancer screening (PSA) &mdash; shared decision-making',
+          body: `You&rsquo;re approaching the age range where the USPSTF (Grade C) recommends a <strong>shared decision-making conversation</strong> about PSA screening (ages 55&ndash;69). This isn&rsquo;t a skip &mdash; it&rsquo;s a conversation about whether screening makes sense for you.`,
+          asks: [
+            'What are the pros and cons of PSA screening for someone my age?',
+            'Does my race or family history shift when I should start?',
+          ]
+        });
+      } else if (!prostateHighRisk && age >= 55 && age <= 69) {
         items.push({
           badge: 'decision',
           label: 'Decision point',
           title: 'Prostate cancer screening (PSA) &mdash; shared decision-making',
-          body: `Most guidelines recommend that people with prostates aged 50&ndash;70 <strong>talk with their clinician</strong> about PSA screening. The decision involves weighing detection benefits against the risk of overdiagnosis and overtreatment. This is a genuinely nuanced clinical conversation &mdash; not a skip.`,
+          body: `The USPSTF (2018, Grade C) recommends that people with prostates aged <strong>55&ndash;69 discuss PSA screening with their clinician</strong>. The decision involves weighing early detection benefits against overdiagnosis and overtreatment. This is a nuanced conversation, not a skip.`,
           asks: [
             'Given my overall health and values, should I get a baseline PSA?',
-            'What does my risk look like based on my age, race, and family history?',
-            'If my PSA is elevated, what are the next steps?',
+            'What does my risk profile look like based on age, race, and family history?',
+            'If my PSA is elevated, what are the typical next steps?',
           ]
         });
-      } else if (age > 70) {
+      } else if (age >= 70) {
         items.push({
           badge: 'discuss',
-          label: 'Discuss with clinician',
+          label: 'USPSTF recommends against',
           title: 'Prostate cancer screening (PSA)',
-          body: `Most guidelines suggest that routine PSA screening offers diminishing benefit after age 70&ndash;75, and decisions at this stage are highly individual. If you&rsquo;ve not yet had a PSA discussion, it&rsquo;s still worth mentioning to your clinician.`,
+          body: `The USPSTF (2018, <strong>Grade D</strong>) recommends <em>against</em> routine PSA-based screening for people aged 70 and older. The potential harms (overdiagnosis, biopsy complications, overtreatment) outweigh the benefits in most cases. Discuss your specific situation with your clinician.`,
           asks: [
-            'At my age, would PSA screening change my management in a meaningful way?',
+            'Given my health and life expectancy, would PSA screening change my management?',
           ]
         });
       }
     }
 
     // ── BREAST / CHEST TISSUE ───────────────────────────────────────────────
+    // Sources: USPSTF 2024 Grade B — biennial mammo ages 40–74
+    //          NCCN — BRCA carriers: MRI from age 25, annual mammo from age 30
+    //          ACS 2023 — ≥20% lifetime risk: annual MRI + mammo from age 30
     if (organs.includes('breasts')) {
-      const highRisk = risks.includes('breast-family') || risks.includes('brca');
+      const brcaRisk   = risks.includes('brca');
+      const familyRisk = risks.includes('breast-family');
+      const highRisk   = brcaRisk || familyRisk;
 
-      if (highRisk && age >= 30) {
+      if (brcaRisk && age >= 23 && age < 25) {
+        items.push({
+          badge: 'soon',
+          label: 'BRCA: MRI coming up at 25',
+          title: 'Breast cancer screening &mdash; BRCA high-risk pathway',
+          body: `With a known BRCA1/BRCA2 variant, NCCN recommends starting <strong>annual breast MRI at age 25</strong> and <strong>annual mammography at age 30</strong>. You&rsquo;re approaching the MRI start age &mdash; make sure your care team has a plan.`,
+          asks: [
+            'Should I start annual MRI screening now?',
+            'Does my specific BRCA variant (1 vs. 2) affect my protocol?',
+            'Should my first-degree relatives consider BRCA testing?',
+          ]
+        });
+      } else if (brcaRisk && age >= 25) {
+        items.push({
+          badge: 'due',
+          label: 'BRCA: active screening',
+          title: 'Breast cancer screening &mdash; BRCA high-risk pathway',
+          body: `With a known BRCA1/BRCA2 variant, NCCN recommends <strong>annual breast MRI starting at age 25</strong> and <strong>annual mammography starting at age 30</strong>.${age < 30 ? ' You&rsquo;re in the MRI-only window &mdash; mammography starts at 30.' : ' Both annual MRI and annual mammography are recommended at your age.'} Do not substitute one for the other; both are needed together.`,
+          asks: [
+            'Am I on an annual MRI + mammogram schedule?',
+            'Does my BRCA variant (1 vs. 2) affect my surveillance interval?',
+            'Should I discuss risk-reducing surgery or chemoprevention with my clinician?',
+          ]
+        });
+      } else if (familyRisk && age >= 28) {
         items.push({
           badge: 'due',
           label: 'High-risk: discuss now',
           title: 'Breast cancer screening &mdash; high-risk pathway',
-          body: `Given your family history or BRCA status, you may qualify for <strong>earlier or more intensive screening</strong> (annual mammography starting at 30, or MRI in addition to mammography). This is an important conversation to have with your clinician soon if you haven&rsquo;t already.`,
+          body: `With a first-degree relative with breast cancer, you may have &ge;20% lifetime risk, which qualifies you for <strong>annual MRI + annual mammography starting at age 30</strong> (ACS 2023). Ask your clinician to calculate your lifetime risk using a validated model (e.g., Tyrer-Cuzick).`,
           asks: [
+            'What is my estimated lifetime breast cancer risk?',
+            'Should I be screened with annual MRI in addition to mammography?',
             'Do I qualify for genetic counseling or BRCA testing?',
-            'Should I be on an annual MRI + mammogram protocol given my risk?',
-            'What is my lifetime breast cancer risk estimate?',
           ]
         });
-      } else if (age >= 40 && age < 50) {
+      } else if (!highRisk && age >= 40 && age < 50) {
         items.push({
           badge: 'soon',
           label: 'Coming up / discuss',
@@ -983,6 +1033,92 @@
           body: `Decisions about continuing mammography after age 74&ndash;75 are individualized, based on prior results, overall health, and life expectancy. Have this conversation with your clinician.`,
           asks: [
             'Based on my health and prior results, should I continue mammograms?',
+          ]
+        });
+      }
+    }
+
+    // ── LUNG CANCER ─────────────────────────────────────────────────────────
+    // Source: USPSTF 2021 Grade B — annual LDCT ages 50–80, ≥20 pack-years, current or quit <15 yr
+    if (risks.includes('smoker-ldct')) {
+      if (age >= 48 && age < 50) {
+        items.push({
+          badge: 'soon',
+          label: 'Coming up at 50',
+          title: 'Lung cancer screening (low-dose CT)',
+          body: `Based on your smoking history, you&rsquo;re approaching the age when the USPSTF (Grade B) recommends <strong>annual low-dose CT (LDCT) of the chest starting at age 50</strong> for people with &ge;20 pack-year histories who currently smoke or quit within the past 15 years. Make sure your clinician knows your history.`,
+          asks: [
+            'When I turn 50, will I be eligible for annual LDCT lung cancer screening?',
+            'What does the screening involve and what does a positive result mean?',
+          ]
+        });
+      } else if (age >= 50 && age <= 80) {
+        items.push({
+          badge: 'due',
+          label: 'Active screening age',
+          title: 'Lung cancer screening (annual low-dose CT)',
+          body: `The USPSTF (2021, Grade B) recommends <strong>annual low-dose CT (LDCT) of the chest</strong> for adults aged 50&ndash;80 with a &ge;20 pack-year smoking history who currently smoke or have quit within the past 15 years. Many insurance plans cover this with no cost-sharing. Screening should stop if you quit &gt;15 years ago or develop a health problem limiting treatment.`,
+          asks: [
+            'Am I enrolled in an annual LDCT lung cancer screening program?',
+            'How do I find a screening center near me covered by my insurance?',
+            'What happens if a nodule is found on my CT?',
+          ]
+        });
+      }
+    }
+
+    // ── ABDOMINAL AORTIC ANEURYSM ────────────────────────────────────────────
+    // Source: USPSTF 2019 Grade B — one-time abdominal ultrasound, men 65–75 who ever smoked
+    if (risks.includes('ever-smoker') && organs.includes('prostate')) {
+      if (age >= 63 && age < 65) {
+        items.push({
+          badge: 'soon',
+          label: 'Coming up at 65',
+          title: 'Abdominal aortic aneurysm (AAA) screening',
+          body: `The USPSTF (2019, Grade B) recommends a <strong>one-time abdominal ultrasound to screen for AAA</strong> for men aged 65&ndash;75 who have ever smoked. You&rsquo;re approaching this age &mdash; flag it with your primary care clinician now so it&rsquo;s scheduled at your next visit after you turn 65.`,
+          asks: [
+            'Am I due for a one-time AAA ultrasound screening?',
+            'What would be done if an aneurysm is found?',
+          ]
+        });
+      } else if (age >= 65 && age <= 75) {
+        items.push({
+          badge: 'due',
+          label: 'One-time screening due',
+          title: 'Abdominal aortic aneurysm (AAA) screening',
+          body: `The USPSTF (2019, Grade B) recommends a <strong>one-time abdominal ultrasound to screen for AAA</strong> for men aged 65&ndash;75 who have ever smoked. AAA prevalence in this group is 4&ndash;8%. The ultrasound is painless, takes about 10 minutes, and is typically covered by insurance.`,
+          asks: [
+            'Have I had an AAA ultrasound screening? If not, can we schedule one?',
+            'If my aorta is enlarged but not yet requiring repair, how often should I be monitored?',
+          ]
+        });
+      }
+    }
+
+    // ── OSTEOPOROSIS ─────────────────────────────────────────────────────────
+    // Source: USPSTF 2025 Grade B — DXA bone density screening, women ≥65
+    if ((organs.includes('cervix') || organs.includes('breasts')) && !organs.includes('prostate')) {
+      if (age >= 63 && age < 65) {
+        items.push({
+          badge: 'soon',
+          label: 'Coming up at 65',
+          title: 'Osteoporosis screening (bone density / DXA)',
+          body: `The USPSTF (2025, Grade B) recommends <strong>bone density (DXA) screening for osteoporosis for women starting at age 65</strong>. You&rsquo;re approaching this age &mdash; flag it with your clinician so it&rsquo;s on the schedule. Osteoporosis is silent until a fracture occurs; screening identifies it when treatment can meaningfully reduce fracture risk.`,
+          asks: [
+            'When I turn 65, should I schedule a DXA scan?',
+            'Are there risk factors that would justify screening now, before age 65?',
+          ]
+        });
+      } else if (age >= 65) {
+        items.push({
+          badge: 'due',
+          label: 'Active screening age',
+          title: 'Osteoporosis screening (bone density / DXA)',
+          body: `The USPSTF (2025, Grade B) recommends <strong>bone density (DXA) screening</strong> for osteoporosis for women aged 65 and older. DXA is a quick, low-radiation scan measuring bone strength at the hip and spine. Results (T-score) guide decisions about calcium, vitamin D, weight-bearing exercise, and medications if needed.`,
+          asks: [
+            'Have I had a baseline DXA scan? If not, can we order one?',
+            'Based on my T-score, what does my fracture risk look like?',
+            'Should I be on a bisphosphonate or other bone-protective agent?',
           ]
         });
       }
