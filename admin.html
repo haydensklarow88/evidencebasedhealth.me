@@ -561,6 +561,8 @@ function populateClientSelectors() {
     });
     if (cur) sel.value = cur;
   });
+  updateMetaPreview();
+  updateGooglePanel();
 }
 
 function useClientForAds(clientId) {
@@ -581,13 +583,20 @@ document.getElementById('meta-client-sel').addEventListener('change', () => {
   updateSelDot('meta-client-sel','meta-sel-dot');
   updateMetaPreview();
 });
-document.getElementById('google-client-sel').addEventListener('change', () => updateSelDot('google-client-sel','google-sel-dot'));
+document.getElementById('google-client-sel').addEventListener('change', () => {
+  updateSelDot('google-client-sel','google-sel-dot');
+  updateGooglePanel();
+});
 
 function updateMetaPreview() {
   const sel = document.getElementById('meta-client-sel');
   const clientId = sel.value;
   const c = clients.find(x => x.clientId === clientId);
-  const name = c ? c.name : 'Evidence-Based Health';
+  const name    = c ? c.name : 'Evidence-Based Health';
+  const siteUrl = c ? '' : 'https://evidencebasedhealth.me';
+  const domain  = siteUrl ? 'EVIDENCEBASEDHEALTH.ME' : (name.toUpperCase().replace(/\s+/g,'-') + '.COM');
+
+  // Avatar + page name in preview
   const avatarLetter = name.trim()[0]?.toUpperCase() || '🌿';
   const pageName = document.getElementById('prev-page-name');
   const avatar   = document.getElementById('prev-avatar');
@@ -605,6 +614,62 @@ function updateMetaPreview() {
       avatar.style.background = 'var(--accent-light)';
       avatar.style.color = '';
     }
+  }
+
+  // Form field placeholders / values
+  const year = new Date().getFullYear();
+  document.getElementById('m-name').placeholder = `e.g. ${name} – Spring ${year}`;
+  document.getElementById('m-primary-text').placeholder =
+    c ? `Tell us about ${name} and what sets it apart…`
+      : "Most people don't know when they're due for cancer screening. We fix that \u2014 evidence-based, plain-language, no hype. Free weekly brief.";
+  document.getElementById('m-headline').placeholder =
+    c ? `${name.slice(0,28)}` : 'Free Evidence-Based Health Brief';
+  document.getElementById('m-description').placeholder =
+    c ? '' : 'Science. No agenda.';
+
+  // Destination URL — only overwrite if the field still has the EBH default or was empty
+  const destField = document.getElementById('m-dest-url');
+  if (!destField.value || destField.value === 'https://evidencebasedhealth.me') {
+    destField.value = siteUrl;
+  }
+
+  // Preview domain
+  const prevDomain = document.getElementById('prev-domain');
+  if (prevDomain && (!document.getElementById('m-dest-url').value)) {
+    prevDomain.textContent = domain;
+  }
+
+  // Keep live preview headline placeholder in sync
+  const hlField = document.getElementById('m-headline');
+  const prevHl  = document.getElementById('prev-headline');
+  if (prevHl && !hlField.value) prevHl.textContent = hlField.placeholder;
+
+  // Keep live preview description placeholder in sync
+  const descField = document.getElementById('m-description');
+  const prevDesc  = document.getElementById('prev-desc');
+  if (prevDesc && !descField.value) prevDesc.textContent = descField.placeholder || '';
+}
+
+function updateGooglePanel() {
+  const sel = document.getElementById('google-client-sel');
+  const clientId = sel.value;
+  const c = clients.find(x => x.clientId === clientId);
+  const name    = c ? c.name : 'EBH';
+  const siteUrl = c ? '' : 'https://evidencebasedhealth.me';
+  const year    = new Date().getFullYear();
+
+  document.getElementById('g-name').placeholder = `${name} \u2013 Search ${year}`;
+
+  const urlField = document.getElementById('g-final-url');
+  if (!urlField.value || urlField.value === 'https://evidencebasedhealth.me') {
+    urlField.value = siteUrl;
+  }
+
+  const kwField = document.getElementById('g-keywords');
+  if (!kwField.value) {
+    kwField.placeholder = c
+      ? `${name.toLowerCase()} services\n${name.toLowerCase()} reviews\nhow to use ${name.toLowerCase()}`
+      : 'evidence based health newsletter\ncancer screening recommendations\ncolorectal cancer screening age\nwhen to get a colonoscopy\npreventive health tips\nhormone health newsletter\nmetabolic health resources';
   }
 }
 
