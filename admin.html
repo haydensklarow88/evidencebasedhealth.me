@@ -347,15 +347,20 @@
           <div id="g-desc-wrap"></div>
           <button type="button" class="btn-sm" id="btn-add-d" style="margin-top:0.5rem;">+ Add Description</button>
         </div>
-        <button class="btn-submit" id="btn-gen-google">Generate Campaign Brief</button>
+        <button class="btn-submit" id="btn-gen-google">Create Google Campaign (Paused)</button>
         <div class="status-bar" id="google-status"></div>
         <div class="google-output" id="google-output">
-          <div class="output-card"><h3>Setup Steps</h3><ul class="step-list" id="go-steps"></ul></div>
-          <div class="output-card"><h3>Campaign Summary</h3><div class="copy-block" id="go-campaign"><button class="copy-btn" data-block="go-campaign">Copy</button><div id="go-campaign-inner"></div></div></div>
-          <div class="output-card"><h3>Keywords</h3><div id="go-kw-pills"></div></div>
-          <div class="output-card"><h3>Headlines</h3><div class="copy-block" id="go-headlines"><button class="copy-btn" data-block="go-headlines">Copy</button><div id="go-headlines-inner"></div></div></div>
-          <div class="output-card"><h3>Descriptions</h3><div class="copy-block" id="go-descs"><button class="copy-btn" data-block="go-descs">Copy</button><div id="go-descs-inner"></div></div></div>
-          <a href="https://ads.google.com" target="_blank" rel="noopener" class="open-google-btn">Open Google Ads ↗</a>
+          <div class="output-card">
+            <h3>Campaign Created</h3>
+            <div style="font-size:0.88rem;color:var(--ink-mid);line-height:1.8">
+              <div>Name: <strong id="go-name"></strong></div>
+              <div>Campaign ID: <code id="go-cid" style="background:var(--paper);padding:0.1rem 0.4rem;border-radius:3px;font-size:0.85em"></code></div>
+              <div>Ad Group ID: <code id="go-agid" style="background:var(--paper);padding:0.1rem 0.4rem;border-radius:3px;font-size:0.85em"></code></div>
+              <div>Account: <span id="go-account"></span></div>
+            </div>
+            <a id="go-review-link" href="#" target="_blank" rel="noopener" class="open-google-btn" style="display:inline-flex;margin-top:1rem">Review in Google Ads ↗</a>
+          </div>
+          <p style="font-size:0.77rem;color:var(--ink-faint);margin-top:0.5rem">Campaign and ad are created in <strong>Paused</strong> status — enable them after reviewing in Google Ads Manager.</p>
         </div>
       </div>
     </div>
@@ -855,20 +860,21 @@ document.getElementById('btn-gen-google').addEventListener('click', async () => 
   if (!campaignName || !dailyBudget || headlines.length < 3 || descriptions.length < 2) {
     showStatus('google-status','error','Enter campaign name, budget, at least 3 headlines, and 2 descriptions.'); return;
   }
-  btn.disabled = true; showStatus('google-status','loading','Generating brief…');
+  btn.disabled = true; showStatus('google-status','loading','Creating campaign in Google Ads… (this takes ~10 seconds)');
   try {
-    const res  = await fetch(`${API}/generate-google-brief`, { method:'POST', headers:authHeaders(), body:JSON.stringify({ campaignName, dailyBudget, keywords, headlines, descriptions, finalUrl, clientId }) });
+    const res  = await fetch(`${API}/create-google-campaign`, { method:'POST', headers:authHeaders(), body:JSON.stringify({ campaignName, dailyBudget, keywords, headlines, descriptions, finalUrl, clientId }) });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Failed');
-    const b = data.brief;
     document.getElementById('google-status').className = 'status-bar';
-    document.getElementById('go-steps').innerHTML = b.setupInstructions.map(s=>`<li><span>${esc(s)}</span></li>`).join('');
-    document.getElementById('go-campaign-inner').innerHTML = [`Name: ${esc(b.campaign.name)}`,`Type: ${esc(b.campaign.type)} | Network: ${esc(b.campaign.network)}`,`Budget: ${esc(b.campaign.dailyBudget)} | Bidding: ${esc(b.campaign.biddingStrategy)}`,`Final URL: ${esc(b.responsiveSearchAd.finalUrl)}`].map(l=>`<div>${l}</div>`).join('');
-    document.getElementById('go-kw-pills').innerHTML = b.adGroup.keywords.map(k=>`<span class="kw-pill">${esc(k.keyword)}</span>`).join('');
-    document.getElementById('go-headlines-inner').innerHTML = b.responsiveSearchAd.headlines.map((h,i)=>`<div class="ad-row"><span class="ad-row-label">H${i+1}</span><span>${esc(h)}</span></div>`).join('');
-    document.getElementById('go-descs-inner').innerHTML     = b.responsiveSearchAd.descriptions.map((d,i)=>`<div class="ad-row"><span class="ad-row-label">D${i+1}</span><span>${esc(d)}</span></div>`).join('');
+    document.getElementById('go-name').textContent    = data.campaignName;
+    document.getElementById('go-cid').textContent     = data.campaignId;
+    document.getElementById('go-agid').textContent    = data.adGroupId;
+    document.getElementById('go-account').textContent = data.customer_id;
+    const link = document.getElementById('go-review-link');
+    link.href = data.review_url;
     document.getElementById('google-output').classList.add('visible');
     document.getElementById('google-output').scrollIntoView({ behavior:'smooth', block:'start' });
+    showStatus('google-status','success',`✓ Campaign <strong>${esc(data.campaignName)}</strong> created (paused). <a href="${esc(data.review_url)}" target="_blank" rel="noopener">Open in Google Ads ↗</a>`);
   } catch (ex) { showStatus('google-status','error',`Error: ${esc(ex.message)}`);
   } finally { btn.disabled = false; }
 });

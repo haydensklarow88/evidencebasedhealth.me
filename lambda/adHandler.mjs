@@ -11,10 +11,14 @@ const {
   ADMIN_PASSWORD, JWT_SECRET,
   FB_ACCESS_TOKEN, FB_AD_ACCOUNT_ID, FB_PAGE_ID,
   SITE_ORIGIN, CLIENTS_TABLE = 'AdClients',
+  GOOGLE_DEVELOPER_TOKEN, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET,
+  GOOGLE_REFRESH_TOKEN, GOOGLE_CUSTOMER_ID, GOOGLE_MCC_ID,
 } = process.env;
 
 const FB_VER  = 'v20.0';
 const FB_BASE = `https://graph.facebook.com/${FB_VER}`;
+const GADS_VER  = 'v17';
+const GADS_BASE = `https://googleads.googleapis.com/${GADS_VER}`;
 const dynamo  = new DynamoDBClient({ region: process.env.AWS_REGION || 'us-east-1' });
 
 const CORS = {
@@ -51,6 +55,41 @@ function verifyJWT(token) {
 
 function resp(status, body, extra = {}) {
   return { statusCode: status, headers: { ...CORS, 'Content-Type': 'application/json', ...extra }, body: JSON.stringify(body) };
+}
+
+async function refreshGToken(refreshTok) {
+  const res = await fetch('https://oauth2.googleapis.com/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      grant_type: 'refresh_token',
+      client_id: GOOGLE_CLIENT_ID,
+      client_secret: GOOGLE_CLIENT_SECRET,
+      refresh_token: refreshTok,
+    }).toString(),
+  });
+  const data = await res.json();
+  if (!res.ok || data.error) throw new Error(data.error_description || 'Google token refresh failed');
+  return data.access_token;
+}
+
+async function gAds(method, path, body, customerId, mccId, accessToken, devToken) {
+  const url = `${GADS_BASE}/customers/${customerId}${path}`;
+  const headers = {
+    'Authorization': `Bearer ${accessToken}`,
+    'developer-token': devToken || GOOGLE_DEVELOPER_TOKEN,
+    'Content-Type': 'application/json',
+  };
+  if (mccId) headers['login-customer-id'] = String(mccId);
+  const res = await fetch(url, { method, headers, body: body ? JSON.stringify(body) : undefined });
+  const data = await res.json();
+  if (!res.ok) {
+    const msg = data.error?.details?.[0]?.errors?.[0]?.message
+      || data.error?.message
+      || JSON.stringify(data);
+    throw new Error(`Google Ads API: ${msg}`);
+  }
+  return data;
 }
 
 async function fb(method, path, data, token = FB_ACCESS_TOKEN) {
@@ -257,41 +296,113 @@ export const handler = async (event) => {
     });
   }
 
-  /* POST /generate-google-brief */
-  if (rawPath.endsWith('/generate-google-brief') && method === 'POST') {
-    const { campaignName = 'Newsletter', dailyBudget, keywords = [], headlines = [], descriptions = [], finalUrl = 'https://evidencebasedhealth.me', clientId } = body;
+  /* POST /create-google-campaign */
+  if (rawPath.endsWith('/create-google-campaign') && method === 'POST') {
+    const {
+      clientId, campaignName = 'New Campaign', dailyBudget, keywords = [],
+      headlines = [], descriptions = [], finalUrl = 'https://evidencebasedhealth.me',
+    } = body;
 
     if (!campaignName || !dailyBudget || headlines.length < 3 || descriptions.length < 2)
       return resp(400, { error: 'Provide campaignName, dailyBudget, at least 3 headlines, and 2 descriptions' });
 
-    let clientName = null;
+    let devToken    = GOOGLE_DEVELOPER_TOKEN;
+    let refreshTok  = GOOGLE_REFRESH_TOKEN;
+    let customerId  = (GOOGLE_CUSTOMER_ID || '').replace(/-/g, '');
+    let mccId       = (GOOGLE_MCC_ID || '').replace(/-/g, '');
+
     if (clientId) {
       const client = await getClient(clientId);
-      clientName = client?.name;
+      const g = client?.platforms?.google;
+      if (g?.customerId)      customerId = g.customerId.replace(/-/g, '');
+      if (g?.developerToken)  devToken   = g.developerToken;
+      if (g?.loginCustomerId) mccId      = g.loginCustomerId.replace(/-/g, '');
+      if (client?.platforms?.google?.refreshToken) refreshTok = client.platforms.google.refreshToken;
     }
 
-    let displayPath;
-    try { displayPath = new URL(finalUrl).hostname; } catch { displayPath = finalUrl; }
+    if (!devToken || !refreshTok || !customerId)
+      return resp(503, { error: 'Google Ads credentials not configured. Add them in the Clients tab or set defaults.' });
 
+    const accessToken = await refreshGToken(refreshTok);
+
+    // 1. Budget
+    const budgetRes = await gAds('POST', '/campaignBudgets:mutate', {
+      operations: [{ create: {
+        name: `${campaignName} — Budget`,
+        amountMicros: String(Math.round(Number(dailyBudget) * 1_000_000)),
+        deliveryMethod: 'STANDARD',
+      }}],
+    }, customerId, mccId, accessToken, devToken);
+    const budgetRN = budgetRes.results[0].resourceName;
+
+    // 2. Campaign
+    const campaignRes = await gAds('POST', '/campaigns:mutate', {
+      operations: [{ create: {
+        name: campaignName,
+        advertisingChannelType: 'SEARCH',
+        status: 'PAUSED',
+        campaignBudget: budgetRN,
+        biddingStrategyType: 'MAXIMIZE_CONVERSIONS',
+        networkSettings: {
+          targetGoogleSearch: true,
+          targetSearchNetwork: true,
+          targetContentNetwork: false,
+        },
+      }}],
+    }, customerId, mccId, accessToken, devToken);
+    const campaignRN = campaignRes.results[0].resourceName;
+    const campaignId = campaignRN.split('/').pop();
+
+    // 3. Ad Group
+    const adGroupRes = await gAds('POST', '/adGroups:mutate', {
+      operations: [{ create: {
+        name: `${campaignName} — Ad Group 1`,
+        campaign: campaignRN,
+        status: 'ENABLED',
+        type: 'SEARCH_STANDARD',
+        cpcBidMicros: '1000000',
+      }}],
+    }, customerId, mccId, accessToken, devToken);
+    const adGroupRN = adGroupRes.results[0].resourceName;
+    const adGroupId = adGroupRN.split('/').pop();
+
+    // 4. Responsive Search Ad
+    await gAds('POST', '/adGroupAds:mutate', {
+      operations: [{ create: {
+        adGroup: adGroupRN,
+        status: 'PAUSED',
+        ad: {
+          responsiveSearchAd: {
+            headlines:    headlines.slice(0, 15).map(t => ({ text: t })),
+            descriptions: descriptions.slice(0, 4).map(t => ({ text: t })),
+          },
+          finalUrls: [finalUrl],
+        },
+      }}],
+    }, customerId, mccId, accessToken, devToken);
+
+    // 5. Keywords
+    if (keywords.length > 0) {
+      await gAds('POST', '/adGroupCriteria:mutate', {
+        operations: keywords.slice(0, 20).map(kw => ({ create: {
+          adGroup: adGroupRN,
+          status: 'ENABLED',
+          keyword: { text: kw, matchType: 'BROAD' },
+        }})),
+      }, customerId, mccId, accessToken, devToken);
+    }
+
+    const cidDisplay = customerId.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
     return resp(200, {
-      brief: {
-        platform:    'Google Ads',
-        generatedAt: new Date().toISOString(),
-        ...(clientName && { client: clientName }),
-        campaign: { name: campaignName, type: 'Search', network: 'Google Search Network', dailyBudget: `$${dailyBudget}/day`, biddingStrategy: 'Maximize Conversions' },
-        adGroup:  { name: `${campaignName} – Ad Group 1`, keywords: keywords.map(k => ({ keyword: k, matchType: 'Broad match' })) },
-        responsiveSearchAd: { finalUrl, displayPath, headlines: headlines.slice(0, 15), descriptions: descriptions.slice(0, 4) },
-        setupInstructions: [
-          'Sign in to ads.google.com',
-          'Click + New Campaign → Goal: Leads → Type: Search',
-          `Set daily budget: $${dailyBudget}`,
-          'Bidding: Maximize Conversions',
-          'Create Ad Group and paste keywords (one per line)',
-          'Create Responsive Search Ad and paste headlines + descriptions',
-          `Set Final URL: ${finalUrl}`,
-        ],
-      },
+      success: true, campaignId, adGroupId, campaignName,
+      customer_id: cidDisplay,
+      review_url: `https://ads.google.com/aw/campaigns?campaignId=${campaignId}`,
     });
+  }
+
+  /* POST /generate-google-brief (kept for backward compat) */
+  if (rawPath.endsWith('/generate-google-brief') && method === 'POST') {
+    return resp(301, { error: 'Use /create-google-campaign for live campaign creation.' });
   }
 
   return resp(404, { error: 'Not found' });
