@@ -301,7 +301,7 @@
         <div class="preview-sticky">
           <div class="preview-label">Live Preview — Facebook</div>
           <div class="fb-card">
-            <div class="fb-header"><div class="fb-avatar">🌿</div><div><div class="fb-page-name">Evidence-Based Health</div><div class="fb-sponsored">Sponsored · 🌐</div></div></div>
+            <div class="fb-header"><div class="fb-avatar" id="prev-avatar">🌿</div><div><div class="fb-page-name" id="prev-page-name">Evidence-Based Health</div><div class="fb-sponsored">Sponsored · 🌐</div></div></div>
             <div class="fb-primary-text" id="prev-text">Your primary text will appear here…</div>
             <div class="fb-img-wrap" id="prev-img-wrap"><div class="fb-img-placeholder">Ad image</div></div>
             <div class="fb-link-row">
@@ -577,8 +577,36 @@ function updateSelDot(selId, dotId) {
   const c = clients.find(x => x.clientId === clientId);
   dot.style.background = c ? c.color : 'var(--ink-faint)';
 }
-document.getElementById('meta-client-sel').addEventListener('change', () => updateSelDot('meta-client-sel','meta-sel-dot'));
+document.getElementById('meta-client-sel').addEventListener('change', () => {
+  updateSelDot('meta-client-sel','meta-sel-dot');
+  updateMetaPreview();
+});
 document.getElementById('google-client-sel').addEventListener('change', () => updateSelDot('google-client-sel','google-sel-dot'));
+
+function updateMetaPreview() {
+  const sel = document.getElementById('meta-client-sel');
+  const clientId = sel.value;
+  const c = clients.find(x => x.clientId === clientId);
+  const name = c ? c.name : 'Evidence-Based Health';
+  const avatarLetter = name.trim()[0]?.toUpperCase() || '🌿';
+  const pageName = document.getElementById('prev-page-name');
+  const avatar   = document.getElementById('prev-avatar');
+  if (pageName) pageName.textContent = name;
+  if (avatar) {
+    if (c) {
+      avatar.textContent = avatarLetter;
+      avatar.style.background = c.color;
+      avatar.style.color = '#fff';
+      avatar.style.fontSize = '0.9rem';
+      avatar.style.fontWeight = '700';
+      avatar.style.fontFamily = 'var(--serif)';
+    } else {
+      avatar.textContent = '🌿';
+      avatar.style.background = 'var(--accent-light)';
+      avatar.style.color = '';
+    }
+  }
+}
 
 /* ── Drawer ── */
 function buildColorSwatches() {
