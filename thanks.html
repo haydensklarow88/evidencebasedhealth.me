@@ -23,6 +23,9 @@
   }
   .nav-logo { font-family: var(--serif); font-size: 0.95rem; color: var(--accent); font-style: italic; text-decoration: none; }
   .nav-logo span { font-style: normal; font-weight: 700; }
+  .nav-links { display: flex; align-items: center; gap: 1.5rem; }
+  .nav-link { font-size: 0.8rem; color: var(--ink-light); text-decoration: none; }
+  .nav-link:hover { color: var(--accent); }
   main {
     flex: 1; display: flex; align-items: center; justify-content: center;
     padding: 4rem 2rem;
@@ -76,6 +79,11 @@
 
 <nav>
   <a href="index.html" class="nav-logo"><span>Evidence&#8209;Based</span> Health</a>
+  <div class="nav-links">
+    <a href="about.html" class="nav-link">About</a>
+    <a href="newsletter.html" class="nav-link">Newsletter</a>
+    <a href="prevention-roadmap.html" class="nav-link">Prevention Roadmap</a>
+  </div>
 </nav>
 
 <main>

@@ -59,14 +59,10 @@
   }
   .nav-logo { font-family: var(--serif); font-size: 0.95rem; color: var(--accent); font-style: italic; text-decoration: none; letter-spacing: 0.01em; }
   .nav-logo span { font-style: normal; font-weight: 700; }
-  .nav-cta {
-    font-family: var(--sans); font-size: 0.8rem; font-weight: 500;
-    letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent);
-    text-decoration: none; border: 1px solid var(--accent);
-    padding: 0.45rem 1.1rem; border-radius: 2px;
-    transition: background 0.2s, color 0.2s;
-  }
-  .nav-cta:hover { background: var(--accent); color: #fff; }
+  .nav-links { display: flex; align-items: center; gap: 1.5rem; }
+  .nav-link { font-size: 0.8rem; color: var(--ink-light); text-decoration: none; letter-spacing: 0.02em; }
+  .nav-link:hover { color: var(--accent); }
+  .nav-link-cta { color: var(--accent); font-weight: 500; }
 
   /* ── PAGE HERO ── */
   .page-hero {
@@ -531,7 +527,11 @@
 <!-- NAV -->
 <nav>
   <a href="index.html" class="nav-logo"><span>Evidence&#8209;Based</span> Health</a>
-  <a href="index.html#subscribe" class="nav-cta">Get the brief</a>
+  <div class="nav-links">
+    <a href="about.html" class="nav-link">About</a>
+    <a href="newsletter.html" class="nav-link">Newsletter</a>
+    <a href="index.html" class="nav-link nav-link-cta">Get the brief &rarr;</a>
+  </div>
 </nav>
 
 <!-- PAGE HERO -->

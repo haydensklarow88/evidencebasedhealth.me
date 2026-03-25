@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="What to expect from the Evidence-Based Health weekly brief: 2&ndash;3 actionable insights on hormones, strength, and metabolic health, plus one small experiment each week.">
+<title>Newsletter &mdash; Evidence-Based Health</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f1a14; --ink-mid: #2d3d35; --ink-light: #5c6e65; --ink-faint: #9aada3;
+    --paper: #f7f5f0; --paper-warm: #ede9e1; --paper-card: #ffffff;
+    --accent: #1a5c3a; --accent-mid: #2d7a52; --accent-light: #e8f2ec; --accent-rule: #c2d9cb;
+    --serif: 'Libre Baskerville', Georgia, serif;
+    --sans: 'DM Sans', system-ui, sans-serif;
+    --max: 680px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 16px; scroll-behavior: smooth; }
+  body { background: var(--paper); color: var(--ink); font-family: var(--sans); font-weight: 300; line-height: 1.75; -webkit-font-smoothing: antialiased; }
+
+  nav {
+    border-bottom: 1px solid var(--paper-warm);
+    padding: 0 2rem; height: 58px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-logo { font-family: var(--serif); font-size: 0.95rem; color: var(--accent); font-style: italic; text-decoration: none; letter-spacing: 0.01em; }
+  .nav-logo span { font-style: normal; font-weight: 700; }
+  .nav-links { display: flex; align-items: center; gap: 1.5rem; }
+  .nav-link { font-size: 0.8rem; color: var(--ink-light); text-decoration: none; letter-spacing: 0.02em; }
+  .nav-link:hover { color: var(--accent); }
+  .nav-link-cta { color: var(--accent); font-weight: 500; }
+
+  main { max-width: var(--max); margin: 0 auto; padding: 4rem 2rem 6rem; }
+
+  .page-label {
+    font-size: 0.7rem; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--accent-mid); margin-bottom: 1rem;
+  }
+  h1 {
+    font-family: var(--serif);
+    font-size: clamp(1.6rem, 3.5vw, 2.3rem);
+    line-height: 1.2; font-weight: 700; color: var(--ink);
+    letter-spacing: -0.02em; margin-bottom: 1.2rem;
+  }
+  .intro {
+    font-size: 1.05rem; color: var(--ink-mid);
+    line-height: 1.8; margin-bottom: 3rem; font-weight: 300;
+  }
+
+  h2 {
+    font-family: var(--serif); font-size: 1.15rem; font-weight: 700; color: var(--ink);
+    margin-bottom: 1.4rem; padding-top: 2.5rem; border-top: 1px solid var(--paper-warm);
+  }
+
+  /* Delivery items */
+  .get-list { display: flex; flex-direction: column; }
+  .get-item {
+    display: grid; grid-template-columns: 1.8rem 1fr;
+    gap: 1rem; padding: 1.3rem 0;
+    border-bottom: 1px solid var(--paper-warm); align-items: start;
+  }
+  .get-item:last-child { border-bottom: none; }
+  .get-arrow { color: var(--accent-mid); font-size: 0.9rem; padding-top: 0.2rem; }
+  .get-body h4 {
+    font-family: var(--serif); font-size: 0.97rem; font-weight: 700;
+    color: var(--ink); margin-bottom: 0.3rem;
+  }
+  .get-body p { font-size: 0.88rem; color: var(--ink-light); line-height: 1.7; }
+
+  /* Pillar list */
+  .pillar-list { display: flex; flex-direction: column; }
+  .pillar-item {
+    display: grid; grid-template-columns: 2.2rem 1fr;
+    align-items: baseline; gap: 1rem;
+    padding: 0.85rem 0; border-bottom: 1px solid var(--paper-warm);
+  }
+  .pillar-item:last-child { border-bottom: none; }
+  .pillar-num {
+    font-family: var(--serif); font-size: 0.78rem;
+    font-weight: 700; color: var(--accent-rule); letter-spacing: 0.02em;
+  }
+  .pillar-title { font-size: 0.95rem; color: var(--ink-mid); line-height: 1.5; }
+  .pillar-title strong { font-weight: 500; color: var(--ink); }
+
+  /* CTA */
+  .cta-row {
+    text-align: center; padding-top: 2.5rem; border-top: 1px solid var(--paper-warm); margin-top: 2.5rem;
+  }
+  .cta-p { font-size: 0.95rem; color: var(--ink-light); margin-bottom: 1.2rem; }
+  .btn-cta {
+    display: inline-block; padding: 0.9rem 2rem;
+    background: var(--accent); color: #fff;
+    text-decoration: none; border-radius: 2px;
+    font-family: var(--sans); font-size: 0.88rem; font-weight: 500;
+    letter-spacing: 0.05em; transition: background 0.2s;
+  }
+  .btn-cta:hover { background: var(--accent-mid); }
+
+  footer {
+    border-top: 1px solid var(--paper-warm); padding: 1.5rem 2rem;
+    text-align: center; font-size: 0.75rem; color: var(--ink-faint);
+  }
+  footer a { color: var(--ink-light); text-decoration: none; }
+  footer a:hover { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo"><span>Evidence&#8209;Based</span> Health</a>
+  <div class="nav-links">
+    <a href="about.html" class="nav-link">About</a>
+    <a href="prevention-roadmap.html" class="nav-link">Prevention Roadmap</a>
+    <a href="index.html" class="nav-link nav-link-cta">Get the brief &rarr;</a>
+  </div>
+</nav>
+
+<main>
+  <div class="page-label">What to Expect</div>
+  <h1>One brief email. Once a week. Actually useful.</h1>
+  <p class="intro">Evidence-based insights on hormones, strength, and metabolic health &mdash; written by a clinician who spends his days treating people who didn&rsquo;t get this information early enough. No products. No agenda. Plain language.</p>
+
+  <div class="get-list">
+    <div class="get-item">
+      <div class="get-arrow">&rarr;</div>
+      <div class="get-body">
+        <h4>2&ndash;3 things to know or do</h4>
+        <p>Actionable guidance on hormones, metabolic health, and everyday habits &mdash; rooted in current medical evidence and explained in plain language.</p>
+      </div>
+    </div>
+    <div class="get-item">
+      <div class="get-arrow">&rarr;</div>
+      <div class="get-body">
+        <h4>1 tiny experiment</h4>
+        <p>Small enough to actually try &mdash; a 10&#8209;minute walk after a meal, a protein target, a simple sleep tweak. One thing per week.</p>
+      </div>
+    </div>
+    <div class="get-item">
+      <div class="get-arrow">&rarr;</div>
+      <div class="get-body">
+        <h4>1 conversation starter</h4>
+        <p>Something you can bring to a partner, parent, friend, or your own clinician to open a better health conversation.</p>
+      </div>
+    </div>
+    <div class="get-item">
+      <div class="get-arrow">&rarr;</div>
+      <div class="get-body">
+        <h4>No agenda</h4>
+        <p>No products to sell, no supplements to push &mdash; just the honest signal extracted from the noise.</p>
+      </div>
+    </div>
+  </div>
+
+  <h2>Topics covered</h2>
+  <div class="pillar-list">
+    <div class="pillar-item">
+      <span class="pillar-num">01</span>
+      <span class="pillar-title"><strong>Hormones</strong> &mdash; TRT, peptides, GLP&#8209;1s, thyroid, cortisol, sex hormones across the lifespan</span>
+    </div>
+    <div class="pillar-item">
+      <span class="pillar-num">02</span>
+      <span class="pillar-title"><strong>Strength and body composition</strong> &mdash; resistance training, protein, recovery, and what the evidence actually says</span>
+    </div>
+    <div class="pillar-item">
+      <span class="pillar-num">03</span>
+      <span class="pillar-title"><strong>Metabolic health</strong> &mdash; blood glucose, insulin resistance, cardiovascular risk, diet, and gut health</span>
+    </div>
+    <div class="pillar-item">
+      <span class="pillar-num">04</span>
+      <span class="pillar-title"><strong>Preventive screening</strong> &mdash; which screenings matter, at what ages, and what to ask your clinician</span>
+    </div>
+    <div class="pillar-item">
+      <span class="pillar-num">05</span>
+      <span class="pillar-title"><strong>Plain&#8209;language education</strong> &mdash; understanding labs, imaging, diagnoses, and risk numbers so you can participate in your own care</span>
+    </div>
+  </div>
+
+  <div class="cta-row">
+    <p class="cta-p">Free. Weekly. Unsubscribe anytime.</p>
+    <a href="index.html" class="btn-cta">Subscribe now &rarr;</a>
+  </div>
+</main>
+
+<footer>
+  &copy; 2025 Evidence-Based Health &nbsp;&middot;&nbsp;
+  <a href="privacy.html">Privacy Policy</a> &nbsp;&middot;&nbsp;
+  <a href="disclaimer.html">Disclaimer</a> &nbsp;&middot;&nbsp;
+  <a href="mailto:info@evidencebasedhealth.me">info@evidencebasedhealth.me</a>
+  &nbsp;&middot;&nbsp; Educational content only. Not medical advice.
+</footer>
+
+<script src="js/cookies.js"></script>
+</body>
+</html>
