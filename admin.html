@@ -662,27 +662,18 @@
             <div class="conn-logo">f</div>
             <div>
               <div class="conn-name">Meta (Facebook / Instagram)</div>
-              <div class="conn-sub">Needs access token for EBH account</div>
+              <div class="conn-sub">Marketing API — connected</div>
             </div>
-            <span class="conn-status pending">⚠ Needs Token</span>
+            <span class="conn-status connected">✓ Connected</span>
           </div>
           <div class="conn-body">
             <div class="conn-detail"><span class="conn-label">Ad Account</span><span>act_719254284605537</span></div>
             <div class="conn-detail"><span class="conn-label">Page ID</span><span>1003750956158809</span></div>
-            <div class="conn-detail"><span class="conn-label">Status</span><span style="color:#b45309">Access token is PLACEHOLDER — update in Lambda env</span></div>
+            <div class="conn-detail"><span class="conn-label">Status</span><span style="color:#15803d">Access token set ✓ — expires ~60 days, regenerate in Graph Explorer</span></div>
             <div class="conn-links">
-              <a href="https://developers.facebook.com/tools/explorer" target="_blank" rel="noopener" class="conn-link">Generate Access Token ↗</a>
+              <a href="https://developers.facebook.com/tools/explorer" target="_blank" rel="noopener" class="conn-link">Regenerate Token ↗</a>
               <a href="https://www.facebook.com/adsmanager" target="_blank" rel="noopener" class="conn-link">Meta Ads Manager ↗</a>
               <a href="https://developers.facebook.com/docs/marketing-apis" target="_blank" rel="noopener" class="conn-link">Marketing API Docs ↗</a>
-            </div>
-            <div class="conn-how">
-              <div class="conn-how-title">How to get your access token</div>
-              <ol class="conn-steps">
-                <li>Go to <strong>developers.facebook.com/tools/explorer</strong></li>
-                <li>Select your App → click <strong>Generate Access Token</strong></li>
-                <li>Add permissions: <code>ads_management</code>, <code>ads_read</code>, <code>pages_read_engagement</code></li>
-                <li>Copy the token and update the Lambda env var <code>FB_ACCESS_TOKEN</code></li>
-              </ol>
             </div>
           </div>
         </div>
