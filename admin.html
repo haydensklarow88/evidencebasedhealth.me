@@ -214,6 +214,60 @@
   .step-list li::before { content: counter(steps); display: flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; background: var(--accent-light); color: var(--accent); font-size: 0.69rem; font-weight: 700; flex-shrink: 0; margin-top: 0.13rem; }
   .open-google-btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.65rem 1.2rem; background: var(--accent); color: #fff; border-radius: 7px; font-family: var(--sans); font-size: 0.85rem; font-weight: 500; text-decoration: none; transition: background 0.2s; margin-top: 1.25rem; }
   .open-google-btn:hover { background: var(--accent-mid); }
+
+  /* ── My Account ── */
+  .home-header { margin-bottom:2rem; }
+  .home-hero { display:flex;align-items:center;gap:1.1rem; }
+  .home-avatar { width:52px;height:52px;border-radius:12px;background:var(--accent);color:#fff;font-family:var(--serif);font-weight:700;font-size:1.1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0; }
+  .home-org { font-family:var(--serif);font-size:1.3rem;font-weight:700;color:var(--ink); }
+  .home-sub { font-size:0.8rem;color:var(--ink-faint);margin-top:0.1rem; }
+  .home-grid { display:grid;grid-template-columns:1fr 280px;gap:2rem;align-items:start; }
+  @media(max-width:820px) { .home-grid { grid-template-columns:1fr; } }
+  .home-section { background:var(--paper-card);border:1px solid var(--paper-warm);border-radius:10px;padding:1.5rem 1.75rem; }
+  .home-section-title { font-size:0.7rem;font-weight:600;letter-spacing:0.13em;text-transform:uppercase;color:var(--ink-light);margin-bottom:1.1rem; }
+  .platform-picker { display:flex;flex-direction:column;gap:0.65rem; }
+  .platform-card { display:flex;align-items:center;gap:1rem;padding:0.9rem 1rem;border:1.5px solid var(--paper-warm);border-radius:8px;background:var(--paper);cursor:pointer;text-align:left;transition:border-color .15s,box-shadow .15s;width:100%; }
+  .platform-card:hover:not(.disabled) { border-color:var(--accent);box-shadow:0 2px 12px rgba(26,92,58,.1); }
+  .platform-card.disabled { opacity:.45;cursor:not-allowed; }
+  .platform-icon { width:34px;height:34px;border-radius:8px;color:#fff;font-weight:700;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--serif); }
+  .platform-card-name { font-size:0.9rem;font-weight:600;color:var(--ink); }
+  .platform-card-desc { font-size:0.76rem;color:var(--ink-faint);margin-top:0.1rem; }
+  .quick-links { display:flex;flex-direction:column;gap:0.5rem; }
+  .quick-link { display:flex;align-items:center;gap:0.7rem;padding:0.55rem 0.7rem;border-radius:7px;color:var(--ink-mid);font-size:0.84rem;text-decoration:none;transition:background .12s; }
+  .quick-link:hover { background:var(--paper-warm); }
+  .ql-icon { width:24px;height:24px;border-radius:6px;color:#fff;font-size:0.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--serif); }
+
+  /* ── Create Ad platform sub-tabs ── */
+  .create-ad-header { margin-bottom:1.5rem; }
+  .create-ad-platform-tabs { display:flex;gap:0.5rem;flex-wrap:wrap; }
+  .plat-tab { display:inline-flex;align-items:center;gap:0.5rem;padding:0.6rem 1.1rem;border:1.5px solid var(--paper-warm);border-radius:8px;background:var(--paper-card);font-family:var(--sans);font-size:0.85rem;font-weight:500;color:var(--ink-mid);cursor:pointer;transition:border-color .15s,background .15s; }
+  .plat-tab:hover:not(.disabled) { border-color:var(--accent);color:var(--accent); }
+  .plat-tab.active { border-color:var(--accent);background:var(--accent-light);color:var(--accent); }
+  .plat-tab.disabled { opacity:.45;cursor:not-allowed; }
+  .plat-tab-icon { width:22px;height:22px;border-radius:5px;color:#fff;font-size:0.8rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--serif); }
+
+  /* ── Connections page ── */
+  .connections-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(420px,1fr));gap:1.25rem; }
+  @media(max-width:600px) { .connections-grid { grid-template-columns:1fr; } }
+  .conn-card { background:var(--paper-card);border:1px solid var(--paper-warm);border-radius:10px;overflow:hidden; }
+  .conn-card-head { display:flex;align-items:center;gap:0.85rem;padding:1rem 1.25rem;color:#fff; }
+  .conn-logo { width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,.2);color:#fff;font-weight:700;font-size:1.1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--serif); }
+  .conn-name { font-size:0.95rem;font-weight:600; }
+  .conn-sub { font-size:0.74rem;opacity:0.8;margin-top:0.1rem; }
+  .conn-status { margin-left:auto;padding:0.2rem 0.6rem;border-radius:20px;font-size:0.7rem;font-weight:600;white-space:nowrap; }
+  .conn-status.connected { background:rgba(255,255,255,.25);color:#fff; }
+  .conn-status.pending { background:#fef3c7;color:#92400e; }
+  .conn-status.empty { background:rgba(255,255,255,.15);color:rgba(255,255,255,.8); }
+  .conn-body { padding:1.1rem 1.25rem; }
+  .conn-detail { display:flex;gap:0.75rem;font-size:0.82rem;color:var(--ink-mid);margin-bottom:0.45rem;align-items:baseline; }
+  .conn-label { font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:var(--ink-faint);white-space:nowrap;min-width:90px; }
+  .conn-links { display:flex;flex-wrap:wrap;gap:0.4rem;margin:0.85rem 0; }
+  .conn-link { display:inline-flex;align-items:center;padding:0.3rem 0.75rem;border:1px solid var(--accent-rule);border-radius:20px;font-size:0.76rem;color:var(--accent);text-decoration:none;background:var(--accent-light);transition:background .12s; }
+  .conn-link:hover { background:var(--accent-rule); }
+  .conn-how { background:var(--paper);border:1px solid var(--paper-warm);border-radius:7px;padding:0.85rem 1rem;margin-top:0.5rem; }
+  .conn-how-title { font-size:0.72rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-light);margin-bottom:0.6rem; }
+  .conn-steps { padding-left:1.2rem;font-size:0.82rem;color:var(--ink-mid);line-height:1.7; }
+  .conn-steps code { background:var(--paper-warm);padding:0.1rem 0.35rem;border-radius:3px;font-size:0.8em; }
 </style>
 </head>
 <body>
@@ -243,13 +297,69 @@
 
   <div class="dash-content">
     <div class="tabs">
-      <button class="tab-btn active" data-tab="clients">Clients</button>
-      <button class="tab-btn" data-tab="meta">Meta Ads</button>
-      <button class="tab-btn" data-tab="google">Google Ads</button>
+      <button class="tab-btn active" data-tab="home">My Account</button>
+      <button class="tab-btn" data-tab="clients">Clients</button>
+      <button class="tab-btn" data-tab="create">Create Ad</button>
+      <button class="tab-btn" data-tab="connections">Connections</button>
+    </div>
+
+    <!-- ══ MY ACCOUNT PANEL ══ -->
+    <div id="panel-home">
+      <div class="home-header">
+        <div class="home-hero">
+          <div class="home-avatar">EBH</div>
+          <div>
+            <div class="home-org">Evidence-Based Health</div>
+            <div class="home-sub">evidencebasedhealth.me · Agency Admin</div>
+          </div>
+        </div>
+      </div>
+      <div class="home-grid">
+        <div class="home-section">
+          <div class="home-section-title">Create a New Ad Campaign</div>
+          <div class="platform-picker">
+            <button class="platform-card" onclick="goCreateAd('meta')">
+              <div class="platform-icon" style="background:#1877f2">f</div>
+              <div class="platform-card-name">Facebook / Instagram</div>
+              <div class="platform-card-desc">Meta Ads — reach by interest &amp; demographics</div>
+            </button>
+            <button class="platform-card" onclick="goCreateAd('google')">
+              <div class="platform-icon" style="background:#4285f4">G</div>
+              <div class="platform-card-name">Google Search Ads</div>
+              <div class="platform-card-desc">Search campaigns — keywords &amp; responsive ads</div>
+            </button>
+            <button class="platform-card disabled">
+              <div class="platform-icon" style="background:#010101">T</div>
+              <div class="platform-card-name">TikTok Ads</div>
+              <div class="platform-card-desc">Coming soon</div>
+            </button>
+          </div>
+        </div>
+        <div class="home-section">
+          <div class="home-section-title">Quick Links</div>
+          <div class="quick-links">
+            <a class="quick-link" href="https://ads.google.com" target="_blank" rel="noopener">
+              <span class="ql-icon" style="background:#4285f4">G</span>Google Ads Manager ↗
+            </a>
+            <a class="quick-link" href="https://www.facebook.com/adsmanager" target="_blank" rel="noopener">
+              <span class="ql-icon" style="background:#1877f2">f</span>Meta Ads Manager ↗
+            </a>
+            <a class="quick-link" href="https://analytics.google.com" target="_blank" rel="noopener">
+              <span class="ql-icon" style="background:#e37400">A</span>Google Analytics ↗
+            </a>
+            <a class="quick-link" href="https://search.google.com/search-console" target="_blank" rel="noopener">
+              <span class="ql-icon" style="background:#34a853">S</span>Search Console ↗
+            </a>
+            <a class="quick-link" href="https://evidencebasedhealth.me" target="_blank" rel="noopener">
+              <span class="ql-icon" style="background:#1a5c3a">🌿</span>Live Site ↗
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- ══ CLIENTS PANEL ══ -->
-    <div id="panel-clients">
+    <div id="panel-clients" style="display:none">
       <div class="clients-header">
         <h2>Client Portfolios</h2>
         <button class="btn-add-client" id="btn-add-client">+ Add Client</button>
@@ -262,6 +372,24 @@
       </div>
     </div>
 
+    <!-- ══ CREATE AD PANEL ══ -->
+    <div id="panel-create" style="display:none">
+      <div class="create-ad-header">
+        <div class="create-ad-platform-tabs">
+          <button class="plat-tab active" data-plat="meta">
+            <span class="plat-tab-icon" style="background:#1877f2">f</span> Facebook / Instagram
+          </button>
+          <button class="plat-tab" data-plat="google">
+            <span class="plat-tab-icon" style="background:#4285f4">G</span> Google Search
+          </button>
+          <button class="plat-tab disabled" title="Coming soon">
+            <span class="plat-tab-icon" style="background:#010101">T</span> TikTok <span style="font-size:0.68rem;opacity:0.6">(soon)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ── META SUB-PANEL ── -->
+      <div id="sub-meta">
     <!-- ══ META PANEL ══ -->
     <div id="panel-meta" style="display:none">
       <div class="client-sel-bar">
@@ -328,9 +456,11 @@
         </div>
       </div>
     </div>
+      </div><!-- end sub-meta -->
+      <div id="sub-google" style="display:none">
 
     <!-- ══ GOOGLE PANEL ══ -->
-    <div id="panel-google" style="display:none">
+    <div id="panel-google">
       <div style="max-width:700px">
         <div class="client-sel-bar">
           <div class="client-sel-dot" id="google-sel-dot"></div>
@@ -456,6 +586,132 @@
           </div>
         </div>
       </div>
+    </div><!-- end panel-google -->
+      </div><!-- end sub-google -->
+
+      <!-- ══ CONNECTIONS PANEL ══ -->
+    </div><!-- end panel-create -->
+
+    <div id="panel-connections" style="display:none">
+      <div class="connections-grid">
+
+        <div class="conn-card">
+          <div class="conn-card-head" style="background:#4285f4">
+            <div class="conn-logo">G</div>
+            <div>
+              <div class="conn-name">Google Ads</div>
+              <div class="conn-sub">Search campaigns — already connected</div>
+            </div>
+            <span class="conn-status connected">✓ Connected</span>
+          </div>
+          <div class="conn-body">
+            <div class="conn-detail"><span class="conn-label">Customer ID</span><span>757-154-6419</span></div>
+            <div class="conn-detail"><span class="conn-label">MCC Account</span><span>665-481-1776</span></div>
+            <div class="conn-detail"><span class="conn-label">API Version</span><span>v20</span></div>
+            <div class="conn-links">
+              <a href="https://ads.google.com" target="_blank" rel="noopener" class="conn-link">Google Ads Manager ↗</a>
+              <a href="https://developers.google.com/google-ads/api/docs/oauth/overview" target="_blank" rel="noopener" class="conn-link">Re-authorize OAuth ↗</a>
+              <a href="https://developers.google.com/google-ads/api/reference/rpc/v20/overview" target="_blank" rel="noopener" class="conn-link">API v20 Docs ↗</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="conn-card">
+          <div class="conn-card-head" style="background:#1877f2">
+            <div class="conn-logo">f</div>
+            <div>
+              <div class="conn-name">Meta (Facebook / Instagram)</div>
+              <div class="conn-sub">Needs access token for EBH account</div>
+            </div>
+            <span class="conn-status pending">⚠ Needs Token</span>
+          </div>
+          <div class="conn-body">
+            <div class="conn-detail"><span class="conn-label">Ad Account</span><span>act_719254284605537</span></div>
+            <div class="conn-detail"><span class="conn-label">Page ID</span><span>1003750956158809</span></div>
+            <div class="conn-detail"><span class="conn-label">Status</span><span style="color:#b45309">Access token is PLACEHOLDER — update in Lambda env</span></div>
+            <div class="conn-links">
+              <a href="https://developers.facebook.com/tools/explorer" target="_blank" rel="noopener" class="conn-link">Generate Access Token ↗</a>
+              <a href="https://www.facebook.com/adsmanager" target="_blank" rel="noopener" class="conn-link">Meta Ads Manager ↗</a>
+              <a href="https://developers.facebook.com/docs/marketing-apis" target="_blank" rel="noopener" class="conn-link">Marketing API Docs ↗</a>
+            </div>
+            <div class="conn-how">
+              <div class="conn-how-title">How to get your access token</div>
+              <ol class="conn-steps">
+                <li>Go to <strong>developers.facebook.com/tools/explorer</strong></li>
+                <li>Select your App → click <strong>Generate Access Token</strong></li>
+                <li>Add permissions: <code>ads_management</code>, <code>ads_read</code>, <code>pages_read_engagement</code></li>
+                <li>Copy the token and update the Lambda env var <code>FB_ACCESS_TOKEN</code></li>
+              </ol>
+            </div>
+          </div>
+        </div>
+
+        <div class="conn-card">
+          <div class="conn-card-head" style="background:#010101">
+            <div class="conn-logo">T</div>
+            <div>
+              <div class="conn-name">TikTok Ads</div>
+              <div class="conn-sub">Not yet connected</div>
+            </div>
+            <span class="conn-status empty">Not Connected</span>
+          </div>
+          <div class="conn-body">
+            <div class="conn-links">
+              <a href="https://ads.tiktok.com/marketing_api/homepage" target="_blank" rel="noopener" class="conn-link">TikTok for Business ↗</a>
+              <a href="https://ads.tiktok.com/marketing_api/docs" target="_blank" rel="noopener" class="conn-link">TikTok Ads API Docs ↗</a>
+            </div>
+            <div class="conn-how">
+              <div class="conn-how-title">How to connect TikTok Ads</div>
+              <ol class="conn-steps">
+                <li>Go to <strong>ads.tiktok.com</strong> and create a Business account</li>
+                <li>Apply for <strong>Marketing API</strong> access in TikTok for Business</li>
+                <li>Create an app → get your <strong>App ID</strong> and <strong>Access Token</strong></li>
+                <li>Add a client in the Clients tab with your TikTok Advertiser ID + token</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+
+        <div class="conn-card">
+          <div class="conn-card-head" style="background:#e37400">
+            <div class="conn-logo">A</div>
+            <div>
+              <div class="conn-name">Google Analytics</div>
+              <div class="conn-sub">Via Google Tag already on site</div>
+            </div>
+            <span class="conn-status connected">✓ Active</span>
+          </div>
+          <div class="conn-body">
+            <div class="conn-links">
+              <a href="https://analytics.google.com" target="_blank" rel="noopener" class="conn-link">Google Analytics ↗</a>
+              <a href="https://search.google.com/search-console" target="_blank" rel="noopener" class="conn-link">Search Console ↗</a>
+              <a href="https://tagmanager.google.com" target="_blank" rel="noopener" class="conn-link">Tag Manager ↗</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="conn-card">
+          <div class="conn-card-head" style="background:#ff9900">
+            <div class="conn-logo">λ</div>
+            <div>
+              <div class="conn-name">AWS Backend</div>
+              <div class="conn-sub">Lambda + DynamoDB + API Gateway</div>
+            </div>
+            <span class="conn-status connected">✓ Active</span>
+          </div>
+          <div class="conn-body">
+            <div class="conn-detail"><span class="conn-label">API Endpoint</span><span style="font-size:0.76rem;word-break:break-all">lvsofp8c9g.execute-api.us-east-1.amazonaws.com/prod</span></div>
+            <div class="conn-detail"><span class="conn-label">Lambda</span><span>adHandler (Node 20.x)</span></div>
+            <div class="conn-detail"><span class="conn-label">Table</span><span>AdClients (DynamoDB)</span></div>
+            <div class="conn-links">
+              <a href="https://us-east-1.console.aws.amazon.com/lambda/home?region=us-east-1#/functions/adHandler" target="_blank" rel="noopener" class="conn-link">Lambda Console ↗</a>
+              <a href="https://us-east-1.console.aws.amazon.com/dynamodbv2/home?region=us-east-1#tables" target="_blank" rel="noopener" class="conn-link">DynamoDB Console ↗</a>
+              <a href="https://us-east-1.console.aws.amazon.com/apigateway" target="_blank" rel="noopener" class="conn-link">API Gateway ↗</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
 
   </div><!-- end dash-content -->
@@ -576,16 +832,35 @@ document.getElementById('btn-logout').addEventListener('click', () => {
 });
 
 /* ── Tabs ── */
-document.querySelectorAll('.tab-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const t = btn.dataset.tab;
-    document.getElementById('panel-clients').style.display = t === 'clients' ? '' : 'none';
-    document.getElementById('panel-meta').style.display    = t === 'meta'    ? '' : 'none';
-    document.getElementById('panel-google').style.display  = t === 'google'  ? '' : 'none';
+const ALL_PANELS = ['home','clients','create','connections'];
+function showTab(t) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === t));
+  ALL_PANELS.forEach(p => {
+    const el = document.getElementById('panel-' + p);
+    if (el) el.style.display = p === t ? '' : 'none';
   });
+  if (t === 'create') showPlatTab(activePlatTab);
+}
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => showTab(btn.dataset.tab));
 });
+
+/* ── Create Ad platform sub-tabs ── */
+let activePlatTab = 'meta';
+function showPlatTab(plat) {
+  activePlatTab = plat;
+  document.querySelectorAll('.plat-tab').forEach(t => t.classList.toggle('active', t.dataset.plat === plat));
+  document.getElementById('sub-meta').style.display   = plat === 'meta'   ? '' : 'none';
+  document.getElementById('sub-google').style.display = plat === 'google' ? '' : 'none';
+}
+document.querySelectorAll('.plat-tab:not(.disabled)').forEach(t => {
+  t.addEventListener('click', () => showPlatTab(t.dataset.plat));
+});
+function goCreateAd(plat) {
+  showTab('create');
+  showPlatTab(plat);
+  document.querySelector('.tab-btn[data-tab="create"]').classList.add('active');
+}
 
 /* ── Load & Render Clients ── */
 async function loadClients() {
@@ -659,7 +934,8 @@ function populateClientSelectors() {
 }
 
 function useClientForAds(clientId) {
-  document.querySelector('[data-tab="meta"]').click();
+  showTab('create');
+  showPlatTab('meta');
   document.getElementById('meta-client-sel').value = clientId;
   updateSelDot('meta-client-sel', 'meta-sel-dot');
 }
