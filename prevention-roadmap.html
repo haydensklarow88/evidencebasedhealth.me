@@ -564,7 +564,7 @@
       <div class="field-group">
         <label class="field-label" for="yob">Year of birth</label>
         <p class="field-hint">We use birth year instead of exact age to minimize data sensitivity.</p>
-        <input type="number" id="yob" name="yob" placeholder="e.g. 1982" min="1920" max="2010" required>
+        <input type="number" id="yob" name="yob" placeholder="e.g. 1982" min="1920" required>
       </div>
 
       <div class="divider"></div>
@@ -798,6 +798,9 @@
   const PREVENTION_API = 'https://lvsofp8c9g.execute-api.us-east-1.amazonaws.com/prod/prevention-profile';
   const ROADMAP_API    = 'https://lvsofp8c9g.execute-api.us-east-1.amazonaws.com/prod/roadmap';
   // ─────────────────────────────────────────────────────────────────────────
+
+  // Set year-of-birth max dynamically so it always reflects ≥18 requirement
+  document.getElementById('yob').max = new Date().getFullYear() - 18;
 
   // Highlight selected radio/checkbox rows
   document.querySelectorAll('.radio-row input, .check-row input').forEach(input => {
@@ -1232,28 +1235,46 @@
             'Should I be in a dedicated hereditary pancreatitis program?',
           ]
         });
-      } else if ((hasBRCA || hasPALB2ATM) && age >= 48) {
-        const showFamily = hasBRCA && hasLynch ? ' or your Lynch syndrome' : '';
+      } else if (hasPALB2ATM && age >= 48) {
         items.push({
           badge: age >= 50 ? 'due' : 'soon',
           label: age >= 50 ? 'Annual surveillance' : 'Coming up at 50',
-          title: 'Pancreatic cancer surveillance &mdash; BRCA/PALB2/ATM',
-          body: `With a <strong>BRCA2, ATM, or PALB2 variant</strong>${showFamily}, NCCN recommends considering <strong>annual pancreatic surveillance (EUS or MRI/MRCP) beginning at age 50</strong>, regardless of family history of pancreatic cancer. BRCA2 carriers have the highest pancreatic cancer risk among BRCA-associated genes. Surveillance should be done at a center with expertise in hereditary GI cancer.`,
+          title: 'Pancreatic cancer surveillance &mdash; PALB2 / ATM',
+          body: `With a <strong>PALB2 or ATM variant</strong>, NCCN recommends <strong>annual pancreatic surveillance (EUS or MRI/MRCP) beginning at age 50</strong>, regardless of family history of pancreatic cancer. These variants are associated with elevated lifetime pancreatic cancer risk. Surveillance should be performed at a center with expertise in hereditary GI cancer.`,
           asks: [
-            'Given my BRCA/PALB2/ATM variant, should I start annual pancreatic surveillance at age 50?',
+            'Given my PALB2/ATM variant, should I begin annual pancreatic surveillance at age 50?',
             'Where is the nearest high-risk pancreatic surveillance program?',
-            'Does my variant also increase my risk for other GI cancers?',
           ]
         });
-      } else if ((hasLynch || hasBRCA) && hasFamilyPanc && age >= 48) {
+      } else if (hasBRCA && age >= 48) {
+        // BRCA2 → surveillance regardless of family history
+        // BRCA1 → NCCN recommends surveillance only with ≥1 FDR/SDR with pancreatic cancer
+        // Since we can’t distinguish BRCA1 from BRCA2 here, show the card but explain the distinction
+        items.push({
+          badge: age >= 50 ? (hasFamilyPanc ? 'due' : 'discuss') : 'soon',
+          label: age >= 50 ? (hasFamilyPanc ? 'Annual surveillance' : 'Discuss with clinician') : 'Coming up at 50',
+          title: 'Pancreatic cancer surveillance &mdash; BRCA1/BRCA2',
+          body: `NCCN recommendations differ by which BRCA variant you carry:
+<ul style="padding-left:1.2rem;margin:8px 0">
+  <li><strong>BRCA2</strong>: Annual pancreatic surveillance (EUS or MRI/MRCP) <strong>starting at age 50 is recommended regardless of family history</strong> &mdash; BRCA2 carries the highest pancreatic cancer risk of the BRCA genes.</li>
+  <li><strong>BRCA1</strong>: Annual surveillance starting at age 50 is recommended <strong>only if you also have at least one first- or second-degree relative diagnosed with pancreatic cancer</strong>.</li>
+</ul>
+If you are unsure which variant you carry, review your genetic testing report or ask a genetic counselor before making surveillance decisions. All surveillance should be performed at a center with expertise in hereditary GI cancer.`,
+          asks: [
+            'Do I have a BRCA1 or BRCA2 variant specifically? This affects whether I need pancreatic surveillance.',
+            'Given my variant and family history, should I begin annual pancreatic surveillance at age 50?',
+            'Where is the nearest accredited high-risk pancreatic surveillance program?',
+          ]
+        });
+      } else if (hasLynch && hasFamilyPanc && age >= 48) {
         items.push({
           badge: age >= 50 ? 'due' : 'soon',
           label: age >= 50 ? 'Annual surveillance' : 'Coming up at 50',
-          title: 'Pancreatic cancer surveillance &mdash; Lynch syndrome / BRCA1 with family history',
-          body: `With a <strong>Lynch syndrome (or BRCA1) variant AND a first-degree relative with pancreatic cancer</strong>, NCCN recommends <strong>annual pancreatic surveillance (EUS or MRI/MRCP) beginning at age 50</strong> (or 10 years before the youngest affected relative). Lynch syndrome TP53 carriers also fall into this category.`,
+          title: 'Pancreatic cancer surveillance &mdash; Lynch syndrome with family history',
+          body: `With a <strong>Lynch syndrome variant AND a first-degree relative diagnosed with pancreatic cancer</strong>, NCCN recommends <strong>annual pancreatic surveillance (EUS or MRI/MRCP) beginning at age 50</strong> (or 10 years before the youngest affected relative). Lynch syndrome (especially MLH1/MSH2) is associated with elevated digestive tract cancer risks beyond colorectal cancer.`,
           asks: [
             'Given my Lynch syndrome and family history of pancreatic cancer, should I start surveillance at 50?',
-            'What is the exact start age recommendation given when my relative was diagnosed?',
+            'What is my recommended start age given when my relative was diagnosed?',
           ]
         });
       } else if (hasFamilyPanc && age >= 40) {
@@ -1353,7 +1374,8 @@
 
     // ── ORAL CANCER (Grade I — tobacco/alcohol users) ────────────────────────
     // Source: USPSTF Grade I — insufficient evidence; tobacco/alcohol users at highest risk
-    if (risks.includes('tobacco-alcohol')) {
+    // Trigger for any tobacco user (ever-smoker OR tobacco-alcohol flag)
+    if (risks.includes('tobacco-alcohol') || risks.includes('ever-smoker')) {
       items.push({
         badge: 'discuss',
         label: 'High-risk: discuss',

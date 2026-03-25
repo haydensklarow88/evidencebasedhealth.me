@@ -210,6 +210,56 @@ function buildReminders(age, organs, riskFlags) {
     });
   }
 
+  // PANCREATIC CANCER HIGH-RISK SURVEILLANCE
+  // Source: NCCN Genetic/Familial High-Risk Assessment (2026)
+  //   STK11 (Peutz-Jeghers): annual EUS/MRI from age 30–35
+  //   CDKN2A (FAMMM):        annual EUS/MRI from age 40
+  //   Hereditary pancreatitis: annual EUS/MRI from age 40 or 20yr after onset
+  //   BRCA2, ATM, PALB2:     annual EUS/MRI from age 50 (regardless of family hx)
+  //   Lynch syndrome + FDR with pancreatic cancer: annual EUS/MRI from age 50
+  {
+    const hasSTK11       = riskFlags.includes('stk11');
+    const hasCDKN2A      = riskFlags.includes('cdkn2a');
+    const hasHeredPanc   = riskFlags.includes('hereditary-pancreatitis');
+    const hasBRCA        = riskFlags.includes('brca');
+    const hasPALB2ATM    = riskFlags.includes('palb2-atm');
+    const hasLynch       = riskFlags.includes('lynch-syndrome');
+    const hasFamilyPanc  = riskFlags.includes('family-pancreatic');
+
+    const pancFlag =
+      (hasSTK11       && age >= 30) ||
+      (hasCDKN2A      && age >= 40) ||
+      (hasHeredPanc   && age >= 40) ||
+      (hasPALB2ATM    && age >= 50) ||
+      (hasBRCA        && age >= 50) ||
+      (hasLynch && hasFamilyPanc && age >= 50);
+
+    if (pancFlag && age <= 80) {
+      const mutLabel = hasSTK11 ? 'STK11/Peutz-Jeghers'
+        : hasCDKN2A   ? 'CDKN2A/FAMMM'
+        : hasHeredPanc ? 'hereditary pancreatitis'
+        : hasPALB2ATM  ? 'PALB2/ATM'
+        : hasBRCA      ? 'BRCA1/BRCA2'
+        : 'Lynch syndrome';
+
+      reminders.push({
+        topic:            'pancreatic',
+        lastReminderAttr: 'lastPancreaticReminder',
+        emailSubject:     'Reminder: annual pancreatic cancer surveillance — Evidence-Based Health',
+        emailBody: `<p>Based on your <strong>${mutLabel} variant</strong>, NCCN guidelines recommend <strong>annual pancreatic surveillance (endoscopic ultrasound [EUS] or MRI/MRCP)</strong>. This surveillance should be performed at a center with expertise in hereditary GI cancers.</p>
+          <p>Pancreatic cancer caught early — when still confined to the pancreas — has a much better prognosis than late-stage disease. Annual surveillance with EUS or MRI/MRCP is the current standard for high-risk individuals.</p>
+          <p><strong>Questions to ask your clinician:</strong></p>
+          <ul style="padding-left:1.2rem;color:#2d3d35;font-size:0.93rem;line-height:1.75">
+            <li>Am I enrolled in an annual pancreatic surveillance program?</li>
+            <li>Should I have EUS, MRI/MRCP, or alternating both?</li>
+            <li>Where is the nearest hereditary GI cancer surveillance center?</li>
+            <li>Are there any registries or clinical trials I should enroll in?</li>
+          </ul>`,
+        smsBody: `Prevention reminder: Based on your hereditary risk variant, annual pancreatic surveillance (EUS or MRI/MRCP) is recommended per NCCN. Ask your clinician. Reply STOP to opt out. Not medical advice. — evidencebasedhealth.me`,
+      });
+    }
+  }
+
   // HEPATITIS C (HCV)
   // Source: USPSTF 2020 Grade B — one-time screening, ages 18–79
   // Uses a very long interval (9999 months) so the reminder fires at most once ever.
@@ -267,28 +317,6 @@ function buildReminders(age, organs, riskFlags) {
         </ul>`,
       smsBody: `Prevention reminder: Screening for prediabetes and type 2 diabetes is recommended for adults 35–70 (USPSTF Grade B). Ask your clinician. Reply STOP to opt out. Not medical advice. — evidencebasedhealth.me`,
     });
-  }
-
-    if (age >= startAge && age <= 76) {
-      reminders.push({
-        topic:             'breast',
-        lastReminderAttr:  'lastBreastReminder',
-        emailSubject:      'Reminder: breast cancer screening — Evidence-Based Health',
-        emailBody: `<p>${highRisk
-            ? 'Given your family history or BRCA status, you may be on an enhanced screening protocol (annual mammogram ± MRI). Make sure you\'re up to date.'
-            : age < 50
-              ? 'You\'re in the age range where guidelines vary. The USPSTF (2024) recommends starting mammography at 40; the ACS recommends discussing it at 40 and beginning no later than 45.'
-              : 'You\'re in the active screening window for breast cancer. Most guidelines recommend mammography every 1–2 years for average-risk people aged 50–74.'
-          }</p>
-          <p><strong>Questions to ask your clinician:</strong></p>
-          <ul style="padding-left:1.2rem;color:#2d3d35;font-size:0.93rem;line-height:1.75">
-            <li>Am I due for a mammogram?</li>
-            <li>Should I screen annually or every 2 years?</li>
-            ${highRisk ? '<li>Do I need MRI in addition to mammography?</li>' : '<li>Does my breast density affect my screening plan?</li>'}
-          </ul>`,
-        smsBody: `Prevention reminder: Based on your age, it may be time for a mammogram or breast screening check-in. Contact your clinician. Reply STOP to opt out. Not medical advice. — evidencebasedhealth.me`,
-      });
-    }
   }
 
   return reminders;
