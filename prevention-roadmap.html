@@ -398,6 +398,44 @@
     padding: 2.4rem;
     box-shadow: 0 4px 24px rgba(15,26,20,0.05);
   }
+  /* ── PERPLEXITY RENDERED SECTIONS ── */
+  .pp-section {
+    padding: 1.4rem 0;
+    border-bottom: 1px solid var(--paper-warm);
+  }
+  .pp-section:last-child { border-bottom: none; }
+  .pp-section-title {
+    font-family: var(--serif);
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 0.9rem;
+    letter-spacing: -0.01em;
+  }
+  .pp-section-body p {
+    font-size: 0.88rem;
+    color: var(--ink-mid);
+    line-height: 1.8;
+    margin-bottom: 0.5rem;
+  }
+  .pp-section-body p:last-child { margin-bottom: 0; }
+  .pp-section-body strong {
+    font-weight: 500;
+    color: var(--ink);
+  }
+  a.pp-cite {
+    color: var(--accent-mid);
+    text-decoration: none;
+    font-size: 0.7rem;
+    font-weight: 500;
+    padding: 0 1px;
+  }
+  a.pp-cite:hover { text-decoration: underline; }
+  sup.pp-cite {
+    color: var(--ink-faint);
+    font-size: 0.7rem;
+  }
+
   .optin-card h2 {
     font-family: var(--serif);
     font-size: 1.15rem;
@@ -687,7 +725,7 @@
         <p style="color:var(--ink-light);font-size:0.88rem;font-style:italic;">Searching current USPSTF, ACS, and medical society guidelines&#8230;</p>
       </div>
       <div id="pp-content" style="display:none;">
-        <div id="pp-text" style="font-size:0.88rem;line-height:1.85;color:var(--ink-mid);white-space:pre-wrap;"></div>
+        <div id="pp-text"></div>
         <div id="pp-citations" style="display:none;margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--paper-warm);">
           <p style="font-size:0.75rem;font-weight:500;color:var(--ink-light);margin-bottom:0.7rem;letter-spacing:0.06em;text-transform:uppercase;">Sources</p>
           <ul id="pp-citations-list" style="list-style:none;padding:0;margin:0;"></ul>
@@ -973,6 +1011,58 @@
     fetchPerplexityRoadmap({ yearOfBirth: yob, sexAtBirth: sex, organs, riskFlags: risks });
   }
 
+  // ── MARKDOWN RENDERER FOR PERPLEXITY OUTPUT ───────────────────────
+  function renderPerplexityMarkdown(md, citations) {
+    // Split into sections on ## headings
+    const sections = md.split(/\n(?=## )/).map(s => s.trim()).filter(Boolean);
+    if (sections.length === 0) return escHtml(md);
+
+    return sections.map(section => {
+      const lines = section.split('\n');
+      const titleLine = lines[0].replace(/^##\s*/, '').trim();
+      const body = lines.slice(1).join('\n').replace(/^\n+/, '');
+
+      // Strip leading --- separator
+      const cleanBody = body.replace(/^---\s*\n?/, '').replace(/\n?---\s*$/, '').trim();
+
+      const html = cleanBody
+        // bold label + value: **Label:** text  → <strong>Label</strong> text
+        .replace(/\*\*([^*]+):\*\*/g, '<strong>$1:</strong>')
+        // any remaining **bold**
+        .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+        // citation refs [N] → superscript linked to footnote
+        .replace(/\[(\d+)\]/g, (_, n) => {
+          const idx = parseInt(n, 10) - 1;
+          const url = citations[idx];
+          if (url && /^https?:\/\//.test(url)) {
+            return `<sup><a href="${escAttr(url)}" target="_blank" rel="noopener noreferrer" class="pp-cite">${n}</a></sup>`;
+          }
+          return `<sup class="pp-cite">${n}</sup>`;
+        })
+        // blank lines → paragraph breaks
+        .split(/\n{2,}/)
+        .map(para => {
+          const trimmed = para.trim();
+          if (!trimmed) return '';
+          // preserve single line-breaks within a paragraph
+          return '<p>' + trimmed.replace(/\n/g, '<br>') + '</p>';
+        })
+        .join('');
+
+      return `<div class="pp-section">
+        <div class="pp-section-title">${escHtml(titleLine)}</div>
+        <div class="pp-section-body">${html}</div>
+      </div>`;
+    }).join('');
+  }
+
+  function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  function escAttr(s) {
+    return String(s).replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  }
+
   async function fetchPerplexityRoadmap(profile) {
     try {
       const res  = await fetch(ROADMAP_API, {
@@ -985,9 +1075,9 @@
 
       document.getElementById('pp-loading').style.display = 'none';
       document.getElementById('pp-content').style.display = '';
-      document.getElementById('pp-text').textContent = data.content;
 
       const citations = Array.isArray(data.citations) ? data.citations : [];
+      document.getElementById('pp-text').innerHTML = renderPerplexityMarkdown(data.content, citations);
       if (citations.length > 0) {
         const list = document.getElementById('pp-citations-list');
         list.innerHTML = '';
