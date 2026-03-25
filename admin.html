@@ -185,6 +185,20 @@
   /* ── Google output ── */
   .google-output { display: none; margin-top: 1.5rem; }
   .google-output.visible { display: block; }
+  .loc-tab { padding:0.35rem 0.8rem;border:1.5px solid var(--border);border-radius:20px;background:transparent;color:var(--ink-mid);font-size:0.8rem;cursor:pointer;transition:border-color .15s,background .15s,color .15s; }
+  .loc-tab:hover { border-color:var(--accent);color:var(--accent); }
+  .loc-tab.active { border-color:var(--accent);background:var(--accent);color:#fff; }
+  .campaigns-table { width:100%;border-collapse:collapse;font-size:0.83rem;margin-top:0.5rem; }
+  .campaigns-table th { text-align:left;padding:0.4rem 0.6rem;border-bottom:2px solid var(--border);color:var(--ink-faint);font-weight:600;text-transform:uppercase;font-size:0.72rem;letter-spacing:.04em; }
+  .campaigns-table td { padding:0.45rem 0.6rem;border-bottom:1px solid var(--border);vertical-align:middle; }
+  .campaigns-table tr:last-child td { border-bottom:none; }
+  .camp-status { display:inline-block;padding:0.15rem 0.55rem;border-radius:20px;font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em; }
+  .camp-status.enabled  { background:#dcfce7;color:#166534; }
+  .camp-status.paused   { background:#fef9c3;color:#854d0e; }
+  .camp-actions { display:flex;gap:0.4rem; }
+  .camp-btn { padding:0.25rem 0.65rem;font-size:0.75rem;border-radius:4px;border:1px solid var(--border);background:transparent;cursor:pointer;transition:background .15s,color .15s; }
+  .camp-btn:hover { background:var(--accent);color:#fff;border-color:var(--accent); }
+  .camp-btn.danger:hover { background:#dc2626;color:#fff;border-color:#dc2626; }
   .output-card { background: var(--paper-card); border: 1px solid var(--paper-warm); border-radius: 10px; padding: 1.5rem 1.6rem; margin-bottom: 1rem; }
   .output-card:last-child { margin-bottom: 0; }
   .output-card h3 { font-size: 0.69rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-light); margin-bottom: 1rem; }
@@ -334,6 +348,70 @@
           <div class="form-row"><label for="g-final-url">Final URL</label><input type="url" id="g-final-url" value="https://evidencebasedhealth.me"></div>
         </div>
         <div class="form-card">
+          <div class="card-title">Location Targeting</div>
+          <div class="form-row" style="gap:0.4rem;flex-wrap:wrap">
+            <label style="width:100%">Target</label>
+            <div id="loc-type-tabs" style="display:flex;gap:0.4rem;flex-wrap:wrap">
+              <button type="button" class="loc-tab active" data-type="national">Entire US</button>
+              <button type="button" class="loc-tab" data-type="states">States</button>
+              <button type="button" class="loc-tab" data-type="zip">ZIP Codes</button>
+              <button type="button" class="loc-tab" data-type="radius">Mile Radius</button>
+            </div>
+          </div>
+          <div id="loc-states-wrap" style="display:none">
+            <div class="form-row"><label for="g-states">States <span class="hint">hold Ctrl/Cmd to pick multiple</span></label>
+              <select id="g-states" multiple size="6" style="height:auto;min-height:7rem">
+                <option value="21132">Alabama</option><option value="21133">Alaska</option>
+                <option value="21136">Arizona</option><option value="21135">Arkansas</option>
+                <option value="21137">California</option><option value="21138">Colorado</option>
+                <option value="21139">Connecticut</option><option value="21140">Delaware</option>
+                <option value="21183">District of Columbia</option><option value="21141">Florida</option>
+                <option value="21142">Georgia</option><option value="21143">Hawaii</option>
+                <option value="21144">Idaho</option><option value="21145">Illinois</option>
+                <option value="21146">Indiana</option><option value="21147">Iowa</option>
+                <option value="21148">Kansas</option><option value="21149">Kentucky</option>
+                <option value="21150">Louisiana</option><option value="21151">Maine</option>
+                <option value="21152">Maryland</option><option value="21153">Massachusetts</option>
+                <option value="21154">Michigan</option><option value="21155">Minnesota</option>
+                <option value="21156">Mississippi</option><option value="21157">Missouri</option>
+                <option value="21158">Montana</option><option value="21159">Nebraska</option>
+                <option value="21160">Nevada</option><option value="21161">New Hampshire</option>
+                <option value="21162">New Jersey</option><option value="21163">New Mexico</option>
+                <option value="21164">New York</option><option value="21165">North Carolina</option>
+                <option value="21166">North Dakota</option><option value="21167">Ohio</option>
+                <option value="21168">Oklahoma</option><option value="21169">Oregon</option>
+                <option value="21170">Pennsylvania</option><option value="21171">Rhode Island</option>
+                <option value="21172">South Carolina</option><option value="21173">South Dakota</option>
+                <option value="21174">Tennessee</option><option value="21175">Texas</option>
+                <option value="21176">Utah</option><option value="21177">Vermont</option>
+                <option value="21178">Virginia</option><option value="21179">Washington</option>
+                <option value="21180">West Virginia</option><option value="21181">Wisconsin</option>
+                <option value="21182">Wyoming</option>
+              </select>
+            </div>
+          </div>
+          <div id="loc-zip-wrap" style="display:none">
+            <div class="form-row"><label for="g-zips">ZIP Codes <span class="hint">comma or line separated</span></label>
+              <textarea id="g-zips" rows="3" placeholder="90210, 10001&#10;60601, 77001"></textarea>
+            </div>
+          </div>
+          <div id="loc-radius-wrap" style="display:none">
+            <div class="form-inline">
+              <div class="form-row"><label for="g-radius-addr">Address / City</label><input type="text" id="g-radius-addr" placeholder="e.g. Chicago, IL or 123 Main St, Austin TX" autocomplete="off"></div>
+              <div class="form-row"><label for="g-radius-miles">Radius</label>
+                <select id="g-radius-miles">
+                  <option value="5">5 miles</option>
+                  <option value="10">10 miles</option>
+                  <option value="15">15 miles</option>
+                  <option value="25" selected>25 miles</option>
+                  <option value="50">50 miles</option>
+                  <option value="100">100 miles</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-card">
           <div class="card-title">Keywords <span style="font-weight:300;letter-spacing:0;text-transform:none;font-size:0.77rem;color:var(--ink-faint)"> — one per line</span></div>
           <div class="form-row"><textarea id="g-keywords" rows="7" placeholder="evidence based health newsletter&#10;cancer screening recommendations&#10;colorectal cancer screening age&#10;when to get a colonoscopy&#10;preventive health tips&#10;hormone health newsletter&#10;metabolic health resources"></textarea></div>
         </div>
@@ -365,6 +443,17 @@
             <a id="go-review-link" href="#" target="_blank" rel="noopener" class="open-google-btn" style="display:inline-flex;margin-top:1rem">Review in Google Ads ↗</a>
           </div>
           <p style="font-size:0.77rem;color:var(--ink-faint);margin-top:0.5rem">Campaign and ad are created in <strong>Paused</strong> status — enable them after reviewing in Google Ads Manager.</p>
+        </div>
+
+        <!-- Manage Campaigns -->
+        <div class="form-card" style="margin-top:1.25rem">
+          <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;padding-bottom:0.6rem;border-bottom:1px solid var(--border)">
+            <span>Manage Existing Campaigns</span>
+            <button type="button" class="btn-sm" id="btn-load-campaigns" style="padding:0.35rem 0.9rem;font-size:0.8rem">↻ Load</button>
+          </div>
+          <div id="campaigns-list-wrap" style="margin-top:0.75rem">
+            <p style="font-size:0.83rem;color:var(--ink-faint);margin:0">Click Load to list campaigns for the selected account.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -1003,9 +1092,34 @@ document.getElementById('btn-gen-google').addEventListener('click', async () => 
   const longD = descriptions.filter(d => d.length > 90);
   if (longH.length) { showStatus('google-status','error',`Headline too long (max 30 chars): "${esc(longH[0])}"`); return; }
   if (longD.length) { showStatus('google-status','error',`Description too long (max 90 chars): "${esc(longD[0])}"`); return; }
+
+  // Build location targeting payload
+  const locType = document.querySelector('.loc-tab.active')?.dataset.type || 'national';
+  let locationTargeting = { type: locType };
+  if (locType === 'states') {
+    locationTargeting.states = Array.from(document.getElementById('g-states').selectedOptions).map(o => o.value);
+    if (!locationTargeting.states.length) { showStatus('google-status','error','Select at least one state.'); return; }
+  } else if (locType === 'zip') {
+    locationTargeting.zipCodes = document.getElementById('g-zips').value.split(/[\n,]+/).map(s=>s.trim()).filter(Boolean);
+    if (!locationTargeting.zipCodes.length) { showStatus('google-status','error','Enter at least one ZIP code.'); return; }
+  } else if (locType === 'radius') {
+    const addr = document.getElementById('g-radius-addr').value.trim();
+    if (!addr) { showStatus('google-status','error','Enter an address for radius targeting.'); return; }
+    locationTargeting.radiusMiles = parseInt(document.getElementById('g-radius-miles').value);
+    btn.disabled = true; showStatus('google-status','loading','Geocoding address…');
+    try {
+      const geoRes  = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(addr)}&format=json&limit=1`, { headers: { 'Accept-Language': 'en' } });
+      const geoData = await geoRes.json();
+      if (!geoData.length) { showStatus('google-status','error','Could not find that address. Try a more specific address.'); btn.disabled = false; return; }
+      locationTargeting.lat     = parseFloat(geoData[0].lat);
+      locationTargeting.lng     = parseFloat(geoData[0].lon);
+      locationTargeting.address = addr;
+    } catch (ex) { showStatus('google-status','error',`Geocoding failed: ${esc(ex.message)}`); btn.disabled = false; return; }
+  }
+
   btn.disabled = true; showStatus('google-status','loading','Creating campaign in Google Ads… (this takes ~10 seconds)');
   try {
-    const res  = await fetch(`${API}/create-google-campaign`, { method:'POST', headers:authHeaders(), body:JSON.stringify({ campaignName, dailyBudget, keywords, headlines, descriptions, finalUrl, clientId }) });
+    const res  = await fetch(`${API}/create-google-campaign`, { method:'POST', headers:authHeaders(), body:JSON.stringify({ campaignName, dailyBudget, keywords, headlines, descriptions, finalUrl, clientId, locationTargeting }) });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Failed');
     document.getElementById('google-status').className = 'status-bar';
@@ -1020,6 +1134,83 @@ document.getElementById('btn-gen-google').addEventListener('click', async () => 
     showStatus('google-status','success',`✓ Campaign <strong>${esc(data.campaignName)}</strong> created (paused). <a href="${esc(data.review_url)}" target="_blank" rel="noopener">Open in Google Ads ↗</a>`);
   } catch (ex) { showStatus('google-status','error',`Error: ${esc(ex.message)}`);
   } finally { btn.disabled = false; }
+});
+
+/* ── Location targeting tab toggles ── */
+document.getElementById('loc-type-tabs').addEventListener('click', e => {
+  const tab = e.target.closest('.loc-tab'); if (!tab) return;
+  document.querySelectorAll('.loc-tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  const type = tab.dataset.type;
+  document.getElementById('loc-states-wrap').style.display = type === 'states' ? '' : 'none';
+  document.getElementById('loc-zip-wrap').style.display    = type === 'zip'    ? '' : 'none';
+  document.getElementById('loc-radius-wrap').style.display = type === 'radius' ? '' : 'none';
+});
+
+/* ── Manage Campaigns ── */
+async function loadCampaigns() {
+  const clientId  = document.getElementById('google-client-sel').value || undefined;
+  const wrap      = document.getElementById('campaigns-list-wrap');
+  const btn       = document.getElementById('btn-load-campaigns');
+  btn.disabled    = true;
+  wrap.innerHTML  = '<p style="font-size:0.83rem;color:var(--ink-faint);margin:0">Loading…</p>';
+  try {
+    const url = `${API}/list-google-campaigns${clientId ? `?clientId=${encodeURIComponent(clientId)}` : ''}`;
+    const res  = await fetch(url, { headers: authHeaders() });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed to load');
+    const campaigns = data.campaigns || [];
+    if (!campaigns.length) {
+      wrap.innerHTML = '<p style="font-size:0.83rem;color:var(--ink-faint);margin:0">No active campaigns found in this account.</p>';
+      return;
+    }
+    wrap.innerHTML = `
+      <table class="campaigns-table">
+        <thead><tr>
+          <th>Campaign</th><th>Status</th><th>Daily Budget</th><th>Actions</th>
+        </tr></thead>
+        <tbody>
+          ${campaigns.map(c => `
+            <tr data-cid="${esc(c.id)}">
+              <td>${esc(c.name)}</td>
+              <td><span class="camp-status ${(c.status||'').toLowerCase()}">${esc(c.status||'—')}</span></td>
+              <td>${c.dailyBudget ? `$${esc(c.dailyBudget)}` : '—'}</td>
+              <td><div class="camp-actions">
+                ${c.status === 'PAUSED'
+                  ? `<button class="camp-btn" data-action="ENABLED">▶ Enable</button>`
+                  : `<button class="camp-btn" data-action="PAUSED">⏸ Pause</button>`}
+                <button class="camp-btn danger" data-action="DELETE">✕ Delete</button>
+              </div></td>
+            </tr>`).join('')}
+        </tbody>
+      </table>`;
+  } catch (ex) {
+    wrap.innerHTML = `<p style="font-size:0.83rem;color:var(--red-soft);margin:0">Error: ${esc(ex.message)}</p>`;
+  } finally { btn.disabled = false; }
+}
+
+document.getElementById('btn-load-campaigns').addEventListener('click', loadCampaigns);
+
+document.getElementById('campaigns-list-wrap').addEventListener('click', async e => {
+  const btn = e.target.closest('.camp-btn'); if (!btn) return;
+  const row       = btn.closest('tr');
+  const campaignId = row?.dataset.cid;
+  const action    = btn.dataset.action;
+  const clientId  = document.getElementById('google-client-sel').value || undefined;
+  if (!campaignId) return;
+  if (action === 'DELETE' && !confirm('Permanently delete this campaign? This cannot be undone.')) return;
+  btn.disabled = true;
+  try {
+    const endpoint = action === 'DELETE' ? '/delete-google-campaign' : '/toggle-google-campaign';
+    const payload  = action === 'DELETE' ? { campaignId, clientId } : { campaignId, action, clientId };
+    const res  = await fetch(`${API}${endpoint}`, { method:'POST', headers:authHeaders(), body:JSON.stringify(payload) });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed');
+    loadCampaigns(); // refresh list
+  } catch (ex) {
+    alert(`Error: ${ex.message}`);
+    btn.disabled = false;
+  }
 });
 
 /* ── Copy buttons ── */
