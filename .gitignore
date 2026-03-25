@@ -9,3 +9,9 @@ Thumbs.db
 
 # Node modules (if ever added)
 node_modules/
+
+# Build artifacts
+*.zip
+tmp*.json
+adcp.json
+adclients-policy.json

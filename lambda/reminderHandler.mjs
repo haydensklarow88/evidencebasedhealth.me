@@ -5,7 +5,7 @@
 //
 // Required env vars:
 //   PREVENTION_TABLE     — PreventionProfiles
-//   SES_FROM             — hello@evidencebasedhealth.me
+//   SES_FROM             — info@evidencebasedhealth.me
 //   SITE_ORIGIN          — https://evidencebasedhealth.me
 //   SMS_ENABLED          — "true"
 //   SMS_ORIGINATION_ID   — phone-aa451571172f48d2b48072b3b0a0d5b2
@@ -25,7 +25,7 @@ const ses   = new SESClient({});
 const smsV2 = new PinpointSMSVoiceV2Client({});
 
 const TABLE              = process.env.PREVENTION_TABLE     || 'PreventionProfiles';
-const FROM               = process.env.SES_FROM             || 'hello@evidencebasedhealth.me';
+const FROM               = process.env.SES_FROM             || 'info@evidencebasedhealth.me';
 const ORIGIN             = process.env.SITE_ORIGIN          || 'https://evidencebasedhealth.me';
 const SMS_ORIGINATION_ID = process.env.SMS_ORIGINATION_ID   || 'phone-aa451571172f48d2b48072b3b0a0d5b2';
 const SMS_ENABLED        = process.env.SMS_ENABLED === 'true';
@@ -344,7 +344,7 @@ function wrapEmail(subject, bodyHtml, yob, origin) {
         <a href="${origin}/prevention-roadmap.html" style="display:inline-block;background:#1a5c3a;color:#fff;padding:12px 24px;border-radius:2px;text-decoration:none;font-size:0.85rem;font-weight:500;letter-spacing:0.05em">View your roadmap &rarr;</a>
       </td></tr>
       <tr><td style="padding:20px 40px;background:#f7f5f0;border-top:1px solid #ede9e1;font-size:0.75rem;color:#9aada3;line-height:1.6">
-        Educational content only. Not medical advice. To stop reminders, reply to this email with "STOP" or contact <a href="mailto:hello@evidencebasedhealth.me" style="color:#5c6e65">hello@evidencebasedhealth.me</a>. To delete your prevention profile, email us any time.
+        Educational content only. Not medical advice. To stop reminders, reply to this email with "STOP" or contact <a href="mailto:info@evidencebasedhealth.me" style="color:#5c6e65">info@evidencebasedhealth.me</a>. To delete your prevention profile, email us any time.
       </td></tr>
     </table>
   </td></tr>

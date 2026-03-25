@@ -10,7 +10,7 @@
 //
 // Required environment variables:
 //   DYNAMODB_TABLE       — DynamoDB table name (partition key: email, type String)
-//   SES_FROM             — verified SES sender, e.g. "hello@evidencebasedhealth.me"
+//   SES_FROM             — verified SES sender, e.g. "info@evidencebasedhealth.me"
 //   SITE_ORIGIN          — your domain, e.g. "https://evidencebasedhealth.me"
 //   SMS_ENABLED          — set to "true" to send welcome SMS (default: false)
 //   SMS_ORIGINATION_ID   — your SNS/Pinpoint phone number ID
@@ -32,7 +32,7 @@ const ses    = new SESClient({});
 const smsV2  = new PinpointSMSVoiceV2Client({});
 
 const TABLE          = process.env.DYNAMODB_TABLE     || 'Subscribers';
-const FROM           = process.env.SES_FROM           || 'hello@evidencebasedhealth.me';
+const FROM           = process.env.SES_FROM           || 'info@evidencebasedhealth.me';
 const ORIGIN         = process.env.SITE_ORIGIN        || 'https://evidencebasedhealth.me';
 const SMS_ORIGINATION_ID = process.env.SMS_ORIGINATION_ID || 'phone-aa451571172f48d2b48072b3b0a0d5b2';
 const SMS_ENABLED = process.env.SMS_ENABLED    === 'true';
