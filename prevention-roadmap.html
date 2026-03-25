@@ -646,6 +646,14 @@
             <input type="checkbox" name="risk" value="brca">
             Known BRCA1/BRCA2 gene variant (self or close family)
           </label>
+          <label class="check-row">
+            <input type="checkbox" name="risk" value="lynch-syndrome">
+            Diagnosed with Lynch syndrome (hereditary colorectal cancer gene variant &mdash; MLH1, MSH2, MSH6, PMS2, or EPCAM)
+          </label>
+          <label class="check-row">
+            <input type="checkbox" name="risk" value="prostate-family">
+            First-degree relative (father, brother) diagnosed with prostate cancer
+          </label>
         </div>
       </div>
 
@@ -780,11 +788,26 @@
     const items = [];
 
     // ── COLORECTAL ──────────────────────────────────────────────────────────
+    // Sources: USPSTF 2021 (avg-risk start 45, end 75); ACS 2023 (high-risk start 40);
+    //          ACG 2021 / NCCN (Lynch syndrome start 20–25, colonoscopy every 1–2 yr)
     if (organs.includes('colon')) {
-      const highRisk = risks.includes('crc-family') || risks.includes('crc-polyps');
-      const startAge = highRisk ? 40 : 45;
+      const lynchRisk = risks.includes('lynch-syndrome');
+      const highRisk  = !lynchRisk && (risks.includes('crc-family') || risks.includes('crc-polyps'));
+      const startAge  = lynchRisk ? 25 : highRisk ? 40 : 45;
 
-      if (age >= startAge && age <= 75) {
+      if (lynchRisk && age >= 20 && age <= 75) {
+        items.push({
+          badge: 'due',
+          label: 'High-risk: Lynch syndrome',
+          title: 'Colorectal cancer screening &mdash; Lynch syndrome protocol',
+          body: `With Lynch syndrome, guidelines (ACG, NCCN) recommend <strong>colonoscopy every 1&ndash;2 years starting at age 20&ndash;25</strong> &mdash; far earlier and more frequently than average-risk screening. FIT tests and Cologuard are <em>not</em> adequate substitutes for colonoscopy in this setting.`,
+          asks: [
+            'Am I on an annual or biennial colonoscopy schedule given my Lynch syndrome?',
+            'Which Lynch gene variant do I have, and does that affect my interval?',
+            'Should my first-degree relatives be tested for Lynch syndrome?',
+          ]
+        });
+      } else if (age >= startAge && age <= 75) {
         items.push({
           badge: 'due',
           label: 'Due now',
@@ -860,11 +883,27 @@
     }
 
     // ── PROSTATE ────────────────────────────────────────────────────────────
+    // Sources: USPSTF 2018 Grade C (shared decision-making, ages 55–69);
+    //          ACS 2023 (high-risk: family history or Black race → discuss at 40–45)
     if (organs.includes('prostate')) {
-      if (age >= 45 && age < 50) {
+      const prostateHighRisk = risks.includes('prostate-family');
+
+      if (prostateHighRisk && age >= 38 && age < 45) {
+        items.push({
+          badge: 'due',
+          label: 'High-risk: discuss now',
+          title: 'Prostate cancer screening (PSA) &mdash; high-risk',
+          body: `With a first-degree relative diagnosed with prostate cancer, the ACS recommends starting a <strong>shared decision-making conversation about PSA screening at age 40&ndash;45</strong>. This is earlier than average-risk guidance &mdash; a conversation with your clinician before age 45 is warranted.`,
+          asks: [
+            'Given my family history, when should I start PSA screening discussions?',
+            'What baseline PSA would be reassuring vs. concerning for my age?',
+            'Should I also discuss genetic testing (BRCA2, HOXB13) for hereditary prostate cancer risk?',
+          ]
+        });
+      } else if (age >= (prostateHighRisk ? 40 : 45) && age < 50) {
         items.push({
           badge: 'soon',
-          label: 'Coming up',
+          label: prostateHighRisk ? 'High-risk: discuss now' : 'Coming up',
           title: 'Prostate cancer screening (PSA) &mdash; shared decision-making',
           body: `You&rsquo;re approaching the age range when most guidelines recommend a <strong>shared decision-making conversation</strong> about PSA (prostate-specific antigen) screening. PSA testing has real benefits and real trade-offs; guidelines don&rsquo;t recommend routine testing without an informed discussion first.`,
           asks: [

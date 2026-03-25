@@ -44,10 +44,30 @@ function buildReminders(age, organs, riskFlags) {
   const reminders = [];
 
   // COLORECTAL
+  // Sources: USPSTF 2021 Grade B — average-risk start 45, continue through 75 (Grade C 76–85)
+  //          ACS 2023 — high-risk (family Hx/prior polyps): start at 40
+  //          ACG 2021 / NCCN — Lynch syndrome: colonoscopy every 1–2 yr starting age 20–25
   if (organs.includes('colon')) {
-    const highRisk   = riskFlags.includes('crc-family') || riskFlags.includes('crc-polyps');
-    const startAge   = highRisk ? 40 : 45;
-    if (age >= startAge - 2 && age <= 76) {
+    const lynchRisk  = riskFlags.includes('lynch-syndrome');
+    const highRisk   = !lynchRisk && (riskFlags.includes('crc-family') || riskFlags.includes('crc-polyps'));
+    const startAge   = lynchRisk ? 25 : highRisk ? 40 : 45;
+
+    if (lynchRisk && age >= 20 && age <= 76) {
+      // Lynch — send every 12 months regardless of when they last heard from us (colonoscopy is annual/biennial)
+      reminders.push({
+        topic:             'colorectal',
+        lastReminderAttr:  'lastColorectalReminder',
+        emailSubject:      'Reminder: colonoscopy (Lynch syndrome) — Evidence-Based Health',
+        emailBody: `<p>With Lynch syndrome, guidelines (ACG, NCCN) recommend a <strong>colonoscopy every 1–2 years</strong> starting at age 20–25 — much earlier and more frequently than average-risk protocols. Stool-based tests (FIT, Cologuard) are not adequate substitutes.</p>
+          <p><strong>Questions to ask your clinician:</strong></p>
+          <ul style="padding-left:1.2rem;color:#2d3d35;font-size:0.93rem;line-height:1.75">
+            <li>Am I currently on an annual or biennial colonoscopy schedule?</li>
+            <li>Which Lynch gene variant do I carry, and does that affect my surveillance interval?</li>
+            <li>Should my first-degree relatives be offered Lynch syndrome testing?</li>
+          </ul>`,
+        smsBody: `Lynch syndrome reminder: Annual/biennial colonoscopy is recommended. Check with your gastroenterologist that your colonoscopy is scheduled. Reply STOP to opt out. Not medical advice. — evidencebasedhealth.me`,
+      });
+    } else if (age >= startAge - 2 && age <= 76) {
       const statusText = age < startAge
         ? `You're approximately ${startAge - age} year${startAge - age > 1 ? 's' : ''} away from the recommended start age for colorectal cancer screening.`
         : `You're in the active window for colorectal cancer screening.`;
@@ -57,6 +77,7 @@ function buildReminders(age, organs, riskFlags) {
         emailSubject:      'Reminder: colorectal cancer screening — Evidence-Based Health',
         emailBody: `<p>${statusText}</p>
           <p>Colorectal cancer is highly treatable when caught early. Options include a <strong>FIT test</strong> (annual stool test), <strong>Cologuard</strong> (stool DNA, every 1–3 years), or <strong>colonoscopy</strong> (every 10 years if normal).</p>
+          ${highRisk ? '<p><strong>Note:</strong> Your family history or prior polyps may mean you need to start earlier or screen more frequently than average-risk guidelines suggest. Confirm your personal interval with your clinician.</p>' : ''}
           <p><strong>3 questions to ask your clinician:</strong></p>
           <ul style="padding-left:1.2rem;color:#2d3d35;font-size:0.93rem;line-height:1.75">
             <li>Which screening test makes the most sense for my history?</li>
@@ -69,9 +90,10 @@ function buildReminders(age, organs, riskFlags) {
   }
 
   // CERVICAL
+  // Source: USPSTF 2018 — Pap q3yr ages 21–29; Pap+HPV co-test q5yr ages 30–65; stop at 65 if adequate prior screening
   if (organs.includes('cervix')) {
     const highRisk = riskFlags.includes('cervix-hpv');
-    if (age >= 21 && age <= 66) {
+    if (age >= 21 && age <= 65) {
       reminders.push({
         topic:             'cervical',
         lastReminderAttr:  'lastCervicalReminder',
@@ -92,13 +114,20 @@ function buildReminders(age, organs, riskFlags) {
   }
 
   // PROSTATE
+  // Sources: USPSTF 2018 Grade C — shared decision-making ages 55–69
+  //          ACS 2023 — high-risk (first-degree relative, or Black race): start SDM at 40–45
   if (organs.includes('prostate')) {
-    if (age >= 48 && age <= 71) {
+    const prostateHighRisk = riskFlags.includes('prostate-family');
+    const prostateStartAge = prostateHighRisk ? 40 : 48;
+    if (age >= prostateStartAge && age <= 71) {
       reminders.push({
         topic:             'prostate',
         lastReminderAttr:  'lastProstateReminder',
         emailSubject:      'Reminder: prostate cancer screening discussion — Evidence-Based Health',
-        emailBody: `<p>You're in the age range when most guidelines recommend a <strong>shared decision-making conversation</strong> about PSA (prostate-specific antigen) screening with your clinician.</p>
+        emailBody: `<p>${prostateHighRisk
+            ? 'With a first-degree relative diagnosed with prostate cancer, the ACS recommends starting a <strong>shared decision-making conversation about PSA screening at age 40&ndash;45</strong> — earlier than average-risk guidance.'
+            : 'You\'re in the age range when most guidelines recommend a <strong>shared decision-making conversation</strong> about PSA (prostate-specific antigen) screening with your clinician.'
+          }</p>
           <p>PSA testing has real benefits and real trade-offs — it's not a simple yes/no. The goal is an informed discussion, not a skipped appointment.</p>
           <p><strong>Questions to bring up:</strong></p>
           <ul style="padding-left:1.2rem;color:#2d3d35;font-size:0.93rem;line-height:1.75">
@@ -112,6 +141,9 @@ function buildReminders(age, organs, riskFlags) {
   }
 
   // BREAST
+  // Sources: USPSTF 2024 Grade B — biennial mammography start age 40, continue through 74
+  //          ACS 2023 — annual mammo ages 45–54, biennial 55+; start at 40 for avg-risk optional
+  //          ACS high-risk (BRCA/family): annual mammo + MRI starting at 25–30
   if (organs.includes('breasts')) {
     const highRisk = riskFlags.includes('breast-family') || riskFlags.includes('brca');
     const startAge = highRisk ? 30 : 40;
