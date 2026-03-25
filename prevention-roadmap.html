@@ -676,6 +676,29 @@
     </div>
   </div>
 
+  <!-- PERPLEXITY RESEARCH SECTION -->
+  <div id="perplexity-section" style="display:none;">
+    <div class="results-card">
+      <div style="display:flex;align-items:baseline;gap:0.7rem;margin-bottom:1.2rem;flex-wrap:wrap;">
+        <h2 style="margin:0;">Research from medical guidelines</h2>
+        <span style="font-size:0.72rem;color:var(--ink-faint);font-weight:400;letter-spacing:0.03em;">via Perplexity AI &bull; sources listed below</span>
+      </div>
+      <div id="pp-loading">
+        <p style="color:var(--ink-light);font-size:0.88rem;font-style:italic;">Searching current USPSTF, ACS, and medical society guidelines&#8230;</p>
+      </div>
+      <div id="pp-content" style="display:none;">
+        <div id="pp-text" style="font-size:0.88rem;line-height:1.85;color:var(--ink-mid);white-space:pre-wrap;"></div>
+        <div id="pp-citations" style="display:none;margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--paper-warm);">
+          <p style="font-size:0.75rem;font-weight:500;color:var(--ink-light);margin-bottom:0.7rem;letter-spacing:0.06em;text-transform:uppercase;">Sources</p>
+          <ul id="pp-citations-list" style="list-style:none;padding:0;margin:0;"></ul>
+        </div>
+      </div>
+      <div id="pp-error" style="display:none;">
+        <p style="font-size:0.85rem;color:var(--ink-light);">Could not fetch additional research. Your roadmap above is still based on current guidelines.</p>
+      </div>
+    </div>
+  </div>
+
   <!-- INFO FOOTER -->
   <div class="info-section">
     <h3>About these guidelines</h3>
@@ -699,6 +722,7 @@
 <script>
   // ── CONFIG ────────────────────────────────────────────────────────────────
   const PREVENTION_API = 'https://lvsofp8c9g.execute-api.us-east-1.amazonaws.com/prod/prevention-profile';
+  const ROADMAP_API    = 'https://lvsofp8c9g.execute-api.us-east-1.amazonaws.com/prod/roadmap';
   // ─────────────────────────────────────────────────────────────────────────
 
   // Highlight selected radio/checkbox rows
@@ -939,6 +963,58 @@
 
     // Scroll to results
     resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    // ── PERPLEXITY RESEARCH ────────────────────────────────────────────────
+    const ppSection = document.getElementById('perplexity-section');
+    ppSection.style.display = '';
+    document.getElementById('pp-loading').style.display = '';
+    document.getElementById('pp-content').style.display = 'none';
+    document.getElementById('pp-error').style.display = 'none';
+    fetchPerplexityRoadmap({ yearOfBirth: yob, sexAtBirth: sex, organs, riskFlags: risks });
+  }
+
+  async function fetchPerplexityRoadmap(profile) {
+    try {
+      const res  = await fetch(ROADMAP_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(profile),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.content) throw new Error(data.error || 'Empty response');
+
+      document.getElementById('pp-loading').style.display = 'none';
+      document.getElementById('pp-content').style.display = '';
+      document.getElementById('pp-text').textContent = data.content;
+
+      const citations = Array.isArray(data.citations) ? data.citations : [];
+      if (citations.length > 0) {
+        const list = document.getElementById('pp-citations-list');
+        list.innerHTML = '';
+        citations.forEach((url, i) => {
+          if (!/^https?:\/\//.test(url)) return;
+          const li = document.createElement('li');
+          li.style.cssText = 'margin-bottom:0.35rem; display:flex; align-items:baseline; gap:0.4rem;';
+          const num = document.createElement('span');
+          num.style.cssText = 'color:var(--ink-faint); flex-shrink:0; font-size:0.75rem;';
+          num.textContent = `[${i + 1}]`;
+          const a = document.createElement('a');
+          a.href = url;
+          a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+          a.textContent = url;
+          a.style.cssText = 'color:var(--accent); text-decoration:underline; text-underline-offset:2px; word-break:break-all; font-size:0.8rem;';
+          li.appendChild(num);
+          li.appendChild(a);
+          list.appendChild(li);
+        });
+        document.getElementById('pp-citations').style.display = '';
+      }
+    } catch (err) {
+      document.getElementById('pp-loading').style.display = 'none';
+      document.getElementById('pp-error').style.display = '';
+      console.error('Perplexity roadmap error:', err);
+    }
   }
 
   // ── PROFILE OPT-IN SUBMIT ────────────────────────────────────────────────

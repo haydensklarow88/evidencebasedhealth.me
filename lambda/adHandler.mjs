@@ -13,6 +13,7 @@ const {
   SITE_ORIGIN, CLIENTS_TABLE = 'AdClients',
   GOOGLE_DEVELOPER_TOKEN, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET,
   GOOGLE_REFRESH_TOKEN, GOOGLE_CUSTOMER_ID, GOOGLE_MCC_ID,
+  PERPLEXITY_API_KEY,
 } = process.env;
 
 const FB_VER  = 'v20.0';
@@ -137,6 +138,53 @@ export const handler = async (event) => {
 
   let body = {};
   try { body = JSON.parse(event.body || '{}'); } catch {}
+
+  /* POST /roadmap — public, no auth required */
+  if (rawPath.endsWith('/roadmap') && method === 'POST') {
+    const { yearOfBirth, sexAtBirth, organs = [], riskFlags = [] } = body;
+    const yob = parseInt(yearOfBirth, 10);
+    const age = new Date().getFullYear() - yob;
+    if (isNaN(age) || age < 18 || age > 120)
+      return resp(400, { error: 'Valid yearOfBirth required' });
+    if (!PERPLEXITY_API_KEY)
+      return resp(503, { error: 'AI research not configured' });
+
+    const organMap = { colon: 'colon', cervix: 'cervix', prostate: 'prostate', breasts: 'breasts/chest tissue' };
+    const riskMap  = {
+      'crc-family':   'first-degree relative with colorectal cancer or advanced polyps before age 60',
+      'crc-polyps':   'personal history of colon polyps',
+      'cervix-hpv':   'history of abnormal Pap/HPV or cervical dysplasia',
+      'breast-family':'first-degree relative with breast cancer',
+      'brca':         'known BRCA1/BRCA2 gene variant',
+    };
+    const sexLabel  = { male: 'male', female: 'female', intersex: 'intersex/biological variation', 'prefer-not': 'unspecified' }[sexAtBirth] || 'unspecified';
+    const organList = organs.map(o => organMap[o] || o).join(', ') || 'not specified';
+    const riskList  = riskFlags.map(r => riskMap[r] || r).join('; ') || 'none';
+
+    const prompt = `A ${age}-year-old person (sex assigned at birth: ${sexLabel}) with the following anatomy: ${organList}. Known risk factors: ${riskList}.\n\nBased on current US cancer screening and prevention guidelines (USPSTF, ACS, ACOG, ACR, AUA), what cancer screenings are recommended for this person?\n\nFor each applicable screening:\n1. Name the screening test\n2. State the specific guideline recommendation (USPSTF grade if applicable)\n3. Recommended starting age and frequency\n4. Note any changes based on their risk factors\n5. Cite the specific guideline source with URL\n\nInclude screenings currently due, coming up in the next 5 years, and any high-risk pathway recommendations.`;
+
+    const ppRes = await fetch('https://api.perplexity.ai/chat/completions', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${PERPLEXITY_API_KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'sonar-pro',
+        messages: [
+          { role: 'system', content: 'You are a preventive medicine reference tool. Provide accurate, evidence-based cancer screening recommendations based only on published guidelines from USPSTF, ACS, ACOG, ACR, AUA, or equivalent major US medical societies. Always cite specific guideline sources. This is educational information only, not medical advice.' },
+          { role: 'user', content: prompt },
+        ],
+        max_tokens: 1500,
+      }),
+    });
+    if (!ppRes.ok) {
+      const e = await ppRes.json().catch(() => ({}));
+      return resp(502, { error: 'Research API error', detail: String(e.error?.message || ppRes.status) });
+    }
+    const ppData = await ppRes.json();
+    return resp(200, {
+      content:   ppData.choices?.[0]?.message?.content || '',
+      citations: ppData.citations || [],
+    });
+  }
 
   /* POST /admin-auth */
   if (rawPath.endsWith('/admin-auth') && method === 'POST') {
