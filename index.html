@@ -390,39 +390,50 @@
     line-height: 1.7;
   }
 
-  .topics-list-grid {
-    margin-top: 2.5rem;
+  .pillar-block {
+    margin-top: 2.8rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--paper-warm);
   }
-  .topics-list-grid h3 {
-    font-family: var(--serif);
-    font-size: 1.1rem;
-    font-weight: 700;
-    font-style: italic;
-    color: var(--ink);
-    margin-bottom: 1.2rem;
+  .pillar-block-label {
+    font-family: var(--sans);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 1.4rem;
   }
-  .topics-columns {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.6rem;
-  }
-  .topic-row {
+  .pillar-list {
     display: flex;
-    align-items: flex-start;
-    gap: 0.7rem;
-    font-size: 0.88rem;
-    color: var(--ink-mid);
-    padding: 0.6rem 0.8rem;
-    background: var(--paper-card);
-    border: 1px solid var(--paper-warm);
-    border-radius: 2px;
+    flex-direction: column;
   }
-  .topic-dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--accent-mid);
-    flex-shrink: 0;
-    margin-top: 0.4rem;
+  .pillar-item {
+    display: grid;
+    grid-template-columns: 2.2rem 1fr;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 0.95rem 0;
+    border-bottom: 1px solid var(--paper-warm);
+  }
+  .pillar-item:last-child { border-bottom: none; }
+  .pillar-num {
+    font-family: var(--serif);
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--accent-rule);
+    letter-spacing: 0.02em;
+  }
+  .pillar-title {
+    font-family: var(--sans);
+    font-size: 0.95rem;
+    font-weight: 400;
+    color: var(--ink-mid);
+    line-height: 1.5;
+  }
+  .pillar-title strong {
+    font-weight: 500;
+    color: var(--ink);
   }
 
   /* ── WHO I AM ── */
@@ -734,15 +745,29 @@
       </div>
     </div>
 
-    <div class="topics-list-grid reveal">
-      <h3>Topics covered each week:</h3>
-      <div class="topics-columns">
-        <div class="topic-row"><div class="topic-dot"></div>TRT, peptides &amp; GLP&#8209;1s &mdash; what the evidence actually shows</div>
-        <div class="topic-row"><div class="topic-dot"></div>Strength and fitness across different ages and goals</div>
-        <div class="topic-row"><div class="topic-dot"></div>Diet and gut health patterns that reduce risk over time</div>
-        <div class="topic-row"><div class="topic-dot"></div>Sleep, stress, and mental health &mdash; the quiet levers</div>
-        <div class="topic-row"><div class="topic-dot"></div>Sexual health and hormonal optimization</div>
-        <div class="topic-row"><div class="topic-dot"></div>Metabolic health and long&#8209;term disease prevention</div>
+    <div class="pillar-block reveal">
+      <div class="pillar-block-label">Core pillars</div>
+      <div class="pillar-list">
+        <div class="pillar-item">
+          <span class="pillar-num">01</span>
+          <span class="pillar-title"><strong>Hormones</strong></span>
+        </div>
+        <div class="pillar-item">
+          <span class="pillar-num">02</span>
+          <span class="pillar-title"><strong>Strength and body composition</strong></span>
+        </div>
+        <div class="pillar-item">
+          <span class="pillar-num">03</span>
+          <span class="pillar-title"><strong>Metabolic health</strong></span>
+        </div>
+        <div class="pillar-item">
+          <span class="pillar-num">04</span>
+          <span class="pillar-title"><strong>Preventive screening and early detection</strong></span>
+        </div>
+        <div class="pillar-item">
+          <span class="pillar-num">05</span>
+          <span class="pillar-title"><strong>Clear education</strong> so patients understand what their numbers and risks actually mean</span>
+        </div>
       </div>
     </div>
   </div>
