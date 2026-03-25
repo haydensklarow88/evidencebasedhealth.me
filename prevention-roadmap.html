@@ -678,6 +678,29 @@
     </div>
   </div>
 
+  <!-- PERPLEXITY RESEARCH SECTION -->
+  <div id="perplexity-section" style="display:none;">
+    <div class="results-card">
+      <div style="display:flex;align-items:baseline;gap:0.7rem;margin-bottom:1.2rem;flex-wrap:wrap;">
+        <h2 style="margin:0;">Research from medical guidelines</h2>
+        <span style="font-size:0.72rem;color:var(--ink-faint);font-weight:400;letter-spacing:0.03em;">via Perplexity AI &bull; sources listed below</span>
+      </div>
+      <div id="pp-loading">
+        <p style="color:var(--ink-light);font-size:0.88rem;font-style:italic;">Searching current USPSTF, ACS, and medical society guidelines&#8230;</p>
+      </div>
+      <div id="pp-content" style="display:none;">
+        <div id="pp-text"></div>
+        <div id="pp-citations" style="display:none;margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--paper-warm);">
+          <p style="font-size:0.75rem;font-weight:500;color:var(--ink-light);margin-bottom:0.7rem;letter-spacing:0.06em;text-transform:uppercase;">Sources</p>
+          <ul id="pp-citations-list" style="list-style:none;padding:0;margin:0;"></ul>
+        </div>
+      </div>
+      <div id="pp-error" style="display:none;">
+        <p style="font-size:0.85rem;color:var(--ink-light);">Could not fetch additional research. Your roadmap above is still based on current guidelines.</p>
+      </div>
+    </div>
+  </div>
+
   <!-- PROFILE OPT-IN -->
   <div id="opt-in">
     <div class="optin-card">
@@ -711,29 +734,6 @@
 
         <button type="submit" class="btn-primary">Save my profile &amp; get reminders &rarr;</button>
       </form>
-    </div>
-  </div>
-
-  <!-- PERPLEXITY RESEARCH SECTION -->
-  <div id="perplexity-section" style="display:none;">
-    <div class="results-card">
-      <div style="display:flex;align-items:baseline;gap:0.7rem;margin-bottom:1.2rem;flex-wrap:wrap;">
-        <h2 style="margin:0;">Research from medical guidelines</h2>
-        <span style="font-size:0.72rem;color:var(--ink-faint);font-weight:400;letter-spacing:0.03em;">via Perplexity AI &bull; sources listed below</span>
-      </div>
-      <div id="pp-loading">
-        <p style="color:var(--ink-light);font-size:0.88rem;font-style:italic;">Searching current USPSTF, ACS, and medical society guidelines&#8230;</p>
-      </div>
-      <div id="pp-content" style="display:none;">
-        <div id="pp-text"></div>
-        <div id="pp-citations" style="display:none;margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--paper-warm);">
-          <p style="font-size:0.75rem;font-weight:500;color:var(--ink-light);margin-bottom:0.7rem;letter-spacing:0.06em;text-transform:uppercase;">Sources</p>
-          <ul id="pp-citations-list" style="list-style:none;padding:0;margin:0;"></ul>
-        </div>
-      </div>
-      <div id="pp-error" style="display:none;">
-        <p style="font-size:0.85rem;color:var(--ink-light);">Could not fetch additional research. Your roadmap above is still based on current guidelines.</p>
-      </div>
     </div>
   </div>
 
