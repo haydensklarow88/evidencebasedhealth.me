@@ -347,7 +347,11 @@
           <div id="g-desc-wrap"></div>
           <button type="button" class="btn-sm" id="btn-add-d" style="margin-top:0.5rem;">+ Add Description</button>
         </div>
-        <button class="btn-submit" id="btn-gen-google">Create Google Campaign (Paused)</button>
+        <div style="display:flex;gap:0.75rem;flex-wrap:wrap;align-items:center;margin-bottom:0.25rem">
+          <button class="btn-submit" id="btn-gen-google" style="flex:1;margin-bottom:0">Create Google Campaign (Paused)</button>
+          <button type="button" class="btn-sm" id="btn-optimize-google" style="white-space:nowrap;padding:0.6rem 1.1rem;font-size:0.82rem">⚡ Optimize with Past Data</button>
+        </div>
+        <div class="status-bar" id="optimize-status"></div>
         <div class="status-bar" id="google-status"></div>
         <div class="google-output" id="google-output">
           <div class="output-card">
@@ -939,6 +943,48 @@ defaultHeadlines.forEach(h => { const i = addInputRow('g-headlines-wrap','Headli
 defaultDescs.forEach(d => { const i = addInputRow('g-desc-wrap','Description N (90 chars max)',90); i.value=d; i.dispatchEvent(new Event('input')); });
 document.getElementById('btn-add-h').addEventListener('click', () => { if (document.querySelectorAll('#g-headlines-wrap .form-row').length < 15) addInputRow('g-headlines-wrap','Headline N (30 chars max)',30); });
 document.getElementById('btn-add-d').addEventListener('click', () => { if (document.querySelectorAll('#g-desc-wrap .form-row').length < 4) addInputRow('g-desc-wrap','Description N (90 chars max)',90); });
+
+/* ── Optimize with Past Data ── */
+document.getElementById('btn-optimize-google').addEventListener('click', async () => {
+  const btn      = document.getElementById('btn-optimize-google');
+  const clientId = document.getElementById('google-client-sel').value || undefined;
+  btn.disabled = true;
+  showStatus('optimize-status','loading','Fetching performance data from Google Ads…');
+  try {
+    const qs  = clientId ? `?clientId=${encodeURIComponent(clientId)}` : '';
+    const res  = await fetch(`${API}/google-insights${qs}`, { headers: authHeaders() });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed');
+    if (!data.hasData) { showStatus('optimize-status','error','No performance data yet — run some campaigns first, then optimize.'); return; }
+
+    // Replace headlines with top performers (keep within 30 chars)
+    const validH = (data.topHeadlines || []).filter(h => h.length <= 30);
+    if (validH.length >= 3) {
+      document.getElementById('g-headlines-wrap').innerHTML = '';
+      validH.forEach(h => { const i = addInputRow('g-headlines-wrap','Headline N (30 chars max)',30); i.value=h; i.dispatchEvent(new Event('input')); });
+    }
+
+    // Replace descriptions with top performers (keep within 90 chars)
+    const validD = (data.topDescriptions || []).filter(d => d.length <= 90);
+    if (validD.length >= 2) {
+      document.getElementById('g-desc-wrap').innerHTML = '';
+      validD.forEach(d => { const i = addInputRow('g-desc-wrap','Description N (90 chars max)',90); i.value=d; i.dispatchEvent(new Event('input')); });
+    }
+
+    // Replace keywords: prefer top converting search terms, fallback to top keywords
+    const kwSrc = data.searchTerms?.length
+      ? data.searchTerms.slice(0,20).map(s => s.term)
+      : (data.topKeywords || []);
+    if (kwSrc.length) document.getElementById('g-keywords').value = kwSrc.join('\n');
+
+    const hCount = validH.length || 0;
+    const kCount = kwSrc.length || 0;
+    const dCount = validD.length || 0;
+    showStatus('optimize-status','success',
+      `✓ Optimized: ${hCount} headline${hCount!==1?'s':''}, ${dCount} description${dCount!==1?'s':''}, ${kCount} keyword${kCount!==1?'s':''} from past 90-day performance data.`);
+  } catch (ex) { showStatus('optimize-status','error',`Error: ${esc(ex.message)}`); }
+  finally { btn.disabled = false; }
+});
 
 /* ── Generate Google Brief ── */
 document.getElementById('btn-gen-google').addEventListener('click', async () => {
