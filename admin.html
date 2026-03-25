@@ -933,8 +933,8 @@ function addInputRow(containerId, placeholder, maxLen) {
   inp.addEventListener('input', () => { const n = inp.value.length; cnt.textContent = `${n} / ${maxLen}`; cnt.className = `char-count${n > maxLen ? ' warn' : ''}`; });
   container.appendChild(row); return inp;
 }
-const defaultHeadlines = ['Free Evidence-Based Brief','Science-Backed Health Insights','Know When to Get Screened','No Hype. Just the Evidence.','Weekly Health Brief — Free'];
-const defaultDescs     = ['Plain-language summaries of the latest research on hormones, strength, and metabolic health.','From an acute care surgery PA. Evidence-based, no agenda. Free weekly newsletter.'];
+const defaultHeadlines = ['Free Evidence-Based Brief','Evidence-Backed Health Tips','Know When to Get Screened','No Hype. Just the Evidence.','Weekly Health Brief — Free'];
+const defaultDescs     = ['Plain-language summaries of research on hormones, strength, and metabolic health.','From an acute care surgery PA. Evidence-based, no agenda. Free weekly newsletter.'];
 defaultHeadlines.forEach(h => { const i = addInputRow('g-headlines-wrap','Headline N (30 chars max)',30); i.value=h; i.dispatchEvent(new Event('input')); });
 defaultDescs.forEach(d => { const i = addInputRow('g-desc-wrap','Description N (90 chars max)',90); i.value=d; i.dispatchEvent(new Event('input')); });
 document.getElementById('btn-add-h').addEventListener('click', () => { if (document.querySelectorAll('#g-headlines-wrap .form-row').length < 15) addInputRow('g-headlines-wrap','Headline N (30 chars max)',30); });
@@ -953,6 +953,10 @@ document.getElementById('btn-gen-google').addEventListener('click', async () => 
   if (!campaignName || !dailyBudget || headlines.length < 3 || descriptions.length < 2) {
     showStatus('google-status','error','Enter campaign name, budget, at least 3 headlines, and 2 descriptions.'); return;
   }
+  const longH = headlines.filter(h => h.length > 30);
+  const longD = descriptions.filter(d => d.length > 90);
+  if (longH.length) { showStatus('google-status','error',`Headline too long (max 30 chars): "${esc(longH[0])}"`); return; }
+  if (longD.length) { showStatus('google-status','error',`Description too long (max 90 chars): "${esc(longD[0])}"`); return; }
   btn.disabled = true; showStatus('google-status','loading','Creating campaign in Google Ads… (this takes ~10 seconds)');
   try {
     const res  = await fetch(`${API}/create-google-campaign`, { method:'POST', headers:authHeaders(), body:JSON.stringify({ campaignName, dailyBudget, keywords, headlines, descriptions, finalUrl, clientId }) });
