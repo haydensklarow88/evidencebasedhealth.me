@@ -666,6 +666,36 @@
             <input type="checkbox" name="risk" value="aaa-family">
             First-degree relative (parent, sibling, child) diagnosed with abdominal aortic aneurysm (AAA)
           </label>
+
+          <label class="check-row">
+            <input type="checkbox" name="risk" value="palb2-atm">
+            Known <strong>PALB2</strong> or <strong>ATM</strong> gene variant (affects pancreatic cancer risk)
+          </label>
+          <label class="check-row">
+            <input type="checkbox" name="risk" value="stk11">
+            Diagnosed with <strong>Peutz-Jeghers syndrome</strong> (STK11 gene variant)
+          </label>
+          <label class="check-row">
+            <input type="checkbox" name="risk" value="cdkn2a">
+            Diagnosed with <strong>FAMMM syndrome</strong> (CDKN2A/p16 gene variant &mdash; familial atypical multiple mole melanoma)
+          </label>
+          <label class="check-row">
+            <input type="checkbox" name="risk" value="family-pancreatic">
+            One or more first-degree relatives (parent, sibling, child) diagnosed with <strong>pancreatic cancer</strong>
+          </label>
+          <label class="check-row">
+            <input type="checkbox" name="risk" value="hereditary-pancreatitis">
+            Diagnosed with <strong>hereditary pancreatitis</strong> (PRSS1 or SPINK1 variant with clinical pancreatitis)
+          </label>
+
+          <label class="check-row">
+            <input type="checkbox" name="risk" value="skin-high-risk">
+            High risk for skin cancer: fair skin that burns easily, personal or family history of melanoma, many atypical moles (dysplastic nevi), or taking immunosuppressive medication
+          </label>
+          <label class="check-row">
+            <input type="checkbox" name="risk" value="tobacco-alcohol">
+            Current or former tobacco user (smoked or smokeless) <em>and/or</em> heavy or regular alcohol use
+          </label>
         </div>
       </div>
 
@@ -1145,6 +1175,196 @@
           ]
         });
       }
+    }
+
+    // ── PANCREATIC CANCER (HIGH-RISK HEREDITARY SURVEILLANCE) ───────────────
+    // Source: NCCN Genetic/Familial High-Risk Assessment: Breast, Ovarian, Pancreatic, Prostate (2026)
+    //         NCCN/ASGE: Pancreatic Adenocarcinoma; USPSTF: no recommendation for general population
+    // STK11 (Peutz-Jeghers): start age 30–35 or 10 yr before youngest affected relative, annual EUS/MRI
+    // CDKN2A (FAMMM): start age 40 or 10 yr before youngest affected relative, annual EUS/MRI
+    // BRCA2, ATM, PALB2: start age 50 (regardless of family history), annual EUS/MRI
+    // BRCA1, Lynch, TP53: start age 50 ONLY if ≥1 first- or second-degree relative with pancreatic cancer
+    // Hereditary pancreatitis (PRSS1/SPINK1): 20 yr after pancreatitis onset or age 40, whichever earlier
+    // Family history only (no mutation): discuss referral to high-risk pancreatic program
+    {
+      const hasBRCA        = risks.includes('brca');
+      const hasPALB2ATM    = risks.includes('palb2-atm');
+      const hasSTK11       = risks.includes('stk11');
+      const hasCDKN2A      = risks.includes('cdkn2a');
+      const hasLynch       = risks.includes('lynch-syndrome');
+      const hasFamilyPanc  = risks.includes('family-pancreatic');
+      const hasHeredPanc   = risks.includes('hereditary-pancreatitis');
+
+      if (hasSTK11 && age >= 28) {
+        const startAge = 30;
+        items.push({
+          badge: age >= startAge ? 'due' : 'soon',
+          label: age >= startAge ? 'Annual surveillance' : `Coming up at ${startAge}`,
+          title: 'Pancreatic cancer surveillance &mdash; Peutz-Jeghers syndrome (STK11)',
+          body: `With a <strong>STK11 (Peutz-Jeghers) variant</strong>, NCCN recommends starting <strong>annual pancreatic surveillance with endoscopic ultrasound (EUS) or MRI/MRCP beginning at age 30&ndash;35</strong> (or 10 years before the youngest affected relative). Peutz-Jeghers carries a &gt;15% lifetime risk of pancreatic cancer. Surveillance should be performed at a center with a dedicated high-risk pancreatic program.`,
+          asks: [
+            'Have I been referred to a hereditary cancer or high-risk pancreatic program?',
+            'Should I have annual EUS or MRI/MRCP for pancreatic surveillance?',
+            'What other cancer surveillances does my Peutz-Jeghers diagnosis require?',
+          ]
+        });
+      } else if (hasCDKN2A && age >= 38) {
+        const startAge = 40;
+        items.push({
+          badge: age >= startAge ? 'due' : 'soon',
+          label: age >= startAge ? 'Annual surveillance' : `Coming up at ${startAge}`,
+          title: 'Pancreatic cancer surveillance &mdash; FAMMM syndrome (CDKN2A)',
+          body: `With a <strong>CDKN2A (p16/FAMMM) variant</strong>, NCCN recommends <strong>annual pancreatic surveillance with EUS or MRI/MRCP beginning at age 40</strong> (or 10 years before the youngest affected relative). CDKN2A is associated with both melanoma and pancreatic cancer risk.`,
+          asks: [
+            'Have I been referred to a hereditary cancer program for pancreatic surveillance?',
+            'Should I have annual EUS or MRI/MRCP starting at age 40?',
+            'Do I also need enhanced melanoma surveillance given my CDKN2A variant?',
+          ]
+        });
+      } else if (hasHeredPanc && age >= 38) {
+        items.push({
+          badge: age >= 40 ? 'due' : 'soon',
+          label: age >= 40 ? 'Annual surveillance' : 'Coming up &mdash; discuss timing',
+          title: 'Pancreatic cancer surveillance &mdash; hereditary pancreatitis',
+          body: `With a confirmed <strong>hereditary pancreatitis</strong> diagnosis (PRSS1 or SPINK1 variant), NCCN recommends beginning <strong>annual pancreatic surveillance (EUS or MRI/MRCP) 20 years after the onset of pancreatitis, or at age 40</strong>, whichever comes first. Chronic pancreatitis significantly elevates lifetime pancreatic cancer risk.`,
+          asks: [
+            'How long have I had pancreatitis symptoms? Have we calculated my surveillance start date?',
+            'Should I be in a dedicated hereditary pancreatitis program?',
+          ]
+        });
+      } else if ((hasBRCA || hasPALB2ATM) && age >= 48) {
+        const showFamily = hasBRCA && hasLynch ? ' or your Lynch syndrome' : '';
+        items.push({
+          badge: age >= 50 ? 'due' : 'soon',
+          label: age >= 50 ? 'Annual surveillance' : 'Coming up at 50',
+          title: 'Pancreatic cancer surveillance &mdash; BRCA/PALB2/ATM',
+          body: `With a <strong>BRCA2, ATM, or PALB2 variant</strong>${showFamily}, NCCN recommends considering <strong>annual pancreatic surveillance (EUS or MRI/MRCP) beginning at age 50</strong>, regardless of family history of pancreatic cancer. BRCA2 carriers have the highest pancreatic cancer risk among BRCA-associated genes. Surveillance should be done at a center with expertise in hereditary GI cancer.`,
+          asks: [
+            'Given my BRCA/PALB2/ATM variant, should I start annual pancreatic surveillance at age 50?',
+            'Where is the nearest high-risk pancreatic surveillance program?',
+            'Does my variant also increase my risk for other GI cancers?',
+          ]
+        });
+      } else if ((hasLynch || hasBRCA) && hasFamilyPanc && age >= 48) {
+        items.push({
+          badge: age >= 50 ? 'due' : 'soon',
+          label: age >= 50 ? 'Annual surveillance' : 'Coming up at 50',
+          title: 'Pancreatic cancer surveillance &mdash; Lynch syndrome / BRCA1 with family history',
+          body: `With a <strong>Lynch syndrome (or BRCA1) variant AND a first-degree relative with pancreatic cancer</strong>, NCCN recommends <strong>annual pancreatic surveillance (EUS or MRI/MRCP) beginning at age 50</strong> (or 10 years before the youngest affected relative). Lynch syndrome TP53 carriers also fall into this category.`,
+          asks: [
+            'Given my Lynch syndrome and family history of pancreatic cancer, should I start surveillance at 50?',
+            'What is the exact start age recommendation given when my relative was diagnosed?',
+          ]
+        });
+      } else if (hasFamilyPanc && age >= 40) {
+        // Family history alone (no mutation identified): discuss referral
+        items.push({
+          badge: 'discuss',
+          label: 'Discuss with clinician',
+          title: 'Pancreatic cancer risk &mdash; family history',
+          body: `Having a first-degree relative with pancreatic cancer increases your lifetime risk. Without a known hereditary gene variant, NCCN does not specify a routine surveillance protocol &mdash; but referral to a <strong>hereditary cancer or high-risk pancreatic program</strong> is reasonable to assess your personal risk, consider germline genetic testing (BRCA2, PALB2, ATM, Lynch genes), and determine whether surveillance is appropriate. Familial pancreatic cancer clusters (≥2 affected FDRs) may qualify for surveillance protocols.`,
+          asks: [
+            'Given my family history, could I benefit from germline genetic testing?',
+            'Should I be referred to a high-risk pancreatic cancer surveillance program?',
+            'Are there clinical registries or research studies I could participate in?',
+          ]
+        });
+      }
+    }
+
+    // ── OVARIAN CANCER (Grade D — screening not recommended) ─────────────────
+    // Source: USPSTF 2018 Grade D — CA-125 and transvaginal ultrasound do not reduce mortality
+    // Show only for women (cervix or breasts selected)
+    if ((organs.includes('cervix') || organs.includes('breasts')) && age >= 40) {
+      items.push({
+        badge: 'discuss',
+        label: 'Not recommended for most',
+        title: 'Ovarian cancer screening &mdash; what you should know',
+        body: `The USPSTF (2018, <strong>Grade D &mdash; recommends against</strong>) routine screening for ovarian cancer using CA-125 blood test or transvaginal ultrasound in <strong>asymptomatic average-risk women</strong>. Screening has not been shown to reduce ovarian cancer mortality, and false positives can lead to unnecessary surgery with serious complications. If you have BRCA1/2 variants, Lynch syndrome, or a strong family history, discuss risk-reduction options (risk-reducing salpingo-oophorectomy, genetic counseling) with your clinician &mdash; this is different from screening.`,
+        asks: [
+          'Based on my family history and genetic risk, do I need a conversation about ovarian cancer risk reduction?',
+          'Are there symptoms I should watch for that should prompt evaluation?',
+        ]
+      });
+    }
+
+    // ── TESTICULAR CANCER (Grade D — screening not recommended) ──────────────
+    // Source: USPSTF Grade D — routine self-examination or clinical examination not beneficial
+    if (organs.includes('prostate') && age >= 15 && age <= 55) {
+      items.push({
+        badge: 'discuss',
+        label: 'Not recommended',
+        title: 'Testicular cancer screening &mdash; what you should know',
+        body: `The USPSTF (<strong>Grade D &mdash; recommends against</strong>) routine screening for testicular cancer in asymptomatic adolescent and adult males via clinical examination or self-examination. Testicular cancer is rare (&lt;1% of male cancers) and has an excellent prognosis even when diagnosed late. If you notice a painless lump, swelling, or heaviness in a testicle, seek prompt evaluation &mdash; symptoms warrant investigation even without routine screening.`,
+        asks: [
+          'What testicular symptoms should prompt me to seek evaluation right away?',
+        ]
+      });
+    }
+
+    // ── THYROID CANCER (Grade D — screening not recommended) ─────────────────
+    // Source: USPSTF 2017 Grade D — overdiagnosis and overtreatment substantial
+    // Show once, for adults; suppress above age 70 to avoid clutter
+    if (age >= 25 && age <= 70) {
+      items.push({
+        badge: 'discuss',
+        label: 'Not recommended for most',
+        title: 'Thyroid cancer screening &mdash; what you should know',
+        body: `The USPSTF (2017, <strong>Grade D &mdash; recommends against</strong>) routine thyroid cancer screening of asymptomatic adults via palpation or ultrasound. Thyroid cancer is highly overdiagnosed &mdash; many small thyroid nodules (papillary microcarcinomas) are found incidentally but rarely cause harm if left undetected. If you have a history of head or neck radiation, a thyroid nodule found on imaging, or a family history of medullary thyroid cancer (MEN2A/2B), discuss targeted evaluation with your clinician.`,
+        asks: [
+          'I had head/neck radiation as a child &mdash; does that change my thyroid cancer screening approach?',
+          'A nodule was found incidentally on imaging &mdash; what workup is appropriate?',
+        ]
+      });
+    }
+
+    // ── BLADDER CANCER (Grade I — insufficient evidence) ─────────────────────
+    // Source: USPSTF Grade I — even in high-risk (smoking, occupational exposures)
+    // Only surface for smokers since this is contextually relevant
+    if (risks.includes('ever-smoker') && age >= 40) {
+      items.push({
+        badge: 'discuss',
+        label: 'No established screening',
+        title: 'Bladder cancer &mdash; what you should know as a smoker',
+        body: `The USPSTF rates the evidence on bladder cancer screening as <strong>Grade I (insufficient)</strong> &mdash; even for high-risk groups including smokers and those with occupational chemical exposures (benzene, aromatic amines). There is no recommended routine screening test. Smoking is the <strong>number-one preventable risk factor</strong> for bladder cancer. Report any blood in urine (hematuria), even if painless, to your clinician promptly &mdash; this warrants evaluation regardless of screening guidelines.`,
+        asks: [
+          'I noticed blood in my urine once &mdash; should I be evaluated for bladder cancer?',
+          'Are there early warnings I should watch for given my smoking history?',
+        ]
+      });
+    }
+
+    // ── SKIN CANCER (Grade I — high-risk discussion) ──────────────────────────
+    // Source: USPSTF 2023 Grade I — insufficient evidence for visual skin exam by clinician
+    // Show informational card for high-risk individuals
+    if (risks.includes('skin-high-risk')) {
+      items.push({
+        badge: 'discuss',
+        label: 'Discuss with clinician',
+        title: 'Skin cancer screening &mdash; high-risk',
+        body: `The USPSTF (2023, <strong>Grade I &mdash; insufficient evidence</strong>) for visual skin examination by a clinician in asymptomatic adults. However, for individuals with your risk profile &mdash; fair skin, personal or family history of melanoma, many atypical moles, or immunosuppression &mdash; many dermatologists recommend <strong>annual full-body skin examination</strong>. The AAD supports regular skin self-exam and professional skin checks for high-risk individuals. Melanoma is highly curable when caught early.`,
+        asks: [
+          'Given my risk factors, should I have an annual full-body skin examination by a dermatologist?',
+          'How do I perform an effective monthly self skin exam?',
+          'What features (ABCDE: asymmetry, border, color, diameter, evolving) should prompt urgent evaluation?',
+        ]
+      });
+    }
+
+    // ── ORAL CANCER (Grade I — tobacco/alcohol users) ────────────────────────
+    // Source: USPSTF Grade I — insufficient evidence; tobacco/alcohol users at highest risk
+    if (risks.includes('tobacco-alcohol')) {
+      items.push({
+        badge: 'discuss',
+        label: 'High-risk: discuss',
+        title: 'Oral cavity cancer screening',
+        body: `The USPSTF rates the evidence on visual oral cancer screening as <strong>Grade I (insufficient)</strong> for asymptomatic adults. However, tobacco use (smoked and smokeless) and heavy alcohol use are the <strong>dominant risk factors</strong> for oropharyngeal cancer, and their combination multiplies risk substantially. Your dentist routinely inspects the oral cavity; specifically ask them to include a thorough oral cancer screen. Report any persistent white or red patches, sores that don’t heal in 2 weeks, or unexplained throat or ear pain promptly.`,
+        asks: [
+          'Can you perform a thorough oral cancer screening at my next dental or medical appointment?',
+          'What oral changes should prompt me to seek evaluation right away?',
+          'If I’m ready, can we discuss tobacco cessation support?',
+        ]
+      });
     }
 
     // ── UNIVERSAL SCREENINGS ──────────────────────────────────────────────────
