@@ -3639,8 +3639,6 @@ function switchNLTab(pane) {
   if (pane === 'autopilot') loadAutopilotConfig();
 }
 
-let nlPostData = null; // set by existing newsletter generator code
-
 async function loadNLDrafts() {
   const list = document.getElementById('nl-drafts-list');
   list.innerHTML = '<p style="font-size:0.83rem;color:var(--ink-faint)">Loading…</p>';
