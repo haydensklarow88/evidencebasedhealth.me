@@ -379,6 +379,63 @@
   .launch-result.success { background:var(--accent-light);color:var(--accent);border:1px solid var(--accent-rule); }
   .launch-result.error { background:#fef2f2;color:var(--red-soft);border:1px solid #fecaca; }
   .launch-prefill-bar { padding:0.7rem 1rem;background:var(--accent-light);border:1px solid var(--accent-rule);border-radius:8px;font-size:0.82rem;color:var(--ink-mid);margin-bottom:1.25rem;display:none; }
+
+  /* ── Campaign Wizard ── */
+  .wizard-pane-title { font-family:var(--serif);font-size:1.1rem;font-weight:700;color:var(--ink);margin:0 0 1.4rem; }
+  .wizard-back-btn { background:none;border:none;color:var(--accent);font-family:var(--sans);font-size:0.84rem;font-weight:500;cursor:pointer;padding:0;display:inline-flex;align-items:center;gap:0.3rem;margin-bottom:1.25rem; }
+  .wizard-back-btn:hover { text-decoration:underline; }
+  .wsd { display:flex;flex-direction:column;align-items:center;gap:0.2rem;flex-shrink:0; }
+  .wsd-num { width:30px;height:30px;border-radius:50%;background:var(--paper-warm);border:2px solid var(--border);color:var(--ink-faint);font-size:0.8rem;font-weight:700;display:flex;align-items:center;justify-content:center;transition:all .2s; }
+  .wsd-label { font-size:0.63rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);transition:color .2s;white-space:nowrap; }
+  .wsd.wiz-active .wsd-num { background:var(--accent);border-color:var(--accent);color:#fff; }
+  .wsd.wiz-active .wsd-label { color:var(--accent); }
+  .wsd.wiz-done .wsd-num { background:var(--accent-light);border-color:var(--accent-rule);color:var(--accent); }
+  .wsd.wiz-done .wsd-label { color:var(--ink-mid); }
+  .wsd-line { flex:1;height:2px;background:var(--border);min-width:20px;margin:0 4px 14px; transition:background .2s; }
+  .wsd-line.wiz-done { background:var(--accent-rule); }
+  .wizard-plat-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1rem;max-width:660px;margin-bottom:1.5rem; }
+  .wizard-plat-card { display:flex;flex-direction:column;align-items:center;gap:0.6rem;padding:1.5rem 1rem;border:2px solid var(--paper-warm);border-radius:12px;background:var(--paper);cursor:pointer;text-align:center;transition:border-color .15s,box-shadow .15s;font-family:var(--sans); }
+  .wizard-plat-card:hover:not(:disabled) { border-color:var(--accent);box-shadow:0 2px 14px rgba(26,92,58,.12); }
+  .wizard-plat-card.wiz-sel { border-color:var(--accent);background:var(--accent-light); }
+  .wizard-plat-card:disabled { opacity:.45;cursor:not-allowed; }
+  .wpc-icon { width:46px;height:46px;border-radius:10px;color:#fff;font-weight:700;font-size:1.15rem;display:flex;align-items:center;justify-content:center;font-family:var(--serif); }
+  .wpc-name { font-size:0.96rem;font-weight:600;color:var(--ink); }
+  .wpc-desc { font-size:0.76rem;color:var(--ink-faint);line-height:1.4; }
+  .wizard-mode-grid { display:grid;grid-template-columns:1fr 1fr;gap:1rem;max-width:520px;margin-bottom:1.5rem; }
+  @media(max-width:520px){.wizard-mode-grid{grid-template-columns:1fr;}}
+  .wizard-mode-card { display:flex;flex-direction:column;align-items:flex-start;gap:0.45rem;padding:1.3rem 1.2rem;border:2px solid var(--paper-warm);border-radius:12px;background:var(--paper);cursor:pointer;text-align:left;transition:border-color .15s,box-shadow .15s;font-family:var(--sans); }
+  .wizard-mode-card:hover { border-color:var(--accent);box-shadow:0 2px 14px rgba(26,92,58,.12); }
+  .wizard-mode-card.wiz-sel { border-color:var(--accent);background:var(--accent-light); }
+  .wmc-icon { font-size:1.6rem; }
+  .wmc-name { font-size:0.93rem;font-weight:600;color:var(--ink); }
+  .wmc-desc { font-size:0.78rem;color:var(--ink-faint);line-height:1.45; }
+  .img-drop-zone { border:2px dashed var(--border);border-radius:8px;padding:1.5rem;text-align:center;cursor:pointer;transition:border-color .15s,background .15s; }
+  .img-drop-zone:hover,.img-drop-zone.drag-over { border-color:var(--accent);background:var(--accent-light); }
+  .wiz-pub-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;max-width:580px;margin-bottom:1.25rem; }
+  .wiz-pub-btn { display:flex;flex-direction:column;align-items:flex-start;gap:0.35rem;padding:1.2rem 1rem;border:2px solid var(--paper-warm);border-radius:10px;background:var(--paper);cursor:pointer;text-align:left;transition:border-color .15s,box-shadow .15s;font-family:var(--sans);width:100%; }
+  .wiz-pub-btn:hover { border-color:var(--accent);box-shadow:0 2px 12px rgba(26,92,58,.1); }
+  .wpb-name { font-size:0.9rem;font-weight:600;color:var(--ink); }
+  .wpb-desc { font-size:0.74rem;color:var(--ink-faint);line-height:1.4; }
+  .policy-result-item { display:flex;align-items:flex-start;gap:0.6rem;padding:0.65rem 0.85rem;border-radius:7px;font-size:0.83rem;margin-bottom:0.5rem; }
+  .policy-result-item.pass { background:#f0fdf4;border:1px solid #a7f3d0;color:#065f46; }
+  .policy-result-item.warn { background:#fffbeb;border:1px solid #fde68a;color:#92400e; }
+  .policy-result-item.fail { background:#fef2f2;border:1px solid #fecaca;color:#c0392b; }
+  /* ── Active Campaigns tab ── */
+  .ac-plat-tabs { display:flex;gap:0.5rem;margin-bottom:1.25rem; }
+  .ac-plat-tab { padding:0.45rem 1.1rem;border:1.5px solid var(--border);border-radius:20px;background:transparent;color:var(--ink-mid);font-size:0.82rem;cursor:pointer;transition:all .15s;font-family:var(--sans); }
+  .ac-plat-tab.active { border-color:var(--accent);background:var(--accent);color:#fff; }
+  /* ── Newsletter sub-tabs ── */
+  .nl-sub-tabs { display:flex;gap:0.5rem;margin-bottom:1.75rem;border-bottom:1px solid var(--border);padding-bottom:0.85rem; }
+  .nl-sub-tab { padding:0.4rem 1rem;border:1.5px solid var(--border);border-radius:20px;background:transparent;color:var(--ink-mid);font-size:0.82rem;cursor:pointer;transition:all .15s;font-family:var(--sans); }
+  .nl-sub-tab.active { border-color:var(--accent);background:var(--accent);color:#fff; }
+  .nl-pane { display:none; }
+  .nl-pane.active { display:block; }
+  /* ── Connections sub-nav ── */
+  .conn-sub-nav { display:flex;gap:0.5rem;margin-bottom:1.75rem; }
+  .conn-sub-tab { padding:0.4rem 1rem;border:1.5px solid var(--border);border-radius:20px;background:transparent;color:var(--ink-mid);font-size:0.82rem;cursor:pointer;transition:all .15s;font-family:var(--sans); }
+  .conn-sub-tab.active { border-color:var(--accent);background:var(--accent);color:#fff; }
+  .conn-sub-pane { display:none; }
+  .conn-sub-pane.active { display:block; }
 </style>
 </head>
 <body>
@@ -409,13 +466,10 @@
   <div class="dash-content">
     <div class="tabs">
       <button class="tab-btn active" data-tab="home">Dashboard</button>
-      <button class="tab-btn" data-tab="clients">Clients</button>
-      <button class="tab-btn" data-tab="aicreative" title="Generate 5 AI-written ad variants with Perplexity">AI Copy<span class="tab-sub">write with AI</span></button>
-      <button class="tab-btn" data-tab="launch" title="Create a complete Meta campaign (campaign → ad set → creative → ad) in one click">🚀 Launch<span class="tab-sub">one-click Meta</span></button>
-      <button class="tab-btn" data-tab="audiences" title="Build GA4 segments and Meta Custom Audiences for retargeting">Audiences<span class="tab-sub">retargeting setup</span></button>
-      <button class="tab-btn" data-tab="create" title="Manually configure individual Meta or Google Search ads with full control">Ad Builder<span class="tab-sub">manual / advanced</span></button>
-      <button class="tab-btn" data-tab="connections">Connections</button>
-      <button class="tab-btn" data-tab="newsletter" title="AI newsletter generator — write, preview &amp; send to subscribers">Newsletter<span class="tab-sub">AI posts + send</span></button>
+      <button class="tab-btn" data-tab="campaign">Create Campaign<span class="tab-sub">Meta · Google</span></button>
+      <button class="tab-btn" data-tab="activecampaigns">Active Campaigns<span class="tab-sub">manage · pause</span></button>
+      <button class="tab-btn" data-tab="connections">Connections<span class="tab-sub">accounts · clients</span></button>
+      <button class="tab-btn" data-tab="newsletter">Newsletter<span class="tab-sub">write · schedule</span></button>
     </div>
 
     <!-- ══ MY ACCOUNT PANEL ══ -->
@@ -432,24 +486,24 @@
       <div style="background:var(--accent-light);border:1px solid var(--accent-rule);border-radius:10px;padding:1rem 1.25rem;margin-bottom:1.5rem">
         <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--accent);margin-bottom:0.55rem">Recommended Workflow</div>
         <div style="display:flex;flex-wrap:wrap;gap:0.4rem 0;align-items:center;font-size:0.82rem;color:var(--ink-mid);line-height:1.7">
-          <button onclick="showTab('aicreative')" style="background:none;border:none;padding:0;color:var(--accent);font-weight:600;cursor:pointer;font-family:var(--sans);font-size:0.82rem">① AI Copy</button>
-          <span style="color:var(--ink-faint);padding:0 0.4rem">→ generate 5 variants →</span>
-          <span style="color:var(--ink-mid)">click <strong>&ldquo;Launch →&rdquo;</strong> on the best one →</span>
-          <button onclick="showTab('launch')" style="background:none;border:none;padding:0 0.35rem;color:var(--accent);font-weight:600;cursor:pointer;font-family:var(--sans);font-size:0.82rem">② 🚀 Launch</button>
-          <span style="color:var(--ink-faint);padding:0 0.4rem">→ add name + budget → Launch (starts Paused) →</span>
-          <button onclick="showTab('audiences')" style="background:none;border:none;padding:0;color:var(--accent);font-weight:600;cursor:pointer;font-family:var(--sans);font-size:0.82rem">③ Audiences</button>
-          <span style="color:var(--ink-faint);padding:0 0.4rem">→ &ldquo;Create All&rdquo; → paste IDs into Remarketing</span>
+          <button onclick="showTab('campaign')" style="background:none;border:none;padding:0;color:var(--accent);font-weight:600;cursor:pointer;font-family:var(--sans);font-size:0.82rem">① Create Campaign</button>
+          <span style="color:var(--ink-faint);padding:0 0.4rem">→ choose platform →</span>
+          <span style="color:var(--ink-mid)">AI or Manual → Policy Check →</span>
+          <button onclick="showTab('campaign')" style="background:none;border:none;padding:0 0.35rem;color:var(--accent);font-weight:600;cursor:pointer;font-family:var(--sans);font-size:0.82rem">② 🚀 Publish</button>
+          <span style="color:var(--ink-faint);padding:0 0.4rem">→ manage in →</span>
+          <button onclick="showTab('activecampaigns')" style="background:none;border:none;padding:0;color:var(--accent);font-weight:600;cursor:pointer;font-family:var(--sans);font-size:0.82rem">③ Active Campaigns</button>
+          <span style="color:var(--ink-faint);padding:0 0.4rem">→ pause, resume, monitor</span>
         </div>
       </div>
       <div class="home-grid">
         <div class="home-section">
           <div class="home-section-title">Start a Campaign</div>
           <div class="platform-picker">
-            <button class="platform-card" onclick="showTab('launch')" style="border-color:var(--accent-rule)">
-              <div class="platform-icon" style="background:var(--accent);font-size:1.1rem">🚀</div>
+            <button class="platform-card" onclick="goCreateAd('meta')" style="border-color:var(--accent-rule)">
+              <div class="platform-icon" style="background:#1877f2">f</div>
               <div class="platform-info">
-                <div class="platform-card-name">Meta — Campaign Launcher <span style="font-size:0.68rem;opacity:0.6;font-weight:400">recommended</span></div>
-                <div class="platform-card-desc">One click creates campaign → ad set → creative → ad, all Paused</div>
+                <div class="platform-card-name">Meta Ads <span style="font-size:0.68rem;opacity:0.6;font-weight:400">Facebook &amp; Instagram</span></div>
+                <div class="platform-card-desc">Cold audiences &amp; retargeting — guided wizard</div>
               </div>
             </button>
             <button class="platform-card" onclick="goCreateAd('google')">
@@ -457,13 +511,6 @@
               <div class="platform-info">
                 <div class="platform-card-name">Google Search Ads</div>
                 <div class="platform-card-desc">Keywords, responsive ads, location targeting</div>
-              </div>
-            </button>
-            <button class="platform-card" onclick="goCreateAd('meta')" style="opacity:0.75">
-              <div class="platform-icon" style="background:#1877f2">f</div>
-              <div class="platform-info">
-                <div class="platform-card-name">Meta — Ad Builder <span style="font-size:0.68rem;opacity:0.6;font-weight:400">advanced</span></div>
-                <div class="platform-card-desc">Custom interests, detailed targeting, manual control</div>
               </div>
             </button>
             <button class="platform-card disabled">
@@ -529,40 +576,118 @@
       </div>
     </div>
 
-    <!-- ══ CLIENTS PANEL ══ -->
-    <div id="panel-clients" style="display:none">
-      <div class="clients-header">
-        <h2>Client Portfolios</h2>
-        <button class="btn-add-client" id="btn-add-client">+ Add Client</button>
-      </div>
-      <div id="clients-loading" class="loading-row"><div class="spinner"></div> Loading clients…</div>
-      <div id="client-grid" class="client-grid" style="display:none"></div>
-      <div id="clients-empty" class="client-empty" style="display:none">
-        <div class="client-empty-icon">🗂</div>
-        <p>No clients yet.<br>Add your first client to get started.</p>
-      </div>
-    </div>
+    <!-- ══ CLIENTS PANEL (legacy stub — content now in conn-clients) ══ -->
+    <div id="panel-clients" style="display:none"></div>
 
-    <!-- ══ CREATE AD PANEL ══ -->
-    <div id="panel-create" style="display:none">
-      <div style="margin-bottom:1.25rem">
-        <div style="font-family:var(--serif);font-size:1.2rem;font-weight:700;color:var(--ink);margin-bottom:0.25rem">Ad Builder <span style="font-size:0.78rem;font-weight:400;color:var(--ink-faint);font-family:var(--sans)">— manual / advanced</span></div>
-        <div style="font-size:0.82rem;color:var(--ink-faint)">Configure individual Meta or Google Search ads with full control over targeting and creative. For one-click full campaign creation use the <button onclick="showTab('launch')" style="background:none;border:none;padding:0;color:var(--accent);cursor:pointer;font-family:var(--sans);font-size:0.82rem;text-decoration:underline">🚀 Launch tab</button>.</div>
+    <!-- ══ CREATE CAMPAIGN WIZARD ══ -->
+    <div id="panel-campaign" style="display:none">
+
+      <!-- Wizard progress bar -->
+      <div id="wiz-nav" style="margin-bottom:2rem;max-width:640px">
+        <div style="display:flex;align-items:center">
+          <div class="wsd wiz-active" data-step="1"><div class="wsd-num">1</div><div class="wsd-label">Platform</div></div>
+          <div class="wsd-line" id="wl-12"></div>
+          <div class="wsd" data-step="2"><div class="wsd-num">2</div><div class="wsd-label">Mode</div></div>
+          <div class="wsd-line" id="wl-23"></div>
+          <div class="wsd" data-step="3"><div class="wsd-num">3</div><div class="wsd-label">Setup</div></div>
+          <div class="wsd-line" id="wl-34"></div>
+          <div class="wsd" data-step="4"><div class="wsd-num">4</div><div class="wsd-label">Policy</div></div>
+          <div class="wsd-line" id="wl-45"></div>
+          <div class="wsd" data-step="5"><div class="wsd-num">5</div><div class="wsd-label">Publish</div></div>
+        </div>
       </div>
-      <div class="create-ad-header">
-        <div class="create-ad-platform-tabs">
-          <button class="plat-tab active" data-plat="meta">
-            <span class="plat-tab-icon" style="background:#1877f2">f</span> Facebook / Instagram
+
+      <!-- Step 1: Platform selection -->
+      <div id="wp-1">
+        <h2 class="wizard-pane-title">Choose a Platform</h2>
+        <div class="wizard-plat-grid">
+          <button class="wizard-plat-card" id="wpc-meta" onclick="selectWizPlat('meta')">
+            <div class="wpc-icon" style="background:#1877f2">f</div>
+            <div class="wpc-name">Meta Ads</div>
+            <div class="wpc-desc">Facebook &amp; Instagram · Cold audiences &amp; retargeting</div>
           </button>
-          <button class="plat-tab" data-plat="google">
-            <span class="plat-tab-icon" style="background:#4285f4">G</span> Google Search
+          <button class="wizard-plat-card" id="wpc-google" onclick="selectWizPlat('google')">
+            <div class="wpc-icon" style="background:#4285f4">G</div>
+            <div class="wpc-name">Google Search</div>
+            <div class="wpc-desc">Intent-driven search ads · Keywords &amp; responsive text</div>
           </button>
-          <button class="plat-tab disabled" title="Coming soon">
-            <span class="plat-tab-icon" style="background:#010101">T</span> TikTok <span style="font-size:0.68rem;opacity:0.6">(soon)</span>
+          <button class="wizard-plat-card" disabled>
+            <div class="wpc-icon" style="background:#010101">TT</div>
+            <div class="wpc-name">TikTok <span style="font-size:0.68rem;font-weight:400;opacity:0.6">soon</span></div>
+            <div class="wpc-desc">Short-form video advertising</div>
           </button>
         </div>
       </div>
 
+      <!-- Step 2: Mode selection -->
+      <div id="wp-2" style="display:none">
+        <button class="wizard-back-btn" onclick="wizGoTo(1)">← Back</button>
+        <h2 class="wizard-pane-title" id="wp2-title">How would you like to build this?</h2>
+        <div class="wizard-mode-grid">
+          <button class="wizard-mode-card" id="wmc-ai" onclick="selectWizMode('ai')">
+            <div class="wmc-icon">✨</div>
+            <div class="wmc-name">AI Generated</div>
+            <div class="wmc-desc">Describe your goal and AI writes all copy — headlines, descriptions, keywords. All editable before publishing.</div>
+          </button>
+          <button class="wizard-mode-card" id="wmc-manual" onclick="selectWizMode('manual')">
+            <div class="wmc-icon">⚙</div>
+            <div class="wmc-name">Manual</div>
+            <div class="wmc-desc">Full control over every attribute — targeting, bidding, keywords, ad copy.</div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 3: Setup (AI brief + platform forms) -->
+      <div id="wp-3" style="display:none">
+        <button class="wizard-back-btn" onclick="wizGoTo(2)">← Back</button>
+
+        <!-- AI Brief (visible when mode=ai) -->
+        <div id="wp3-ai" style="display:none">
+          <div class="form-card" style="margin-bottom:1.25rem">
+            <div class="card-title">✨ AI Creative Brief</div>
+            <div class="ai-brief-grid">
+              <div class="form-row">
+                <label for="wai-client">Client</label>
+                <select id="wai-client"><option value="">— My account —</option></select>
+              </div>
+              <div class="form-row">
+                <label for="wai-offer">Offer / Topic</label>
+                <select id="wai-offer">
+                  <option value="GLP-1 education">GLP-1 / Semaglutide education</option>
+                  <option value="peptide therapy education">Peptide therapy education</option>
+                  <option value="TRT and hormone health education">TRT / hormone health</option>
+                  <option value="cancer prevention and screening">Cancer prevention &amp; screening</option>
+                  <option value="metabolic health and weight management">Metabolic health &amp; weight</option>
+                  <option value="evidence-based health newsletter">Evidence-based health newsletter</option>
+                </select>
+              </div>
+              <div class="form-row">
+                <label for="wai-objective">Objective</label>
+                <select id="wai-objective">
+                  <option value="Traffic to education page">Traffic — education page</option>
+                  <option value="Lead capture — newsletter signup">Lead — newsletter signup</option>
+                  <option value="Awareness of evidence-based approach">Awareness</option>
+                </select>
+              </div>
+              <div class="form-row">
+                <label for="wai-audience">Target Audience</label>
+                <input type="text" id="wai-audience" placeholder="e.g. Adults 35–65 interested in preventive health">
+              </div>
+              <div class="form-row" style="grid-column:1/-1">
+                <label for="wai-extra">Extra Context <span class="hint">optional</span></label>
+                <textarea id="wai-extra" rows="2" placeholder="Hooks, brand voice, seasonal angles…"></textarea>
+              </div>
+            </div>
+            <button class="btn-submit" id="btn-wiz-gen-ai" style="margin-top:0.75rem">✨ Generate with AI</button>
+            <div class="status-bar" id="wai-status"></div>
+          </div>
+          <div id="wai-variants" style="display:none;margin-bottom:1.25rem"></div>
+          <div id="wp3-ai-applied" style="display:none;background:var(--accent-light);border:1px solid var(--accent-rule);border-radius:7px;padding:0.7rem 1rem;font-size:0.82rem;color:var(--ink-mid);margin-bottom:1rem">
+            ✓ AI copy applied below — review the form and click <strong>Policy Review →</strong> when ready.
+          </div>
+        </div>
+
+        <!-- Platform forms (sub-meta / sub-google) are inserted here -->
       <!-- ── META SUB-PANEL ── -->
       <div id="sub-meta">
     <!-- ══ META PANEL ══ -->
@@ -609,10 +734,23 @@
             <div class="form-row"><label for="m-primary-text">Primary Text <span class="hint">125 chars</span></label><textarea id="m-primary-text" rows="3" placeholder="Most people don't know when they're due for cancer screening. We fix that — evidence-based, plain-language, no hype. Free weekly brief."></textarea><div class="char-count" id="cc-primary">0 / 125</div></div>
             <div class="form-row"><label for="m-headline">Headline <span class="hint">40 chars</span></label><input type="text" id="m-headline" placeholder="Free Evidence-Based Health Brief"><div class="char-count" id="cc-headline">0 / 40</div></div>
             <div class="form-row"><label for="m-description">Description <span class="hint">optional, 30 chars</span></label><input type="text" id="m-description" placeholder="Science. No agenda."><div class="char-count" id="cc-desc">0 / 30</div></div>
-            <div class="form-row"><label for="m-image-url">Image URL <span class="hint">optional</span></label><input type="url" id="m-image-url" placeholder="https://…"></div>
+            <div class="form-row">
+              <label>Ad Image <span class="hint">upload or paste URL</span></label>
+              <div class="img-drop-zone" id="meta-img-drop" onclick="document.getElementById('meta-img-file').click()" style="margin-bottom:0.5rem">
+                <input type="file" id="meta-img-file" accept="image/*" style="display:none" onchange="handleImgUpload(this,'m-image-url','meta-img-preview')">
+                <div id="meta-img-drop-content">
+                  <div style="font-size:1.3rem;margin-bottom:0.25rem">📁</div>
+                  <div style="font-size:0.82rem;color:var(--ink-mid)">Click to upload or drag &amp; drop</div>
+                  <div style="font-size:0.74rem;color:var(--ink-faint);margin-top:0.15rem">JPG, PNG · max 10MB · recommended 1200×628</div>
+                </div>
+              </div>
+              <input type="url" id="m-image-url" placeholder="https://… (or upload above)">
+              <div id="meta-img-preview" style="display:none;margin-top:0.5rem"><img style="max-width:100%;max-height:160px;border-radius:6px;border:1px solid var(--border)" alt="preview"></div>
+            </div>
             <div class="form-row"><label for="m-dest-url">Destination URL</label><input type="url" id="m-dest-url" value="https://evidencebasedhealth.me"></div>
           </div>
-          <button class="btn-submit" id="btn-create-meta">Create Meta Campaign (Paused)</button>
+          <!-- hidden submit — triggered programmatically from wizard step 5 -->
+          <button class="btn-submit" id="btn-create-meta" style="display:none">Create Meta Campaign</button>
           <div class="status-bar" id="meta-status"></div>
         </div>
         <div class="preview-sticky">
@@ -793,8 +931,100 @@
     </div><!-- end panel-google -->
       </div><!-- end sub-google -->
 
+        <!-- Proceed button (bottom of step 3) -->
+        <div style="margin-top:1.75rem;display:flex;justify-content:flex-end">
+          <button class="btn-submit" id="btn-wp3-next" style="width:auto;padding:0.8rem 2.5rem" onclick="wizGoTo(4)">Policy Review →</button>
+        </div>
+
+      </div><!-- end wp-3 -->
+
+      <!-- Step 4: Policy Review -->
+      <div id="wp-4" style="display:none">
+        <button class="wizard-back-btn" onclick="wizGoTo(3)">← Back to Form</button>
+        <h2 class="wizard-pane-title">Policy Review</h2>
+        <p style="font-size:0.84rem;color:var(--ink-mid);margin-bottom:1.25rem">We check your copy against platform policies before submitting. Issues are auto-corrected where possible.</p>
+        <button class="btn-submit" style="width:auto;padding:0.8rem 2.5rem" id="btn-run-policy" onclick="runWizPolicyCheck()">Run Policy Check ▸</button>
+        <div id="wiz-policy-results" style="margin-top:1.25rem"></div>
+        <div id="btn-proceed-publish" style="display:none;margin-top:1.25rem">
+          <button class="btn-submit" style="width:auto;padding:0.8rem 2.5rem" onclick="wizGoTo(5)">Continue to Publish →</button>
+        </div>
+      </div>
+
+      <!-- Step 5: Publish -->
+      <div id="wp-5" style="display:none">
+        <button class="wizard-back-btn" onclick="wizGoTo(4)">← Back</button>
+        <h2 class="wizard-pane-title">Ready to Publish</h2>
+        <div class="wiz-pub-grid">
+          <button class="wiz-pub-btn" onclick="submitWizCampaign('live')">
+            <span style="font-size:1.4rem">🚀</span>
+            <div class="wpb-name">Publish Now</div>
+            <div class="wpb-desc">Create &amp; enable immediately — campaign goes live</div>
+          </button>
+          <button class="wiz-pub-btn" onclick="submitWizCampaign('paused')">
+            <span style="font-size:1.4rem">💾</span>
+            <div class="wpb-name">Save as Draft</div>
+            <div class="wpb-desc">Create in Paused status — enable in Ads Manager when ready</div>
+          </button>
+          <button class="wiz-pub-btn" onclick="toggleWizSchedule()">
+            <span style="font-size:1.4rem">📅</span>
+            <div class="wpb-name">Schedule</div>
+            <div class="wpb-desc">Pick a date &amp; time to automatically enable</div>
+          </button>
+        </div>
+        <div id="wiz-sched-row" style="display:none;margin-bottom:1.25rem;max-width:380px">
+          <div class="form-row">
+            <label>Launch Date &amp; Time</label>
+            <input type="datetime-local" id="wiz-sched-dt">
+          </div>
+          <button class="btn-submit" style="margin-top:0.75rem" onclick="submitWizCampaign('scheduled')">Schedule Campaign ▸</button>
+        </div>
+        <div class="status-bar" id="wiz-pub-status"></div>
+        <div id="wiz-pub-result" style="display:none;margin-top:1.25rem"></div>
+      </div>
+
+    </div><!-- end panel-campaign -->
+
+    <!-- ══ ACTIVE CAMPAIGNS PANEL ══ -->
+    <div id="panel-activecampaigns" style="display:none">
+      <div style="margin-bottom:1.5rem">
+        <div style="font-family:var(--serif);font-size:1.15rem;font-weight:700;color:var(--ink);margin-bottom:0.25rem">Active Campaigns</div>
+        <div style="font-size:0.82rem;color:var(--ink-faint)">View, pause, enable or delete your running campaigns across Google and Meta.</div>
+      </div>
+      <div class="ac-plat-tabs">
+        <button class="ac-plat-tab active" data-aplat="google" onclick="switchACTab('google')">Google Search</button>
+        <button class="ac-plat-tab" data-aplat="meta" onclick="switchACTab('meta')">Meta Ads</button>
+      </div>
+      <!-- Google pane -->
+      <div id="ac-google">
+        <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem">
+          <select id="ac-google-client" style="flex:1;max-width:260px">
+            <option value="">— My account (default) —</option>
+          </select>
+          <button class="btn-sm" id="btn-ac-load-google" onclick="acLoadGoogle()">↺ Load</button>
+        </div>
+        <div id="ac-google-wrap">
+          <p style="font-size:0.83rem;color:var(--ink-faint);margin:0">Click Load to show campaigns.</p>
+        </div>
+      </div>
+      <!-- Meta pane -->
+      <div id="ac-meta" style="display:none">
+        <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem">
+          <select id="ac-meta-client" style="flex:1;max-width:260px">
+            <option value="">— My account (default) —</option>
+          </select>
+          <button class="btn-sm" id="btn-ac-load-meta" onclick="acLoadMeta()">↺ Load</button>
+        </div>
+        <div id="ac-meta-wrap">
+          <p style="font-size:0.83rem;color:var(--ink-faint);margin:0">Click Load to show Meta campaigns.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- legacy panels kept in DOM (no nav buttons) -->
+    <div id="panel-create" style="display:none"></div>
+
       <!-- ══ AI CREATIVE PANEL ══ -->
-    </div><!-- end panel-create -->
+    </div><!-- end panel-create (unused) -->
 
     <div id="panel-aicreative" style="display:none">
       <div style="margin-bottom:1.5rem">
@@ -1203,7 +1433,15 @@
     </div>
 
     <div id="panel-connections" style="display:none">
-      <div class="connections-grid">
+      <!-- Connections sub-nav -->
+      <div class="conn-sub-nav">
+        <button class="conn-sub-tab active" data-cpane="integrations" onclick="switchConnTab('integrations')">Integrations</button>
+        <button class="conn-sub-tab" data-cpane="clients" onclick="switchConnTab('clients')">Clients</button>
+      </div>
+
+      <!-- Integrations pane -->
+      <div id="conn-integrations" class="conn-sub-pane active">
+        <div class="connections-grid">
 
         <div class="conn-card">
           <div class="conn-card-head" style="background:#4285f4">
@@ -1334,152 +1572,258 @@
           </div>
         </div>
 
+      </div><!-- end conn-integrations pane -->
+
+      <!-- Clients pane -->
+      <div id="conn-clients" class="conn-sub-pane">
+        <div class="clients-header" style="margin-bottom:1.25rem">
+          <h2 style="margin:0">Client Portfolios</h2>
+          <button class="btn-add-client" id="btn-add-client">+ Add Client</button>
+        </div>
+        <div id="clients-loading" class="loading-row"><div class="spinner"></div> Loading clients…</div>
+        <div id="client-grid" class="client-grid" style="display:none"></div>
+        <div id="clients-empty" class="client-empty" style="display:none">
+          <div class="client-empty-icon">🗂</div>
+          <p>No clients yet.<br>Add your first client to get started.</p>
+        </div>
       </div>
-    </div>
+
+    </div><!-- end panel-connections -->
 
     <div id="panel-newsletter" style="display:none">
-      <div class="panel-grid">
 
-        <!-- ── Left: Generator + Preview ── -->
-        <div>
+      <!-- Newsletter sub-tabs -->
+      <div class="nl-sub-tabs">
+        <button class="nl-sub-tab active" data-nlpane="write" onclick="switchNLTab('write')">✍ Write</button>
+        <button class="nl-sub-tab" data-nlpane="drafts" onclick="switchNLTab('drafts')">📋 Scheduled &amp; Drafts</button>
+        <button class="nl-sub-tab" data-nlpane="autopilot" onclick="switchNLTab('autopilot')">🤖 Autopilot</button>
+      </div>
+
+      <!-- ── WRITE pane ── -->
+      <div id="nlp-write" class="nl-pane active">
+        <div class="panel-grid">
+
+          <!-- Left: Generator + Preview -->
+          <div>
+            <div class="form-card">
+              <div class="card-title">✨ AI Post Generator</div>
+              <div class="form-row">
+                <label for="nl-topic">Topic / Prompt <span class="hint">what to write about this week</span></label>
+                <textarea id="nl-topic" rows="2" placeholder="e.g. New research on semaglutide and cardiovascular outcomes — what patients really need to know"></textarea>
+              </div>
+              <div class="form-inline">
+                <div class="form-row">
+                  <label for="nl-pillar">Core Pillar</label>
+                  <select id="nl-pillar">
+                    <option value="GLP-1 / Semaglutide education">GLP-1 / Semaglutide</option>
+                    <option value="Peptide therapy">Peptide Therapy</option>
+                    <option value="TRT / hormone health">TRT / Hormone Health</option>
+                    <option value="Cancer prevention &amp; screening">Cancer Prevention</option>
+                    <option value="Metabolic health &amp; weight management">Metabolic Health</option>
+                    <option value="evidence-based preventive medicine">Preventive Medicine</option>
+                  </select>
+                </div>
+                <div class="form-row">
+                  <label for="nl-tone">Tone</label>
+                  <select id="nl-tone">
+                    <option value="educational, warm, no hype">Educational &amp; Warm</option>
+                    <option value="informative, clinical, precise">Clinical &amp; Precise</option>
+                    <option value="inspiring, empowering">Inspiring</option>
+                    <option value="conversational, relatable">Conversational</option>
+                  </select>
+                </div>
+                <div class="form-row">
+                  <label for="nl-length">Length</label>
+                  <select id="nl-length">
+                    <option value="short">Short (~300 words)</option>
+                    <option value="medium" selected>Medium (~450 words)</option>
+                    <option value="long">Long (~700 words)</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-row">
+                <label for="nl-context">Extra Context <span class="hint">optional</span></label>
+                <textarea id="nl-context" rows="2" placeholder="e.g. Tie in a recent news story, target patients who are already on GLP-1s, use this hook…"></textarea>
+              </div>
+              <!-- Newsletter image upload -->
+              <div class="form-row" style="margin-top:0.5rem">
+                <label>Header Image <span class="hint">optional</span></label>
+                <div class="img-drop-zone" id="nl-img-drop" onclick="document.getElementById('nl-img-file').click()" style="margin-bottom:0.5rem">
+                  <input type="file" id="nl-img-file" accept="image/*" style="display:none" onchange="handleImgUpload(this,'nl-img-url','nl-img-preview')">
+                  <div>
+                    <div style="font-size:1.2rem;margin-bottom:0.2rem">📁</div>
+                    <div style="font-size:0.82rem;color:var(--ink-mid)">Upload header image</div>
+                    <div style="font-size:0.74rem;color:var(--ink-faint);margin-top:0.1rem">JPG, PNG · recommended 1200×628</div>
+                  </div>
+                </div>
+                <input type="url" id="nl-img-url" placeholder="https://… (or upload above)" oninput="nlImgPreview()">
+                <div id="nl-img-preview" style="display:none;margin-top:0.5rem"><img style="max-width:100%;max-height:140px;border-radius:6px;border:1px solid var(--border)" alt="preview"></div>
+              </div>
+              <button class="btn-submit" id="btn-generate-post">✨ Generate Post with AI</button>
+              <div class="status-bar" id="nl-gen-status"></div>
+            </div>
+
+            <!-- Post Preview -->
+            <div id="nl-preview-wrap" style="display:none">
+              <div class="form-card">
+                <div class="card-title">Post Preview</div>
+                <div style="margin-bottom:1rem">
+                  <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:0.4rem">Subject Line</div>
+                  <div class="copy-block" id="nl-block-subject" style="font-size:0.97rem;font-weight:600;color:var(--ink)"><span id="nl-subject-text"></span><button class="copy-btn" data-block="nl-block-subject">Copy</button></div>
+                  <div style="font-size:0.76rem;color:var(--ink-faint);margin-top:0.32rem" id="nl-preview-text-row"></div>
+                </div>
+                <div style="margin-bottom:1.1rem">
+                  <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:0.4rem">Email Body Preview</div>
+                  <div id="nl-body-preview" style="background:var(--paper);border:1px solid var(--paper-warm);border-radius:8px;padding:1.25rem 1.5rem;font-size:0.88rem;line-height:1.8;color:var(--ink-mid);max-height:520px;overflow-y:auto"></div>
+                </div>
+                <div id="nl-social-wrap">
+                  <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:0.7rem">Social Captions</div>
+                  <div style="display:flex;flex-direction:column;gap:0.65rem">
+                    <div><div style="font-size:0.7rem;font-weight:600;color:var(--ink-faint);margin-bottom:0.25rem">X / Twitter</div><div class="copy-block" id="nl-block-x"><span id="nl-social-x"></span><button class="copy-btn" data-block="nl-block-x">Copy</button></div></div>
+                    <div><div style="font-size:0.7rem;font-weight:600;color:var(--ink-faint);margin-bottom:0.25rem">LinkedIn</div><div class="copy-block" id="nl-block-li"><span id="nl-social-li"></span><button class="copy-btn" data-block="nl-block-li">Copy</button></div></div>
+                    <div><div style="font-size:0.7rem;font-weight:600;color:var(--ink-faint);margin-bottom:0.25rem">Instagram</div><div class="copy-block" id="nl-block-ig"><span id="nl-social-ig"></span><button class="copy-btn" data-block="nl-block-ig">Copy</button></div></div>
+                  </div>
+                </div>
+                <div style="margin-top:0.85rem">
+                  <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:0.4rem;cursor:pointer" onclick="var b=document.getElementById('nl-research-body');b.style.display=b.style.display==='none'?'':'none'">Research Grounding ▾ <span style="font-size:0.65rem;font-weight:400;text-transform:none;letter-spacing:0">(click to expand)</span></div>
+                  <div id="nl-research-body" style="display:none;background:var(--paper);border:1px solid var(--paper-warm);border-radius:6px;padding:0.85rem 1rem;font-size:0.79rem;color:var(--ink-mid);line-height:1.75;white-space:pre-wrap;max-height:300px;overflow-y:auto"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right sidebar -->
+          <div class="preview-sticky">
+            <div class="form-card" style="margin-bottom:1.1rem">
+              <div class="card-title">Send &amp; Publish</div>
+              <p style="font-size:0.8rem;color:var(--ink-faint);margin-bottom:1rem;line-height:1.55">Generate a post first, then send or schedule.</p>
+              <div class="form-row">
+                <label for="nl-test-email">Test Email <span class="hint">preview to yourself</span></label>
+                <input type="email" id="nl-test-email" placeholder="you@evidencebasedhealth.me">
+              </div>
+              <button class="btn-sm" id="btn-send-test" style="width:100%;margin-bottom:0.6rem">Send Test Email</button>
+              <div style="display:flex;flex-direction:column;gap:0.5rem;margin-bottom:0.7rem">
+                <button class="btn-submit" id="btn-send-all" style="opacity:0.5;pointer-events:none">📧 Send to All Subscribers</button>
+                <button class="btn-sm" id="btn-save-nl-draft" style="width:100%;opacity:0.5;pointer-events:none">💾 Save as Draft</button>
+                <button class="btn-sm" id="btn-schedule-nl" style="width:100%;opacity:0.5;pointer-events:none">📅 Schedule Send</button>
+              </div>
+              <div id="nl-sched-row" style="display:none;margin-bottom:0.6rem">
+                <input type="datetime-local" id="nl-sched-dt" style="width:100%;margin-bottom:0.5rem">
+                <button class="btn-submit" id="btn-confirm-schedule">Confirm Schedule</button>
+              </div>
+              <div class="status-bar" id="nl-send-status"></div>
+            </div>
+
+            <div class="form-card" style="margin-bottom:1.1rem">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+                <div class="card-title" style="margin-bottom:0">Subscribers</div>
+                <button class="btn-sm" id="btn-refresh-subs" style="padding:0.25rem 0.6rem;font-size:0.72rem">Refresh</button>
+              </div>
+              <div style="display:flex;gap:0.6rem;margin-bottom:1rem">
+                <div class="nl-count-box"><div class="nl-count-num" id="nl-count-active">—</div><div class="nl-count-lbl">Active</div></div>
+                <div class="nl-count-box"><div class="nl-count-num muted" id="nl-count-total">—</div><div class="nl-count-lbl">Total</div></div>
+              </div>
+              <button class="btn-sm" id="btn-export-csv" style="width:100%;margin-bottom:0.85rem">⬇ Export CSV</button>
+              <div id="nl-sub-table-wrap" style="max-height:380px;overflow-y:auto">
+                <div class="loading-row" id="nl-sub-loading"><div class="spinner"></div>Loading…</div>
+                <table id="nl-sub-table" style="display:none;width:100%;border-collapse:collapse">
+                  <thead><tr>
+                    <th style="text-align:left;padding:0.3rem 0.4rem;border-bottom:2px solid var(--paper-warm);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600">Email</th>
+                    <th style="text-align:left;padding:0.3rem 0.4rem;border-bottom:2px solid var(--paper-warm);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600">Date</th>
+                    <th style="text-align:left;padding:0.3rem 0.4rem;border-bottom:2px solid var(--paper-warm);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600">Status</th>
+                    <th></th>
+                  </tr></thead>
+                  <tbody id="nl-sub-tbody"></tbody>
+                </table>
+                <div id="nl-sub-empty" style="display:none;text-align:center;padding:2rem;color:var(--ink-faint);font-size:0.85rem">No subscribers yet.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><!-- end nlp-write -->
+
+      <!-- ── SCHEDULED & DRAFTS pane ── -->
+      <div id="nlp-drafts" class="nl-pane">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem">
+          <h2 style="font-family:var(--serif);font-size:1rem;font-weight:700;color:var(--ink);margin:0">Scheduled &amp; Drafts</h2>
+          <button class="btn-sm" onclick="loadNLDrafts()">↺ Refresh</button>
+        </div>
+        <div id="nl-drafts-list">
+          <p style="font-size:0.83rem;color:var(--ink-faint)">No drafts yet. Generate a post in the Write tab and save it as a draft or schedule it.</p>
+        </div>
+      </div>
+
+      <!-- ── AUTOPILOT pane ── -->
+      <div id="nlp-autopilot" class="nl-pane">
+        <div style="max-width:580px">
           <div class="form-card">
-            <div class="card-title">✨ AI Post Generator</div>
+            <div class="card-title">🤖 Autopilot — AI Weekly Newsletter</div>
+            <p style="font-size:0.82rem;color:var(--ink-mid);margin-bottom:1.25rem;line-height:1.65">Configure a recurring AI-generated newsletter. Each week, the AI generates a post on your chosen topic and sends it automatically.</p>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:0.85rem 1rem;background:var(--paper);border-radius:8px;border:1px solid var(--border);margin-bottom:1.25rem">
+              <div>
+                <div style="font-size:0.88rem;font-weight:600;color:var(--ink)">Autopilot Status</div>
+                <div style="font-size:0.76rem;color:var(--ink-faint)" id="ap-status-text">Not configured</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:0.5rem">
+                <span id="ap-status-dot" style="width:10px;height:10px;border-radius:50%;background:var(--ink-faint);display:inline-block"></span>
+                <button class="btn-sm" id="btn-ap-toggle" onclick="toggleAutopilot()" style="display:none">Pause</button>
+              </div>
+            </div>
             <div class="form-row">
-              <label for="nl-topic">Topic / Prompt <span class="hint">what to write about this week</span></label>
-              <textarea id="nl-topic" rows="2" placeholder="e.g. New research on semaglutide and cardiovascular outcomes — what patients really need to know"></textarea>
+              <label for="ap-topic">Weekly Topic Focus</label>
+              <input type="text" id="ap-topic" placeholder="e.g. Latest evidence-based health research — focus on metabolic health">
             </div>
             <div class="form-inline">
               <div class="form-row">
-                <label for="nl-pillar">Core Pillar</label>
-                <select id="nl-pillar">
+                <label for="ap-pillar">Core Pillar</label>
+                <select id="ap-pillar">
                   <option value="GLP-1 / Semaglutide education">GLP-1 / Semaglutide</option>
                   <option value="Peptide therapy">Peptide Therapy</option>
                   <option value="TRT / hormone health">TRT / Hormone Health</option>
-                  <option value="Cancer prevention &amp; screening">Cancer Prevention</option>
-                  <option value="Metabolic health &amp; weight management">Metabolic Health</option>
                   <option value="evidence-based preventive medicine">Preventive Medicine</option>
+                  <option value="Metabolic health &amp; weight management">Metabolic Health</option>
                 </select>
               </div>
               <div class="form-row">
-                <label for="nl-tone">Tone</label>
-                <select id="nl-tone">
-                  <option value="educational, warm, no hype">Educational &amp; Warm</option>
-                  <option value="informative, clinical, precise">Clinical &amp; Precise</option>
-                  <option value="inspiring, empowering">Inspiring</option>
-                  <option value="conversational, relatable">Conversational</option>
+                <label for="ap-day">Send Day</label>
+                <select id="ap-day">
+                  <option value="Monday">Monday</option>
+                  <option value="Tuesday">Tuesday</option>
+                  <option value="Wednesday" selected>Wednesday</option>
+                  <option value="Thursday">Thursday</option>
+                  <option value="Friday">Friday</option>
                 </select>
               </div>
               <div class="form-row">
-                <label for="nl-length">Length</label>
-                <select id="nl-length">
-                  <option value="short">Short (~300 words)</option>
-                  <option value="medium" selected>Medium (~450 words)</option>
-                  <option value="long">Long (~700 words)</option>
+                <label for="ap-time">Send Time (ET)</label>
+                <select id="ap-time">
+                  <option value="08:00">8:00 AM</option>
+                  <option value="09:00" selected>9:00 AM</option>
+                  <option value="10:00">10:00 AM</option>
+                  <option value="12:00">12:00 PM</option>
+                  <option value="17:00">5:00 PM</option>
                 </select>
               </div>
             </div>
             <div class="form-row">
-              <label for="nl-context">Extra Context <span class="hint">optional</span></label>
-              <textarea id="nl-context" rows="2" placeholder="e.g. Tie in a recent news story, target patients who are already on GLP-1s, use this hook…"></textarea>
+              <label for="ap-tone">Tone</label>
+              <select id="ap-tone">
+                <option value="educational, warm, no hype">Educational &amp; Warm</option>
+                <option value="informative, clinical, precise">Clinical &amp; Precise</option>
+                <option value="conversational, relatable">Conversational</option>
+              </select>
             </div>
-            <button class="btn-submit" id="btn-generate-post">✨ Generate Post with AI</button>
-            <div class="status-bar" id="nl-gen-status"></div>
+            <button class="btn-submit" id="btn-ap-save" onclick="saveAutopilotConfig()">Save &amp; Activate Autopilot</button>
+            <div class="status-bar" id="ap-status"></div>
           </div>
-
-          <!-- Post Preview (shown after generation) -->
-          <div id="nl-preview-wrap" style="display:none">
-            <div class="form-card">
-              <div class="card-title">Post Preview</div>
-
-              <div style="margin-bottom:1rem">
-                <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:0.4rem">Subject Line</div>
-                <div class="copy-block" id="nl-block-subject" style="font-size:0.97rem;font-weight:600;color:var(--ink)"><span id="nl-subject-text"></span><button class="copy-btn" data-block="nl-block-subject">Copy</button></div>
-                <div style="font-size:0.76rem;color:var(--ink-faint);margin-top:0.32rem" id="nl-preview-text-row"></div>
-              </div>
-
-              <div style="margin-bottom:1.1rem">
-                <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:0.4rem">Email Body Preview</div>
-                <div id="nl-body-preview" style="background:var(--paper);border:1px solid var(--paper-warm);border-radius:8px;padding:1.25rem 1.5rem;font-size:0.88rem;line-height:1.8;color:var(--ink-mid);max-height:520px;overflow-y:auto"></div>
-              </div>
-
-              <div id="nl-social-wrap">
-                <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:0.7rem">Social Captions</div>
-                <div style="display:flex;flex-direction:column;gap:0.65rem">
-                  <div>
-                    <div style="font-size:0.7rem;font-weight:600;color:var(--ink-faint);margin-bottom:0.25rem">X / Twitter</div>
-                    <div class="copy-block" id="nl-block-x"><span id="nl-social-x"></span><button class="copy-btn" data-block="nl-block-x">Copy</button></div>
-                  </div>
-                  <div>
-                    <div style="font-size:0.7rem;font-weight:600;color:var(--ink-faint);margin-bottom:0.25rem">LinkedIn</div>
-                    <div class="copy-block" id="nl-block-li"><span id="nl-social-li"></span><button class="copy-btn" data-block="nl-block-li">Copy</button></div>
-                  </div>
-                  <div>
-                    <div style="font-size:0.7rem;font-weight:600;color:var(--ink-faint);margin-bottom:0.25rem">Instagram</div>
-                    <div class="copy-block" id="nl-block-ig"><span id="nl-social-ig"></span><button class="copy-btn" data-block="nl-block-ig">Copy</button></div>
-                  </div>
-                </div>
-              </div>
-
-              <div style="margin-top:0.85rem">
-                <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:0.4rem;cursor:pointer" onclick="var b=document.getElementById('nl-research-body');b.style.display=b.style.display==='none'?'':'none'">Research Grounding ▾ <span style="font-size:0.65rem;font-weight:400;text-transform:none;letter-spacing:0">(click to expand)</span></div>
-                <div id="nl-research-body" style="display:none;background:var(--paper);border:1px solid var(--paper-warm);border-radius:6px;padding:0.85rem 1rem;font-size:0.79rem;color:var(--ink-mid);line-height:1.75;white-space:pre-wrap;max-height:300px;overflow-y:auto"></div>
-              </div>
-
-            </div>
+          <div class="form-card" style="margin-top:1rem">
+            <div class="card-title">Next Scheduled Send</div>
+            <div id="ap-next-send" style="font-size:0.85rem;color:var(--ink-mid)">Configure autopilot above to see scheduling.</div>
           </div>
-        </div>
-
-        <!-- ── Sidebar: Send + Subscribers ── -->
-        <div class="preview-sticky">
-
-          <div class="form-card" style="margin-bottom:1.1rem">
-            <div class="card-title">Send Newsletter</div>
-            <p style="font-size:0.8rem;color:var(--ink-faint);margin-bottom:0.85rem;line-height:1.55">Generate a post first, then send a test or broadcast to all active subscribers.</p>
-            <div class="form-row">
-              <label for="nl-test-email">Test Email <span class="hint">send preview to yourself</span></label>
-              <input type="email" id="nl-test-email" placeholder="you@evidencebasedhealth.me">
-            </div>
-            <button class="btn-sm" id="btn-send-test" style="width:100%;margin-bottom:0.7rem">Send Test Email</button>
-            <button class="btn-submit" id="btn-send-all" style="opacity:0.5;pointer-events:none">📧 Send to All Subscribers</button>
-            <div class="status-bar" id="nl-send-status"></div>
-          </div>
-
-          <div class="form-card" style="margin-bottom:1.1rem">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
-              <div class="card-title" style="margin-bottom:0">Subscribers</div>
-              <button class="btn-sm" id="btn-refresh-subs" style="padding:0.25rem 0.6rem;font-size:0.72rem">Refresh</button>
-            </div>
-            <div style="display:flex;gap:0.6rem;margin-bottom:1rem">
-              <div class="nl-count-box"><div class="nl-count-num" id="nl-count-active">—</div><div class="nl-count-lbl">Active</div></div>
-              <div class="nl-count-box"><div class="nl-count-num muted" id="nl-count-total">—</div><div class="nl-count-lbl">Total</div></div>
-            </div>
-            <button class="btn-sm" id="btn-export-csv" style="width:100%;margin-bottom:0.85rem">⬇ Export CSV</button>
-            <div id="nl-sub-table-wrap" style="max-height:380px;overflow-y:auto">
-              <div class="loading-row" id="nl-sub-loading"><div class="spinner"></div>Loading…</div>
-              <table id="nl-sub-table" style="display:none;width:100%;border-collapse:collapse">
-                <thead><tr>
-                  <th style="text-align:left;padding:0.3rem 0.4rem;border-bottom:2px solid var(--paper-warm);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600">Email</th>
-                  <th style="text-align:left;padding:0.3rem 0.4rem;border-bottom:2px solid var(--paper-warm);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600">Date</th>
-                  <th style="text-align:left;padding:0.3rem 0.4rem;border-bottom:2px solid var(--paper-warm);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600">Status</th>
-                  <th></th>
-                </tr></thead>
-                <tbody id="nl-sub-tbody"></tbody>
-              </table>
-              <div id="nl-sub-empty" style="display:none;text-align:center;padding:2rem;color:var(--ink-faint);font-size:0.85rem">No subscribers yet.</div>
-            </div>
-          </div>
-
-          <div class="form-card">
-            <div class="card-title">Weekly Automation</div>
-            <p style="font-size:0.82rem;color:var(--ink-mid);line-height:1.65;margin-bottom:0.7rem">Use <strong>EventBridge Scheduler</strong> to auto-generate &amp; send a post every 7 days.</p>
-            <div style="background:var(--paper);border:1px solid var(--paper-warm);border-radius:6px;padding:0.75rem 0.9rem;font-family:monospace;font-size:0.73rem;color:var(--ink-mid);word-break:break-all;line-height:1.8;margin-bottom:0.7rem">aws events put-rule \<br>&nbsp; --name EBH-WeeklyNewsletter \<br>&nbsp; --schedule-expression "rate(7 days)" \<br>&nbsp; --state ENABLED</div>
-            <p style="font-size:0.76rem;color:var(--ink-faint);line-height:1.55;margin-bottom:0.75rem">Add a target pointing to <code style="background:var(--paper-warm);padding:0.1rem 0.3rem;border-radius:3px">adHandler</code> with payload <code style="background:var(--paper-warm);padding:0.1rem 0.3rem;border-radius:3px">{"source":"eventbridge","action":"scheduled-post"}</code></p>
-            <a href="https://us-east-1.console.aws.amazon.com/scheduler/home" target="_blank" rel="noopener" class="conn-link">EventBridge Scheduler ↗</a>
-          </div>
-
         </div>
       </div>
-    </div>
+
+    </div><!-- end panel-newsletter -->
 
   </div><!-- end dash-content -->
 </div><!-- end dashboard -->
@@ -1619,36 +1963,33 @@ document.getElementById('btn-logout').addEventListener('click', () => {
 });
 
 /* ── Tabs ── */
-const ALL_PANELS = ['home','clients','create','aicreative','audiences','launch','connections','newsletter'];
+const ALL_PANELS = ['home','campaign','activecampaigns','connections','newsletter','clients','create','aicreative','audiences','launch'];
 function showTab(t) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === t));
   ALL_PANELS.forEach(p => {
     const el = document.getElementById('panel-' + p);
     if (el) el.style.display = p === t ? '' : 'none';
   });
-  if (t === 'create')     showPlatTab(activePlatTab);
-  if (t === 'newsletter') loadSubscribers();
+  if (t === 'newsletter')      loadSubscribers();
+  if (t === 'activecampaigns') populateACClientSelectors();
+  if (t === 'connections')     { /* connections sub-tabs are already visible */ }
 }
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => showTab(btn.dataset.tab));
 });
 
-/* ── Create Ad platform sub-tabs ── */
+/* ── Wizard platform sub-tabs (still used inside Step 3) ── */
 let activePlatTab = 'meta';
 function showPlatTab(plat) {
   activePlatTab = plat;
-  document.querySelectorAll('.plat-tab').forEach(t => t.classList.toggle('active', t.dataset.plat === plat));
-  document.getElementById('sub-meta').style.display   = plat === 'meta'   ? '' : 'none';
-  document.getElementById('sub-google').style.display = plat === 'google' ? '' : 'none';
-  if (plat === 'google' && document.getElementById('pi-body').style.display !== 'none') loadPolicyViolations();
+  const sm = document.getElementById('sub-meta');
+  const sg = document.getElementById('sub-google');
+  if (sm) sm.style.display = plat === 'meta'   ? '' : 'none';
+  if (sg) sg.style.display = plat === 'google' ? '' : 'none';
 }
-document.querySelectorAll('.plat-tab:not(.disabled)').forEach(t => {
-  t.addEventListener('click', () => showPlatTab(t.dataset.plat));
-});
 function goCreateAd(plat) {
-  showTab('create');
-  showPlatTab(plat);
-  document.querySelector('.tab-btn[data-tab="create"]').classList.add('active');
+  showTab('campaign');
+  selectWizPlat(plat);
 }
 
 /* ── Load & Render Clients ── */
@@ -1711,17 +2052,25 @@ function renderClientGrid() {
 function populateClientSelectors() {
   ['meta-client-sel','google-client-sel'].forEach(id => {
     const sel = document.getElementById(id);
+    if (!sel) return;
     const cur = sel.value;
     while (sel.options.length > 1) sel.remove(1);
-    clients.forEach(c => {
-      const opt = new Option(c.name, c.clientId);
-      sel.add(opt);
-    });
+    clients.forEach(c => sel.add(new Option(c.name, c.clientId)));
     if (cur) sel.value = cur;
   });
   populateAIClientSel();
   updateMetaPreview();
   updateGooglePanel();
+}
+
+function populateACClientSelectors() {
+  ['ac-google-client','ac-meta-client','wai-client'].forEach(id => {
+    const sel = document.getElementById(id);
+    if (!sel) return;
+    const cur = sel.value;
+    while (sel.options.length > 1) sel.remove(1);
+    clients.forEach(c => sel.add(new Option(c.name, c.clientId, false, c.clientId === cur)));
+  });
 }
 
 function useClientForAds(clientId) {
@@ -3103,6 +3452,379 @@ document.addEventListener('click', e => {
     setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
   });
 });
+
+/* ═══════════════════════════════════════════════════
+   WIZARD FUNCTIONS
+═══════════════════════════════════════════════════ */
+let wizState = { platform: null, mode: null, step: 1 };
+
+function selectWizPlat(plat) {
+  wizState.platform = plat;
+  document.querySelectorAll('.wizard-plat-card').forEach(c => c.classList.toggle('wiz-sel', c.id === 'wpc-' + plat));
+  const title = document.getElementById('wp2-title');
+  if (title) title.textContent = `How would you like to build this ${plat === 'meta' ? 'Meta' : 'Google'} campaign?`;
+  wizGoTo(2);
+}
+
+function selectWizMode(mode) {
+  wizState.mode = mode;
+  document.querySelectorAll('.wizard-mode-card').forEach(c => c.classList.toggle('wiz-sel', c.id === 'wmc-' + mode));
+  showPlatTab(wizState.platform);
+  const aiSection = document.getElementById('wp3-ai');
+  if (aiSection) aiSection.style.display = mode === 'ai' ? '' : 'none';
+  wizGoTo(3);
+}
+
+function wizGoTo(step) {
+  for (let i = 1; i <= 5; i++) {
+    const pane = document.getElementById('wp-' + i);
+    if (pane) pane.style.display = i === step ? '' : 'none';
+  }
+  document.querySelectorAll('.wsd').forEach(dot => {
+    const s = parseInt(dot.dataset.step);
+    dot.classList.toggle('wiz-active', s === step);
+    dot.classList.toggle('wiz-done', s < step);
+  });
+  document.querySelectorAll('.wsd-line').forEach((line, idx) => {
+    line.classList.toggle('wiz-done', idx + 1 < step);
+  });
+  wizState.step = step;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function runWizPolicyCheck() {
+  const btn = document.getElementById('btn-run-policy');
+  const results = document.getElementById('wiz-policy-results');
+  const proceedBtn = document.getElementById('btn-proceed-publish');
+  btn.disabled = true;
+  btn.textContent = 'Checking…';
+
+  let textsToCheck = [];
+  if (wizState.platform === 'meta') {
+    textsToCheck = [
+      document.getElementById('m-primary-text')?.value || '',
+      document.getElementById('m-headline')?.value || '',
+      document.getElementById('m-description')?.value || '',
+    ];
+  } else {
+    textsToCheck = [
+      ...Array.from(document.querySelectorAll('.ag-headline')).map(i => i.value),
+      ...Array.from(document.querySelectorAll('#g-desc-wrap input')).map(i => i.value),
+    ].filter(Boolean);
+  }
+
+  const RX_COMMERCIAL = /\b(buy|order|shop|purchase|get\s+your|prescription|rx|pharmacy|refill|available\s+now|limited\s+supply|stock|price|cost|coupon|discount|offer|deal|sale|free\s+trial|as\s+low\s+as|\$\d)\b/i;
+  const RX_BRANDS = /\b(ozempic|wegovy|mounjaro|zepbound|saxenda|rybelsus|victoza|trulicity|semaglutide\s+injection|tirzepatide|bpc.?157|tb.?500|ipamorelin|sermorelin|hgh|testosterone|trt\s+therapy)\b/i;
+
+  const issues = [], warnings = [];
+  textsToCheck.forEach(text => {
+    if (text && RX_COMMERCIAL.test(text)) issues.push(`Commercial language detected: "${text.slice(0,60)}…"`);
+    if (text && RX_BRANDS.test(text))     warnings.push(`Drug brand name (may need certification): "${text.slice(0,60)}…"`);
+  });
+
+  let html = '';
+  if (!issues.length && !warnings.length) {
+    html = '<div class="policy-result-item pass">✓ No policy issues found — copy looks clean.</div>';
+    if (proceedBtn) proceedBtn.style.display = '';
+  } else {
+    issues.forEach(i => { html += `<div class="policy-result-item fail">⛔ ${esc(i)}</div>`; });
+    warnings.forEach(w => { html += `<div class="policy-result-item warn">⚠ ${esc(w)}</div>`; });
+    if (!issues.length) {
+      html += '<div style="margin-top:0.75rem"><button class="btn-submit" style="width:auto;padding:0.75rem 2rem" onclick="wizGoTo(5)">Accept &amp; Continue →</button></div>';
+      if (proceedBtn) proceedBtn.style.display = 'none';
+    } else {
+      html += '<div style="margin-top:0.75rem;display:flex;gap:0.75rem;flex-wrap:wrap"><button class="btn-sm" onclick="wizAutoCorrect()">✨ Auto-correct with AI</button><button class="wizard-back-btn" onclick="wizGoTo(3)" style="margin:0">← Edit Manually</button></div>';
+    }
+  }
+  results.innerHTML = html;
+  btn.disabled = false;
+  btn.textContent = 'Run Policy Check ▸';
+}
+
+async function wizAutoCorrect() {
+  const results = document.getElementById('wiz-policy-results');
+  const offer = document.getElementById('wai-offer')?.value || 'health education';
+  const obj   = document.getElementById('wai-objective')?.value || 'Traffic to education page';
+  results.innerHTML = '<p style="font-size:0.83rem;color:var(--ink-faint)">⏳ Auto-correcting with AI…</p>';
+  try {
+    const res = await fetch(`${API}/generate-ad-copy`, {
+      method: 'POST', headers: authHeaders(),
+      body: JSON.stringify({ platform: wizState.platform === 'google' ? 'Google' : 'Meta', offer, objective: obj, audience: 'health-conscious adults', brand: 'Evidence-Based Health' }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+    if (data.variants?.[0]) {
+      const v = data.variants[0];
+      if (wizState.platform === 'meta') {
+        if (v.headline)     { const el = document.getElementById('m-headline');     if (el) el.value = v.headline.slice(0,40); }
+        if (v.primaryText)  { const el = document.getElementById('m-primary-text'); if (el) el.value = v.primaryText.slice(0,125); }
+      }
+    }
+    results.innerHTML = '<div class="policy-result-item pass">✓ Auto-corrected. Review your form in Step 3, then re-run check.</div><div style="margin-top:0.75rem"><button class="wizard-back-btn" style="margin:0" onclick="wizGoTo(3)">← Review Form</button></div>';
+  } catch(e) {
+    results.innerHTML = `<div class="policy-result-item fail">Auto-correct failed: ${esc(e.message)}</div>`;
+  }
+}
+
+function toggleWizSchedule() {
+  const row = document.getElementById('wiz-sched-row');
+  if (row) row.style.display = row.style.display === 'none' ? '' : 'none';
+}
+
+async function submitWizCampaign(mode) {
+  showStatus('wiz-pub-status', 'loading', `Creating ${wizState.platform} campaign…`);
+  try {
+    if (wizState.platform === 'meta') {
+      document.getElementById('btn-create-meta')?.click();
+    } else {
+      document.getElementById('btn-gen-google')?.click();
+    }
+    if (mode === 'scheduled') {
+      const dt = document.getElementById('wiz-sched-dt')?.value;
+      if (dt) localStorage.setItem(`wiz_sched_${Date.now()}`, JSON.stringify({ platform: wizState.platform, scheduledAt: dt }));
+    }
+  } catch(e) {
+    showStatus('wiz-pub-status', 'error', e.message);
+  }
+}
+
+/* ═══════════════════════════════════════════════════
+   ACTIVE CAMPAIGNS FUNCTIONS
+═══════════════════════════════════════════════════ */
+function switchACTab(plat) {
+  document.querySelectorAll('.ac-plat-tab').forEach(t => t.classList.toggle('active', t.dataset.aplat === plat));
+  const gEl = document.getElementById('ac-google');
+  const mEl = document.getElementById('ac-meta');
+  if (gEl) gEl.style.display = plat === 'google' ? '' : 'none';
+  if (mEl) mEl.style.display = plat === 'meta'   ? '' : 'none';
+}
+
+async function acLoadGoogle() {
+  const clientId = document.getElementById('ac-google-client')?.value || undefined;
+  const wrap = document.getElementById('ac-google-wrap');
+  const btn  = document.getElementById('btn-ac-load-google');
+  if (btn) btn.disabled = true;
+  wrap.innerHTML = '<p style="font-size:0.83rem;color:var(--ink-faint)">Loading…</p>';
+  try {
+    const url = `${API}/list-google-campaigns${clientId ? `?clientId=${encodeURIComponent(clientId)}` : ''}`;
+    const res  = await fetch(url, { headers: authHeaders() });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed');
+    const campaigns = data.campaigns || [];
+    if (!campaigns.length) { wrap.innerHTML = '<p style="font-size:0.83rem;color:var(--ink-faint)">No campaigns found.</p>'; return; }
+    if (typeof renderCampaignsTable === 'function') {
+      wrap.innerHTML = renderCampaignsTable(campaigns, clientId, 'ac');
+    } else {
+      wrap.innerHTML = campaigns.map(c => `<div style="border:1px solid var(--border);border-radius:8px;padding:0.9rem 1rem;margin-bottom:0.6rem;display:flex;justify-content:space-between;align-items:center"><div><strong style="font-size:0.88rem">${esc(c.name)}</strong><div style="font-size:0.75rem;color:var(--ink-faint);margin-top:0.1rem">Status: ${esc(c.status)} · Budget: $${c.dailyBudget ?? '—'}/day</div></div></div>`).join('');
+    }
+  } catch(ex) {
+    wrap.innerHTML = `<p style="font-size:0.83rem;color:var(--red-soft)">Error: ${esc(ex.message)}</p>`;
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
+
+async function acLoadMeta() {
+  const wrap = document.getElementById('ac-meta-wrap');
+  wrap.innerHTML = '<p style="font-size:0.83rem;color:var(--ink-faint)">Meta campaign listing coming soon.</p>';
+}
+
+/* ═══════════════════════════════════════════════════
+   NEWSLETTER SUB-TABS + DRAFT / SCHEDULE FUNCTIONS
+═══════════════════════════════════════════════════ */
+function switchNLTab(pane) {
+  document.querySelectorAll('.nl-sub-tab').forEach(t => t.classList.toggle('active', t.dataset.nlpane === pane));
+  document.querySelectorAll('.nl-pane').forEach(p => p.classList.toggle('active', p.id === 'nlp-' + pane));
+  if (pane === 'drafts')    loadNLDrafts();
+  if (pane === 'autopilot') loadAutopilotConfig();
+}
+
+let nlPostData = null; // set by existing newsletter generator code
+
+async function loadNLDrafts() {
+  const list = document.getElementById('nl-drafts-list');
+  list.innerHTML = '<p style="font-size:0.83rem;color:var(--ink-faint)">Loading…</p>';
+  try {
+    const res  = await fetch(`${API}/nl-drafts`, { headers: authHeaders() });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+    if (!data.length) { list.innerHTML = '<p style="font-size:0.83rem;color:var(--ink-faint)">No drafts or scheduled posts yet.</p>'; return; }
+    list.innerHTML = data.map(d => `
+      <div style="border:1px solid var(--border);border-radius:8px;padding:1rem;margin-bottom:0.75rem">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div>
+            <div style="font-weight:600;font-size:0.9rem">${esc(d.subjectLine || '(no subject)')}</div>
+            <div style="font-size:0.76rem;color:var(--ink-faint);margin-top:0.2rem">
+              ${d.status === 'scheduled' ? `📅 Scheduled: ${new Date(d.scheduledAt).toLocaleString()}` : '💾 Draft'}
+              · Saved ${new Date(d.createdAt).toLocaleDateString()}
+            </div>
+          </div>
+          <div style="display:flex;gap:0.4rem">
+            <button class="btn-sm" onclick="loadNLDraftIntoEditor('${esc(d.draftId)}')">Edit</button>
+            <button class="btn-sm" style="color:var(--red-soft)" onclick="deleteNLDraft('${esc(d.draftId)}')">Delete</button>
+          </div>
+        </div>
+      </div>`).join('');
+  } catch(e) {
+    list.innerHTML = `<p style="font-size:0.83rem;color:var(--red-soft)">Error: ${esc(e.message)}</p>`;
+  }
+}
+
+async function saveNLDraft(status = 'draft', scheduledAt = null) {
+  const subjectEl = document.getElementById('nl-subject-line') || document.getElementById('nl-subject');
+  const bodyEl    = document.getElementById('nl-body') || document.getElementById('newsletter-preview');
+  const payload = {
+    subjectLine: subjectEl?.value || subjectEl?.textContent || '(no subject)',
+    body: bodyEl?.value || bodyEl?.innerHTML || '',
+    imageUrl: document.getElementById('nl-img-url')?.value || '',
+    status,
+  };
+  if (scheduledAt) payload.scheduledAt = scheduledAt;
+  try {
+    const res  = await fetch(`${API}/nl-draft`, { method: 'POST', headers: authHeaders(), body: JSON.stringify(payload) });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+    showStatus('nl-send-status', 'success', `✓ ${status === 'scheduled' ? 'Scheduled' : 'Draft saved'} successfully.`);
+  } catch(e) {
+    showStatus('nl-send-status', 'error', e.message);
+  }
+}
+
+async function deleteNLDraft(draftId) {
+  if (!confirm('Delete this draft?')) return;
+  await fetch(`${API}/nl-draft`, { method: 'DELETE', headers: authHeaders(), body: JSON.stringify({ draftId }) });
+  loadNLDrafts();
+}
+
+function loadNLDraftIntoEditor(draftId) {
+  switchNLTab('write');
+  // Fetch and populate — basic stub, full hydration requires draft data
+  showStatus('nl-send-status', 'loading', 'Loading draft…');
+  fetch(`${API}/nl-drafts`, { headers: authHeaders() })
+    .then(r => r.json())
+    .then(arr => {
+      const d = arr.find(x => x.draftId === draftId);
+      if (!d) return;
+      const subjectEl = document.getElementById('nl-subject-line') || document.getElementById('nl-subject');
+      if (subjectEl) subjectEl.value = d.subjectLine || '';
+      const imgEl = document.getElementById('nl-img-url');
+      if (imgEl) imgEl.value = d.imageUrl || '';
+      showStatus('nl-send-status', 'success', 'Draft loaded. Edit and send when ready.');
+    }).catch(() => {});
+}
+
+document.getElementById('btn-save-nl-draft')?.addEventListener('click', () => saveNLDraft('draft'));
+document.getElementById('btn-schedule-nl')?.addEventListener('click', () => {
+  const row = document.getElementById('nl-sched-row');
+  if (row) row.style.display = row.style.display === 'none' ? '' : 'none';
+});
+document.getElementById('btn-confirm-schedule')?.addEventListener('click', () => {
+  const dt = document.getElementById('nl-sched-dt')?.value;
+  if (!dt) { alert('Select a date and time.'); return; }
+  saveNLDraft('scheduled', dt);
+});
+
+/* ═══════════════════════════════════════════════════
+   AUTOPILOT FUNCTIONS
+═══════════════════════════════════════════════════ */
+async function saveAutopilotConfig() {
+  const btn = document.getElementById('btn-ap-save');
+  if (btn) btn.disabled = true;
+  const config = {
+    topic:   document.getElementById('ap-topic')?.value || '',
+    pillar:  document.getElementById('ap-pillar')?.value || '',
+    day:     document.getElementById('ap-day')?.value || 'Wednesday',
+    time:    document.getElementById('ap-time')?.value || '09:00',
+    tone:    document.getElementById('ap-tone')?.value || 'educational, warm, no hype',
+    enabled: true,
+  };
+  try {
+    const res  = await fetch(`${API}/nl-autopilot`, { method: 'POST', headers: authHeaders(), body: JSON.stringify(config) });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+    showStatus('ap-status', 'success', `✓ Autopilot activated — every ${config.day} at ${config.time} ET.`);
+    loadAutopilotConfig();
+  } catch(e) {
+    showStatus('ap-status', 'error', e.message);
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
+
+async function loadAutopilotConfig() {
+  try {
+    const res  = await fetch(`${API}/nl-autopilot`, { headers: authHeaders() });
+    const data = await res.json();
+    if (!res.ok || !data.topic) return;
+    const set = (id, v) => { const el = document.getElementById(id); if (el) el.value = v; };
+    set('ap-topic', data.topic || '');
+    set('ap-pillar', data.pillar || '');
+    set('ap-day', data.day || 'Wednesday');
+    set('ap-time', data.time || '09:00');
+    set('ap-tone', data.tone || 'educational, warm, no hype');
+    const dot  = document.getElementById('ap-status-dot');
+    const txt  = document.getElementById('ap-status-text');
+    const tbtn = document.getElementById('btn-ap-toggle');
+    if (dot) dot.style.background = data.enabled ? '#22c55e' : 'var(--ink-faint)';
+    if (txt) txt.textContent = data.enabled ? `Active — every ${data.day} at ${data.time} ET` : 'Paused';
+    if (tbtn) { tbtn.style.display = ''; tbtn.textContent = data.enabled ? 'Pause' : 'Resume'; }
+  } catch(e) {}
+}
+
+async function toggleAutopilot() {
+  try {
+    const res  = await fetch(`${API}/nl-autopilot`, { headers: authHeaders() });
+    const data = await res.json();
+    if (!res.ok) return;
+    await fetch(`${API}/nl-autopilot`, { method: 'POST', headers: authHeaders(), body: JSON.stringify({ ...data, enabled: !data.enabled }) });
+    loadAutopilotConfig();
+  } catch(e) {}
+}
+
+/* ═══════════════════════════════════════════════════
+   CONNECTIONS SUB-TABS
+═══════════════════════════════════════════════════ */
+function switchConnTab(pane) {
+  document.querySelectorAll('.conn-sub-tab').forEach(t => t.classList.toggle('active', t.dataset.cpane === pane));
+  document.querySelectorAll('.conn-sub-pane').forEach(p => p.classList.toggle('active', p.id === 'conn-' + pane));
+  if (pane === 'clients') loadClients();
+}
+
+/* ═══════════════════════════════════════════════════
+   S3 IMAGE UPLOAD + NEWSLETTER IMAGE PREVIEW
+═══════════════════════════════════════════════════ */
+async function handleImgUpload(input, targetId, previewId) {
+  const file = input.files[0];
+  if (!file) return;
+  if (file.size > 10 * 1024 * 1024) { alert('File too large — max 10MB'); return; }
+  try {
+    const res = await fetch(`${API}/presigned-upload`, {
+      method: 'POST', headers: authHeaders(),
+      body: JSON.stringify({ fileName: file.name, contentType: file.type }),
+    });
+    const { uploadUrl, fileUrl } = await res.json();
+    if (!res.ok) throw new Error('Could not get upload URL');
+    await fetch(uploadUrl, { method: 'PUT', body: file, headers: { 'Content-Type': file.type } });
+    const targetEl = document.getElementById(targetId);
+    if (targetEl) targetEl.value = fileUrl;
+    const preview = document.getElementById(previewId);
+    if (preview) {
+      preview.style.display = '';
+      const img = preview.querySelector('img');
+      if (img) img.src = fileUrl;
+    }
+  } catch(e) {
+    alert('Upload failed: ' + e.message);
+  }
+}
+
+function nlImgPreview() {
+  const url = document.getElementById('nl-img-url')?.value;
+  const p   = document.getElementById('nl-img-preview');
+  if (!p) return;
+  if (url) { p.style.display = ''; const img = p.querySelector('img'); if (img) img.src = url; }
+  else { p.style.display = 'none'; }
+}
 </script>
 
 <script src="js/cookies.js"></script>
