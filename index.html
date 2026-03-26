@@ -363,6 +363,18 @@
       }(window,document,'script');
       fbq('init', META_PIXEL_ID);
       fbq('track', 'PageView');
+      // topic-scoped ViewContent for retargeting audiences
+      const topicMap = {
+        '/glp1': 'GLP1', '/peptide': 'PEPTIDE', '/trt': 'TRT',
+        '/prevention': 'PREVENTION', '/hormone': 'HORMONE',
+      };
+      const path = window.location.pathname.toLowerCase();
+      for (const [seg, cat] of Object.entries(topicMap)) {
+        if (path.includes(seg)) {
+          fbq('trackCustom', 'ViewContent', { content_category: cat });
+          break;
+        }
+      }
     }
     if (!window.gtag && GOOGLE_ADS_ID !== 'AW-XXXXXXXXX') {
       const s = document.createElement('script');
@@ -374,16 +386,65 @@
       gtag('js', new Date());
       gtag('config', GOOGLE_ADS_ID);
     }
+    // High-intent behavioral signals
+    startEngagementTracking();
+  }
+
+  function startEngagementTracking() {
+    const path = window.location.pathname.toLowerCase();
+    // Map path to GA4 event name
+    const pageTopics = [
+      ['/glp1',       'view_glp1_page'],
+      ['/peptide',    'view_peptide_page'],
+      ['/trt',        'view_trt_page'],
+      ['/prevention', 'view_prevention_page'],
+      ['/hormone',    'view_hormone_page'],
+    ];
+    for (const [seg, evtName] of pageTopics) {
+      if (path.includes(seg) && window.gtag) {
+        gtag('event', evtName, { page_path: path });
+      }
+    }
+
+    // Time-on-page ≥ 45s → engaged_session
+    let engagedFired = false;
+    setTimeout(() => {
+      if (!engagedFired) {
+        engagedFired = true;
+        if (window.gtag) gtag('event', 'engaged_session', { engagement_seconds: 45 });
+        if (window.fbq) fbq('trackCustom', 'EngagedVisitor', { seconds: 45 });
+      }
+    }, 45000);
+
+    // Scroll depth ≥ 75%
+    let scroll75Fired = false;
+    function onScroll() {
+      if (scroll75Fired) return;
+      const scrolled = window.scrollY + window.innerHeight;
+      const total    = document.documentElement.scrollHeight;
+      if (scrolled / total >= 0.75) {
+        scroll75Fired = true;
+        if (window.gtag) gtag('event', 'scroll_depth', { percent: 75 });
+        if (window.fbq) fbq('trackCustom', 'DeepScroll', { percent: 75 });
+        window.removeEventListener('scroll', onScroll);
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
   }
 
   function trackLead() {
     if (window.fbq) fbq('track', 'Lead');
     if (window.gtag) {
-      gtag('event', 'conversion', {
-        send_to: GOOGLE_ADS_ID + '/' + GOOGLE_CONV_LBL,
-        value: 1.0,
-        currency: 'USD'
-      });
+      // GA4 lead conversion
+      gtag('event', 'lead', { source: 'homepage_subscribe' });
+      // Google Ads conversion
+      if (GOOGLE_CONV_LBL !== 'YOUR_CONVERSION_LABEL') {
+        gtag('event', 'conversion', {
+          send_to: GOOGLE_ADS_ID + '/' + GOOGLE_CONV_LBL,
+          value: 1.0,
+          currency: 'USD'
+        });
+      }
     }
   }
 

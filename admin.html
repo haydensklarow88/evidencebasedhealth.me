@@ -290,6 +290,48 @@
   .camp-detail-row { display:none; background:var(--paper); }
   .camp-detail-row.open { display:table-row; }
   .camp-detail-cell { padding:0.65rem 0.9rem; font-size:0.8rem; color:var(--ink-mid); }
+  /* ── AI Creative panel ── */
+  .ai-brief-grid { display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;align-items:start; }
+  @media(max-width:820px) { .ai-brief-grid { grid-template-columns:1fr; } }
+  .ai-variants-wrap { margin-top:1.5rem; }
+  .ai-variant-card { background:var(--paper-card);border:1px solid var(--paper-warm);border-radius:10px;overflow:hidden;margin-bottom:1rem; }
+  .ai-variant-head { display:flex;align-items:center;justify-content:space-between;padding:0.65rem 1rem;background:var(--accent-light);border-bottom:1px solid var(--accent-rule); }
+  .ai-variant-num { font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent); }
+  .ai-variant-actions { display:flex;gap:0.4rem; }
+  .ai-variant-body { padding:0.9rem 1.1rem; }
+  .ai-field-row { display:flex;gap:0.5rem;font-size:0.84rem;color:var(--ink-mid);margin-bottom:0.55rem;align-items:flex-start; }
+  .ai-field-label { font-size:0.68rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-faint);min-width:80px;padding-top:0.05rem; }
+  .ai-field-val { flex:1;line-height:1.5; }
+  .ai-image-concept { background:var(--paper);border:1px solid var(--paper-warm);border-radius:5px;padding:0.45rem 0.65rem;font-size:0.78rem;color:var(--ink-light);font-style:italic;margin-top:0.3rem; }
+  .ai-loading-pulse { display:flex;align-items:center;gap:0.8rem;padding:2rem 0;color:var(--ink-faint);font-size:0.88rem; }
+
+  /* ── Audiences panel ── */
+  .audiences-grid { display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;align-items:start; }
+  @media(max-width:820px) { .audiences-grid { grid-template-columns:1fr; } }
+  .aud-card { background:var(--paper-card);border:1px solid var(--paper-warm);border-radius:10px;overflow:hidden; }
+  .aud-card-head { padding:0.85rem 1.1rem;border-bottom:1px solid var(--paper-warm);display:flex;align-items:center;justify-content:space-between;gap:0.5rem; }
+  .aud-card-title { font-size:0.88rem;font-weight:600;color:var(--ink); }
+  .aud-card-sub { font-size:0.73rem;color:var(--ink-faint);margin-top:0.12rem; }
+  .aud-card-body { padding:0.9rem 1.1rem; }
+  .aud-segment { display:flex;align-items:flex-start;gap:0.65rem;padding:0.55rem 0;border-bottom:1px solid var(--paper-warm); }
+  .aud-segment:last-child { border-bottom:none; }
+  .aud-seg-dot { width:9px;height:9px;border-radius:50%;flex-shrink:0;margin-top:0.35rem; }
+  .aud-seg-name { font-size:0.85rem;font-weight:500;color:var(--ink-mid); }
+  .aud-seg-desc { font-size:0.75rem;color:var(--ink-faint);margin-top:0.1rem;line-height:1.5; }
+  .aud-action-row { display:flex;flex-wrap:wrap;gap:0.45rem;margin-top:0.8rem; }
+
+  /* ── Weekly Insights ── */
+  .insights-section { margin-top:1.5rem;background:var(--paper-card);border:1px solid var(--paper-warm);border-radius:10px;overflow:hidden; }
+  .insights-header { display:flex;align-items:center;justify-content:space-between;padding:0.85rem 1rem;border-bottom:1px solid var(--paper-warm); }
+  .insights-inner { padding:1rem 1.1rem; }
+  .insights-client-row { display:flex;align-items:center;gap:0.65rem;margin-bottom:1rem; }
+  .insights-summary { background:var(--paper);border:1px solid var(--paper-warm);border-radius:8px;padding:1rem 1.1rem;line-height:1.75;font-size:0.86rem;color:var(--ink-mid);white-space:pre-wrap;word-break:break-word; }
+  .insights-cols { display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.8rem;margin-top:1rem; }
+  @media(max-width:700px) { .insights-cols { grid-template-columns:1fr; } }
+  .insights-col { background:var(--paper);border:1px solid var(--paper-warm);border-radius:8px;padding:0.8rem 1rem; }
+  .insights-col-title { font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-light);margin-bottom:0.6rem; }
+  .insights-item { font-size:0.82rem;color:var(--ink-mid);margin-bottom:0.4rem;line-height:1.5; }
+  .insights-item strong { color:var(--accent); }
 </style>
 </head>
 <body>
@@ -322,6 +364,8 @@
       <button class="tab-btn active" data-tab="home">My Account</button>
       <button class="tab-btn" data-tab="clients">Clients</button>
       <button class="tab-btn" data-tab="create">Create Ad</button>
+      <button class="tab-btn" data-tab="aicreative">AI Creative</button>
+      <button class="tab-btn" data-tab="audiences">Audiences</button>
       <button class="tab-btn" data-tab="connections">Connections</button>
     </div>
 
@@ -387,6 +431,26 @@
         </div>
         <div id="ga4-wrap" class="ga4-inner">
           <p style="font-size:0.83rem;color:var(--ink-faint);margin:0">Click Load to pull live data from Google Analytics.</p>
+        </div>
+      </div>
+
+      <!-- Weekly Insights -->
+      <div class="insights-section">
+        <div class="insights-header">
+          <div>
+            <div style="font-size:0.92rem;font-weight:600;color:var(--ink)">🤖 Weekly Performance Insights</div>
+            <div style="font-size:0.73rem;color:var(--ink-faint);margin-top:0.1rem">AI-powered summary of top audiences, creatives &amp; optimization suggestions</div>
+          </div>
+          <button type="button" class="btn-sm" id="btn-load-insights" style="padding:0.35rem 0.9rem;font-size:0.8rem">↻ Analyze</button>
+        </div>
+        <div id="insights-inner" class="insights-inner">
+          <div class="insights-client-row">
+            <label style="font-size:0.8rem;font-weight:500;color:var(--ink-mid);white-space:nowrap">Client:</label>
+            <select id="insights-client-sel" style="flex:1;max-width:260px;padding:0.4rem 0.65rem;border:1px solid var(--paper-warm);border-radius:6px;font-family:var(--sans);font-size:0.84rem;background:var(--paper);color:var(--ink)">
+              <option value="">— My account (EBH default) —</option>
+            </select>
+          </div>
+          <p style="font-size:0.83rem;color:var(--ink-faint);margin:0">Select a client and click Analyze to see last-week performance + AI recommendations.</p>
         </div>
       </div>
     </div>
@@ -630,8 +694,240 @@
     </div><!-- end panel-google -->
       </div><!-- end sub-google -->
 
-      <!-- ══ CONNECTIONS PANEL ══ -->
+      <!-- ══ AI CREATIVE PANEL ══ -->
     </div><!-- end panel-create -->
+
+    <div id="panel-aicreative" style="display:none">
+      <div style="margin-bottom:1.5rem">
+        <div style="font-family:var(--serif);font-size:1.2rem;font-weight:700;color:var(--ink);margin-bottom:0.35rem">AI Ad Creative Generator</div>
+        <div style="font-size:0.82rem;color:var(--ink-faint)">Fill in a brief and AI will write 5 education-first, policy-safe ad variants for Google or Meta.</div>
+      </div>
+      <div style="max-width:760px">
+        <div class="form-card">
+          <div class="card-title">Creative Brief</div>
+          <div class="ai-brief-grid">
+            <div class="form-row">
+              <label for="ai-client">Client</label>
+              <select id="ai-client">
+                <option value="">— My account (EBH) —</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label for="ai-platform">Platform</label>
+              <select id="ai-platform">
+                <option value="Meta">Facebook / Instagram (Meta)</option>
+                <option value="Google">Google Search</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label for="ai-offer">Offer / Topic</label>
+              <select id="ai-offer">
+                <option value="GLP-1 education">GLP-1 / Semaglutide education</option>
+                <option value="peptide therapy education">Peptide therapy education</option>
+                <option value="TRT and hormone health education">TRT / hormone health education</option>
+                <option value="cancer prevention and screening">Cancer prevention &amp; screening</option>
+                <option value="metabolic health and weight management">Metabolic health &amp; weight</option>
+                <option value="evidence-based health newsletter">Evidence-based health newsletter</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label for="ai-objective">Campaign Objective</label>
+              <select id="ai-objective">
+                <option value="Traffic to education page">Traffic — education page</option>
+                <option value="Lead capture — newsletter signup">Lead — newsletter signup</option>
+                <option value="Lead capture — eligibility quiz">Lead — eligibility quiz</option>
+                <option value="Brand awareness">Brand awareness</option>
+              </select>
+            </div>
+            <div class="form-row" style="grid-column:1/-1">
+              <label for="ai-audience">Target Audience</label>
+              <input type="text" id="ai-audience" placeholder="e.g. people who visited GLP-1 content but haven't completed an eligibility form" autocomplete="off">
+            </div>
+            <div class="form-row" style="grid-column:1/-1">
+              <label for="ai-extra">Additional Context <span class="hint">optional — winning angles, brand voice, restrictions</span></label>
+              <textarea id="ai-extra" rows="2" placeholder="e.g. Winning hook so far: 'doctor explaining safety'. Avoid any direct prescription language."></textarea>
+            </div>
+          </div>
+          <button class="btn-submit" id="btn-gen-ai" style="margin-top:0.5rem">✨ Generate 5 Ad Variants</button>
+          <div class="status-bar" id="ai-status"></div>
+        </div>
+        <div class="ai-variants-wrap" id="ai-variants-wrap" style="display:none"></div>
+      </div>
+    </div>
+
+    <!-- ══ AUDIENCES PANEL ══ -->
+    <div id="panel-audiences" style="display:none">
+      <div style="margin-bottom:1.5rem">
+        <div style="font-family:var(--serif);font-size:1.2rem;font-weight:700;color:var(--ink);margin-bottom:0.35rem">Audience Strategy</div>
+        <div style="font-size:0.82rem;color:var(--ink-faint)">Build GA4 segments, Meta Custom Audiences, and lookalikes to retarget warm visitors and find new ones.</div>
+      </div>
+      <div class="audiences-grid">
+
+        <!-- GA4 Audiences -->
+        <div class="aud-card">
+          <div class="aud-card-head">
+            <div>
+              <div class="aud-card-title">📈 GA4 Audiences → Google Ads</div>
+              <div class="aud-card-sub">Build in GA4 and publish to Google Ads for bid observation/remarketing</div>
+            </div>
+          </div>
+          <div class="aud-card-body">
+            <div class="aud-segment">
+              <div class="aud-seg-dot" style="background:#4285f4"></div>
+              <div>
+                <div class="aud-seg-name">All Visitors (30 / 60 / 180 days)</div>
+                <div class="aud-seg-desc">Condition: <code>session_start</code> in last 30–180 days. Use as top-level remarketing list in Google Ads.</div>
+              </div>
+            </div>
+            <div class="aud-segment">
+              <div class="aud-seg-dot" style="background:#0ea5e9"></div>
+              <div>
+                <div class="aud-seg-name">High-Intent Learners</div>
+                <div class="aud-seg-desc">Viewed GLP-1/peptide/TRT pages <strong>AND</strong> fired <code>engaged_session</code> or <code>scroll_depth</code>. Best for Google Search bid boost (+30%).</div>
+              </div>
+            </div>
+            <div class="aud-segment">
+              <div class="aud-seg-dot" style="background:#1a5c3a"></div>
+              <div>
+                <div class="aud-seg-name">Leads</div>
+                <div class="aud-seg-desc">Fired <code>lead</code> event. Publish to Google Ads as a conversion audience and seed for Performance Max.</div>
+              </div>
+            </div>
+            <div class="aud-action-row">
+              <a href="https://analytics.google.com" target="_blank" rel="noopener" class="btn-sm" style="text-decoration:none">Open GA4 Audiences ↗</a>
+              <a href="https://ads.google.com/aw/audiences" target="_blank" rel="noopener" class="btn-sm" style="text-decoration:none">Google Ads Audiences ↗</a>
+            </div>
+            <div style="margin-top:0.85rem;font-size:0.78rem;color:var(--ink-faint);line-height:1.6">
+              In GA4 → Admin → Audiences, create each segment above. Then link your GA4 property to Google Ads (Admin → Google Ads Links). Audiences publish within 24–48 hours.
+            </div>
+          </div>
+        </div>
+
+        <!-- Meta Custom Audiences -->
+        <div class="aud-card">
+          <div class="aud-card-head">
+            <div>
+              <div class="aud-card-title">🎯 Meta Custom Audiences</div>
+              <div class="aud-card-sub">Website visitors segmented by topic for retargeting + lookalikes</div>
+            </div>
+            <button type="button" class="btn-sm" id="btn-create-meta-audiences" style="white-space:nowrap">Create All</button>
+          </div>
+          <div class="aud-card-body">
+            <div class="aud-segment">
+              <div class="aud-seg-dot" style="background:#1877f2"></div>
+              <div>
+                <div class="aud-seg-name">All Website Visitors</div>
+                <div class="aud-seg-desc">All PageView events — 30, 60, and 180-day windows. Broad retargeting base.</div>
+              </div>
+            </div>
+            <div class="aud-segment">
+              <div class="aud-seg-dot" style="background:#7c3aed"></div>
+              <div>
+                <div class="aud-seg-name">GLP-1 / Peptide / TRT Interest</div>
+                <div class="aud-seg-desc">ViewContent with <code>content_category</code> IN (GLP1, PEPTIDE, TRT). URL-based or Pixel custom event match.</div>
+              </div>
+            </div>
+            <div class="aud-segment">
+              <div class="aud-seg-dot" style="background:#be123c"></div>
+              <div>
+                <div class="aud-seg-name">Engaged Visitors</div>
+                <div class="aud-seg-desc">Fired <code>EngagedVisitor</code> or <code>DeepScroll</code> custom events (45s+ or 75%+ scroll). Warmest retargeting pool.</div>
+              </div>
+            </div>
+            <div class="aud-segment">
+              <div class="aud-seg-dot" style="background:#1a5c3a"></div>
+              <div>
+                <div class="aud-seg-name">Leads (Subscribers)</div>
+                <div class="aud-seg-desc">Fired <code>Lead</code> event. Seed for 1–2% Lookalike Audiences.</div>
+              </div>
+            </div>
+            <div class="aud-action-row">
+              <a href="https://www.facebook.com/adsmanager/audiences" target="_blank" rel="noopener" class="btn-sm" style="text-decoration:none">Meta Audiences Manager ↗</a>
+            </div>
+            <div id="meta-aud-status" style="margin-top:0.65rem"></div>
+            <div style="margin-top:0.85rem;font-size:0.78rem;color:var(--ink-faint);line-height:1.6">
+              "Create All" will create these as <strong>Website Custom Audiences</strong> via the Meta Marketing API for the selected client's ad account. Lookalike creation is manual in Ads Manager after audiences accumulate ≥100 people.
+            </div>
+          </div>
+        </div>
+
+        <!-- Lookalike strategy -->
+        <div class="aud-card">
+          <div class="aud-card-head">
+            <div>
+              <div class="aud-card-title">🔁 Lookalike Strategy</div>
+              <div class="aud-card-sub">Meta 1–2% lookalikes from warm audiences</div>
+            </div>
+          </div>
+          <div class="aud-card-body">
+            <div class="aud-segment">
+              <div class="aud-seg-dot" style="background:#1877f2"></div>
+              <div>
+                <div class="aud-seg-name">Leads Lookalike (1%)</div>
+                <div class="aud-seg-desc">Seed: Lead event audience. Most valuable — finds people similar to your actual subscribers.</div>
+              </div>
+            </div>
+            <div class="aud-segment">
+              <div class="aud-seg-dot" style="background:#7c3aed"></div>
+              <div>
+                <div class="aud-seg-name">Engaged Topic Lookalike (1–2%)</div>
+                <div class="aud-seg-desc">Seed: GLP-1/Peptide/TRT audience. Finds people likely to engage with medical education content.</div>
+              </div>
+            </div>
+            <div class="aud-segment">
+              <div class="aud-seg-dot" style="background:#0ea5e9"></div>
+              <div>
+                <div class="aud-seg-name">Email List Lookalike</div>
+                <div class="aud-seg-desc">Upload hashed subscriber list to Meta (via Custom Audience → Customer List) then create lookalike. Requires GDPR opt-in or US CAN-SPAM consent.</div>
+              </div>
+            </div>
+            <div class="aud-action-row">
+              <a href="https://www.facebook.com/adsmanager/audiences/create/lookalike" target="_blank" rel="noopener" class="btn-sm" style="text-decoration:none">Create Lookalike in Meta ↗</a>
+            </div>
+            <div style="margin-top:0.75rem;font-size:0.78rem;color:var(--ink-faint);line-height:1.6">
+              Lookalikes need ≥ 100 source audience members. Start at 1%, then expand to 2–3% once you have conversion data.
+            </div>
+          </div>
+        </div>
+
+        <!-- Campaign structure guide -->
+        <div class="aud-card">
+          <div class="aud-card-head">
+            <div>
+              <div class="aud-card-title">📋 Recommended Campaign Structure</div>
+              <div class="aud-card-sub">Per client — education-first, two-funnel model</div>
+            </div>
+          </div>
+          <div class="aud-card-body">
+            <div style="font-size:0.82rem;color:var(--ink-mid);line-height:1.75">
+              <strong style="color:var(--ink)">Meta — Cold/Top-of-Funnel</strong><br>
+              Objective: Traffic or Engagement<br>
+              Targeting: Lookalikes (Leads 1%) + Advantage+ broad<br>
+              Creative: Education-only → drives to EBH article or partner education page<br><br>
+
+              <strong style="color:var(--ink)">Meta — Warm Retargeting</strong><br>
+              Objective: Leads<br>
+              Targeting: GLP-1/Peptide/TRT visitors + Engaged Visitors<br>
+              Creative: "Take our 2-min eligibility quiz with [Partner]"<br><br>
+
+              <strong style="color:var(--ink)">Google — Search</strong><br>
+              Targeting: Symptom/lifestyle keywords (not drug terms)<br>
+              Audiences: High-Intent Learners + Leads as Observation +30%<br>
+              Assets: Educational headlines<br><br>
+
+              <strong style="color:var(--ink)">Google — Performance Max</strong><br>
+              Seed: Leads audience + email subscriber customer list<br>
+              Assets: Education-first visuals + headlines
+            </div>
+            <div class="aud-action-row" style="margin-top:1rem">
+              <button class="btn-sm" onclick="goCreateAd('meta')">Create Meta Campaign →</button>
+              <button class="btn-sm" onclick="goCreateAd('google')">Create Google Campaign →</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
 
     <div id="panel-connections" style="display:none">
       <div class="connections-grid">
@@ -871,7 +1167,7 @@ document.getElementById('btn-logout').addEventListener('click', () => {
 });
 
 /* ── Tabs ── */
-const ALL_PANELS = ['home','clients','create','connections'];
+const ALL_PANELS = ['home','clients','create','aicreative','audiences','connections'];
 function showTab(t) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === t));
   ALL_PANELS.forEach(p => {
@@ -969,6 +1265,7 @@ function populateClientSelectors() {
     });
     if (cur) sel.value = cur;
   });
+  populateAIClientSel();
   updateMetaPreview();
   updateGooglePanel();
 }
@@ -1629,6 +1926,186 @@ document.getElementById('btn-load-ga4').addEventListener('click', async () => {
       </div>`;
   } catch (ex) {
     wrap.innerHTML = `<p style="font-size:0.83rem;color:var(--red-soft);margin:0">Error: ${esc(ex.message)}</p>`;
+  } finally { btn.disabled = false; }
+});
+
+/* ── AI Creative Generator ── */
+function populateAIClientSel() {
+  const sel = document.getElementById('ai-client');
+  const insightsSel = document.getElementById('insights-client-sel');
+  while (sel.options.length > 1) sel.remove(1);
+  while (insightsSel.options.length > 1) insightsSel.remove(1);
+  clients.forEach(c => {
+    sel.add(new Option(c.name, c.clientId));
+    insightsSel.add(new Option(c.name, c.clientId));
+  });
+}
+
+document.getElementById('btn-gen-ai').addEventListener('click', async () => {
+  const btn       = document.getElementById('btn-gen-ai');
+  const clientId  = document.getElementById('ai-client').value || undefined;
+  const platform  = document.getElementById('ai-platform').value;
+  const offer     = document.getElementById('ai-offer').value;
+  const objective = document.getElementById('ai-objective').value;
+  const audience  = document.getElementById('ai-audience').value.trim();
+  const extra     = document.getElementById('ai-extra').value.trim();
+
+  if (!audience) { showStatus('ai-status', 'error', 'Describe the target audience.'); return; }
+
+  const c       = clients.find(x => x.clientId === clientId);
+  const brand   = c ? c.name : 'Evidence-Based Health';
+
+  btn.disabled = true;
+  showStatus('ai-status', 'loading', '✨ Generating 5 ad variants with AI…');
+  document.getElementById('ai-variants-wrap').style.display = 'none';
+
+  try {
+    const res  = await fetch(`${API}/generate-ad-copy`, {
+      method: 'POST',
+      headers: authHeaders(),
+      body: JSON.stringify({ clientId, platform, offer, objective, audience, brand, extra }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'AI generation failed');
+    renderAIVariants(data.variants || [], platform);
+    document.getElementById('ai-status').className = 'status-bar';
+  } catch (ex) {
+    showStatus('ai-status', 'error', `Error: ${esc(ex.message)}`);
+  } finally { btn.disabled = false; }
+});
+
+function renderAIVariants(variants, platform) {
+  const wrap = document.getElementById('ai-variants-wrap');
+  if (!variants.length) { wrap.style.display = 'none'; return; }
+  const isGoogle = platform === 'Google';
+  wrap.innerHTML = variants.map((v, i) => `
+    <div class="ai-variant-card">
+      <div class="ai-variant-head">
+        <span class="ai-variant-num">Variant ${i + 1}</span>
+        <div class="ai-variant-actions">
+          <button class="btn-sm" style="font-size:0.73rem;padding:0.2rem 0.6rem" onclick="applyAIVariant(${i})">Use This →</button>
+        </div>
+      </div>
+      <div class="ai-variant-body">
+        <div class="ai-field-row">
+          <span class="ai-field-label">${isGoogle ? 'Headline 1' : 'Headline'}</span>
+          <span class="ai-field-val"><strong>${esc(v.headline || '')}</strong></span>
+        </div>
+        ${isGoogle && v.headline2 ? `<div class="ai-field-row"><span class="ai-field-label">Headline 2</span><span class="ai-field-val">${esc(v.headline2)}</span></div>` : ''}
+        ${isGoogle && v.headline3 ? `<div class="ai-field-row"><span class="ai-field-label">Headline 3</span><span class="ai-field-val">${esc(v.headline3)}</span></div>` : ''}
+        <div class="ai-field-row">
+          <span class="ai-field-label">${isGoogle ? 'Description' : 'Primary Text'}</span>
+          <span class="ai-field-val">${esc(v.primaryText || v.description || '')}</span>
+        </div>
+        ${v.description2 ? `<div class="ai-field-row"><span class="ai-field-label">Desc 2</span><span class="ai-field-val">${esc(v.description2)}</span></div>` : ''}
+        <div class="ai-field-row">
+          <span class="ai-field-label">CTA</span>
+          <span class="ai-field-val">${esc(v.cta || '')}</span>
+        </div>
+        ${v.imageConcept ? `<div class="ai-image-concept">🖼 Image concept: ${esc(v.imageConcept)}</div>` : ''}
+      </div>
+    </div>`).join('');
+  wrap.style.display = '';
+  wrap._variants = variants;
+  wrap._platform = platform;
+  wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function applyAIVariant(idx) {
+  const wrap    = document.getElementById('ai-variants-wrap');
+  const variant = wrap._variants?.[idx];
+  const plat    = wrap._platform;
+  if (!variant) return;
+  if (plat === 'Google') {
+    showTab('create'); showPlatTab('google');
+    document.getElementById('g-headlines-wrap').innerHTML = '';
+    const hs = [variant.headline, variant.headline2, variant.headline3].filter(Boolean);
+    hs.forEach(h => { const i = addInputRow('g-headlines-wrap','Headline N (30 chars max)',30); i.value = h.slice(0,30); i.dispatchEvent(new Event('input')); });
+    if (variant.primaryText) {
+      document.getElementById('g-desc-wrap').innerHTML = '';
+      const i = addInputRow('g-desc-wrap','Description N (90 chars max)',90); i.value = (variant.primaryText || variant.description || '').slice(0,90); i.dispatchEvent(new Event('input'));
+    }
+    if (variant.description2) {
+      const i = addInputRow('g-desc-wrap','Description N (90 chars max)',90); i.value = variant.description2.slice(0,90); i.dispatchEvent(new Event('input'));
+    }
+  } else {
+    showTab('create'); showPlatTab('meta');
+    if (variant.headline) { document.getElementById('m-headline').value = variant.headline.slice(0,40); document.getElementById('m-headline').dispatchEvent(new Event('input')); }
+    if (variant.primaryText) { document.getElementById('m-primary-text').value = variant.primaryText.slice(0,125); document.getElementById('m-primary-text').dispatchEvent(new Event('input')); }
+    if (variant.cta) { document.getElementById('m-description').value = variant.cta.slice(0,30); document.getElementById('m-description').dispatchEvent(new Event('input')); }
+  }
+}
+
+/* ── Audiences — Meta Custom Audiences ── */
+document.getElementById('btn-create-meta-audiences').addEventListener('click', async () => {
+  const btn      = document.getElementById('btn-create-meta-audiences');
+  const statusEl = document.getElementById('meta-aud-status');
+  // Use first client that has Meta credentials, or EBH default
+  const clientId = clients.find(c => c.platforms?.meta?.adAccountId)?.clientId;
+  btn.disabled = true;
+  statusEl.className = 'status-bar loading';
+  statusEl.style.display = '';
+  statusEl.textContent   = 'Creating Meta Custom Audiences…';
+  try {
+    const res  = await fetch(`${API}/meta-audiences`, {
+      method: 'POST',
+      headers: authHeaders(),
+      body: JSON.stringify({ clientId }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed');
+    statusEl.className   = 'status-bar success';
+    statusEl.innerHTML   = `✓ Created ${(data.audiences || []).length} audiences: ${(data.audiences||[]).map(a => esc(a.name)).join(', ')}`;
+  } catch (ex) {
+    statusEl.className = 'status-bar error';
+    statusEl.textContent = `Error: ${ex.message}`;
+  } finally { btn.disabled = false; }
+});
+
+/* ── Weekly Insights ── */
+document.getElementById('btn-load-insights').addEventListener('click', async () => {
+  const btn      = document.getElementById('btn-load-insights');
+  const clientId = document.getElementById('insights-client-sel').value || undefined;
+  const wrap     = document.getElementById('insights-inner');
+  btn.disabled   = true;
+
+  // Keep the client selector visible
+  const selRow = wrap.querySelector('.insights-client-row');
+  const selHTML = selRow ? selRow.outerHTML : '';
+
+  wrap.innerHTML = selHTML + `<div class="ai-loading-pulse"><div class="spinner"></div> Pulling last-week data from Google Ads + Meta and running AI analysis…</div>`;
+
+  try {
+    const res  = await fetch(`${API}/weekly-summary`, {
+      method: 'POST',
+      headers: authHeaders(),
+      body: JSON.stringify({ clientId }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed');
+
+    const topAuds = (data.topAudiences || []).map(a => `<div class="insights-item"><strong>${esc(a.name)}</strong> — ${esc(a.stat)}</div>`).join('') || '<div class="insights-item" style="color:var(--ink-faint)">No audience data</div>';
+    const topCreatives = (data.topCreatives || []).map(a => `<div class="insights-item"><strong>${esc(a.name)}</strong> — ${esc(a.stat)}</div>`).join('') || '<div class="insights-item" style="color:var(--ink-faint)">No creative data</div>';
+    const suggestions = (data.suggestions || []).map((s,i) => `<div class="insights-item">${i+1}. ${esc(s)}</div>`).join('') || '<div class="insights-item" style="color:var(--ink-faint)">No suggestions yet</div>';
+
+    wrap.innerHTML = `${selHTML}
+      <div class="insights-cols">
+        <div class="insights-col">
+          <div class="insights-col-title">Top Audiences</div>
+          ${topAuds}
+        </div>
+        <div class="insights-col">
+          <div class="insights-col-title">Top Creatives</div>
+          ${topCreatives}
+        </div>
+        <div class="insights-col">
+          <div class="insights-col-title">AI Suggestions</div>
+          ${suggestions}
+        </div>
+      </div>
+      ${data.summary ? `<div class="insights-summary" style="margin-top:1rem">${esc(data.summary)}</div>` : ''}`;
+  } catch (ex) {
+    wrap.innerHTML = selHTML + `<p style="font-size:0.83rem;color:var(--red-soft);margin:0">Error: ${esc(ex.message)}</p>`;
   } finally { btn.disabled = false; }
 });
 
