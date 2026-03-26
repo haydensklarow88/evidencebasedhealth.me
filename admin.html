@@ -338,6 +338,19 @@
   /* ── Campaign Launcher ── */
   .launch-grid { display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;align-items:start; }
   @media(max-width:900px) { .launch-grid { grid-template-columns:1fr; } }
+
+  /* ── Newsletter Panel ── */
+  .nl-sub-row { display:flex;align-items:center;gap:0.5rem;padding:0.38rem 0.4rem;border-bottom:1px solid var(--paper-warm);font-size:0.8rem; }
+  .nl-sub-row:last-child { border-bottom:none; }
+  .nl-status-badge { display:inline-block;padding:0.1rem 0.4rem;border-radius:10px;font-size:0.68rem;font-weight:600;text-transform:uppercase;letter-spacing:0.04em; }
+  .nl-status-badge.active { background:#dcfce7;color:#15803d; }
+  .nl-status-badge.unsubscribed { background:var(--paper-warm);color:var(--ink-faint); }
+  .nl-remove-btn { background:none;border:none;cursor:pointer;color:var(--ink-faint);font-size:0.75rem;font-family:var(--sans);padding:0.18rem 0.45rem;border-radius:4px;transition:color 0.12s,background 0.12s;white-space:nowrap; }
+  .nl-remove-btn:hover { color:var(--red-soft);background:#fef2f2; }
+  .nl-count-box { flex:1;text-align:center;padding:0.75rem;background:var(--paper);border:1px solid var(--paper-warm);border-radius:8px; }
+  .nl-count-num { font-size:1.55rem;font-weight:700;color:var(--accent); }
+  .nl-count-lbl { font-size:0.68rem;text-transform:uppercase;letter-spacing:0.07em;color:var(--ink-faint);margin-top:0.15rem; }
+  .nl-count-num.muted { color:var(--ink-mid); }
   .launch-card { background:var(--paper-card);border:1px solid var(--paper-warm);border-radius:12px;padding:1.5rem; }
   .launch-card-badge { display:inline-block;padding:0.18rem 0.55rem;border-radius:100px;font-size:0.68rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;background:var(--accent-light);color:var(--accent);border:1px solid var(--accent-rule);margin-bottom:0.5rem; }
   .launch-card-title { font-family:var(--serif);font-size:1.05rem;font-weight:700;color:var(--ink);margin-bottom:0.2rem; }
@@ -389,6 +402,7 @@
       <button class="tab-btn" data-tab="audiences" title="Build GA4 segments and Meta Custom Audiences for retargeting">Audiences<span class="tab-sub">retargeting setup</span></button>
       <button class="tab-btn" data-tab="create" title="Manually configure individual Meta or Google Search ads with full control">Ad Builder<span class="tab-sub">manual / advanced</span></button>
       <button class="tab-btn" data-tab="connections">Connections</button>
+      <button class="tab-btn" data-tab="newsletter" title="AI newsletter generator — write, preview &amp; send to subscribers">Newsletter<span class="tab-sub">AI posts + send</span></button>
     </div>
 
     <!-- ══ MY ACCOUNT PANEL ══ -->
@@ -1267,6 +1281,150 @@
       </div>
     </div>
 
+    <div id="panel-newsletter" style="display:none">
+      <div class="panel-grid">
+
+        <!-- ── Left: Generator + Preview ── -->
+        <div>
+          <div class="form-card">
+            <div class="card-title">✨ AI Post Generator</div>
+            <div class="form-row">
+              <label for="nl-topic">Topic / Prompt <span class="hint">what to write about this week</span></label>
+              <textarea id="nl-topic" rows="2" placeholder="e.g. New research on semaglutide and cardiovascular outcomes — what patients really need to know"></textarea>
+            </div>
+            <div class="form-inline">
+              <div class="form-row">
+                <label for="nl-pillar">Core Pillar</label>
+                <select id="nl-pillar">
+                  <option value="GLP-1 / Semaglutide education">GLP-1 / Semaglutide</option>
+                  <option value="Peptide therapy">Peptide Therapy</option>
+                  <option value="TRT / hormone health">TRT / Hormone Health</option>
+                  <option value="Cancer prevention &amp; screening">Cancer Prevention</option>
+                  <option value="Metabolic health &amp; weight management">Metabolic Health</option>
+                  <option value="evidence-based preventive medicine">Preventive Medicine</option>
+                </select>
+              </div>
+              <div class="form-row">
+                <label for="nl-tone">Tone</label>
+                <select id="nl-tone">
+                  <option value="educational, warm, no hype">Educational &amp; Warm</option>
+                  <option value="informative, clinical, precise">Clinical &amp; Precise</option>
+                  <option value="inspiring, empowering">Inspiring</option>
+                  <option value="conversational, relatable">Conversational</option>
+                </select>
+              </div>
+              <div class="form-row">
+                <label for="nl-length">Length</label>
+                <select id="nl-length">
+                  <option value="short">Short (~300 words)</option>
+                  <option value="medium" selected>Medium (~450 words)</option>
+                  <option value="long">Long (~700 words)</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <label for="nl-context">Extra Context <span class="hint">optional</span></label>
+              <textarea id="nl-context" rows="2" placeholder="e.g. Tie in a recent news story, target patients who are already on GLP-1s, use this hook…"></textarea>
+            </div>
+            <button class="btn-submit" id="btn-generate-post">✨ Generate Post with AI</button>
+            <div class="status-bar" id="nl-gen-status"></div>
+          </div>
+
+          <!-- Post Preview (shown after generation) -->
+          <div id="nl-preview-wrap" style="display:none">
+            <div class="form-card">
+              <div class="card-title">Post Preview</div>
+
+              <div style="margin-bottom:1rem">
+                <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:0.4rem">Subject Line</div>
+                <div class="copy-block" id="nl-block-subject" style="font-size:0.97rem;font-weight:600;color:var(--ink)"><span id="nl-subject-text"></span><button class="copy-btn" data-block="nl-block-subject">Copy</button></div>
+                <div style="font-size:0.76rem;color:var(--ink-faint);margin-top:0.32rem" id="nl-preview-text-row"></div>
+              </div>
+
+              <div style="margin-bottom:1.1rem">
+                <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:0.4rem">Email Body Preview</div>
+                <div id="nl-body-preview" style="background:var(--paper);border:1px solid var(--paper-warm);border-radius:8px;padding:1.25rem 1.5rem;font-size:0.88rem;line-height:1.8;color:var(--ink-mid);max-height:520px;overflow-y:auto"></div>
+              </div>
+
+              <div id="nl-social-wrap">
+                <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:0.7rem">Social Captions</div>
+                <div style="display:flex;flex-direction:column;gap:0.65rem">
+                  <div>
+                    <div style="font-size:0.7rem;font-weight:600;color:var(--ink-faint);margin-bottom:0.25rem">X / Twitter</div>
+                    <div class="copy-block" id="nl-block-x"><span id="nl-social-x"></span><button class="copy-btn" data-block="nl-block-x">Copy</button></div>
+                  </div>
+                  <div>
+                    <div style="font-size:0.7rem;font-weight:600;color:var(--ink-faint);margin-bottom:0.25rem">LinkedIn</div>
+                    <div class="copy-block" id="nl-block-li"><span id="nl-social-li"></span><button class="copy-btn" data-block="nl-block-li">Copy</button></div>
+                  </div>
+                  <div>
+                    <div style="font-size:0.7rem;font-weight:600;color:var(--ink-faint);margin-bottom:0.25rem">Instagram</div>
+                    <div class="copy-block" id="nl-block-ig"><span id="nl-social-ig"></span><button class="copy-btn" data-block="nl-block-ig">Copy</button></div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="margin-top:0.85rem">
+                <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:0.4rem;cursor:pointer" onclick="var b=document.getElementById('nl-research-body');b.style.display=b.style.display==='none'?'':'none'">Research Grounding ▾ <span style="font-size:0.65rem;font-weight:400;text-transform:none;letter-spacing:0">(click to expand)</span></div>
+                <div id="nl-research-body" style="display:none;background:var(--paper);border:1px solid var(--paper-warm);border-radius:6px;padding:0.85rem 1rem;font-size:0.79rem;color:var(--ink-mid);line-height:1.75;white-space:pre-wrap;max-height:300px;overflow-y:auto"></div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Sidebar: Send + Subscribers ── -->
+        <div class="preview-sticky">
+
+          <div class="form-card" style="margin-bottom:1.1rem">
+            <div class="card-title">Send Newsletter</div>
+            <p style="font-size:0.8rem;color:var(--ink-faint);margin-bottom:0.85rem;line-height:1.55">Generate a post first, then send a test or broadcast to all active subscribers.</p>
+            <div class="form-row">
+              <label for="nl-test-email">Test Email <span class="hint">send preview to yourself</span></label>
+              <input type="email" id="nl-test-email" placeholder="you@evidencebasedhealth.me">
+            </div>
+            <button class="btn-sm" id="btn-send-test" style="width:100%;margin-bottom:0.7rem">Send Test Email</button>
+            <button class="btn-submit" id="btn-send-all" style="opacity:0.5;pointer-events:none">📧 Send to All Subscribers</button>
+            <div class="status-bar" id="nl-send-status"></div>
+          </div>
+
+          <div class="form-card" style="margin-bottom:1.1rem">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+              <div class="card-title" style="margin-bottom:0">Subscribers</div>
+              <button class="btn-sm" id="btn-refresh-subs" style="padding:0.25rem 0.6rem;font-size:0.72rem">Refresh</button>
+            </div>
+            <div style="display:flex;gap:0.6rem;margin-bottom:1rem">
+              <div class="nl-count-box"><div class="nl-count-num" id="nl-count-active">—</div><div class="nl-count-lbl">Active</div></div>
+              <div class="nl-count-box"><div class="nl-count-num muted" id="nl-count-total">—</div><div class="nl-count-lbl">Total</div></div>
+            </div>
+            <button class="btn-sm" id="btn-export-csv" style="width:100%;margin-bottom:0.85rem">⬇ Export CSV</button>
+            <div id="nl-sub-table-wrap" style="max-height:380px;overflow-y:auto">
+              <div class="loading-row" id="nl-sub-loading"><div class="spinner"></div>Loading…</div>
+              <table id="nl-sub-table" style="display:none;width:100%;border-collapse:collapse">
+                <thead><tr>
+                  <th style="text-align:left;padding:0.3rem 0.4rem;border-bottom:2px solid var(--paper-warm);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600">Email</th>
+                  <th style="text-align:left;padding:0.3rem 0.4rem;border-bottom:2px solid var(--paper-warm);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600">Date</th>
+                  <th style="text-align:left;padding:0.3rem 0.4rem;border-bottom:2px solid var(--paper-warm);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600">Status</th>
+                  <th></th>
+                </tr></thead>
+                <tbody id="nl-sub-tbody"></tbody>
+              </table>
+              <div id="nl-sub-empty" style="display:none;text-align:center;padding:2rem;color:var(--ink-faint);font-size:0.85rem">No subscribers yet.</div>
+            </div>
+          </div>
+
+          <div class="form-card">
+            <div class="card-title">Weekly Automation</div>
+            <p style="font-size:0.82rem;color:var(--ink-mid);line-height:1.65;margin-bottom:0.7rem">Use <strong>EventBridge Scheduler</strong> to auto-generate &amp; send a post every 7 days.</p>
+            <div style="background:var(--paper);border:1px solid var(--paper-warm);border-radius:6px;padding:0.75rem 0.9rem;font-family:monospace;font-size:0.73rem;color:var(--ink-mid);word-break:break-all;line-height:1.8;margin-bottom:0.7rem">aws events put-rule \<br>&nbsp; --name EBH-WeeklyNewsletter \<br>&nbsp; --schedule-expression "rate(7 days)" \<br>&nbsp; --state ENABLED</div>
+            <p style="font-size:0.76rem;color:var(--ink-faint);line-height:1.55;margin-bottom:0.75rem">Add a target pointing to <code style="background:var(--paper-warm);padding:0.1rem 0.3rem;border-radius:3px">adHandler</code> with payload <code style="background:var(--paper-warm);padding:0.1rem 0.3rem;border-radius:3px">{"source":"eventbridge","action":"scheduled-post"}</code></p>
+            <a href="https://us-east-1.console.aws.amazon.com/scheduler/home" target="_blank" rel="noopener" class="conn-link">EventBridge Scheduler ↗</a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
   </div><!-- end dash-content -->
 </div><!-- end dashboard -->
 
@@ -1392,14 +1550,15 @@ document.getElementById('btn-logout').addEventListener('click', () => {
 });
 
 /* ── Tabs ── */
-const ALL_PANELS = ['home','clients','create','aicreative','audiences','launch','connections'];
+const ALL_PANELS = ['home','clients','create','aicreative','audiences','launch','connections','newsletter'];
 function showTab(t) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === t));
   ALL_PANELS.forEach(p => {
     const el = document.getElementById('panel-' + p);
     if (el) el.style.display = p === t ? '' : 'none';
   });
-  if (t === 'create') showPlatTab(activePlatTab);
+  if (t === 'create')     showPlatTab(activePlatTab);
+  if (t === 'newsletter') loadSubscribers();
 }
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => showTab(btn.dataset.tab));
@@ -2495,6 +2654,128 @@ async function launchCampaign(type) {
 
 document.getElementById('btn-launch-cold').addEventListener('click', () => launchCampaign('cold'));
 document.getElementById('btn-launch-rmkt').addEventListener('click', () => launchCampaign('remarketing'));
+
+/* ── Newsletter ── */
+let nlPostData = null;   // stores last generated post
+let nlSubscribers = []; // cached subscriber list
+
+async function loadSubscribers() {
+  const loading = document.getElementById('nl-sub-loading');
+  const table   = document.getElementById('nl-sub-table');
+  const empty   = document.getElementById('nl-sub-empty');
+  const tbody   = document.getElementById('nl-sub-tbody');
+  loading.style.display = 'flex'; table.style.display = 'none'; empty.style.display = 'none';
+  try {
+    const res  = await fetch(`${API}/subscribers`, { headers: authHeaders() });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed');
+    nlSubscribers = data.subscribers || [];
+    document.getElementById('nl-count-active').textContent = data.active ?? 0;
+    document.getElementById('nl-count-total').textContent  = data.total  ?? 0;
+    loading.style.display = 'none';
+    if (!nlSubscribers.length) { empty.style.display = 'block'; return; }
+    tbody.innerHTML = nlSubscribers.map(s => `
+      <tr class="nl-sub-row">
+        <td style="padding:0.38rem 0.4rem;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(s.email)}</td>
+        <td style="padding:0.38rem 0.4rem;color:var(--ink-faint);white-space:nowrap;font-size:0.77rem">${s.subscribedAt ? s.subscribedAt.slice(0,10) : '—'}</td>
+        <td style="padding:0.38rem 0.4rem"><span class="nl-status-badge ${s.status === 'active' ? 'active' : 'unsubscribed'}">${esc(s.status)}</span></td>
+        <td style="padding:0.38rem 0.4rem;text-align:right"><button class="nl-remove-btn" onclick="removeSubscriber('${esc(s.email)}')">Remove</button></td>
+      </tr>`).join('');
+    table.style.display = '';
+  } catch (ex) {
+    loading.innerHTML = `<span style="color:var(--red-soft)">Error: ${esc(ex.message)}</span>`;
+  }
+}
+
+async function removeSubscriber(email) {
+  if (!confirm(`Unsubscribe ${email}?`)) return;
+  const res = await fetch(`${API}/subscriber`, { method: 'DELETE', headers: authHeaders(), body: JSON.stringify({ email }) });
+  if (res.ok) loadSubscribers();
+}
+
+function exportSubscribersCSV() {
+  if (!nlSubscribers.length) return alert('No subscribers loaded. Click Refresh first.');
+  const rows = [['email','displayName','source','status','subscribedAt'],
+    ...nlSubscribers.map(s => [s.email, s.displayName, s.source, s.status, s.subscribedAt])];
+  const csv = rows.map(r => r.map(v => `"${(v||'').replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+  a.download = `ebh-subscribers-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+}
+
+document.getElementById('btn-refresh-subs').addEventListener('click', loadSubscribers);
+document.getElementById('btn-export-csv').addEventListener('click', exportSubscribersCSV);
+
+document.getElementById('btn-generate-post').addEventListener('click', async () => {
+  const topic   = document.getElementById('nl-topic').value.trim();
+  const pillar  = document.getElementById('nl-pillar').value;
+  const tone    = document.getElementById('nl-tone').value;
+  const length  = document.getElementById('nl-length').value;
+  const extra   = document.getElementById('nl-context').value.trim();
+  if (!topic) { showStatus('nl-gen-status','error','Please enter a topic or prompt.'); return; }
+  showStatus('nl-gen-status','loading','<span class="spinner" style="display:inline-block;vertical-align:middle;margin-right:0.5rem"></span>Researching with Perplexity, then writing with AI… (15–30 sec)');
+  document.getElementById('btn-generate-post').disabled = true;
+  document.getElementById('nl-preview-wrap').style.display = 'none';
+  try {
+    const res  = await fetch(`${API}/generate-post`, { method: 'POST', headers: authHeaders(), body: JSON.stringify({ topic, pillar, tone, length, extraContext: extra }) });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Generation failed');
+    nlPostData = data;
+    // Populate preview
+    document.getElementById('nl-subject-text').textContent = data.subjectLine || '';
+    document.getElementById('nl-preview-text-row').textContent = data.previewText ? `Preview text: ${data.previewText}` : '';
+    document.getElementById('nl-body-preview').innerHTML = data.bodyHtml || '<em>No body returned.</em>';
+    document.getElementById('nl-social-x').textContent  = data.socialX  || '';
+    document.getElementById('nl-social-li').textContent = data.socialLinkedIn || '';
+    document.getElementById('nl-social-ig').textContent = data.socialInstagram || '';
+    if (data.research) { document.getElementById('nl-research-body').textContent = data.research; }
+    document.getElementById('nl-preview-wrap').style.display = '';
+    // Enable send buttons
+    document.getElementById('btn-send-all').style.cssText = '';
+    showStatus('nl-gen-status','success','✓ Post generated. Review the preview, then send a test or broadcast to all subscribers.');
+  } catch (ex) {
+    showStatus('nl-gen-status','error',`Generation failed: ${esc(ex.message)}`);
+  } finally {
+    document.getElementById('btn-generate-post').disabled = false;
+  }
+});
+
+document.getElementById('btn-send-test').addEventListener('click', async () => {
+  if (!nlPostData) return showStatus('nl-send-status','error','Generate a post first.');
+  const testEmail = document.getElementById('nl-test-email').value.trim();
+  if (!testEmail) return showStatus('nl-send-status','error','Enter a test email address.');
+  showStatus('nl-send-status','loading','<span class="spinner" style="display:inline-block;vertical-align:middle;margin-right:0.5rem"></span>Sending test…');
+  document.getElementById('btn-send-test').disabled = true;
+  try {
+    const res  = await fetch(`${API}/send-newsletter`, { method: 'POST', headers: authHeaders(), body: JSON.stringify({ subjectLine: nlPostData.subjectLine, bodyHtml: nlPostData.bodyHtml, bodyText: nlPostData.bodyText, previewText: nlPostData.previewText, testOnly: true, testEmail }) });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Send failed');
+    showStatus('nl-send-status','success',`✓ Test email sent to ${esc(testEmail)}. Check your inbox!`);
+  } catch (ex) {
+    showStatus('nl-send-status','error',`Send failed: ${esc(ex.message)}`);
+  } finally {
+    document.getElementById('btn-send-test').disabled = false;
+  }
+});
+
+document.getElementById('btn-send-all').addEventListener('click', async () => {
+  if (!nlPostData) return showStatus('nl-send-status','error','Generate a post first.');
+  const activeCount = parseInt(document.getElementById('nl-count-active').textContent) || 0;
+  if (!confirm(`Send "${nlPostData.subjectLine}" to all ${activeCount} active subscriber(s)?`)) return;
+  showStatus('nl-send-status','loading','<span class="spinner" style="display:inline-block;vertical-align:middle;margin-right:0.5rem"></span>Sending to all subscribers…');
+  document.getElementById('btn-send-all').disabled = true;
+  try {
+    const res  = await fetch(`${API}/send-newsletter`, { method: 'POST', headers: authHeaders(), body: JSON.stringify({ subjectLine: nlPostData.subjectLine, bodyHtml: nlPostData.bodyHtml, bodyText: nlPostData.bodyText, previewText: nlPostData.previewText }) });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Send failed');
+    showStatus('nl-send-status','success',`✓ Sent to ${data.sent} subscriber(s).${data.errors ? ` (${data.errors} failed)` : ''}`);
+  } catch (ex) {
+    showStatus('nl-send-status','error',`Send failed: ${esc(ex.message)}`);
+  } finally {
+    document.getElementById('btn-send-all').disabled = false;
+  }
+});
 
 /* ── Copy buttons ── */
 document.addEventListener('click', e => {
