@@ -644,6 +644,12 @@
             <option value="">— My account (default) —</option>
           </select>
         </div>
+        <div id="google-compliance-notice" style="background:#fffbeb;border:1px solid #fbbf24;border-radius:6px;padding:0.65rem 0.9rem;margin-bottom:0.9rem;font-size:0.8rem;color:#92400e;line-height:1.5;display:none">
+          <strong>⚠ Compliance mode active</strong> — This client is not LegitScript certified.
+          All keywords and ad copy must stay in the <strong>education + lifestyle lane</strong>.
+          No drug brand names, no prescription access language, no guarantee claims.
+          Add certification status in the Clients tab to unlock pharmaceutical ad copy.
+        </div>
         <div class="form-card">
           <div class="card-title">Campaign Settings</div>
           <div class="form-inline">
@@ -1514,6 +1520,19 @@
       <div class="form-row"><label for="d-ga4id">GA4 Property ID <span class="hint">optional — numbers only</span></label><input type="text" id="d-ga4id" placeholder="e.g. 530012579" autocomplete="off"></div>
     </div>
 
+    <!-- Compliance -->
+    <div class="drawer-section">
+      <div class="drawer-section-title">Compliance</div>
+      <div class="form-row" style="flex-direction:row;align-items:center;gap:0.7rem;flex-wrap:nowrap">
+        <input type="checkbox" id="d-certified" style="width:auto;min-width:16px;margin:0;flex-shrink:0">
+        <label for="d-certified" style="font-size:0.85rem;margin:0;cursor:pointer;line-height:1.3">LegitScript certified for Rx pharmaceutical ads</label>
+      </div>
+      <p style="font-size:0.76rem;color:var(--ink-light);margin:0.45rem 0 0;line-height:1.45">
+        When checked, AI copy and campaigns will allow pharmaceutical brand/generic names. Only enable if your practice holds <strong>active LegitScript certification</strong>.
+        Until certified, the system enforces education-only framing on all generated content.
+      </p>
+    </div>
+
     <!-- Custom -->
     <div class="drawer-section">
       <div class="drawer-section-title">Custom / Other Accounts</div>
@@ -1788,6 +1807,10 @@ function updateGooglePanel() {
   if (!urlField.value || urlField.value === 'https://evidencebasedhealth.me') {
     urlField.value = siteUrl;
   }
+
+  // Show/hide LegitScript compliance notice based on client certification
+  const notice = document.getElementById('google-compliance-notice');
+  if (notice) notice.style.display = (c && c.isCertifiedForRxAds) ? 'none' : '';
 }
 
 /* ── Drawer ── */
@@ -1819,6 +1842,7 @@ function openDrawer(clientId = null) {
   document.getElementById('d-notes').value      = client?.notes         || '';
   document.getElementById('d-looker').value     = client?.lookerUrl     || '';
   document.getElementById('d-ga4id').value      = client?.ga4PropertyId || '';
+  document.getElementById('d-certified').checked = client?.isCertifiedForRxAds || false;
   selectedColor = client?.color || '#1a5c3a';
   document.getElementById('d-color').value = selectedColor;
   buildColorSwatches();
@@ -1905,8 +1929,9 @@ document.getElementById('btn-save-client').addEventListener('click', async () =>
     const payload = {
       name, color: document.getElementById('d-color').value,
       notes: document.getElementById('d-notes').value.trim(),
-      lookerUrl:     document.getElementById('d-looker').value.trim() || undefined,
-      ga4PropertyId: document.getElementById('d-ga4id').value.trim()  || undefined,
+      lookerUrl:            document.getElementById('d-looker').value.trim() || undefined,
+      ga4PropertyId:        document.getElementById('d-ga4id').value.trim()  || undefined,
+      isCertifiedForRxAds:  document.getElementById('d-certified').checked,
       platforms: getDrawerPlatforms(),
       ...(editingClientId && { clientId: editingClientId }),
     };
@@ -2061,10 +2086,10 @@ document.getElementById('btn-add-d').addEventListener('click', () => { if (docum
 /* ── EBH Ad Group templates + helpers ── */
 const EBH_AD_GROUPS = [
   { name: 'GLP-1 & Metabolic Health',
-    keywords: ['how does semaglutide work','glp-1 medication explained','semaglutide weight loss research','evidence based metabolic health','glp-1 cardiovascular benefits','ozempic mechanism explained'],
-    headlines: ['GLP-1 Explained Simply','Evidence-Based GLP-1 Guide','Science Behind Semaglutide','Free Newsletter — No Hype','PA-Written Health Updates'] },
+    keywords: ['how do glp-1 medications work','glp-1 therapy explained','glp-1 weight loss research','evidence based metabolic health','glp-1 cardiovascular benefits','glp-1 mechanism of action'],
+    headlines: ['GLP-1 Explained Simply','Evidence-Based GLP-1 Guide','The Science of GLP-1','Free Newsletter — No Hype','PA-Written Health Updates'] },
   { name: 'Peptide Therapy Basics',
-    keywords: ['what are peptides for health','peptide therapy explained','peptide health education','BPC-157 what is it','healing peptides research'],
+    keywords: ['what are peptides for health','peptide therapy explained','peptide health education','healing peptides research','peptide therapy basics'],
     headlines: ['Peptide Therapy Explained','What Are Health Peptides?','Science-Backed Peptide Info','Free Health Newsletter','No-Hype Health Education'] },
   { name: 'TRT & Hormone Health',
     keywords: ['testosterone replacement explained','low testosterone symptoms guide','TRT education newsletter','hormone health basics','testosterone research facts'],
@@ -2306,7 +2331,7 @@ document.getElementById('btn-gen-google').addEventListener('click', async () => 
     link.href = data.review_url;
     document.getElementById('google-output').classList.add('visible');
     document.getElementById('google-output').scrollIntoView({ behavior:'smooth', block:'start' });
-    showStatus('google-status','success',`✓ Campaign <strong>${esc(data.campaignName)}</strong> created (paused) with ${data.adGroups?.length||1} ad group${(data.adGroups?.length||1)!==1?'s':''}. <a href="${esc(data.review_url)}" target="_blank" rel="noopener">Open in Google Ads ↗</a>`);
+    showStatus('google-status','success',`✓ Campaign <strong>${esc(data.campaignName)}</strong> created (paused) with ${data.adGroups?.length||1} ad group${(data.adGroups?.length||1)!==1?'s':''}. <a href="${esc(data.review_url)}" target="_blank" rel="noopener">Open in Google Ads ↗</a>${data.complianceWarnings?.length ? `<br><span style="color:#b45309">⚠ Compliance notes: ${data.complianceWarnings.length} keyword/headline item(s) to review — not LegitScript-certified content detected.</span>` : ''}`);
   } catch (ex) { showStatus('google-status','error',`Error: ${esc(ex.message)}`);
   } finally { btn.disabled = false; }
 });
@@ -2593,7 +2618,12 @@ document.getElementById('btn-gen-ai').addEventListener('click', async () => {
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'AI generation failed');
     renderAIVariants(data.variants || [], platform);
-    document.getElementById('ai-status').className = 'status-bar';
+    // Show compliance notice if server flagged warnings
+    if (data.compliance?.warnings?.length) {
+      showStatus('ai-status', 'error', `⚠️ Compliance check flagged ${data.compliance.warnings.length} issue(s) in generated copy. Review carefully before use:<br><ul style="margin:0.3rem 0 0 1rem;font-size:0.82rem">${data.compliance.warnings.map(w => `<li>${esc(w)}</li>`).join('')}</ul>`);
+    } else {
+      document.getElementById('ai-status').className = 'status-bar';
+    }
   } catch (ex) {
     showStatus('ai-status', 'error', `Error: ${esc(ex.message)}`);
   } finally { btn.disabled = false; }
@@ -2629,6 +2659,7 @@ function renderAIVariants(variants, platform) {
           <span class="ai-field-val">${esc(v.cta || '')}</span>
         </div>
         ${v.imageConcept ? `<div class="ai-image-concept">🖼 Image concept: ${esc(v.imageConcept)}</div>` : ''}
+        ${v.disclaimer ? `<div style="font-size:0.73rem;color:var(--ink-light);border-top:1px solid var(--border);margin-top:0.5rem;padding-top:0.45rem;line-height:1.4">📋 ${esc(v.disclaimer)}</div>` : ''}
       </div>
     </div>`).join('');
   wrap.style.display = '';
