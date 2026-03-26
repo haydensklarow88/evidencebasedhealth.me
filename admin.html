@@ -659,7 +659,9 @@
                   <option value="cancer prevention and screening">Cancer prevention &amp; screening</option>
                   <option value="metabolic health and weight management">Metabolic health &amp; weight</option>
                   <option value="evidence-based health newsletter">Evidence-based health newsletter</option>
+                  <option value="__custom__">Other / Custom…</option>
                 </select>
+                <input type="text" id="wai-offer-custom" placeholder="Describe your topic…" style="display:none;margin-top:0.5rem">
               </div>
               <div class="form-row">
                 <label for="wai-objective">Objective</label>
@@ -667,10 +669,12 @@
                   <option value="Traffic to education page">Traffic — education page</option>
                   <option value="Lead capture — newsletter signup">Lead — newsletter signup</option>
                   <option value="Awareness of evidence-based approach">Awareness</option>
+                  <option value="__custom__">Other / Custom…</option>
                 </select>
+                <input type="text" id="wai-objective-custom" placeholder="Describe your objective…" style="display:none;margin-top:0.5rem">
               </div>
               <div class="form-row">
-                <label for="wai-audience">Target Audience</label>
+                <label for="wai-audience" style="display:flex;align-items:center;justify-content:space-between">Target Audience <button type="button" id="btn-wiz-regen-audience" style="font-size:0.75rem;padding:0.2rem 0.6rem;border:1.5px solid var(--accent-rule);border-radius:20px;background:transparent;color:var(--accent);cursor:pointer;font-family:var(--sans);font-weight:500">↺ Regenerate</button></label>
                 <input type="text" id="wai-audience" placeholder="e.g. Adults 35–65 interested in preventive health">
               </div>
               <div class="form-row" style="grid-column:1/-1">
@@ -3037,31 +3041,66 @@ function autofillAudience() {
 document.getElementById('btn-autofill-audience').addEventListener('click', autofillAudience);
 
 // ── Wizard audience autofill (reuses the same knowledge map) ────────────────
+function wizEffectiveTopic() {
+  const sel = document.getElementById('wai-offer').value;
+  return sel === '__custom__' ? document.getElementById('wai-offer-custom').value.trim() : sel;
+}
+function wizEffectiveObjective() {
+  const sel = document.getElementById('wai-objective').value;
+  return sel === '__custom__' ? document.getElementById('wai-objective-custom').value.trim() : sel;
+}
+
 function wizAutofillAudience() {
-  const offer     = document.getElementById('wai-offer').value;
-  const objective = document.getElementById('wai-objective').value;
+  const offer     = wizEffectiveTopic();
+  const objective = wizEffectiveObjective();
   const field     = document.getElementById('wai-audience');
-  // Map wizard objective labels → map keys
-  const objKey = objective === 'Awareness of evidence-based approach' ? 'Brand awareness' : objective;
+  const objKey    = objective === 'Awareness of evidence-based approach' ? 'Brand awareness' : objective;
   const suggestion = AI_AUDIENCE_MAP[offer]?.[objKey];
-  if (!suggestion) return;
+  if (!suggestion) return false;
   field.value = suggestion;
   field.style.borderColor = 'var(--accent-mid)';
   field.style.background  = '#f0f7f2';
   setTimeout(() => { field.style.borderColor = ''; field.style.background = ''; }, 1400);
+  return true;
 }
 
-let _wizAudienceAutoFilled = false;
-['wai-offer','wai-objective'].forEach(id => {
-  document.getElementById(id)?.addEventListener('change', () => {
-    const field = document.getElementById('wai-audience');
-    if (!field.value || _wizAudienceAutoFilled) {
-      wizAutofillAudience();
-      _wizAudienceAutoFilled = true;
+async function wizRegenAudience() {
+  const btn = document.getElementById('btn-wiz-regen-audience');
+  const field = document.getElementById('wai-audience');
+  const topic     = wizEffectiveTopic();
+  const objective = wizEffectiveObjective();
+  if (!topic || !objective) return;
+  if (wizAutofillAudience()) return; // served from knowledge map instantly
+  // Fall back to AI for custom topics
+  btn.textContent = '⏳';
+  btn.disabled = true;
+  try {
+    const res  = await fetch(`${API}/suggest-audience`, {
+      method: 'POST', headers: authHeaders(),
+      body: JSON.stringify({ topic, objective }),
+    });
+    const data = await res.json();
+    if (data.audience) {
+      field.value = data.audience;
+      field.style.borderColor = 'var(--accent-mid)';
+      field.style.background  = '#f0f7f2';
+      setTimeout(() => { field.style.borderColor = ''; field.style.background = ''; }, 1400);
     }
-  });
+  } catch { /* silent */ }
+  btn.textContent = '↺ Regenerate';
+  btn.disabled = false;
+}
+
+// Show/hide custom text inputs when "Other" selected; auto-update audience on dropdown change
+document.getElementById('wai-offer')?.addEventListener('change', function() {
+  document.getElementById('wai-offer-custom').style.display = this.value === '__custom__' ? '' : 'none';
+  if (this.value !== '__custom__') wizAutofillAudience();
 });
-document.getElementById('wai-audience')?.addEventListener('input', () => { _wizAudienceAutoFilled = false; });
+document.getElementById('wai-objective')?.addEventListener('change', function() {
+  document.getElementById('wai-objective-custom').style.display = this.value === '__custom__' ? '' : 'none';
+  if (this.value !== '__custom__') wizAutofillAudience();
+});
+document.getElementById('btn-wiz-regen-audience')?.addEventListener('click', wizRegenAudience);
 
 // Auto-fill whenever offer or objective changes (only if field is empty or was previously auto-filled)
 let _audienceWasAutoFilled = false;
@@ -3117,6 +3156,103 @@ document.getElementById('btn-gen-ai').addEventListener('click', async () => {
     showStatus('ai-status', 'error', `Error: ${esc(ex.message)}`);
   } finally { btn.disabled = false; }
 });
+
+// ── Wizard "Generate with AI" button handler ──────────────────────────────────
+document.getElementById('btn-wiz-gen-ai')?.addEventListener('click', async () => {
+  const btn       = document.getElementById('btn-wiz-gen-ai');
+  const clientId  = document.getElementById('wai-client')?.value || undefined;
+  const platform  = wizState.platform === 'google' ? 'Google' : 'Meta';
+  const offer     = wizEffectiveTopic();
+  const objective = wizEffectiveObjective();
+  const audience  = document.getElementById('wai-audience')?.value.trim();
+  const extra     = document.getElementById('wai-extra')?.value.trim();
+
+  if (!offer)     { showStatus('wai-status', 'error', 'Select or enter a topic first.'); return; }
+  if (!objective) { showStatus('wai-status', 'error', 'Select or enter an objective first.'); return; }
+  if (!audience)  { showStatus('wai-status', 'error', 'Target Audience is required — click ↺ Regenerate or type one.'); return; }
+
+  const c     = clients.find(x => x.clientId === clientId);
+  const brand = c ? c.name : 'Evidence-Based Health';
+
+  btn.disabled = true;
+  showStatus('wai-status', 'loading', '✨ Generating AI ad variants…');
+  document.getElementById('wai-variants').style.display = 'none';
+
+  try {
+    const res  = await fetch(`${API}/generate-ad-copy`, {
+      method: 'POST', headers: authHeaders(),
+      body: JSON.stringify({ clientId, platform, offer, objective, audience, brand, extra }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'AI generation failed');
+
+    // Render variants into the wizard's variant container
+    const wrap = document.getElementById('wai-variants');
+    const vars = data.variants || [];
+    if (!vars.length) { showStatus('wai-status', 'error', 'No variants returned.'); return; }
+    wrap.innerHTML = vars.map((v, i) => `
+      <div class="ai-variant-card">
+        <div class="ai-variant-head">
+          <span class="ai-variant-num">Variant ${i + 1}</span>
+          <button class="btn-sm" style="font-size:0.73rem;padding:0.2rem 0.75rem;background:var(--accent);color:#fff;border-color:var(--accent)" onclick="applyWizVariant(${i})">Use This →</button>
+        </div>
+        <div class="ai-variant-body">
+          <div class="ai-field-row"><span class="ai-field-label">${platform === 'Google' ? 'Headline 1' : 'Headline'}</span><span class="ai-field-val"><strong>${esc(v.headline || '')}</strong></span></div>
+          ${platform === 'Google' && v.headline2 ? `<div class="ai-field-row"><span class="ai-field-label">Headline 2</span><span class="ai-field-val">${esc(v.headline2)}</span></div>` : ''}
+          ${platform === 'Google' && v.headline3 ? `<div class="ai-field-row"><span class="ai-field-label">Headline 3</span><span class="ai-field-val">${esc(v.headline3)}</span></div>` : ''}
+          <div class="ai-field-row"><span class="ai-field-label">${platform === 'Google' ? 'Description' : 'Primary Text'}</span><span class="ai-field-val">${esc(v.primaryText || v.description || '')}</span></div>
+          <div class="ai-field-row"><span class="ai-field-label">CTA</span><span class="ai-field-val">${esc(v.cta || '')}</span></div>
+          ${v.imageConcept ? `<div class="ai-image-concept">🖼 ${esc(v.imageConcept)}</div>` : ''}
+        </div>
+      </div>`).join('');
+    wrap._variants = vars;
+    wrap._platform = platform;
+    wrap.style.display = '';
+    if (data.compliance?.warnings?.length) {
+      showStatus('wai-status', 'error', `⚠️ ${data.compliance.warnings.length} compliance flag(s) — review before publishing.`);
+    } else {
+      document.getElementById('wai-status').className = 'status-bar';
+    }
+    document.getElementById('wp3-ai-applied').style.display = 'none';
+    wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } catch (ex) {
+    showStatus('wai-status', 'error', `Error: ${esc(ex.message)}`);
+  } finally { btn.disabled = false; }
+});
+
+function applyWizVariant(idx) {
+  const wrap    = document.getElementById('wai-variants');
+  const variant = wrap._variants?.[idx];
+  const plat    = wrap._platform;
+  if (!variant) return;
+  if (plat === 'Google') {
+    const firstCard = document.querySelector('#sub-google .ag-card');
+    if (firstCard) {
+      const agIdx = firstCard.dataset.idx;
+      const hs = [variant.headline, variant.headline2, variant.headline3].filter(Boolean).map(h => h.slice(0, 30));
+      const hlWrap = document.getElementById(`ag-hl-${agIdx}`);
+      if (hlWrap) {
+        hlWrap.innerHTML = '';
+        hs.forEach(h => {
+          const row = document.createElement('div'); row.className = 'ag-hl-row';
+          row.innerHTML = `<input type="text" class="ag-headline" maxlength="30" value="${esc(h)}" oninput="updateAgCharCount(this)"><span class="ag-char-count">${h.length}/30</span>`;
+          hlWrap.appendChild(row);
+        });
+      }
+      const descWrap = document.getElementById(`ag-desc-${agIdx}`);
+      if (descWrap && variant.description) {
+        const inp = descWrap.querySelector('.ag-desc');
+        if (inp) { inp.value = variant.description.slice(0, 90); updateAgCharCount(inp); }
+      }
+    }
+  } else {
+    if (variant.headline)    { const el = document.getElementById('m-headline');     if (el) el.value = variant.headline.slice(0, 40); }
+    if (variant.primaryText) { const el = document.getElementById('m-primary-text'); if (el) el.value = variant.primaryText.slice(0, 125); }
+    if (variant.cta)         { const el = document.getElementById('m-cta');          if (el) { [...el.options].forEach(o => { if (o.text.toLowerCase().includes(variant.cta.slice(0,5).toLowerCase())) el.value = o.value; }); } }
+  }
+  document.getElementById('wp3-ai-applied').style.display = '';
+  document.getElementById('wai-variants').style.display = 'none';
+}
 
 function renderAIVariants(variants, platform) {
   const wrap = document.getElementById('ai-variants-wrap');
@@ -3518,7 +3654,7 @@ function wizGoTo(step) {
   wizState.step = step;
   if (step === 3) {
     const field = document.getElementById('wai-audience');
-    if (!field.value) { wizAutofillAudience(); _wizAudienceAutoFilled = true; }
+    if (!field.value) wizAutofillAudience();
   }
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -3574,8 +3710,8 @@ function runWizPolicyCheck() {
 
 async function wizAutoCorrect() {
   const results = document.getElementById('wiz-policy-results');
-  const offer = document.getElementById('wai-offer')?.value || 'health education';
-  const obj   = document.getElementById('wai-objective')?.value || 'Traffic to education page';
+  const offer = wizEffectiveTopic() || 'health education';
+  const obj   = wizEffectiveObjective() || 'Traffic to education page';
   results.innerHTML = '<p style="font-size:0.83rem;color:var(--ink-faint)">⏳ Auto-correcting with AI…</p>';
   try {
     const res = await fetch(`${API}/generate-ad-copy`, {
