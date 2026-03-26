@@ -332,6 +332,25 @@
   .insights-col-title { font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-light);margin-bottom:0.6rem; }
   .insights-item { font-size:0.82rem;color:var(--ink-mid);margin-bottom:0.4rem;line-height:1.5; }
   .insights-item strong { color:var(--accent); }
+
+  /* ── Campaign Launcher ── */
+  .launch-grid { display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;align-items:start; }
+  @media(max-width:900px) { .launch-grid { grid-template-columns:1fr; } }
+  .launch-card { background:var(--paper-card);border:1px solid var(--paper-warm);border-radius:12px;padding:1.5rem; }
+  .launch-card-badge { display:inline-block;padding:0.18rem 0.55rem;border-radius:100px;font-size:0.68rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;background:var(--accent-light);color:var(--accent);border:1px solid var(--accent-rule);margin-bottom:0.5rem; }
+  .launch-card-title { font-family:var(--serif);font-size:1.05rem;font-weight:700;color:var(--ink);margin-bottom:0.2rem; }
+  .launch-card-sub { font-size:0.79rem;color:var(--ink-faint);line-height:1.5; }
+  .launch-section-label { font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-faint);margin:1.1rem 0 0.6rem;padding-bottom:0.35rem;border-bottom:1px solid var(--paper-warm); }
+  .launch-row-2 { display:grid;grid-template-columns:1fr 1fr;gap:0.7rem; }
+  .launch-btn { width:100%;padding:0.85rem 1.5rem;background:var(--accent);color:#fff;border:none;border-radius:7px;font-family:var(--sans);font-size:0.88rem;font-weight:500;cursor:pointer;transition:background 0.15s;margin-top:1.1rem; }
+  .launch-btn:hover { background:var(--accent-mid); }
+  .launch-btn:disabled { opacity:0.55;cursor:not-allowed; }
+  .launch-btn.rmkt { background:#1877f2; }
+  .launch-btn.rmkt:hover { background:#1060d4; }
+  .launch-result { margin-top:0.85rem;padding:0.85rem 1rem;border-radius:7px;font-size:0.83rem;line-height:1.6; }
+  .launch-result.success { background:var(--accent-light);color:var(--accent);border:1px solid var(--accent-rule); }
+  .launch-result.error { background:#fef2f2;color:var(--red-soft);border:1px solid #fecaca; }
+  .launch-prefill-bar { padding:0.7rem 1rem;background:var(--accent-light);border:1px solid var(--accent-rule);border-radius:8px;font-size:0.82rem;color:var(--ink-mid);margin-bottom:1.25rem;display:none; }
 </style>
 </head>
 <body>
@@ -366,6 +385,7 @@
       <button class="tab-btn" data-tab="create">Create Ad</button>
       <button class="tab-btn" data-tab="aicreative">AI Creative</button>
       <button class="tab-btn" data-tab="audiences">Audiences</button>
+      <button class="tab-btn" data-tab="launch">Launch</button>
       <button class="tab-btn" data-tab="connections">Connections</button>
     </div>
 
@@ -929,6 +949,177 @@
       </div>
     </div>
 
+    <!-- ══ CAMPAIGN LAUNCHER PANEL ══ -->
+    <div id="panel-launch" style="display:none">
+      <div style="margin-bottom:1.5rem">
+        <div style="font-family:var(--serif);font-size:1.2rem;font-weight:700;color:var(--ink);margin-bottom:0.35rem">Campaign Launcher</div>
+        <div style="font-size:0.82rem;color:var(--ink-faint)">Create complete Meta campaigns — campaign → ad set → creative → ad — in one click. All campaigns launch as <strong>Paused</strong> so you can review before going live in Meta Ads Manager.</div>
+      </div>
+      <div class="launch-prefill-bar" id="launch-prefill-bar">✅ AI variant pre-filled below — edit as needed, then hit Launch.</div>
+      <div class="launch-grid">
+
+        <!-- Cold / Education -->
+        <div class="launch-card">
+          <div class="launch-card-badge">Cold / Top-of-Funnel</div>
+          <div class="launch-card-title">Education Campaign</div>
+          <div class="launch-card-sub">Traffic or Engagement objective — Lookalike or broad Advantage+ targeting. Drives to your education content.</div>
+
+          <div class="launch-section-label">Campaign Settings</div>
+          <div class="form-row">
+            <label>Campaign Name</label>
+            <input type="text" id="cold-name" placeholder="e.g. EBH GLP-1 Education — Cold Mar 2026" autocomplete="off">
+          </div>
+          <div class="launch-row-2">
+            <div class="form-row">
+              <label>Objective</label>
+              <select id="cold-objective">
+                <option value="OUTCOME_TRAFFIC">Traffic</option>
+                <option value="OUTCOME_ENGAGEMENT">Engagement</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label>Daily Budget ($)</label>
+              <input type="number" id="cold-budget" value="20" min="1" step="1">
+            </div>
+          </div>
+
+          <div class="launch-section-label">Targeting</div>
+          <div class="form-row">
+            <label>Audience Type</label>
+            <select id="cold-aud-type" onchange="document.getElementById('cold-lookalike-row').style.display=this.value==='lookalike'?'':'none'">
+              <option value="broad">Broad — Advantage+ (Meta auto-optimizes)</option>
+              <option value="lookalike">Lookalike Audience ID</option>
+            </select>
+          </div>
+          <div id="cold-lookalike-row" class="form-row" style="display:none">
+            <label>Lookalike Audience ID <span class="hint">from Meta Ads Manager → Audiences</span></label>
+            <input type="text" id="cold-aud-id" placeholder="e.g. 23843012345" autocomplete="off">
+          </div>
+          <div class="launch-row-2">
+            <div class="form-row"><label>Age Min</label><input type="number" id="cold-age-min" value="25" min="18" max="65"></div>
+            <div class="form-row"><label>Age Max</label><input type="number" id="cold-age-max" value="65" min="18" max="65"></div>
+          </div>
+          <div class="form-row">
+            <label>Countries <span class="hint">comma-separated ISO codes</span></label>
+            <input type="text" id="cold-countries" value="US" autocomplete="off">
+          </div>
+
+          <div class="launch-section-label">Creative</div>
+          <div class="form-row">
+            <label>Destination URL</label>
+            <input type="url" id="cold-url" value="https://evidencebasedhealth.me" autocomplete="off">
+          </div>
+          <div class="form-row">
+            <label>Headline <span class="hint">≤ 40 chars</span></label>
+            <input type="text" id="cold-headline" maxlength="40" placeholder="e.g. Understanding GLP-1 Medications: A Doctor's Guide" autocomplete="off">
+          </div>
+          <div class="form-row">
+            <label>Primary Text <span class="hint">≤ 125 chars</span></label>
+            <textarea id="cold-text" maxlength="125" rows="2" placeholder="e.g. Learn what GLP-1 medications do, evidence-based benefits, and what to know before starting."></textarea>
+          </div>
+          <div class="launch-row-2">
+            <div class="form-row">
+              <label>CTA Button</label>
+              <select id="cold-cta">
+                <option value="LEARN_MORE">Learn More</option>
+                <option value="SIGN_UP">Sign Up</option>
+                <option value="GET_QUOTE">Get Quote</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label>Client</label>
+              <select id="cold-client"><option value="">EBH (default)</option></select>
+            </div>
+          </div>
+          <div class="form-row">
+            <label>Image URL <span class="hint">optional — hosted image</span></label>
+            <input type="url" id="cold-image" placeholder="https://..." autocomplete="off">
+          </div>
+          <button class="launch-btn" id="btn-launch-cold">🚀 Launch Cold Campaign</button>
+          <div class="launch-result" id="cold-result" style="display:none"></div>
+        </div>
+
+        <!-- Remarketing -->
+        <div class="launch-card">
+          <div class="launch-card-badge" style="background:#eff6ff;color:#1877f2;border-color:#bfdbfe">Warm / Remarketing</div>
+          <div class="launch-card-title">Remarketing Campaign</div>
+          <div class="launch-card-sub">Leads objective — targets your Meta Custom Audiences. Use audience IDs from the Audiences tab → Create All.</div>
+
+          <div class="launch-section-label">Campaign Settings</div>
+          <div class="form-row">
+            <label>Campaign Name</label>
+            <input type="text" id="rmkt-name" placeholder="e.g. EBH GLP-1 Remarketing — Leads Mar 2026" autocomplete="off">
+          </div>
+          <div class="launch-row-2">
+            <div class="form-row">
+              <label>Objective</label>
+              <select id="rmkt-objective">
+                <option value="OUTCOME_LEADS">Leads</option>
+                <option value="OUTCOME_TRAFFIC">Traffic</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label>Daily Budget ($)</label>
+              <input type="number" id="rmkt-budget" value="15" min="1" step="1">
+            </div>
+          </div>
+
+          <div class="launch-section-label">Targeting</div>
+          <div class="form-row">
+            <label>Custom Audience IDs <span class="hint">comma-separated IDs from Audiences tab → Create All</span></label>
+            <textarea id="rmkt-aud-ids" rows="2" placeholder="e.g. 23843012345, 23843012346 (GLP-1 visitors, Engaged visitors)"></textarea>
+          </div>
+          <div class="form-row">
+            <label>Exclude Audience IDs <span class="hint">optional — exclude existing leads to avoid waste</span></label>
+            <input type="text" id="rmkt-excl-ids" placeholder="e.g. 23843012347 (Leads audience)" autocomplete="off">
+          </div>
+          <div class="launch-row-2">
+            <div class="form-row"><label>Age Min</label><input type="number" id="rmkt-age-min" value="25" min="18" max="65"></div>
+            <div class="form-row"><label>Age Max</label><input type="number" id="rmkt-age-max" value="65" min="18" max="65"></div>
+          </div>
+          <div class="form-row">
+            <label>Countries</label>
+            <input type="text" id="rmkt-countries" value="US" autocomplete="off">
+          </div>
+
+          <div class="launch-section-label">Creative</div>
+          <div class="form-row">
+            <label>Destination URL</label>
+            <input type="url" id="rmkt-url" value="https://evidencebasedhealth.me" autocomplete="off">
+          </div>
+          <div class="form-row">
+            <label>Headline <span class="hint">≤ 40 chars</span></label>
+            <input type="text" id="rmkt-headline" maxlength="40" placeholder="e.g. Take Our 2-Min GLP-1 Readiness Check" autocomplete="off">
+          </div>
+          <div class="form-row">
+            <label>Primary Text <span class="hint">≤ 125 chars</span></label>
+            <textarea id="rmkt-text" maxlength="125" rows="2" placeholder="e.g. Curious if GLP-1 therapy is right for you? Answer 5 quick questions to find out."></textarea>
+          </div>
+          <div class="launch-row-2">
+            <div class="form-row">
+              <label>CTA Button</label>
+              <select id="rmkt-cta">
+                <option value="SIGN_UP">Sign Up</option>
+                <option value="LEARN_MORE">Learn More</option>
+                <option value="GET_QUOTE">Get Quote</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label>Client</label>
+              <select id="rmkt-client"><option value="">EBH (default)</option></select>
+            </div>
+          </div>
+          <div class="form-row">
+            <label>Image URL <span class="hint">optional</span></label>
+            <input type="url" id="rmkt-image" placeholder="https://..." autocomplete="off">
+          </div>
+          <button class="launch-btn rmkt" id="btn-launch-rmkt">🚀 Launch Remarketing Campaign</button>
+          <div class="launch-result" id="rmkt-result" style="display:none"></div>
+        </div>
+
+      </div>
+    </div>
+
     <div id="panel-connections" style="display:none">
       <div class="connections-grid">
 
@@ -1167,7 +1358,7 @@ document.getElementById('btn-logout').addEventListener('click', () => {
 });
 
 /* ── Tabs ── */
-const ALL_PANELS = ['home','clients','create','aicreative','audiences','connections'];
+const ALL_PANELS = ['home','clients','create','aicreative','audiences','launch','connections'];
 function showTab(t) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === t));
   ALL_PANELS.forEach(p => {
@@ -1939,6 +2130,12 @@ function populateAIClientSel() {
     sel.add(new Option(c.name, c.clientId));
     insightsSel.add(new Option(c.name, c.clientId));
   });
+  // Launch tab client selects
+  ['cold-client', 'rmkt-client'].forEach(id => {
+    const s = document.getElementById(id);
+    while (s.options.length > 1) s.remove(1);
+    clients.forEach(c => s.add(new Option(c.name, c.clientId)));
+  });
 }
 
 document.getElementById('btn-gen-ai').addEventListener('click', async () => {
@@ -1984,6 +2181,7 @@ function renderAIVariants(variants, platform) {
         <span class="ai-variant-num">Variant ${i + 1}</span>
         <div class="ai-variant-actions">
           <button class="btn-sm" style="font-size:0.73rem;padding:0.2rem 0.6rem" onclick="applyAIVariant(${i})">Use This →</button>
+          <button class="btn-sm" style="font-size:0.73rem;padding:0.2rem 0.6rem;background:var(--accent);color:#fff;border-color:var(--accent)" onclick="prefillLaunch(${i})">Launch →</button>
         </div>
       </div>
       <div class="ai-variant-body">
@@ -2009,6 +2207,20 @@ function renderAIVariants(variants, platform) {
   wrap._variants = variants;
   wrap._platform = platform;
   wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function prefillLaunch(idx) {
+  const wrap    = document.getElementById('ai-variants-wrap');
+  const variant = wrap._variants?.[idx];
+  if (!variant) return;
+  const h = variant.headline || '';
+  const t = variant.primaryText || variant.description || '';
+  document.getElementById('cold-headline').value = h.slice(0, 40);
+  document.getElementById('cold-text').value = t.slice(0, 125);
+  document.getElementById('rmkt-headline').value = h.slice(0, 40);
+  document.getElementById('rmkt-text').value = t.slice(0, 125);
+  document.getElementById('launch-prefill-bar').style.display = '';
+  showTab('launch');
 }
 
 function applyAIVariant(idx) {
@@ -2108,6 +2320,72 @@ document.getElementById('btn-load-insights').addEventListener('click', async () 
     wrap.innerHTML = selHTML + `<p style="font-size:0.83rem;color:var(--red-soft);margin:0">Error: ${esc(ex.message)}</p>`;
   } finally { btn.disabled = false; }
 });
+
+/* ── Campaign Launcher ── */
+async function launchCampaign(type) {
+  const isCold   = type === 'cold';
+  const pfx      = isCold ? 'cold' : 'rmkt';
+  const btn      = document.getElementById(`btn-launch-${isCold ? 'cold' : 'rmkt'}`);
+  const resultEl = document.getElementById(`${pfx}-result`);
+
+  const campaignName = document.getElementById(`${pfx}-name`).value.trim();
+  const objective    = document.getElementById(`${pfx}-objective`).value;
+  const dailyBudget  = Number(document.getElementById(`${pfx}-budget`).value);
+  const ageMin       = Number(document.getElementById(`${pfx}-age-min`).value);
+  const ageMax       = Number(document.getElementById(`${pfx}-age-max`).value);
+  const countries    = document.getElementById(`${pfx}-countries`).value.split(',').map(s => s.trim()).filter(Boolean);
+  const destUrl      = document.getElementById(`${pfx}-url`).value.trim() || 'https://evidencebasedhealth.me';
+  const headline     = document.getElementById(`${pfx}-headline`).value.trim();
+  const primaryText  = document.getElementById(`${pfx}-text`).value.trim();
+  const ctaType      = document.getElementById(`${pfx}-cta`).value;
+  const imageUrl     = document.getElementById(`${pfx}-image`).value.trim();
+  const clientId     = document.getElementById(`${pfx}-client`).value || undefined;
+
+  if (!campaignName) { resultEl.className = 'launch-result error'; resultEl.style.display = ''; resultEl.textContent = 'Campaign name is required.'; return; }
+  if (!headline || !primaryText) { resultEl.className = 'launch-result error'; resultEl.style.display = ''; resultEl.textContent = 'Headline and primary text are required.'; return; }
+
+  let audienceIds = [];
+  let excludeAudienceIds = [];
+
+  if (isCold) {
+    if (document.getElementById('cold-aud-type').value === 'lookalike') {
+      const id = document.getElementById('cold-aud-id').value.trim();
+      if (id) audienceIds = [id];
+    }
+  } else {
+    audienceIds = document.getElementById('rmkt-aud-ids').value.split(',').map(s => s.trim()).filter(Boolean);
+    excludeAudienceIds = document.getElementById('rmkt-excl-ids').value.split(',').map(s => s.trim()).filter(Boolean);
+    if (!audienceIds.length) { resultEl.className = 'launch-result error'; resultEl.style.display = ''; resultEl.textContent = 'Add at least one custom audience ID for remarketing.'; return; }
+  }
+
+  btn.disabled = true;
+  resultEl.className = 'launch-result';
+  resultEl.style.display = '';
+  resultEl.textContent = '⏳ Creating campaign, ad set, and ad in Meta…';
+
+  try {
+    const res = await fetch(`${API}/launch-meta-campaign`, {
+      method: 'POST',
+      headers: authHeaders(),
+      body: JSON.stringify({ clientId, campaignName, type, objective, dailyBudget, destinationUrl: destUrl, ageMin, ageMax, countries, audienceIds, excludeAudienceIds, primaryText, headline, imageUrl, ctaType }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Launch failed');
+    resultEl.className = 'launch-result success';
+    resultEl.innerHTML = `✅ Campaign created and <strong>Paused</strong> in Meta.<br>
+      Campaign: <code>${esc(data.campaignId)}</code> &nbsp; Ad Set: <code>${esc(data.adsetId)}</code> &nbsp; Ad: <code>${esc(data.adId)}</code><br>
+      <a href="${esc(data.previewUrl)}" target="_blank" rel="noopener" style="color:var(--accent);font-weight:500">Review &amp; activate in Meta Ads Manager →</a>`;
+  } catch (ex) {
+    resultEl.className = 'launch-result error';
+    resultEl.style.display = '';
+    resultEl.textContent = `Error: ${ex.message}`;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+document.getElementById('btn-launch-cold').addEventListener('click', () => launchCampaign('cold'));
+document.getElementById('btn-launch-rmkt').addEventListener('click', () => launchCampaign('remarketing'));
 
 /* ── Copy buttons ── */
 document.addEventListener('click', e => {
