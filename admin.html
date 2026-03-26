@@ -2331,7 +2331,7 @@ document.getElementById('btn-gen-google').addEventListener('click', async () => 
     link.href = data.review_url;
     document.getElementById('google-output').classList.add('visible');
     document.getElementById('google-output').scrollIntoView({ behavior:'smooth', block:'start' });
-    showStatus('google-status','success',`✓ Campaign <strong>${esc(data.campaignName)}</strong> created (paused) with ${data.adGroups?.length||1} ad group${(data.adGroups?.length||1)!==1?'s':''}. <a href="${esc(data.review_url)}" target="_blank" rel="noopener">Open in Google Ads ↗</a>${data.complianceWarnings?.length ? `<br><span style="color:#b45309">⚠ Compliance notes: ${data.complianceWarnings.length} keyword/headline item(s) to review — not LegitScript-certified content detected.</span>` : ''}`);
+    showStatus('google-status','success',`✓ Campaign <strong>${esc(data.campaignName)}</strong> created (paused) with ${data.adGroups?.length||1} ad group${(data.adGroups?.length||1)!==1?'s':''}. <a href="${esc(data.review_url)}" target="_blank" rel="noopener">Open in Google Ads ↗</a>${data.complianceWarnings?.length ? `<br><span style="color:#b45309">⚠ Compliance notes: ${data.complianceWarnings.length} keyword/headline item(s) to review — not LegitScript-certified content detected.</span>` : ''}${data.adGroups?.some(g=>g.adWarning) ? `<br><span style="color:#b45309">⚠ One or more RSA ads were skipped due to Google policy — add them manually in Google Ads: ${data.adGroups.filter(g=>g.adWarning).map(g=>`${esc(g.name)}: ${esc(g.adWarning)}`).join('; ')}</span>` : ''}`);
   } catch (ex) { showStatus('google-status','error',`Error: ${esc(ex.message)}`);
   } finally { btn.disabled = false; }
 });
