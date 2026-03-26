@@ -43,9 +43,10 @@
   /* ── Content & Tabs ── */
   .dash-content { max-width: 1280px; margin: 0 auto; padding: 76px 2rem 4rem; }
   .tabs { display: flex; border-bottom: 2px solid var(--paper-warm); margin-bottom: 2.25rem; }
-  .tab-btn { padding: 0.8rem 1.65rem; font-family: var(--sans); font-size: 0.88rem; font-weight: 500; color: var(--ink-light); background: none; border: none; border-bottom: 2px solid transparent; margin-bottom: -2px; cursor: pointer; transition: color 0.2s, border-color 0.2s; letter-spacing: 0.03em; }
+  .tab-btn { padding: 0.65rem 1.35rem; font-family: var(--sans); font-size: 0.88rem; font-weight: 500; color: var(--ink-light); background: none; border: none; border-bottom: 2px solid transparent; margin-bottom: -2px; cursor: pointer; transition: color 0.2s, border-color 0.2s; letter-spacing: 0.03em; display: flex; flex-direction: column; align-items: center; gap: 0.15rem; }
   .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
   .tab-btn:hover:not(.active) { color: var(--ink-mid); }
+  .tab-sub { font-size: 0.65rem; font-weight: 400; letter-spacing: 0.02em; opacity: 0.7; white-space: nowrap; }
 
   /* ── Client Grid ── */
   .clients-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.6rem; flex-wrap: wrap; gap: 1rem; }
@@ -230,6 +231,7 @@
   .platform-card:hover:not(.disabled) { border-color:var(--accent);box-shadow:0 2px 12px rgba(26,92,58,.1); }
   .platform-card.disabled { opacity:.45;cursor:not-allowed; }
   .platform-icon { width:34px;height:34px;border-radius:8px;color:#fff;font-weight:700;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--serif); }
+  .platform-info { flex:1; }
   .platform-card-name { font-size:0.9rem;font-weight:600;color:var(--ink); }
   .platform-card-desc { font-size:0.76rem;color:var(--ink-faint);margin-top:0.1rem; }
   .quick-links { display:flex;flex-direction:column;gap:0.5rem; }
@@ -380,12 +382,12 @@
 
   <div class="dash-content">
     <div class="tabs">
-      <button class="tab-btn active" data-tab="home">My Account</button>
+      <button class="tab-btn active" data-tab="home">Dashboard</button>
       <button class="tab-btn" data-tab="clients">Clients</button>
-      <button class="tab-btn" data-tab="create">Create Ad</button>
-      <button class="tab-btn" data-tab="aicreative">AI Creative</button>
-      <button class="tab-btn" data-tab="audiences">Audiences</button>
-      <button class="tab-btn" data-tab="launch">Launch</button>
+      <button class="tab-btn" data-tab="aicreative" title="Generate 5 AI-written ad variants with Perplexity">AI Copy<span class="tab-sub">write with AI</span></button>
+      <button class="tab-btn" data-tab="launch" title="Create a complete Meta campaign (campaign → ad set → creative → ad) in one click">🚀 Launch<span class="tab-sub">one-click Meta</span></button>
+      <button class="tab-btn" data-tab="audiences" title="Build GA4 segments and Meta Custom Audiences for retargeting">Audiences<span class="tab-sub">retargeting setup</span></button>
+      <button class="tab-btn" data-tab="create" title="Manually configure individual Meta or Google Search ads with full control">Ad Builder<span class="tab-sub">manual / advanced</span></button>
       <button class="tab-btn" data-tab="connections">Connections</button>
     </div>
 
@@ -400,24 +402,49 @@
           </div>
         </div>
       </div>
+      <div style="background:var(--accent-light);border:1px solid var(--accent-rule);border-radius:10px;padding:1rem 1.25rem;margin-bottom:1.5rem">
+        <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--accent);margin-bottom:0.55rem">Recommended Workflow</div>
+        <div style="display:flex;flex-wrap:wrap;gap:0.4rem 0;align-items:center;font-size:0.82rem;color:var(--ink-mid);line-height:1.7">
+          <button onclick="showTab('aicreative')" style="background:none;border:none;padding:0;color:var(--accent);font-weight:600;cursor:pointer;font-family:var(--sans);font-size:0.82rem">① AI Copy</button>
+          <span style="color:var(--ink-faint);padding:0 0.4rem">→ generate 5 variants →</span>
+          <span style="color:var(--ink-mid)">click <strong>&ldquo;Launch →&rdquo;</strong> on the best one →</span>
+          <button onclick="showTab('launch')" style="background:none;border:none;padding:0 0.35rem;color:var(--accent);font-weight:600;cursor:pointer;font-family:var(--sans);font-size:0.82rem">② 🚀 Launch</button>
+          <span style="color:var(--ink-faint);padding:0 0.4rem">→ add name + budget → Launch (starts Paused) →</span>
+          <button onclick="showTab('audiences')" style="background:none;border:none;padding:0;color:var(--accent);font-weight:600;cursor:pointer;font-family:var(--sans);font-size:0.82rem">③ Audiences</button>
+          <span style="color:var(--ink-faint);padding:0 0.4rem">→ &ldquo;Create All&rdquo; → paste IDs into Remarketing</span>
+        </div>
+      </div>
       <div class="home-grid">
         <div class="home-section">
-          <div class="home-section-title">Create a New Ad Campaign</div>
+          <div class="home-section-title">Start a Campaign</div>
           <div class="platform-picker">
-            <button class="platform-card" onclick="goCreateAd('meta')">
-              <div class="platform-icon" style="background:#1877f2">f</div>
-              <div class="platform-card-name">Facebook / Instagram</div>
-              <div class="platform-card-desc">Meta Ads — reach by interest &amp; demographics</div>
+            <button class="platform-card" onclick="showTab('launch')" style="border-color:var(--accent-rule)">
+              <div class="platform-icon" style="background:var(--accent);font-size:1.1rem">🚀</div>
+              <div class="platform-info">
+                <div class="platform-card-name">Meta — Campaign Launcher <span style="font-size:0.68rem;opacity:0.6;font-weight:400">recommended</span></div>
+                <div class="platform-card-desc">One click creates campaign → ad set → creative → ad, all Paused</div>
+              </div>
             </button>
             <button class="platform-card" onclick="goCreateAd('google')">
               <div class="platform-icon" style="background:#4285f4">G</div>
-              <div class="platform-card-name">Google Search Ads</div>
-              <div class="platform-card-desc">Search campaigns — keywords &amp; responsive ads</div>
+              <div class="platform-info">
+                <div class="platform-card-name">Google Search Ads</div>
+                <div class="platform-card-desc">Keywords, responsive ads, location targeting</div>
+              </div>
+            </button>
+            <button class="platform-card" onclick="goCreateAd('meta')" style="opacity:0.75">
+              <div class="platform-icon" style="background:#1877f2">f</div>
+              <div class="platform-info">
+                <div class="platform-card-name">Meta — Ad Builder <span style="font-size:0.68rem;opacity:0.6;font-weight:400">advanced</span></div>
+                <div class="platform-card-desc">Custom interests, detailed targeting, manual control</div>
+              </div>
             </button>
             <button class="platform-card disabled">
               <div class="platform-icon" style="background:#010101">T</div>
-              <div class="platform-card-name">TikTok Ads</div>
-              <div class="platform-card-desc">Coming soon</div>
+              <div class="platform-info">
+                <div class="platform-card-name">TikTok Ads</div>
+                <div class="platform-card-desc">Coming soon</div>
+              </div>
             </button>
           </div>
         </div>
@@ -491,6 +518,10 @@
 
     <!-- ══ CREATE AD PANEL ══ -->
     <div id="panel-create" style="display:none">
+      <div style="margin-bottom:1.25rem">
+        <div style="font-family:var(--serif);font-size:1.2rem;font-weight:700;color:var(--ink);margin-bottom:0.25rem">Ad Builder <span style="font-size:0.78rem;font-weight:400;color:var(--ink-faint);font-family:var(--sans)">— manual / advanced</span></div>
+        <div style="font-size:0.82rem;color:var(--ink-faint)">Configure individual Meta or Google Search ads with full control over targeting and creative. For one-click full campaign creation use the <button onclick="showTab('launch')" style="background:none;border:none;padding:0;color:var(--accent);cursor:pointer;font-family:var(--sans);font-size:0.82rem;text-decoration:underline">🚀 Launch tab</button>.</div>
+      </div>
       <div class="create-ad-header">
         <div class="create-ad-platform-tabs">
           <button class="plat-tab active" data-plat="meta">
@@ -719,8 +750,8 @@
 
     <div id="panel-aicreative" style="display:none">
       <div style="margin-bottom:1.5rem">
-        <div style="font-family:var(--serif);font-size:1.2rem;font-weight:700;color:var(--ink);margin-bottom:0.35rem">AI Ad Creative Generator</div>
-        <div style="font-size:0.82rem;color:var(--ink-faint)">Fill in a brief and AI will write 5 education-first, policy-safe ad variants for Google or Meta.</div>
+        <div style="font-family:var(--serif);font-size:1.2rem;font-weight:700;color:var(--ink);margin-bottom:0.35rem">AI Copy Generator</div>
+        <div style="font-size:0.82rem;color:var(--ink-faint)">Fill in a brief and AI writes 5 education-first ad variants. Click <strong>&ldquo;Launch →&rdquo;</strong> on your favourite to auto-fill the Campaign Launcher.</div>
       </div>
       <div style="max-width:760px">
         <div class="form-card">
@@ -952,8 +983,8 @@
     <!-- ══ CAMPAIGN LAUNCHER PANEL ══ -->
     <div id="panel-launch" style="display:none">
       <div style="margin-bottom:1.5rem">
-        <div style="font-family:var(--serif);font-size:1.2rem;font-weight:700;color:var(--ink);margin-bottom:0.35rem">Campaign Launcher</div>
-        <div style="font-size:0.82rem;color:var(--ink-faint)">Create complete Meta campaigns — campaign → ad set → creative → ad — in one click. All campaigns launch as <strong>Paused</strong> so you can review before going live in Meta Ads Manager.</div>
+        <div style="font-family:var(--serif);font-size:1.2rem;font-weight:700;color:var(--ink);margin-bottom:0.35rem">🚀 Campaign Launcher</div>
+        <div style="font-size:0.82rem;color:var(--ink-faint)">Creates the full Meta campaign structure — campaign → ad set → creative → ad — in one click. Everything launches as <strong>Paused</strong> so you review in Meta Ads Manager before going live. <em>Use <strong>AI Copy</strong> tab to pre-fill the creative fields automatically.</em></div>
       </div>
       <div class="launch-prefill-bar" id="launch-prefill-bar">✅ AI variant pre-filled below — edit as needed, then hit Launch.</div>
       <div class="launch-grid">
