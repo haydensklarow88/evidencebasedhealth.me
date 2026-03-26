@@ -3072,7 +3072,8 @@ async function wizRegenAudience() {
   if (!topic || !objective) return;
   if (wizAutofillAudience()) return; // served from knowledge map instantly
   // Fall back to AI for custom topics
-  btn.textContent = '⏳';
+  const origText = btn.textContent;
+  btn.textContent = '⏳ Thinking…';
   btn.disabled = true;
   try {
     const res  = await fetch(`${API}/suggest-audience`, {
@@ -3080,14 +3081,17 @@ async function wizRegenAudience() {
       body: JSON.stringify({ topic, objective }),
     });
     const data = await res.json();
+    if (!res.ok) throw new Error(data.error || `Error ${res.status}`);
     if (data.audience) {
       field.value = data.audience;
       field.style.borderColor = 'var(--accent-mid)';
       field.style.background  = '#f0f7f2';
       setTimeout(() => { field.style.borderColor = ''; field.style.background = ''; }, 1400);
     }
-  } catch { /* silent */ }
-  btn.textContent = '↺ Regenerate';
+  } catch(e) {
+    field.placeholder = `⚠ ${e.message} — type your audience manually`;
+  }
+  btn.textContent = origText;
   btn.disabled = false;
 }
 
