@@ -791,8 +791,11 @@
               </select>
             </div>
             <div class="form-row" style="grid-column:1/-1">
-              <label for="ai-audience">Target Audience</label>
-              <input type="text" id="ai-audience" placeholder="e.g. people who visited GLP-1 content but haven't completed an eligibility form" autocomplete="off">
+              <label for="ai-audience" style="display:flex;align-items:center;justify-content:space-between">
+                Target Audience
+                <button type="button" id="btn-autofill-audience" style="font-size:0.7rem;padding:0.15rem 0.55rem;background:var(--accent-light);color:var(--accent);border:1px solid var(--accent-rule);border-radius:4px;cursor:pointer;font-family:var(--sans);font-weight:500;white-space:nowrap">✨ Auto-fill</button>
+              </label>
+              <input type="text" id="ai-audience" placeholder="Select topic + objective above, then click Auto-fill" autocomplete="off">
             </div>
             <div class="form-row" style="grid-column:1/-1">
               <label for="ai-extra">Additional Context <span class="hint">optional — winning angles, brand voice, restrictions</span></label>
@@ -2168,6 +2171,81 @@ function populateAIClientSel() {
     clients.forEach(c => s.add(new Option(c.name, c.clientId)));
   });
 }
+
+/* ── AI audience auto-fill ── */
+const AI_AUDIENCE_MAP = {
+  'GLP-1 education': {
+    'Traffic to education page':          'Adults 30–65 curious about GLP-1 / semaglutide who are researching weight-loss or metabolic health options but haven't visited our education page yet',
+    'Lead capture — newsletter signup':   'Adults 30–65 interested in GLP-1 or metabolic health who have visited relevant content but haven't subscribed to our newsletter',
+    'Lead capture — eligibility quiz':    'Adults 30–65 who have browsed GLP-1 or weight-management content but haven't completed an eligibility or readiness quiz',
+    'Brand awareness':                    'Broad adults 30–65 interested in weight management, metabolic health, or preventive medicine — no prior exposure to our brand',
+  },
+  'peptide therapy education': {
+    'Traffic to education page':          'Fitness-conscious adults 25–55 interested in recovery, anti-aging, or performance optimisation who haven't read our peptide education content',
+    'Lead capture — newsletter signup':   'Adults 25–55 who've browsed peptide therapy topics but haven't opted into health content from us',
+    'Lead capture — eligibility quiz':    'Adults 25–55 researching peptide therapy who haven't taken a readiness or eligibility quiz',
+    'Brand awareness':                    'Health-aware adults 25–55 interested in biohacking, longevity, or sports medicine',
+  },
+  'TRT and hormone health education': {
+    'Traffic to education page':          'Men 35–65 experiencing low energy, reduced libido, or fatigue who are researching hormone health but haven't visited our TRT education page',
+    'Lead capture — newsletter signup':   'Men 35–65 interested in testosterone or hormone optimisation who haven't yet subscribed to health content',
+    'Lead capture — eligibility quiz':    'Men 35–65 who've researched TRT or hormone therapy but haven't completed a candidacy or symptoms quiz',
+    'Brand awareness':                    'Men 35–65 broadly interested in men's health, vitality, or preventive medicine',
+  },
+  'cancer prevention and screening': {
+    'Traffic to education page':          'Adults 40–70 who may be overdue for preventive cancer screening and haven't seen evidence-based guidance on screening timelines',
+    'Lead capture — newsletter signup':   'Adults 40–70 interested in preventive health who haven't yet subscribed to evidence-based screening guidance',
+    'Lead capture — eligibility quiz':    'Adults 40–70 who've read about cancer screening but haven't gone through a personalised screening-readiness checklist',
+    'Brand awareness':                    'Adults 35–70 broadly interested in cancer prevention, primary care, or evidence-based health tips',
+  },
+  'metabolic health and weight management': {
+    'Traffic to education page':          'Adults 28–60 interested in blood sugar, insulin resistance, or sustainable weight loss who haven't visited our metabolic health content',
+    'Lead capture — newsletter signup':   'Adults 28–60 researching metabolic health or weight management who haven't subscribed to science-backed guidance',
+    'Lead capture — eligibility quiz':    'Adults 28–60 interested in metabolic optimisation who haven't completed a health profile or quiz',
+    'Brand awareness':                    'Adults 28–60 broadly interested in nutrition, metabolic fitness, or preventive health improvements',
+  },
+  'evidence-based health newsletter': {
+    'Traffic to education page':          'Health-conscious adults 30–65 who regularly read health news but haven't discovered our evidence-based newsletter',
+    'Lead capture — newsletter signup':   'Adults 30–65 who've visited health education content but haven't yet signed up for a regular newsletter',
+    'Lead capture — eligibility quiz':    'Adults 30–65 interested in personalised health insights who haven't answered a brief health-interests quiz',
+    'Brand awareness':                    'Broad adults 30–65 interested in health, wellness, or evidence-based medicine — no prior brand interaction',
+  },
+};
+
+function autofillAudience() {
+  const offer     = document.getElementById('ai-offer').value;
+  const objective = document.getElementById('ai-objective').value;
+  const platform  = document.getElementById('ai-platform').value;
+  const field     = document.getElementById('ai-audience');
+  const base      = AI_AUDIENCE_MAP[offer]?.[objective];
+  if (!base) return;
+  const platformSuffix = platform === 'Google'
+    ? ' — reached via Google Search'
+    : ' — reached via Facebook / Instagram feed';
+  field.value = base + platformSuffix;
+  field.style.borderColor = 'var(--accent-mid)';
+  field.style.background  = '#fff';
+  setTimeout(() => { field.style.borderColor = ''; field.style.background = ''; }, 1200);
+}
+
+document.getElementById('btn-autofill-audience').addEventListener('click', autofillAudience);
+
+// Auto-fill whenever offer or objective changes (only if field is empty or was previously auto-filled)
+let _audienceWasAutoFilled = false;
+['ai-offer','ai-objective','ai-platform'].forEach(id => {
+  document.getElementById(id).addEventListener('change', () => {
+    const field = document.getElementById('ai-audience');
+    if (!field.value || _audienceWasAutoFilled) {
+      autofillAudience();
+      _audienceWasAutoFilled = true;
+    }
+  });
+});
+document.getElementById('ai-audience').addEventListener('input', () => { _audienceWasAutoFilled = false; });
+
+// Auto-fill on page load so field isn't empty from the start
+autofillAudience();
+_audienceWasAutoFilled = true;
 
 document.getElementById('btn-gen-ai').addEventListener('click', async () => {
   const btn       = document.getElementById('btn-gen-ai');
