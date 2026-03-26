@@ -2089,6 +2089,9 @@ document.getElementById('btn-gen-google').addEventListener('click', async () => 
   if (!campaignName || !dailyBudget || headlines.length < 3 || descriptions.length < 2) {
     showStatus('google-status','error','Enter campaign name, budget, at least 3 headlines, and 2 descriptions.'); return;
   }
+  if (keywords.length < 1) {
+    showStatus('google-status','error','Enter at least 1 keyword (one per line). Use "Optimize from Insights" to auto-fill.'); return;
+  }
   const longH = headlines.filter(h => h.length > 30);
   const longD = descriptions.filter(d => d.length > 90);
   if (longH.length) { showStatus('google-status','error',`Headline too long (max 30 chars): "${esc(longH[0])}"`); return; }
