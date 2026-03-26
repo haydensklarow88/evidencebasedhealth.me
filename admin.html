@@ -3037,6 +3037,33 @@ function autofillAudience() {
 
 document.getElementById('btn-autofill-audience').addEventListener('click', autofillAudience);
 
+// ── Wizard audience autofill (reuses the same knowledge map) ────────────────
+function wizAutofillAudience() {
+  const offer     = document.getElementById('wai-offer').value;
+  const objective = document.getElementById('wai-objective').value;
+  const field     = document.getElementById('wai-audience');
+  // Map wizard objective labels → map keys
+  const objKey = objective === 'Awareness of evidence-based approach' ? 'Brand awareness' : objective;
+  const suggestion = AI_AUDIENCE_MAP[offer]?.[objKey];
+  if (!suggestion) return;
+  field.value = suggestion;
+  field.style.borderColor = 'var(--accent-mid)';
+  field.style.background  = '#f0f7f2';
+  setTimeout(() => { field.style.borderColor = ''; field.style.background = ''; }, 1400);
+}
+
+let _wizAudienceAutoFilled = false;
+['wai-offer','wai-objective'].forEach(id => {
+  document.getElementById(id)?.addEventListener('change', () => {
+    const field = document.getElementById('wai-audience');
+    if (!field.value || _wizAudienceAutoFilled) {
+      wizAutofillAudience();
+      _wizAudienceAutoFilled = true;
+    }
+  });
+});
+document.getElementById('wai-audience')?.addEventListener('input', () => { _wizAudienceAutoFilled = false; });
+
 // Auto-fill whenever offer or objective changes (only if field is empty or was previously auto-filled)
 let _audienceWasAutoFilled = false;
 ['ai-offer','ai-objective','ai-platform'].forEach(id => {
@@ -3490,6 +3517,10 @@ function wizGoTo(step) {
     line.classList.toggle('wiz-done', idx + 1 < step);
   });
   wizState.step = step;
+  if (step === 3) {
+    const field = document.getElementById('wai-audience');
+    if (!field.value) { wizAutofillAudience(); _wizAudienceAutoFilled = true; }
+  }
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
