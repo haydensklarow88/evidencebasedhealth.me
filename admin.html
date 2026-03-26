@@ -1192,6 +1192,28 @@
           </div>
         </div>
 
+        <!-- Google Ads Conversion Tracking card -->
+        <div class="conn-card">
+          <div class="conn-card-head" style="background:#34a853">
+            <div class="conn-logo" style="font-size:1rem">⬡</div>
+            <div>
+              <div class="conn-name">Conversion Tracking</div>
+              <div class="conn-sub">Newsletter Signup — Google Ads</div>
+            </div>
+            <span id="conv-status-badge" class="conn-status empty">Not Set Up</span>
+          </div>
+          <div class="conn-body">
+            <p style="font-size:0.82rem;color:#555;margin:0 0 0.75rem">Tracks newsletter signups as conversions so Google can optimize your ad bidding automatically. Run once — applies to all campaigns.</p>
+            <div id="conv-result" style="display:none;margin-bottom:0.75rem">
+              <div class="conn-detail"><span class="conn-label">Conversion Action</span><span id="conv-name">—</span></div>
+              <div class="conn-detail"><span class="conn-label">Conversion Label</span><span id="conv-label" style="font-family:monospace;font-size:0.8rem">—</span></div>
+              <div class="conn-detail"><span class="conn-label">Status</span><span id="conv-action-status" style="color:#15803d">—</span></div>
+            </div>
+            <div id="conv-status" class="status-bar"></div>
+            <button id="btn-setup-conv" class="btn btn-primary" style="width:100%;margin-top:0.5rem">Set Up Conversion Tracking</button>
+          </div>
+        </div>
+
         <div class="conn-card">
           <div class="conn-card-head" style="background:#1877f2">
             <div class="conn-logo">f</div>
@@ -2074,6 +2096,36 @@ document.getElementById('btn-optimize-google').addEventListener('click', async (
       `✓ Optimized: ${hCount} headline${hCount!==1?'s':''}, ${dCount} description${dCount!==1?'s':''}, ${kCount} keyword${kCount!==1?'s':''} from past 90-day performance data.`);
   } catch (ex) { showStatus('optimize-status','error',`Error: ${esc(ex.message)}`); }
   finally { btn.disabled = false; }
+});
+
+/* ── Conversion Tracking Setup ── */
+document.getElementById('btn-setup-conv').addEventListener('click', async () => {
+  const btn = document.getElementById('btn-setup-conv');
+  btn.disabled = true;
+  showStatus('conv-status', 'loading', 'Setting up conversion tracking…');
+  try {
+    const res  = await fetch(`${API}/setup-conversion`, { headers: authHeaders() });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed');
+
+    document.getElementById('conv-result').style.display = '';
+    document.getElementById('conv-name').textContent   = data.name || 'Newsletter Signup';
+    document.getElementById('conv-label').textContent  = data.label || '(label not available — check Google Ads)';
+    document.getElementById('conv-action-status').textContent = data.status === 'created' ? '✓ Created now' : '✓ Already exists';
+    document.getElementById('conv-status-badge').textContent  = '✓ Active';
+    document.getElementById('conv-status-badge').className    = 'conn-status connected';
+
+    if (data.label) {
+      showStatus('conv-status', 'success',
+        `✓ ${data.status === 'created' ? 'Created' : 'Found existing'} conversion action. Label: ${data.label} — copy it to index.html GOOGLE_CONV_LBL.`);
+    } else {
+      showStatus('conv-status', 'success',
+        `✓ Conversion action ${data.status === 'created' ? 'created' : 'found'}. Label not yet available — check Google Ads → Tools → Conversions in a few minutes.`);
+    }
+  } catch (ex) {
+    showStatus('conv-status', 'error', `Error: ${esc(ex.message)}`);
+    btn.disabled = false;
+  }
 });
 
 /* ── Generate Google Brief ── */
