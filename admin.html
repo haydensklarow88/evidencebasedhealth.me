@@ -271,6 +271,19 @@
   .conn-steps { padding-left:1.2rem;font-size:0.82rem;color:var(--ink-mid);line-height:1.7; }
   .conn-steps code { background:var(--paper-warm);padding:0.1rem 0.35rem;border-radius:3px;font-size:0.8em; }
 
+  /* ── Ad Groups builder ── */
+  .ag-card { border:1px solid var(--border); border-radius:6px; margin-bottom:0.6rem; overflow:hidden; }
+  .ag-card.ag-disabled .ag-body { opacity:0.5; pointer-events:none; }
+  .ag-head { display:flex; align-items:center; gap:0.6rem; padding:0.55rem 0.75rem; background:var(--paper); cursor:pointer; user-select:none; }
+  .ag-head-label { font-size:0.84rem; font-weight:600; flex:1; color:var(--ink); }
+  .ag-body { padding:0.7rem; border-top:1px solid var(--border); }
+  .ag-body.ag-hidden { display:none; }
+  .ag-chevron { font-size:0.72rem; color:var(--ink-faint); }
+  .ag-char-count { font-size:0.7rem; color:var(--ink-faint); white-space:nowrap; }
+  .ag-char-count.over { color:#dc2626; font-weight:600; }
+  .ag-hl-row { display:flex; align-items:center; gap:0.4rem; margin-bottom:0.22rem; }
+  .ag-hl-row input { flex:1; font-size:0.79rem !important; padding:0.25rem 0.45rem !important; }
+
   /* ── Site Analytics (GA4) ── */
   .ga4-section { margin-top:1.5rem; background:var(--paper-card); border:1px solid var(--border); border-radius:10px; overflow:hidden; }
   .ga4-section-header { display:flex; align-items:center; justify-content:space-between; padding:0.85rem 1rem; border-bottom:1px solid var(--border); font-weight:600; font-size:0.92rem; }
@@ -638,6 +651,17 @@
             <div class="form-row"><label for="g-budget">Daily Budget ($)</label><input type="number" id="g-budget" placeholder="15" min="1"></div>
           </div>
           <div class="form-row"><label for="g-final-url">Final URL</label><input type="url" id="g-final-url" value="https://evidencebasedhealth.me"></div>
+          <div class="form-row">
+            <label for="g-bidding">Bidding Strategy <span class="hint">start with Clicks — switch to Conversions after 20–30 signups</span></label>
+            <select id="g-bidding">
+              <option value="clicks" selected>Maximize Clicks (recommended for new campaigns)</option>
+              <option value="conversions">Maximize Conversions (after 20–30 signups)</option>
+            </select>
+          </div>
+          <div class="form-row" style="flex-direction:row;align-items:center;gap:0.6rem;margin-top:0.1rem">
+            <input type="checkbox" id="g-search-partners" style="width:auto;margin:0;cursor:pointer">
+            <label for="g-search-partners" style="margin:0;font-weight:400;font-size:0.82rem;cursor:pointer">Include Search Partners (AOL, Ask.com) <span class="hint" style="display:inline">— off by default for a clean test</span></label>
+          </div>
         </div>
         <div class="form-card">
           <div class="card-title">Location Targeting</div>
@@ -704,13 +728,9 @@
           </div>
         </div>
         <div class="form-card">
-          <div class="card-title">Keywords <span style="font-weight:300;letter-spacing:0;text-transform:none;font-size:0.77rem;color:var(--ink-faint)"> — one per line</span></div>
-          <div class="form-row"><textarea id="g-keywords" rows="7" placeholder="evidence based health newsletter&#10;cancer screening recommendations&#10;colorectal cancer screening age&#10;when to get a colonoscopy&#10;preventive health tips&#10;hormone health newsletter&#10;metabolic health resources"></textarea></div>
-        </div>
-        <div class="form-card">
-          <div class="card-title">Headlines <span style="font-weight:300;letter-spacing:0;text-transform:none;font-size:0.77rem;color:var(--ink-faint)"> — 3–15, max 30 chars each</span></div>
-          <div id="g-headlines-wrap"></div>
-          <button type="button" class="btn-sm" id="btn-add-h" style="margin-top:0.5rem;">+ Add Headline</button>
+          <div class="card-title">Ad Groups <span style="font-weight:300;letter-spacing:0;text-transform:none;font-size:0.77rem;color:var(--ink-faint)"> — enable/customise themes; each needs 3+ headlines</span></div>
+          <p style="font-size:0.8rem;color:var(--ink-faint);margin:0 0 0.75rem">Toggle each theme on/off. Click ▾ to edit keywords and headlines per group. All enabled groups become separate ad groups in one campaign.</p>
+          <div id="adgroups-wrap"></div>
         </div>
         <div class="form-card">
           <div class="card-title">Descriptions <span style="font-weight:300;letter-spacing:0;text-transform:none;font-size:0.77rem;color:var(--ink-faint)"> — 2–4, max 90 chars each</span></div>
@@ -729,17 +749,9 @@
             <div style="font-size:0.88rem;color:var(--ink-mid);line-height:1.8">
               <div>Name: <strong id="go-name"></strong></div>
               <div>Campaign ID: <code id="go-cid" style="background:var(--paper);padding:0.1rem 0.4rem;border-radius:3px;font-size:0.85em"></code></div>
-              <div>Ad Group ID: <code id="go-agid" style="background:var(--paper);padding:0.1rem 0.4rem;border-radius:3px;font-size:0.85em"></code></div>
               <div>Account: <span id="go-account"></span></div>
             </div>
-            <div id="go-keywords-wrap" style="display:none;margin-top:0.9rem">
-              <div style="font-size:0.8rem;font-weight:600;color:var(--ink-mid);margin-bottom:0.4rem">Keywords added:</div>
-              <div id="go-keywords" style="display:flex;flex-wrap:wrap;gap:0.35rem"></div>
-            </div>
-            <div id="go-headlines-wrap" style="display:none;margin-top:0.75rem">
-              <div style="font-size:0.8rem;font-weight:600;color:var(--ink-mid);margin-bottom:0.4rem">RSA headlines added:</div>
-              <ol id="go-headlines" style="margin:0;padding-left:1.2rem;font-size:0.83rem;color:var(--ink-mid);line-height:1.7"></ol>
-            </div>
+            <div id="go-adgroups" style="margin-top:0.85rem"></div>
             <a id="go-review-link" href="#" target="_blank" rel="noopener" class="open-google-btn" style="display:inline-flex;margin-top:1rem">Review in Google Ads ↗</a>
           </div>
           <p style="font-size:0.77rem;color:var(--ink-faint);margin-top:0.5rem">Campaign and ad are created in <strong>Paused</strong> status — enable them after reviewing in Google Ads Manager.</p>
@@ -1776,13 +1788,6 @@ function updateGooglePanel() {
   if (!urlField.value || urlField.value === 'https://evidencebasedhealth.me') {
     urlField.value = siteUrl;
   }
-
-  const kwField = document.getElementById('g-keywords');
-  if (!kwField.value) {
-    kwField.placeholder = c
-      ? `${name.toLowerCase()} services\n${name.toLowerCase()} reviews\nhow to use ${name.toLowerCase()}`
-      : 'evidence based health newsletter\ncancer screening recommendations\ncolorectal cancer screening age\nwhen to get a colonoscopy\npreventive health tips\nhormone health newsletter\nmetabolic health resources';
-  }
 }
 
 /* ── Drawer ── */
@@ -2049,12 +2054,96 @@ function addInputRow(containerId, placeholder, maxLen) {
   inp.addEventListener('input', () => { const n = inp.value.length; cnt.textContent = `${n} / ${maxLen}`; cnt.className = `char-count${n > maxLen ? ' warn' : ''}`; });
   container.appendChild(row); return inp;
 }
-const defaultHeadlines = ['Free Evidence-Based Brief','Evidence-Backed Health Tips','Know When to Get Screened','No Hype. Just the Evidence.','Weekly Health Brief — Free'];
-const defaultDescs     = ['Plain-language summaries of research on hormones, strength, and metabolic health.','From an acute care surgery PA. Evidence-based, no agenda. Free weekly newsletter.'];
-defaultHeadlines.forEach(h => { const i = addInputRow('g-headlines-wrap','Headline N (30 chars max)',30); i.value=h; i.dispatchEvent(new Event('input')); });
+const defaultDescs = ['Plain-language summaries of research on hormones, strength, and metabolic health.','From an acute care surgery PA. Evidence-based, no agenda. Free weekly newsletter.'];
 defaultDescs.forEach(d => { const i = addInputRow('g-desc-wrap','Description N (90 chars max)',90); i.value=d; i.dispatchEvent(new Event('input')); });
-document.getElementById('btn-add-h').addEventListener('click', () => { if (document.querySelectorAll('#g-headlines-wrap .form-row').length < 15) addInputRow('g-headlines-wrap','Headline N (30 chars max)',30); });
 document.getElementById('btn-add-d').addEventListener('click', () => { if (document.querySelectorAll('#g-desc-wrap .form-row').length < 4) addInputRow('g-desc-wrap','Description N (90 chars max)',90); });
+
+/* ── EBH Ad Group templates + helpers ── */
+const EBH_AD_GROUPS = [
+  { name: 'GLP-1 & Metabolic Health',
+    keywords: ['how does semaglutide work','glp-1 medication explained','semaglutide weight loss research','evidence based metabolic health','glp-1 cardiovascular benefits','ozempic mechanism explained'],
+    headlines: ['GLP-1 Explained Simply','Evidence-Based GLP-1 Guide','Science Behind Semaglutide','Free Newsletter — No Hype','PA-Written Health Updates'] },
+  { name: 'Peptide Therapy Basics',
+    keywords: ['what are peptides for health','peptide therapy explained','peptide health education','BPC-157 what is it','healing peptides research'],
+    headlines: ['Peptide Therapy Explained','What Are Health Peptides?','Science-Backed Peptide Info','Free Health Newsletter','No-Hype Health Education'] },
+  { name: 'TRT & Hormone Health',
+    keywords: ['testosterone replacement explained','low testosterone symptoms guide','TRT education newsletter','hormone health basics','testosterone research facts'],
+    headlines: ['TRT Explained by a PA','Low Testosterone Guide','Hormone Health Education','Evidence-Based TRT Info',"Men's Health Newsletter"] },
+  { name: 'Cancer Screening & Prevention',
+    keywords: ['when to get a colonoscopy','cancer screening age guide','colorectal cancer prevention','cancer screening newsletter','preventive health education'],
+    headlines: ['When to Get Screened','Cancer Screening Guide','Evidence-Based Prevention','Colonoscopy Age Facts','Free Prevention Newsletter'] },
+];
+
+function initAdGroups() {
+  const wrap = document.getElementById('adgroups-wrap');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+  EBH_AD_GROUPS.forEach((grp, idx) => {
+    const card = document.createElement('div');
+    card.className = 'ag-card'; card.dataset.idx = idx;
+    card.innerHTML = `
+      <div class="ag-head" onclick="toggleAgBody(${idx})">
+        <input type="checkbox" class="ag-toggle" id="ag-toggle-${idx}" checked onclick="event.stopPropagation();toggleAgEnabled(${idx})">
+        <label class="ag-head-label" for="ag-toggle-${idx}" onclick="event.stopPropagation()">${esc(grp.name)}</label>
+        <span class="ag-chevron" id="ag-chev-${idx}">&#9662;</span>
+      </div>
+      <div class="ag-body" id="ag-body-${idx}">
+        <div class="form-row" style="margin-bottom:0.45rem">
+          <label style="font-size:0.77rem;margin-bottom:0.2rem">Group Name</label>
+          <input type="text" id="ag-name-${idx}" value="${esc(grp.name)}" style="font-size:0.81rem;padding:0.3rem 0.5rem">
+        </div>
+        <div class="form-row" style="margin-bottom:0.45rem">
+          <label style="font-size:0.77rem;margin-bottom:0.2rem">Keywords <span class="hint">one per line — education terms, not drug brand names</span></label>
+          <textarea id="ag-kw-${idx}" rows="5" style="font-size:0.79rem">${grp.keywords.join('\n')}</textarea>
+        </div>
+        <div class="form-row">
+          <label style="font-size:0.77rem;margin-bottom:0.2rem">Headlines <span class="hint">3–5, max 30 chars each</span></label>
+          <div id="ag-hl-${idx}">${grp.headlines.map(h => `<div class="ag-hl-row"><input type="text" class="ag-headline" maxlength="30" value="${esc(h)}" oninput="updateAgCharCount(this)"><span class="ag-char-count">${h.length}/30</span></div>`).join('')}</div>
+          <button type="button" class="btn-sm" onclick="addAgHeadline(${idx})" style="margin-top:0.3rem;font-size:0.75rem;padding:0.25rem 0.65rem">+ Add Headline</button>
+        </div>
+      </div>`;
+    wrap.appendChild(card);
+  });
+}
+function toggleAgBody(idx) {
+  const body = document.getElementById(`ag-body-${idx}`);
+  const chev = document.getElementById(`ag-chev-${idx}`);
+  if (!body) return;
+  const hidden = body.classList.toggle('ag-hidden');
+  if (chev) chev.innerHTML = hidden ? '&#9656;' : '&#9662;';
+}
+function toggleAgEnabled(idx) {
+  const card = document.querySelector(`.ag-card[data-idx="${idx}"]`);
+  const tog  = document.getElementById(`ag-toggle-${idx}`);
+  if (card && tog) card.classList.toggle('ag-disabled', !tog.checked);
+}
+function addAgHeadline(idx) {
+  const hlWrap = document.getElementById(`ag-hl-${idx}`);
+  if (!hlWrap || hlWrap.querySelectorAll('.ag-headline').length >= 15) return;
+  const row = document.createElement('div'); row.className = 'ag-hl-row';
+  row.innerHTML = `<input type="text" class="ag-headline" maxlength="30" placeholder="Headline (max 30 chars)" oninput="updateAgCharCount(this)"><span class="ag-char-count">0/30</span>`;
+  hlWrap.appendChild(row);
+}
+function updateAgCharCount(input) {
+  const span = input.nextElementSibling;
+  if (!span) return;
+  span.textContent = `${input.value.length}/30`;
+  span.className = `ag-char-count${input.value.length > 30 ? ' over' : ''}`;
+}
+function collectAdGroups() {
+  const groups = [];
+  document.querySelectorAll('.ag-card').forEach(card => {
+    const idx = card.dataset.idx;
+    const tog = document.getElementById(`ag-toggle-${idx}`);
+    if (!tog?.checked) return;
+    const name     = (document.getElementById(`ag-name-${idx}`)?.value || '').trim() || `Ad Group ${Number(idx)+1}`;
+    const keywords = (document.getElementById(`ag-kw-${idx}`)?.value || '').split('\n').map(s=>s.trim()).filter(Boolean);
+    const headlines = Array.from(document.querySelectorAll(`#ag-hl-${idx} .ag-headline`)).map(i=>i.value.trim()).filter(Boolean);
+    if (headlines.length >= 3) groups.push({ name, keywords, headlines });
+  });
+  return groups;
+}
+initAdGroups();
 
 /* ── Optimize with Past Data ── */
 document.getElementById('btn-optimize-google').addEventListener('click', async () => {
@@ -2069,25 +2158,37 @@ document.getElementById('btn-optimize-google').addEventListener('click', async (
     if (!res.ok) throw new Error(data.error || 'Failed');
     if (!data.hasData) { showStatus('optimize-status','error','No performance data yet — run some campaigns first, then optimize.'); return; }
 
-    // Replace headlines with top performers (keep within 30 chars)
-    const validH = (data.topHeadlines || []).filter(h => h.length <= 30);
-    if (validH.length >= 3) {
-      document.getElementById('g-headlines-wrap').innerHTML = '';
-      validH.forEach(h => { const i = addInputRow('g-headlines-wrap','Headline N (30 chars max)',30); i.value=h; i.dispatchEvent(new Event('input')); });
-    }
-
-    // Replace descriptions with top performers (keep within 90 chars)
+    // Replace descriptions with top performers (90 chars max)
     const validD = (data.topDescriptions || []).filter(d => d.length <= 90);
     if (validD.length >= 2) {
       document.getElementById('g-desc-wrap').innerHTML = '';
       validD.forEach(d => { const i = addInputRow('g-desc-wrap','Description N (90 chars max)',90); i.value=d; i.dispatchEvent(new Event('input')); });
     }
 
-    // Replace keywords: prefer top converting search terms, fallback to top keywords
-    const kwSrc = data.searchTerms?.length
+    // Fill first enabled ad group with performance headlines + keywords
+    const validH = (data.topHeadlines || []).filter(h => h.length <= 30);
+    const kwSrc  = data.searchTerms?.length
       ? data.searchTerms.slice(0,20).map(s => s.term)
       : (data.topKeywords || []);
-    if (kwSrc.length) document.getElementById('g-keywords').value = kwSrc.join('\n');
+    const firstCard = document.querySelector('.ag-card:not(.ag-disabled)');
+    if (firstCard) {
+      const idx = firstCard.dataset.idx;
+      if (validH.length >= 3) {
+        const hlWrap = document.getElementById(`ag-hl-${idx}`);
+        if (hlWrap) {
+          hlWrap.innerHTML = '';
+          validH.forEach(h => {
+            const row = document.createElement('div'); row.className = 'ag-hl-row';
+            row.innerHTML = `<input type="text" class="ag-headline" maxlength="30" value="${esc(h)}" oninput="updateAgCharCount(this)"><span class="ag-char-count">${h.length}/30</span>`;
+            hlWrap.appendChild(row);
+          });
+        }
+      }
+      if (kwSrc.length) {
+        const kwArea = document.getElementById(`ag-kw-${idx}`);
+        if (kwArea) kwArea.value = kwSrc.join('\n');
+      }
+    }
 
     const hCount = validH.length || 0;
     const kCount = kwSrc.length || 0;
@@ -2128,26 +2229,33 @@ document.getElementById('btn-setup-conv').addEventListener('click', async () => 
   }
 });
 
-/* ── Generate Google Brief ── */
+/* ── Create Google Campaign (multi-ad-group) ── */
 document.getElementById('btn-gen-google').addEventListener('click', async () => {
-  const btn          = document.getElementById('btn-gen-google');
-  const campaignName = document.getElementById('g-name').value.trim();
-  const dailyBudget  = parseFloat(document.getElementById('g-budget').value);
-  const finalUrl     = document.getElementById('g-final-url').value.trim();
-  const clientId     = document.getElementById('google-client-sel').value || undefined;
-  const keywords     = document.getElementById('g-keywords').value.split('\n').map(s=>s.trim()).filter(Boolean);
-  const headlines    = Array.from(document.querySelectorAll('#g-headlines-wrap input')).map(i=>i.value.trim()).filter(Boolean);
-  const descriptions = Array.from(document.querySelectorAll('#g-desc-wrap input')).map(i=>i.value.trim()).filter(Boolean);
-  if (!campaignName || !dailyBudget || headlines.length < 3 || descriptions.length < 2) {
-    showStatus('google-status','error','Enter campaign name, budget, at least 3 headlines, and 2 descriptions.'); return;
+  const btn             = document.getElementById('btn-gen-google');
+  const campaignName    = document.getElementById('g-name').value.trim();
+  const dailyBudget     = parseFloat(document.getElementById('g-budget').value);
+  const finalUrl        = document.getElementById('g-final-url').value.trim();
+  const clientId        = document.getElementById('google-client-sel').value || undefined;
+  const biddingStrategy = document.getElementById('g-bidding').value;
+  const searchPartners  = document.getElementById('g-search-partners').checked;
+  const adGroups        = collectAdGroups();
+  const descriptions    = Array.from(document.querySelectorAll('#g-desc-wrap input')).map(i=>i.value.trim()).filter(Boolean);
+
+  if (!campaignName || !dailyBudget) {
+    showStatus('google-status','error','Enter a campaign name and daily budget.'); return;
   }
-  if (keywords.length < 1) {
-    showStatus('google-status','error','Enter at least 1 keyword (one per line). Use "Optimize from Insights" to auto-fill.'); return;
+  if (descriptions.length < 2) {
+    showStatus('google-status','error','Add at least 2 shared descriptions.'); return;
   }
-  const longH = headlines.filter(h => h.length > 30);
+  if (adGroups.length === 0) {
+    showStatus('google-status','error','Enable at least one ad group and ensure it has 3+ headlines.'); return;
+  }
   const longD = descriptions.filter(d => d.length > 90);
-  if (longH.length) { showStatus('google-status','error',`Headline too long (max 30 chars): "${esc(longH[0])}"`); return; }
   if (longD.length) { showStatus('google-status','error',`Description too long (max 90 chars): "${esc(longD[0])}"`); return; }
+  for (const g of adGroups) {
+    const bad = g.headlines.filter(h => h.length > 30);
+    if (bad.length) { showStatus('google-status','error',`Headline too long in "${esc(g.name)}" (max 30 chars): "${esc(bad[0])}"`); return; }
+  }
 
   // Build location targeting payload
   const locType = document.querySelector('.loc-tab.active')?.dataset.type || 'national';
@@ -2166,42 +2274,39 @@ document.getElementById('btn-gen-google').addEventListener('click', async () => 
     try {
       const geoRes  = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(addr)}&format=json&limit=1`, { headers: { 'Accept-Language': 'en' } });
       const geoData = await geoRes.json();
-      if (!geoData.length) { showStatus('google-status','error','Could not find that address. Try a more specific address.'); btn.disabled = false; return; }
-      locationTargeting.lat     = parseFloat(geoData[0].lat);
-      locationTargeting.lng     = parseFloat(geoData[0].lon);
+      if (!geoData.length) { showStatus('google-status','error','Could not find that address.'); btn.disabled = false; return; }
+      locationTargeting.lat = parseFloat(geoData[0].lat);
+      locationTargeting.lng = parseFloat(geoData[0].lon);
       locationTargeting.address = addr;
     } catch (ex) { showStatus('google-status','error',`Geocoding failed: ${esc(ex.message)}`); btn.disabled = false; return; }
   }
 
-  btn.disabled = true; showStatus('google-status','loading','Creating campaign in Google Ads… (this takes ~10 seconds)');
+  btn.disabled = true;
+  showStatus('google-status','loading',`Creating campaign with ${adGroups.length} ad group${adGroups.length!==1?'s':''}… (~${adGroups.length * 8}s)`);
   try {
-    const res  = await fetch(`${API}/create-google-campaign`, { method:'POST', headers:authHeaders(), body:JSON.stringify({ campaignName, dailyBudget, keywords, headlines, descriptions, finalUrl, clientId, locationTargeting }) });
+    const res  = await fetch(`${API}/create-google-campaign`, {
+      method:'POST', headers:authHeaders(),
+      body: JSON.stringify({ campaignName, dailyBudget, adGroups, descriptions, finalUrl, clientId, locationTargeting, biddingStrategy, searchPartners }),
+    });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Failed');
     document.getElementById('google-status').className = 'status-bar';
     document.getElementById('go-name').textContent    = data.campaignName;
     document.getElementById('go-cid').textContent     = data.campaignId;
-    document.getElementById('go-agid').textContent    = data.adGroupId;
     document.getElementById('go-account').textContent = data.customer_id;
-    // Keywords
-    const kwWrap = document.getElementById('go-keywords-wrap');
-    const kwDiv  = document.getElementById('go-keywords');
-    if (data.keywords?.length) {
-      kwDiv.innerHTML = data.keywords.map(k => `<span class="kw-pill">${esc(k)}</span>`).join('');
-      kwWrap.style.display = '';
-    } else { kwWrap.style.display = 'none'; }
-    // Headlines
-    const hlWrap = document.getElementById('go-headlines-wrap');
-    const hlList = document.getElementById('go-headlines');
-    if (data.headlines?.length) {
-      hlList.innerHTML = data.headlines.slice(0,5).map(h => `<li>${esc(h)}</li>`).join('');
-      hlWrap.style.display = '';
-    } else { hlWrap.style.display = 'none'; }
+    const agWrap = document.getElementById('go-adgroups');
+    if (data.adGroups?.length) {
+      agWrap.innerHTML = data.adGroups.map(g =>
+        `<div style="background:var(--paper);border:1px solid var(--border);border-radius:5px;padding:0.5rem 0.75rem;margin-bottom:0.4rem;font-size:0.82rem">
+          <div style="font-weight:600;margin-bottom:0.2rem">${esc(g.name)}</div>
+          <div style="color:var(--ink-mid)">ID: <code style="background:var(--paper-warm);padding:0.1rem 0.3rem;border-radius:3px">${esc(g.id)}</code> · ${g.keywords?.length||0} keywords · ${g.headlines?.length||0} headlines</div>
+        </div>`).join('');
+    }
     const link = document.getElementById('go-review-link');
     link.href = data.review_url;
     document.getElementById('google-output').classList.add('visible');
     document.getElementById('google-output').scrollIntoView({ behavior:'smooth', block:'start' });
-    showStatus('google-status','success',`✓ Campaign <strong>${esc(data.campaignName)}</strong> created (paused). <a href="${esc(data.review_url)}" target="_blank" rel="noopener">Open in Google Ads ↗</a>`);
+    showStatus('google-status','success',`✓ Campaign <strong>${esc(data.campaignName)}</strong> created (paused) with ${data.adGroups?.length||1} ad group${(data.adGroups?.length||1)!==1?'s':''}. <a href="${esc(data.review_url)}" target="_blank" rel="noopener">Open in Google Ads ↗</a>`);
   } catch (ex) { showStatus('google-status','error',`Error: ${esc(ex.message)}`);
   } finally { btn.disabled = false; }
 });
@@ -2553,9 +2658,21 @@ function applyAIVariant(idx) {
   if (!variant) return;
   if (plat === 'Google') {
     showTab('create'); showPlatTab('google');
-    document.getElementById('g-headlines-wrap').innerHTML = '';
-    const hs = [variant.headline, variant.headline2, variant.headline3].filter(Boolean);
-    hs.forEach(h => { const i = addInputRow('g-headlines-wrap','Headline N (30 chars max)',30); i.value = h.slice(0,30); i.dispatchEvent(new Event('input')); });
+    // Fill first enabled ad group with AI headlines
+    const firstCard = document.querySelector('.ag-card:not(.ag-disabled)');
+    if (firstCard) {
+      const idx = firstCard.dataset.idx;
+      const hlWrap = document.getElementById(`ag-hl-${idx}`);
+      if (hlWrap) {
+        hlWrap.innerHTML = '';
+        const hs = [variant.headline, variant.headline2, variant.headline3].filter(Boolean).map(h => h.slice(0, 30));
+        hs.forEach(h => {
+          const row = document.createElement('div'); row.className = 'ag-hl-row';
+          row.innerHTML = `<input type="text" class="ag-headline" maxlength="30" value="${esc(h)}" oninput="updateAgCharCount(this)"><span class="ag-char-count">${h.length}/30</span>`;
+          hlWrap.appendChild(row);
+        });
+      }
+    }
     if (variant.primaryText) {
       document.getElementById('g-desc-wrap').innerHTML = '';
       const i = addInputRow('g-desc-wrap','Description N (90 chars max)',90); i.value = (variant.primaryText || variant.description || '').slice(0,90); i.dispatchEvent(new Event('input'));
