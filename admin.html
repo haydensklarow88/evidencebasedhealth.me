@@ -763,6 +763,22 @@
           <p style="font-size:0.77rem;color:var(--ink-faint);margin-top:0.5rem">Campaign and ad are created in <strong>Paused</strong> status — enable them after reviewing in Google Ads Manager.</p>
         </div>
 
+        <!-- Policy Intelligence -->
+        <div class="form-card" style="margin-top:1.25rem">
+          <div class="card-title" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between" onclick="togglePolicyIntel()">
+            <span>🧠 Policy Intelligence <span id="pi-badge" style="display:none;font-size:0.72rem;font-weight:600;background:var(--accent);color:#fff;border-radius:20px;padding:0.1rem 0.55rem;vertical-align:middle;margin-left:0.4rem"></span></span>
+            <span id="pi-chev" style="font-size:0.85rem;color:var(--ink-faint)">▾</span>
+          </div>
+          <div id="pi-body" style="display:none;margin-top:0.75rem">
+            <p style="font-size:0.79rem;color:var(--ink-mid);margin:0 0 0.75rem">Terms learned from Google Ads policy rejections. <strong>Hard-blocked</strong> ones are pre-filtered before campaign creation. Remove any that are false positives.</p>
+            <div style="display:flex;gap:0.5rem;align-items:center;margin-bottom:0.75rem">
+              <button type="button" class="btn-sm" onclick="loadPolicyViolations()">↺ Refresh</button>
+              <span id="pi-count" style="font-size:0.79rem;color:var(--ink-mid)"></span>
+            </div>
+            <div id="pi-list"></div>
+          </div>
+        </div>
+
         <!-- Manage Campaigns -->
         <div class="form-card" style="margin-top:1.25rem">
           <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;padding-bottom:0.6rem;border-bottom:1px solid var(--border)">
@@ -1624,6 +1640,7 @@ function showPlatTab(plat) {
   document.querySelectorAll('.plat-tab').forEach(t => t.classList.toggle('active', t.dataset.plat === plat));
   document.getElementById('sub-meta').style.display   = plat === 'meta'   ? '' : 'none';
   document.getElementById('sub-google').style.display = plat === 'google' ? '' : 'none';
+  if (plat === 'google' && document.getElementById('pi-body').style.display !== 'none') loadPolicyViolations();
 }
 document.querySelectorAll('.plat-tab:not(.disabled)').forEach(t => {
   t.addEventListener('click', () => showPlatTab(t.dataset.plat));
@@ -2346,6 +2363,102 @@ document.getElementById('loc-type-tabs').addEventListener('click', e => {
   document.getElementById('loc-zip-wrap').style.display    = type === 'zip'    ? '' : 'none';
   document.getElementById('loc-radius-wrap').style.display = type === 'radius' ? '' : 'none';
 });
+
+/* ── Policy Intelligence ── */
+function togglePolicyIntel() {
+  const body = document.getElementById('pi-body');
+  const chev = document.getElementById('pi-chev');
+  const open = body.style.display === 'none';
+  body.style.display = open ? '' : 'none';
+  chev.textContent   = open ? '▴' : '▾';
+  if (open) loadPolicyViolations();
+}
+
+async function loadPolicyViolations() {
+  const list  = document.getElementById('pi-list');
+  const count = document.getElementById('pi-count');
+  list.innerHTML = '<p style="font-size:0.82rem;color:var(--ink-faint)">Loading…</p>';
+  try {
+    const res  = await fetch(`${API}/policy-violations`, { headers: authHeaders() });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || res.status);
+    renderPolicyViolations(data);
+  } catch (e) {
+    list.innerHTML = `<p style="font-size:0.82rem;color:var(--danger)">${e.message}</p>`;
+    count.textContent = '';
+  }
+}
+
+function renderPolicyViolations(violations) {
+  const list  = document.getElementById('pi-list');
+  const badge = document.getElementById('pi-badge');
+  const count = document.getElementById('pi-count');
+  if (!violations.length) {
+    list.innerHTML = '<p style="font-size:0.82rem;color:var(--ink-faint);margin:0">No violations logged yet. Run a campaign to start learning.</p>';
+    count.textContent = '';
+    badge.style.display = 'none';
+    return;
+  }
+  const hard     = violations.filter(v => !v.isExemptible || !v.wasExempted);
+  const exempted = violations.filter(v =>  v.isExemptible &&  v.wasExempted);
+  badge.textContent   = violations.length;
+  badge.style.display = '';
+  count.textContent   = `${hard.length} hard-blocked · ${exempted.length} auto-exempted`;
+
+  const groups = {};
+  for (const v of violations) {
+    (groups[v.type] = groups[v.type] || []).push(v);
+  }
+  const typeLabels = { keyword:'Keywords', headline:'Headlines / Ads', description:'Descriptions', unknown:'Other' };
+  let html = '';
+  for (const [type, items] of Object.entries(groups)) {
+    html += `<div style="margin-bottom:1rem">
+      <div style="font-size:0.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-mid);margin-bottom:0.35rem">${typeLabels[type] || type}</div>
+      <table style="width:100%;border-collapse:collapse;font-size:0.8rem">
+        <thead><tr style="border-bottom:1px solid var(--border);color:var(--ink-mid)">
+          <th style="text-align:left;padding:0.3rem 0.4rem;font-weight:600">Term</th>
+          <th style="text-align:left;padding:0.3rem 0.4rem;font-weight:600">Policy</th>
+          <th style="text-align:center;padding:0.3rem 0.4rem;font-weight:600">Status</th>
+          <th style="padding:0.3rem 0.4rem"></th>
+        </tr></thead>
+        <tbody>`;
+    for (const v of items) {
+      const isHard = !v.isExemptible || !v.wasExempted;
+      const statusHtml = isHard
+        ? `<span style="background:#fde8e8;color:#c0392b;border-radius:12px;padding:0.1rem 0.45rem;font-size:0.72rem;white-space:nowrap">⛔ Hard-blocked</span>`
+        : `<span style="background:#e8f5e9;color:#1b7a3e;border-radius:12px;padding:0.1rem 0.45rem;font-size:0.72rem;white-space:nowrap">✓ Auto-exempted</span>`;
+      html += `<tr style="border-bottom:1px solid var(--border)">
+        <td style="padding:0.35rem 0.4rem;word-break:break-all">${escHtml(v.text)}</td>
+        <td style="padding:0.35rem 0.4rem;color:var(--ink-mid)">${escHtml(v.policyName)}</td>
+        <td style="padding:0.35rem 0.4rem;text-align:center">${statusHtml}</td>
+        <td style="padding:0.35rem 0.4rem;text-align:right">
+          <button type="button" class="btn-sm" style="padding:0.15rem 0.5rem;font-size:0.72rem;border-color:var(--border);color:var(--danger)" onclick="deletePolicyViolation('${escHtml(v.violationId)}')">Remove</button>
+        </td>
+      </tr>`;
+    }
+    html += `</tbody></table></div>`;
+  }
+  list.innerHTML = html;
+}
+
+async function deletePolicyViolation(violationId) {
+  if (!confirm('Remove this violation from the learned list?')) return;
+  try {
+    const res = await fetch(`${API}/policy-violations`, {
+      method: 'DELETE',
+      headers: { ...authHeaders(), 'Content-Type': 'application/json' },
+      body: JSON.stringify({ violationId }),
+    });
+    if (!res.ok) throw new Error((await res.json()).error || res.status);
+    loadPolicyViolations();
+  } catch (e) {
+    alert('Remove failed: ' + e.message);
+  }
+}
+
+function escHtml(str) {
+  return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
 
 /* ── Manage Campaigns ── */
 async function loadCampaigns() {
