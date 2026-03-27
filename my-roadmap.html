@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Log in to view your saved prevention roadmap, upcoming screenings, and personalized reminders.">
+<title>My Roadmap &mdash; Evidence-Based Health</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<style>
+  /* ── auth forms ── */
+  .auth-wrap {
+    max-width: 460px;
+    margin: 4rem auto;
+    background: var(--paper-card);
+    border: 1px solid var(--paper-warm);
+    border-radius: 6px;
+    padding: 2.4rem;
+    box-shadow: 0 4px 24px rgba(15,26,20,0.06);
+  }
+  .auth-wrap h2 {
+    font-family: var(--serif);
+    font-size: 1.4rem;
+    margin-bottom: 0.4rem;
+    color: var(--ink);
+  }
+  .auth-sub {
+    font-size: 0.88rem;
+    color: var(--ink-light);
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+  }
+  .auth-tabs {
+    display: flex;
+    gap: 0;
+    border: 1px solid var(--paper-warm);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+  }
+  .auth-tab {
+    flex: 1;
+    padding: 0.5rem 0;
+    font-size: 0.82rem;
+    font-weight: 500;
+    background: var(--paper);
+    border: none;
+    cursor: pointer;
+    color: var(--ink-light);
+    transition: background 0.15s, color 0.15s;
+  }
+  .auth-tab.active {
+    background: var(--accent);
+    color: #fff;
+  }
+  .field { margin-bottom: 1rem; }
+  .field label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--ink-mid);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 0.35rem;
+  }
+  .field input {
+    width: 100%;
+    padding: 0.65rem 0.85rem;
+    border: 1px solid var(--paper-warm);
+    border-radius: 4px;
+    font-family: var(--sans);
+    font-size: 0.95rem;
+    color: var(--ink);
+    background: var(--paper);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .field input:focus { border-color: var(--accent); }
+  .field input.error { border-color: var(--red-soft); }
+  .field-hint { font-size: 0.75rem; color: var(--ink-faint); margin-top: 0.3rem; }
+  .auth-error {
+    background: #fdf0ee;
+    border: 1px solid #e8c4bc;
+    border-radius: 4px;
+    padding: 0.6rem 0.9rem;
+    font-size: 0.85rem;
+    color: var(--red-soft);
+    margin-bottom: 1rem;
+    display: none;
+  }
+  .auth-error.visible { display: block; }
+  .btn-primary {
+    display: block;
+    width: 100%;
+    padding: 0.8rem 1.5rem;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-family: var(--sans);
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    margin-top: 1.2rem;
+  }
+  .btn-primary:hover { opacity: 0.88; }
+  .btn-primary:disabled { opacity: 0.55; cursor: not-allowed; }
+  .auth-switch { font-size: 0.82rem; color: var(--ink-light); margin-top: 1rem; text-align: center; }
+  .auth-switch a { color: var(--accent); cursor: pointer; text-decoration: underline; }
+  .privacy-note {
+    font-size: 0.75rem;
+    color: var(--ink-faint);
+    border-top: 1px solid var(--paper-warm);
+    margin-top: 1.4rem;
+    padding-top: 1rem;
+    line-height: 1.6;
+  }
+  .privacy-note a { color: var(--accent); }
+
+  /* ── dashboard ── */
+  #dashboard { display: none; }
+  .dash-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.2rem;
+    border-bottom: 1px solid var(--paper-warm);
+  }
+  .dash-email {
+    font-size: 0.82rem;
+    color: var(--ink-light);
+  }
+  .dash-email strong { color: var(--ink); }
+  .btn-ghost {
+    padding: 0.4rem 0.9rem;
+    border: 1px solid var(--paper-warm);
+    border-radius: 4px;
+    background: transparent;
+    font-family: var(--sans);
+    font-size: 0.78rem;
+    color: var(--ink-light);
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-danger {
+    padding: 0.4rem 0.9rem;
+    border: 1px solid #e8c4bc;
+    border-radius: 4px;
+    background: transparent;
+    font-family: var(--sans);
+    font-size: 0.78rem;
+    color: var(--red-soft);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .btn-danger:hover { background: #fdf0ee; }
+  .section-heading {
+    font-family: var(--serif);
+    font-size: 1.25rem;
+    color: var(--ink);
+    margin-bottom: 0.25rem;
+  }
+  .section-sub {
+    font-size: 0.83rem;
+    color: var(--ink-light);
+    margin-bottom: 1.4rem;
+  }
+
+  /* ── timeline ── */
+  .timeline { list-style: none; margin-bottom: 3rem; }
+  .tl-item {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 0 1.2rem;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid var(--paper-warm);
+    align-items: start;
+  }
+  .tl-item:last-child { border-bottom: none; }
+  .tl-badge {
+    display: inline-block;
+    padding: 0.25rem 0.55rem;
+    border-radius: 3px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .badge-overdue { background: #fce8e4; color: #a8301b; }
+  .badge-due     { background: #fff3cd; color: #7a5c00; }
+  .badge-soon    { background: #e3f1e8; color: #1a5c3a; }
+  .badge-future  { background: var(--paper); color: var(--ink-faint); border: 1px solid var(--paper-warm); }
+  .tl-title { font-size: 0.9rem; font-weight: 500; color: var(--ink); line-height: 1.4; }
+  .tl-note  { font-size: 0.78rem; color: var(--ink-light); margin-top: 0.2rem; }
+  .tl-when  { font-size: 0.72rem; color: var(--ink-faint); margin-top: 0.2rem; }
+  .tl-empty { font-size: 0.88rem; color: var(--ink-faint); padding: 1.5rem 0; }
+
+  /* ── profile card ── */
+  .profile-card {
+    background: var(--paper-card);
+    border: 1px solid var(--paper-warm);
+    border-radius: 4px;
+    padding: 1.6rem 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 12px rgba(15,26,20,0.04);
+  }
+  .profile-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1rem 2rem;
+    margin-top: 1rem;
+  }
+  .pf-row label {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 0.2rem;
+  }
+  .pf-row span {
+    font-size: 0.88rem;
+    color: var(--ink-mid);
+  }
+  .actions-row {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-top: 0.75rem;
+  }
+
+  /* ── password change form ── */
+  .pw-change {
+    max-width: 420px;
+    margin-top: 1.5rem;
+    display: none;
+  }
+  .pw-change.visible { display: block; }
+
+  /* ── consent toggles ── */
+  .consent-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    font-size: 0.83rem;
+    color: var(--ink-mid);
+    cursor: pointer;
+    margin-bottom: 0.6rem;
+  }
+  .consent-row input[type="checkbox"] { margin-top: 0.15rem; accent-color: var(--accent); }
+
+  @media (max-width: 500px) {
+    .tl-item { grid-template-columns: 1fr; gap: 0.3rem 0; }
+    .dash-header { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html"><span>EBH</span> &mdash; Evidence-Based Health</a>
+  <div class="nav-links">
+    <a class="nav-link" href="index.html">Home</a>
+    <a class="nav-link" href="about.html">About</a>
+    <a class="nav-link" href="newsletter.html">Newsletter</a>
+    <a class="nav-link" href="prevention-roadmap.html">Prevention Roadmap</a>
+    <a class="nav-link active" href="my-roadmap.html" aria-current="page">My Roadmap</a>
+  </div>
+</nav>
+
+<div class="page-hero" style="padding:2.5rem 2rem 2rem">
+  <div class="page-hero-inner">
+    <p class="page-label">Personalized</p>
+    <h1>My Prevention <em>Roadmap</em></h1>
+    <p class="hero-sub" style="margin-bottom:0">Your saved screening timeline and upcoming reminders.</p>
+  </div>
+</div>
+
+<main>
+
+  <!-- ── AUTH SECTION (shown when not logged in) ─────────────────── -->
+  <div id="auth-section">
+    <div class="auth-wrap">
+      <h2 id="auth-heading">Log in to your roadmap</h2>
+      <p class="auth-sub" id="auth-subtext">Access your saved prevention profile and screening timeline.</p>
+
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-login" onclick="showTab('login')">Log in</button>
+        <button class="auth-tab" id="tab-register" onclick="showTab('register')">Create account</button>
+      </div>
+
+      <div id="auth-error" class="auth-error" role="alert"></div>
+
+      <!-- LOGIN FORM -->
+      <form id="login-form" onsubmit="handleLogin(event)">
+        <div class="field">
+          <label for="login-email">Email</label>
+          <input type="email" id="login-email" name="email" placeholder="your@email.com" required autocomplete="email">
+        </div>
+        <div class="field">
+          <label for="login-password">Password</label>
+          <input type="password" id="login-password" name="password" placeholder="••••••••" required autocomplete="current-password">
+        </div>
+        <button type="submit" class="btn-primary" id="login-btn">Log in &rarr;</button>
+        <p class="auth-switch">Don&rsquo;t have an account? <a onclick="showTab('register')">Create one</a> &mdash; it&rsquo;s free.</p>
+      </form>
+
+      <!-- REGISTER FORM -->
+      <form id="register-form" onsubmit="handleRegister(event)" hidden>
+        <div class="field">
+          <label for="reg-email">Email</label>
+          <input type="email" id="reg-email" name="email" placeholder="your@email.com" required autocomplete="email">
+        </div>
+        <div class="field">
+          <label for="reg-password">Password</label>
+          <input type="password" id="reg-password" name="password" placeholder="At least 8 characters" required autocomplete="new-password" minlength="8">
+        </div>
+        <div class="field">
+          <label for="reg-confirm">Confirm password</label>
+          <input type="password" id="reg-confirm" name="confirm" placeholder="Repeat password" required autocomplete="new-password" minlength="8">
+        </div>
+        <button type="submit" class="btn-primary" id="register-btn">Create account &rarr;</button>
+        <p class="auth-switch">Already have an account? <a onclick="showTab('login')">Log in</a></p>
+        <div class="privacy-note">
+          <strong>What we store:</strong> your email address, year of birth, and an anonymous health profile
+          (organ selections &amp; risk flags). No name. No full date of birth. No medical record.
+          Passwords are salted and hashed and never stored in plain text.
+          <a href="privacy.html">Privacy policy</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ── DASHBOARD (shown when logged in) ──────────────────────── -->
+  <div id="dashboard">
+
+    <div class="dash-header">
+      <div>
+        <div class="dash-email">Logged in as <strong id="dash-email-label"></strong></div>
+        <div style="font-size:0.75rem;color:var(--ink-faint);margin-top:0.2rem" id="dash-last-login"></div>
+      </div>
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
+        <a href="prevention-roadmap.html" class="btn-ghost">Update my profile &rarr;</a>
+        <button class="btn-ghost" onclick="showPwChange()">Change password</button>
+        <button class="btn-ghost" onclick="handleLogout()">Log out</button>
+      </div>
+    </div>
+
+    <!-- PASSWORD CHANGE -->
+    <div id="pw-change-wrap" style="display:none;margin-bottom:2rem">
+      <div class="profile-card">
+        <p class="section-heading" style="font-size:1rem;margin-bottom:1rem">Change password</p>
+        <div id="pw-error" class="auth-error"></div>
+        <div id="pw-success" style="display:none;font-size:0.85rem;color:var(--accent);margin-bottom:0.75rem">&#10003; Password updated.</div>
+        <form id="pw-form" onsubmit="handlePwChange(event)">
+          <div class="field"><label for="pw-current">Current password</label><input type="password" id="pw-current" required autocomplete="current-password"></div>
+          <div class="field"><label for="pw-new">New password</label><input type="password" id="pw-new" required autocomplete="new-password" minlength="8" placeholder="At least 8 characters"></div>
+          <div class="field"><label for="pw-confirm">Confirm new password</label><input type="password" id="pw-confirm" required autocomplete="new-password" minlength="8"></div>
+          <div style="display:flex;gap:0.75rem;margin-top:1rem">
+            <button type="submit" class="btn-primary" style="max-width:180px;margin-top:0" id="pw-btn">Save password</button>
+            <button type="button" class="btn-ghost" onclick="hidePwChange()">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- UPCOMING REMINDERS TIMELINE -->
+    <div class="profile-card">
+      <p class="section-heading">Upcoming reminders</p>
+      <p class="section-sub">Sorted by most urgent first &mdash; based on your age and saved profile.</p>
+      <ul class="timeline" id="timeline-list">
+        <li class="tl-empty">Loading&hellip;</li>
+      </ul>
+    </div>
+
+    <!-- PROFILE SUMMARY -->
+    <div class="profile-card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:0.5rem">
+        <p class="section-heading">Your profile</p>
+        <a href="prevention-roadmap.html" class="btn-ghost" style="font-size:0.78rem">Edit on roadmap page &rarr;</a>
+      </div>
+      <p class="section-sub" style="margin-bottom:0.75rem">Anonymous health profile — no name or full date of birth stored.</p>
+      <div class="profile-grid" id="profile-grid">
+        <!-- filled by JS -->
+      </div>
+
+      <!-- Email / SMS consent toggles -->
+      <div style="margin-top:1.4rem;padding-top:1.2rem;border-top:1px solid var(--paper-warm)">
+        <p style="font-size:0.78rem;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:0.75rem">Notification preferences</p>
+        <label class="consent-row">
+          <input type="checkbox" id="pref-email"> Send me email reminders when a screening age is approaching
+        </label>
+        <label class="consent-row">
+          <input type="checkbox" id="pref-sms"> Also send SMS reminders (message &amp; data rates apply)
+        </label>
+        <button class="btn-ghost" style="margin-top:0.75rem;font-size:0.8rem" onclick="saveConsent()">Save preferences</button>
+        <span id="consent-saved" style="font-size:0.8rem;color:var(--accent);margin-left:0.75rem;display:none">&#10003; Saved</span>
+      </div>
+    </div>
+
+    <!-- DANGER ZONE -->
+    <div style="border:1px solid #e8c4bc;border-radius:4px;padding:1.2rem 1.6rem;margin-bottom:4rem">
+      <p style="font-size:0.88rem;font-weight:500;color:var(--red-soft);margin-bottom:0.4rem">Delete account</p>
+      <p style="font-size:0.82rem;color:var(--ink-light);margin-bottom:0.75rem">Permanently deletes your email address and all profile data. This cannot be undone.</p>
+      <button class="btn-danger" onclick="handleDeleteAccount()">Delete my account</button>
+    </div>
+
+  </div><!-- end #dashboard -->
+
+</main>
+
+<footer>
+  <p><strong>evidencebasedhealth.me</strong></p>
+  <p style="margin-top:0.4rem">
+    &copy; 2025 Evidence-Based Health &nbsp;&middot;&nbsp;
+    <a href="privacy.html">Privacy Policy</a> &nbsp;&middot;&nbsp;
+    <a href="disclaimer.html">Disclaimer</a> &nbsp;&middot;&nbsp;
+    <a href="mailto:info@evidencebasedhealth.me">info@evidencebasedhealth.me</a>
+  </p>
+  <p style="margin-top:0.3rem">Educational content only. Not medical advice. Not a substitute for care from your clinician.</p>
+</footer>
+
+<script>
+const API   = 'https://lvsofp8c9g.execute-api.us-east-1.amazonaws.com/prod';
+const TOKEN_KEY = 'ebh-profile-jwt';
+
+// ── Auth state ────────────────────────────────────────────────────────────────
+function getToken()        { return localStorage.getItem(TOKEN_KEY); }
+function saveToken(t)      { localStorage.setItem(TOKEN_KEY, t); }
+function clearToken()      { localStorage.removeItem(TOKEN_KEY); }
+
+// Decode JWT payload (no signature verification — server does that on every request)
+function decodeJWT(token) {
+  try {
+    const b64 = token.split('.')[1];
+    return JSON.parse(atob(b64.replace(/-/g,'+').replace(/_/g,'/')));
+  } catch { return null; }
+}
+
+function isTokenValid(token) {
+  if (!token) return false;
+  const p = decodeJWT(token);
+  if (!p || p.role !== 'profile') return false;
+  return p.exp > Math.floor(Date.now() / 1000);
+}
+
+// ── Tab switcher ──────────────────────────────────────────────────────────────
+function showTab(tab) {
+  const isLogin = tab === 'login';
+  document.getElementById('login-form').hidden    = !isLogin;
+  document.getElementById('register-form').hidden = isLogin;
+  document.getElementById('tab-login').classList.toggle('active', isLogin);
+  document.getElementById('tab-register').classList.toggle('active', !isLogin);
+  document.getElementById('auth-heading').textContent   = isLogin ? 'Log in to your roadmap' : 'Create your roadmap account';
+  document.getElementById('auth-subtext').textContent   = isLogin ? 'Access your saved prevention profile and screening timeline.' : 'Save your prevention roadmap and get reminders as screening ages approach.';
+  document.getElementById('auth-error').classList.remove('visible');
+}
+
+function showAuthError(msg) {
+  const el = document.getElementById('auth-error');
+  el.textContent = msg;
+  el.classList.add('visible');
+}
+
+// ── Login ─────────────────────────────────────────────────────────────────────
+async function handleLogin(e) {
+  e.preventDefault();
+  const form = e.target;
+  const btn  = document.getElementById('login-btn');
+  btn.textContent = 'Logging in\u2026';
+  btn.disabled = true;
+  document.getElementById('auth-error').classList.remove('visible');
+
+  try {
+    const res = await fetch(`${API}/profile-login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: form.email.value.trim(), password: form.password.value }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Login failed.');
+    saveToken(data.token);
+    await loadDashboard();
+  } catch (err) {
+    showAuthError(err.message);
+  } finally {
+    btn.textContent = 'Log in \u2192';
+    btn.disabled = false;
+  }
+}
+
+// ── Register ──────────────────────────────────────────────────────────────────
+async function handleRegister(e) {
+  e.preventDefault();
+  const form = e.target;
+  const btn  = document.getElementById('register-btn');
+  document.getElementById('auth-error').classList.remove('visible');
+
+  const password = form.password.value;
+  const confirm  = form.confirm.value;
+  if (password !== confirm) { showAuthError('Passwords do not match.'); return; }
+  if (password.length < 8)  { showAuthError('Password must be at least 8 characters.'); return; }
+
+  btn.textContent = 'Creating account\u2026';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch(`${API}/profile-register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email:       form.email.value.trim(),
+        password:    password,
+        yearOfBirth: 0,   // no profile data yet — user can fill via roadmap page
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Registration failed.');
+    saveToken(data.token);
+    await loadDashboard();
+  } catch (err) {
+    showAuthError(err.message);
+  } finally {
+    btn.textContent = 'Create account \u2192';
+    btn.disabled = false;
+  }
+}
+
+// ── Logout ────────────────────────────────────────────────────────────────────
+function handleLogout() {
+  clearToken();
+  document.getElementById('dashboard').style.display    = 'none';
+  document.getElementById('auth-section').style.display = 'block';
+}
+
+// ── Delete account ────────────────────────────────────────────────────────────
+async function handleDeleteAccount() {
+  if (!confirm('Permanently delete your account and all profile data? This cannot be undone.')) return;
+  const token = getToken();
+  const res = await fetch(`${API}/profile`, {
+    method: 'DELETE',
+    headers: { 'Authorization': `Bearer ${token}` },
+  });
+  if (res.ok) {
+    clearToken();
+    alert('Your account has been deleted.');
+    window.location.href = 'prevention-roadmap.html';
+  } else {
+    alert('Could not delete account. Please try again or contact info@evidencebasedhealth.me');
+  }
+}
+
+// ── Password change ───────────────────────────────────────────────────────────
+function showPwChange() {
+  document.getElementById('pw-change-wrap').style.display = 'block';
+  document.getElementById('pw-change-wrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+function hidePwChange() {
+  document.getElementById('pw-change-wrap').style.display = 'none';
+  document.getElementById('pw-form').reset();
+  document.getElementById('pw-error').classList.remove('visible');
+  document.getElementById('pw-success').style.display = 'none';
+}
+async function handlePwChange(e) {
+  e.preventDefault();
+  const btn     = document.getElementById('pw-btn');
+  const errEl   = document.getElementById('pw-error');
+  const succEl  = document.getElementById('pw-success');
+  errEl.classList.remove('visible');
+  succEl.style.display = 'none';
+
+  const cur  = document.getElementById('pw-current').value;
+  const nw   = document.getElementById('pw-new').value;
+  const conf = document.getElementById('pw-confirm').value;
+  if (nw !== conf) { errEl.textContent = 'New passwords do not match.'; errEl.classList.add('visible'); return; }
+  if (nw.length < 8) { errEl.textContent = 'New password must be at least 8 characters.'; errEl.classList.add('visible'); return; }
+
+  btn.textContent = 'Saving\u2026'; btn.disabled = true;
+  try {
+    const res = await fetch(`${API}/profile-change-password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getToken()}` },
+      body: JSON.stringify({ currentPassword: cur, newPassword: nw }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed to change password.');
+    document.getElementById('pw-form').reset();
+    succEl.style.display = 'inline';
+  } catch (err) {
+    errEl.textContent = err.message; errEl.classList.add('visible');
+  } finally {
+    btn.textContent = 'Save password'; btn.disabled = false;
+  }
+}
+
+// ── Save consent prefs ────────────────────────────────────────────────────────
+async function saveConsent() {
+  const token = getToken();
+  const emailConsent = document.getElementById('pref-email').checked;
+  const smsConsent   = document.getElementById('pref-sms').checked;
+  // Pull current profile to keep other fields intact
+  const profile = window._cachedProfile;
+  if (!profile) return;
+
+  await fetch(`${API}/profile`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+    body: JSON.stringify({ ...profile, emailConsent, smsConsent }),
+  });
+  const el = document.getElementById('consent-saved');
+  el.style.display = 'inline';
+  setTimeout(() => { el.style.display = 'none'; }, 2500);
+}
+
+// ── Load dashboard ────────────────────────────────────────────────────────────
+async function loadDashboard() {
+  const token = getToken();
+  const res = await fetch(`${API}/profile`, {
+    headers: { 'Authorization': `Bearer ${token}` },
+  });
+
+  if (res.status === 401 || res.status === 404) {
+    clearToken();
+    return;
+  }
+
+  const profile = await res.json();
+  window._cachedProfile = profile;
+
+  // Show dashboard, hide auth
+  document.getElementById('auth-section').style.display = 'none';
+  document.getElementById('dashboard').style.display    = 'block';
+
+  // Header
+  document.getElementById('dash-email-label').textContent = profile.email;
+  if (profile.lastLoginAt) {
+    const d = new Date(profile.lastLoginAt);
+    document.getElementById('dash-last-login').textContent = 'Last login: ' + d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  }
+
+  // Profile grid
+  renderProfileGrid(profile);
+
+  // Consent toggles
+  document.getElementById('pref-email').checked = !!profile.emailConsent;
+  document.getElementById('pref-sms').checked   = !!profile.smsConsent;
+
+  // Timeline
+  renderTimeline(profile);
+}
+
+// ── Profile grid ──────────────────────────────────────────────────────────────
+function renderProfileGrid(p) {
+  const currentAge = p.yearOfBirth ? new Date().getFullYear() - Number(p.yearOfBirth) : null;
+
+  const organLabels = { colon: 'Colon', cervix: 'Cervix', prostate: 'Prostate', breasts: 'Breast tissue' };
+  const sexLabels = { male: 'Male', female: 'Female', intersex: 'Intersex / biological variation', 'prefer-not': 'Prefer not to say' };
+  const orientLabels = { straight: 'Heterosexual / straight', 'gay-lesbian': 'Gay / lesbian', bisexual: 'Bisexual', queer: 'Queer', 'prefer-not': 'Prefer not to say' };
+
+  const rows = [
+    { label: 'Approx. age',        value: currentAge ? `~${currentAge}` : 'Not set' },
+    { label: 'Sex assigned at birth', value: sexLabels[p.sexAtBirth] || (p.sexAtBirth || 'Not set') },
+    { label: 'Sexual orientation', value: orientLabels[p.orientation] || (p.orientation || 'Not set') },
+    { label: 'Anatomy',            value: p.organs?.length ? p.organs.map(o => organLabels[o] || o).join(', ') : 'Not set' },
+    { label: 'Risk factors',       value: p.riskFlags?.length ? `${p.riskFlags.length} on file` : 'None' },
+    { label: 'Member since',       value: p.createdAt ? new Date(p.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : '' },
+  ];
+
+  document.getElementById('profile-grid').innerHTML = rows.map(r => `
+    <div class="pf-row">
+      <label>${r.label}</label>
+      <span>${r.value}</span>
+    </div>`).join('');
+}
+
+// ── Timeline computation ──────────────────────────────────────────────────────
+function computeTimeline(profile) {
+  const yob        = Number(profile.yearOfBirth);
+  const currentAge = new Date().getFullYear() - yob;
+  const organs     = profile.organs    || [];
+  const risks      = profile.riskFlags || [];
+  const items      = [];
+
+  if (!yob || currentAge < 15 || currentAge > 120) return [];
+
+  function add(title, startAge, endAge, note) {
+    if (currentAge > endAge) return;
+    const nextDue   = Math.max(startAge, currentAge);
+    const yearsAway = nextDue - currentAge;
+    items.push({ title, nextDue, yearsAway, note, endAge });
+  }
+
+  // ── Colorectal ────────────────────────────────────────────────────────────
+  if (organs.includes('colon')) {
+    const lynch = risks.includes('lynch-syndrome');
+    const high  = !lynch && (risks.includes('crc-family') || risks.includes('crc-polyps'));
+    if (lynch) add('Colorectal cancer screening — Lynch syndrome', 25, 75, 'Colonoscopy every 1–2 yr (NCCN)');
+    else if (high) add('Colorectal cancer screening — high-risk', 40, 75, 'Every 3–5 yr (ACS)');
+    else add('Colorectal cancer screening', 45, 75, 'Every 3–10 yr depending on test (USPSTF 2021 Grade B)');
+  }
+
+  // ── Cervical ──────────────────────────────────────────────────────────────
+  if (organs.includes('cervix')) {
+    add('Cervical cancer screening', 21, 65, 'Pap every 3 yr; or Pap+HPV cotesting every 5 yr age 30+ (USPSTF 2018 Grade A)');
+  }
+
+  // ── Prostate PSA ──────────────────────────────────────────────────────────
+  if (organs.includes('prostate')) {
+    const highRisk = risks.includes('prostate-family') || risks.includes('brca');
+    if (highRisk) add('Prostate cancer screening — PSA (high-risk)', 45, 75, 'Discuss annual PSA with clinician (ACS / NCCN)');
+    else add('Prostate cancer screening — PSA', 55, 70, 'Shared decision-making discussion (USPSTF 2018 Grade C)');
+  }
+
+  // ── Breast ────────────────────────────────────────────────────────────────
+  if (organs.includes('breasts')) {
+    const brca    = risks.includes('brca');
+    const famRisk = !brca && risks.includes('breast-family');
+    if (brca)       add('Breast cancer screening — BRCA variant', 25, 999, 'Annual MRI + mammogram (NCCN)');
+    else if (famRisk) add('Breast cancer screening — family history', 40, 999, 'Annual mammogram; discuss MRI (ACS)');
+    else add('Breast cancer screening', 40, 74, 'Annual or biennial mammogram (USPSTF 2024 Grade B)');
+  }
+
+  // ── Lung LDCT ─────────────────────────────────────────────────────────────
+  if (risks.includes('smoker-ldct')) {
+    add('Lung cancer screening — annual LDCT', 50, 80, '≥20 pack-year history, current or quit <15 yr (USPSTF 2021 Grade B)');
+  }
+
+  // ── AAA ultrasound ────────────────────────────────────────────────────────
+  if (organs.includes('prostate') && (risks.includes('ever-smoker') || risks.includes('aaa-family'))) {
+    add('Abdominal aortic aneurysm — ultrasound', 65, 75, 'One-time or periodic (USPSTF 2019 Grade B)');
+  }
+
+  // ── Osteoporosis DXA ─────────────────────────────────────────────────────
+  if (!organs.includes('prostate') && (organs.includes('cervix') || organs.includes('breasts'))) {
+    add('Osteoporosis screening — DXA', 65, 999, 'Every 2–5 yr based on results (USPSTF 2018 Grade B)');
+  }
+
+  // ── Pancreatic (hereditary) ───────────────────────────────────────────────
+  if (risks.includes('stk11'))
+    add('Pancreatic cancer screening — Peutz-Jeghers (STK11)', 30, 999, 'Annual EUS or MRI/MRCP (NCCN)');
+  if (risks.includes('cdkn2a'))
+    add('Pancreatic cancer screening — FAMMM (CDKN2A)', 40, 999, 'Annual imaging (NCCN)');
+  if (risks.includes('hereditary-pancreatitis'))
+    add('Pancreatic cancer screening — hereditary pancreatitis', 40, 999, 'Annual imaging (NCCN)');
+  if (risks.includes('palb2-atm') || (risks.includes('brca') && (risks.includes('family-pancreatic') || risks.includes('lynch-syndrome'))))
+    add('Pancreatic cancer screening — high-risk gene variant', 50, 999, 'Annual EUS or MRI (NCCN)');
+  if (risks.includes('family-pancreatic') && !risks.includes('stk11') && !risks.includes('cdkn2a'))
+    add('Pancreatic cancer — family history discussion', 40, 999, 'Discuss screening eligibility with clinician');
+
+  // ── HCV (one-time) ────────────────────────────────────────────────────────
+  add('Hepatitis C (HCV) — one-time blood test', 18, 79, 'Anti-HCV antibody; curative treatment now available (USPSTF 2020 Grade B)');
+
+  // ── HIV ───────────────────────────────────────────────────────────────────
+  add('HIV screening', 15, 65, 'At least once; more often if at ongoing risk (USPSTF 2019 Grade A)');
+
+  // ── Blood pressure ────────────────────────────────────────────────────────
+  add('Blood pressure screening', 18, 999, currentAge >= 40 ? 'Annual check (USPSTF 2021 Grade A)' : 'Every 3–5 yr if normal');
+
+  // ── Lipids ────────────────────────────────────────────────────────────────
+  add('Cholesterol / lipid panel', 19, 999, currentAge >= 40 ? 'Every 1–5 yr (ACC/AHA 2026)' : 'Every 4–6 yr if normal');
+
+  // ── Diabetes ──────────────────────────────────────────────────────────────
+  add('Prediabetes & type 2 diabetes screening', 35, 70, 'Every 3 yr if normal; HbA1c or fasting glucose (USPSTF 2021 Grade B)');
+
+  // ── Fall risk ─────────────────────────────────────────────────────────────
+  add('Fall risk assessment', 65, 999, 'Annual multifactorial assessment (USPSTF / CDC STEADI Grade B)');
+
+  // ── Skin ──────────────────────────────────────────────────────────────────
+  if (risks.includes('skin-high-risk'))
+    add('Skin cancer screening — dermatology', 18, 999, 'Annual full-body exam if high-risk');
+
+  // ── Oral ──────────────────────────────────────────────────────────────────
+  if (risks.includes('tobacco-alcohol') || risks.includes('ever-smoker'))
+    add('Oral cancer screening', 18, 999, 'At annual dental/medical visit (USPSTF Grade I — discuss with clinician)');
+
+  // ── Bladder ───────────────────────────────────────────────────────────────
+  if (risks.includes('ever-smoker'))
+    add('Bladder cancer discussion', 40, 999, 'Discuss with clinician if never previously evaluated (USPSTF Grade I)');
+
+  // Sort: overdue first, then soonest
+  return items.sort((a, b) => a.yearsAway - b.yearsAway);
+}
+
+// ── Render timeline ───────────────────────────────────────────────────────────
+function renderTimeline(profile) {
+  const list  = document.getElementById('timeline-list');
+  const items = computeTimeline(profile);
+
+  if (!items.length) {
+    list.innerHTML = '<li class="tl-empty">No screening timeline available yet — <a href="prevention-roadmap.html">complete your prevention roadmap</a> to populate this page.</li>';
+    return;
+  }
+
+  list.innerHTML = items.map(item => {
+    const ya = item.yearsAway;
+    let badgeClass, badgeText, whenText;
+
+    if (ya <= 0) {
+      badgeClass = 'badge-overdue';
+      badgeText  = ya < 0 ? 'Overdue' : 'Due now';
+      whenText   = 'Discuss at your next visit';
+    } else if (ya <= 2) {
+      badgeClass = 'badge-due';
+      badgeText  = `Age ${item.nextDue}`;
+      whenText   = `In about ${ya === 1 ? '1 year' : ya + ' years'}`;
+    } else if (ya <= 7) {
+      badgeClass = 'badge-soon';
+      badgeText  = `Age ${item.nextDue}`;
+      whenText   = `In about ${ya} years`;
+    } else {
+      badgeClass = 'badge-future';
+      badgeText  = `Age ${item.nextDue}`;
+      whenText   = `In ${ya} years`;
+    }
+
+    return `<li class="tl-item">
+      <span class="tl-badge ${badgeClass}">${badgeText}</span>
+      <div>
+        <div class="tl-title">${item.title}</div>
+        <div class="tl-note">${item.note}</div>
+        <div class="tl-when">${whenText}</div>
+      </div>
+    </li>`;
+  }).join('');
+}
+
+// ── On page load ──────────────────────────────────────────────────────────────
+(async function init() {
+  const params = new URLSearchParams(window.location.search);
+  const token  = getToken();
+
+  // If arriving from prevention-roadmap.html after register/login, tab is already set
+  if (params.get('action') === 'register') showTab('register');
+
+  if (isTokenValid(token)) {
+    try {
+      await loadDashboard();
+    } catch {
+      clearToken();
+    }
+  }
+  // else auth section stays visible
+})();
+</script>
+
+<script src="js/cookies.js"></script>
+</body>
+</html>

@@ -531,6 +531,7 @@
     <a href="about.html" class="nav-link">About</a>
     <a href="newsletter.html" class="nav-link">Newsletter</a>
     <a href="prevention-roadmap.html" class="nav-link active" aria-current="page">Prevention Roadmap</a>
+    <a href="my-roadmap.html" class="nav-link">My Roadmap</a>
     <a href="index.html" class="nav-link nav-link-cta">Get the brief &rarr;</a>
   </div>
 </nav>
@@ -752,36 +753,90 @@
   <!-- PROFILE OPT-IN -->
   <div id="opt-in">
     <div class="optin-card">
-      <h2>Want reminders when screenings are coming up?</h2>
-      <p class="optin-sub">Enter your email (and optionally your phone number) and we&rsquo;ll send simple, evidence-based nudges when you&rsquo;re approaching key screening ages. No spam. No selling your data. Occasional messages only.</p>
 
-      <div id="optin-success" class="optin-success">
-        <p>&#10003; &nbsp;You&rsquo;re set &mdash; we&rsquo;ll send a reminder when a screening is coming up for you.</p>
+      <!-- Shown when already logged in -->
+      <div id="optin-loggedin" style="display:none">
+        <p style="font-size:1rem;font-weight:500;color:var(--accent);margin-bottom:0.5rem">&#10003; You&rsquo;re logged in</p>
+        <p style="font-size:0.88rem;color:var(--ink-mid);margin-bottom:1.2rem">Your profile is saved. You can update it with this roadmap&rsquo;s data, or go straight to your timeline.</p>
+        <div style="display:flex;gap:0.75rem;flex-wrap:wrap">
+          <button class="btn-primary" style="max-width:220px" onclick="updateProfileFromRoadmap()">Update my profile &rarr;</button>
+          <a href="my-roadmap.html" class="btn-primary" style="max-width:220px;text-align:center;text-decoration:none">View my roadmap &rarr;</a>
+        </div>
+        <p id="update-success" style="display:none;margin-top:0.75rem;font-size:0.85rem;color:var(--accent)">&#10003; Profile updated.</p>
       </div>
 
-      <form id="optin-form" onsubmit="handleOptIn(event)">
-        <input type="email" class="input-field" name="email" placeholder="your@email.com" required autocomplete="email">
-        <input type="tel" class="input-field" name="phone" placeholder="Phone (optional) &mdash; e.g. +1 555 000 1234" autocomplete="tel">
+      <!-- Shown when not logged in -->
+      <div id="optin-forms">
+        <h2>Save your roadmap &amp; get reminders</h2>
+        <p class="optin-sub">Create a free account to save this roadmap, view your personal screening timeline, and receive evidence-based nudges as key ages approach.</p>
 
-        <label class="consent-row">
-          <input type="checkbox" name="emailConsent" checked>
-          <span>Send me email reminders when I&rsquo;m approaching a screening age</span>
-        </label>
-        <label class="consent-row">
-          <input type="checkbox" name="smsConsent">
-          <span>Also send SMS reminders. Msg &amp; data rates may apply. Reply STOP to opt out.</span>
-        </label>
-        <label class="consent-row">
-          <input type="checkbox" name="remarketingConsent">
-          <span>I&rsquo;m okay with my hashed email being used (in hashed form) to show me relevant ads on other platforms.</span>
-        </label>
+        <div id="optin-success" class="optin-success">
+          <p>&#10003; &nbsp;Account created &mdash; redirecting to your roadmap&hellip;</p>
+        </div>
 
-        <p class="consent-fine" style="margin-top:0.7rem;margin-bottom:1rem">
-          By saving your profile you agree to receive occasional educational reminder emails. Unsubscribe anytime via any email or by <a href="mailto:info@evidencebasedhealth.me">contacting us</a>. We do not share your data with third parties for marketing. <a href="privacy.html">Privacy Policy</a> &middot; <a href="disclaimer.html">Disclaimer</a>
-        </p>
+        <!-- Tab switcher -->
+        <div style="display:flex;gap:0;border:1px solid var(--paper-warm);border-radius:4px;overflow:hidden;margin-bottom:1.4rem">
+          <button id="oi-tab-register" onclick="switchOptinTab('register')" style="flex:1;padding:0.5rem 0;font-size:0.82rem;font-weight:500;background:var(--accent);color:#fff;border:none;cursor:pointer">Create account</button>
+          <button id="oi-tab-login"    onclick="switchOptinTab('login')"    style="flex:1;padding:0.5rem 0;font-size:0.82rem;font-weight:500;background:var(--paper);color:var(--ink-light);border:none;cursor:pointer">Log in</button>
+          <button id="oi-tab-basic"   onclick="switchOptinTab('basic')"    style="flex:1;padding:0.5rem 0;font-size:0.82rem;font-weight:500;background:var(--paper);color:var(--ink-light);border:none;cursor:pointer">Email only</button>
+        </div>
 
-        <button type="submit" class="btn-primary">Save my profile &amp; get reminders &rarr;</button>
-      </form>
+        <div id="oi-error" style="display:none;background:#fdf0ee;border:1px solid #e8c4bc;border-radius:4px;padding:0.6rem 0.9rem;font-size:0.85rem;color:var(--red-soft);margin-bottom:1rem"></div>
+
+        <!-- CREATE ACCOUNT FORM -->
+        <form id="oi-register-form" onsubmit="oiRegister(event)">
+          <input type="email" class="input-field" name="email" placeholder="your@email.com" required autocomplete="email">
+          <input type="password" class="input-field" name="password" placeholder="Password (8+ characters)" required minlength="8" autocomplete="new-password">
+          <input type="password" class="input-field" name="confirm" placeholder="Confirm password" required minlength="8" autocomplete="new-password">
+          <label class="consent-row" style="margin-top:0.5rem">
+            <input type="checkbox" name="emailConsent" checked>
+            <span>Send me email reminders when I&rsquo;m approaching a screening age</span>
+          </label>
+          <label class="consent-row">
+            <input type="checkbox" name="smsConsent">
+            <span>Also send SMS reminders. Msg &amp; data rates may apply.</span>
+          </label>
+          <p style="font-size:0.75rem;color:var(--ink-faint);margin:0.9rem 0 1rem;line-height:1.6">
+            <strong>Privacy:</strong> We store your email, year of birth, and anonymous health profile only.
+            No name. No full date of birth. Passwords are hashed and never stored in plain text.
+            <a href="privacy.html">Privacy Policy</a>
+          </p>
+          <button type="submit" class="btn-primary" id="oi-reg-btn">Create account &amp; save roadmap &rarr;</button>
+        </form>
+
+        <!-- LOG IN FORM -->
+        <form id="oi-login-form" onsubmit="oiLogin(event)" style="display:none">
+          <input type="email" class="input-field" name="email" placeholder="your@email.com" required autocomplete="email">
+          <input type="password" class="input-field" name="password" placeholder="Password" required autocomplete="current-password">
+          <button type="submit" class="btn-primary" id="oi-login-btn">Log in &amp; view my roadmap &rarr;</button>
+          <p style="font-size:0.82rem;color:var(--ink-light);margin-top:0.75rem">Don&rsquo;t have an account? <a onclick="switchOptinTab('register')" style="color:var(--accent);cursor:pointer;text-decoration:underline">Create one free</a></p>
+        </form>
+
+        <!-- EMAIL-ONLY FORM (basic, no account) -->
+        <form id="oi-basic-form" onsubmit="handleOptIn(event)" style="display:none">
+          <p style="font-size:0.83rem;color:var(--ink-light);margin-bottom:1rem">Just want occasional reminder emails? No account needed.</p>
+          <input type="email" class="input-field" name="email" placeholder="your@email.com" required autocomplete="email">
+          <input type="tel" class="input-field" name="phone" placeholder="Phone (optional) &mdash; e.g. +1 555 000 1234" autocomplete="tel">
+          <label class="consent-row">
+            <input type="checkbox" name="emailConsent" checked>
+            <span>Send me email reminders when I&rsquo;m approaching a screening age</span>
+          </label>
+          <label class="consent-row">
+            <input type="checkbox" name="smsConsent">
+            <span>Also send SMS reminders. Msg &amp; data rates may apply. Reply STOP to opt out.</span>
+          </label>
+          <label class="consent-row">
+            <input type="checkbox" name="remarketingConsent">
+            <span>I&rsquo;m okay with my hashed email being used to show me relevant ads on other platforms.</span>
+          </label>
+          <p class="consent-fine" style="margin-top:0.7rem;margin-bottom:1rem">
+            By saving your profile you agree to receive occasional educational reminder emails. Unsubscribe anytime. We do not share your data. <a href="privacy.html">Privacy Policy</a>
+          </p>
+          <button type="submit" class="btn-primary" id="oi-basic-btn">Save &amp; get reminders &rarr;</button>
+          <div id="oi-basic-success" style="display:none;margin-top:1rem;font-size:0.88rem;color:var(--accent)">&#10003; Saved &mdash; we&rsquo;ll send reminders as screening ages approach.</div>
+        </form>
+      </div>
+
     </div>
   </div>
 
@@ -1525,6 +1580,16 @@ If you are unsure which variant you carry, review your genetic testing report or
     // Stash computed data so the opt-in form can send it
     window._roadmapData = { yob, sexAtBirth: sex, orientation, organs, riskFlags: risks };
 
+    // Check login state: show correct opt-in mode
+    const tok = localStorage.getItem('ebh-profile-jwt');
+    if (tok && isProfileTokenValid(tok)) {
+      document.getElementById('optin-loggedin').style.display = 'block';
+      document.getElementById('optin-forms').style.display    = 'none';
+    } else {
+      document.getElementById('optin-loggedin').style.display = 'none';
+      document.getElementById('optin-forms').style.display    = 'block';
+    }
+
     // Show opt-in
     optInEl.classList.add('visible');
 
@@ -1532,29 +1597,145 @@ If you are unsure which variant you carry, review your genetic testing report or
     resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
-  // ── PROFILE OPT-IN SUBMIT ────────────────────────────────────────────────
+  // ── Profile token validity check (client-side only) ──────────────────────
+  function isProfileTokenValid(token) {
+    try {
+      const p = JSON.parse(atob(token.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));
+      return p?.role === 'profile' && p.exp > Math.floor(Date.now() / 1000);
+    } catch { return false; }
+  }
+
+  // ── Opt-in tab switcher ──────────────────────────────────────────────────
+  function switchOptinTab(tab) {
+    document.getElementById('oi-register-form').style.display = tab === 'register' ? 'block' : 'none';
+    document.getElementById('oi-login-form').style.display    = tab === 'login'    ? 'block' : 'none';
+    document.getElementById('oi-basic-form').style.display    = tab === 'basic'    ? 'block' : 'none';
+    ['register','login','basic'].forEach(t => {
+      const btn = document.getElementById('oi-tab-' + t);
+      btn.style.background = t === tab ? 'var(--accent)' : 'var(--paper)';
+      btn.style.color      = t === tab ? '#fff' : 'var(--ink-light)';
+    });
+    document.getElementById('oi-error').style.display = 'none';
+  }
+
+  function showOiError(msg) {
+    const el = document.getElementById('oi-error');
+    el.textContent = msg;
+    el.style.display = 'block';
+  }
+
+  // ── Create account from roadmap ──────────────────────────────────────────
+  async function oiRegister(e) {
+    e.preventDefault();
+    const form  = e.target;
+    const btn   = document.getElementById('oi-reg-btn');
+    const rd    = window._roadmapData || {};
+    document.getElementById('oi-error').style.display = 'none';
+
+    if (form.password.value !== form.confirm.value) { showOiError('Passwords do not match.'); return; }
+    if (form.password.value.length < 8)              { showOiError('Password must be at least 8 characters.'); return; }
+
+    btn.textContent = 'Creating account\u2026'; btn.disabled = true;
+    try {
+      const res = await fetch('https://lvsofp8c9g.execute-api.us-east-1.amazonaws.com/prod/profile-register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email:        form.email.value.trim(),
+          password:     form.password.value,
+          yearOfBirth:  rd.yob,
+          sexAtBirth:   rd.sexAtBirth || '',
+          orientation:  rd.orientation || '',
+          organs:       rd.organs || [],
+          riskFlags:    rd.riskFlags || [],
+          emailConsent: form.emailConsent.checked,
+          smsConsent:   form.smsConsent.checked,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Registration failed.');
+      localStorage.setItem('ebh-profile-jwt', data.token);
+      document.getElementById('optin-success').style.display = 'block';
+      setTimeout(() => { window.location.href = 'my-roadmap.html'; }, 1200);
+    } catch (err) {
+      showOiError(err.message);
+      btn.textContent = 'Create account & save roadmap \u2192'; btn.disabled = false;
+    }
+  }
+
+  // ── Log in from roadmap ──────────────────────────────────────────────────
+  async function oiLogin(e) {
+    e.preventDefault();
+    const form = e.target;
+    const btn  = document.getElementById('oi-login-btn');
+    document.getElementById('oi-error').style.display = 'none';
+
+    btn.textContent = 'Logging in\u2026'; btn.disabled = true;
+    try {
+      const res = await fetch('https://lvsofp8c9g.execute-api.us-east-1.amazonaws.com/prod/profile-login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: form.email.value.trim(), password: form.password.value }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Login failed.');
+      localStorage.setItem('ebh-profile-jwt', data.token);
+      // Optionally update profile with current roadmap data then redirect
+      window.location.href = 'my-roadmap.html';
+    } catch (err) {
+      showOiError(err.message);
+      btn.textContent = 'Log in & view my roadmap \u2192'; btn.disabled = false;
+    }
+  }
+
+  // ── Update profile from current roadmap (logged-in user) ────────────────
+  async function updateProfileFromRoadmap() {
+    const rd  = window._roadmapData || {};
+    const tok = localStorage.getItem('ebh-profile-jwt');
+    if (!tok) return;
+    try {
+      const res = await fetch('https://lvsofp8c9g.execute-api.us-east-1.amazonaws.com/prod/profile', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tok },
+        body: JSON.stringify({
+          yearOfBirth:  rd.yob,
+          sexAtBirth:   rd.sexAtBirth || '',
+          orientation:  rd.orientation || '',
+          organs:       rd.organs || [],
+          riskFlags:    rd.riskFlags || [],
+          emailConsent: true,
+          smsConsent:   false,
+        }),
+      });
+      if (res.ok) {
+        document.getElementById('update-success').style.display = 'block';
+        setTimeout(() => { window.location.href = 'my-roadmap.html'; }, 1000);
+      }
+    } catch (err) { console.error('Profile update error:', err); }
+  }
+
+  // ── Basic email-only opt-in (no account) ────────────────────────────────
   async function handleOptIn(e) {
     e.preventDefault();
     const form = e.target;
-    const btn  = form.querySelector('button[type="submit"]');
+    const btn  = document.getElementById('oi-basic-btn');
     const rd   = window._roadmapData || {};
 
     const payload = {
-      email:               form.email.value.trim(),
-      phone:               form.phone.value.trim() || null,
-      yearOfBirth:         rd.yob,
-      sexAtBirth:          rd.sexAtBirth,
-      orientation:         rd.orientation || '',
-      organs:              rd.organs || [],
-      riskFlags:           rd.riskFlags || [],
-      emailConsent:        form.emailConsent.checked,
-      smsConsent:          form.smsConsent.checked,
-      remarketingConsent:  form.remarketingConsent.checked,
-      sourcePath:          '/prevention-roadmap',
+      email:              form.email.value.trim(),
+      phone:              form.phone.value.trim() || null,
+      yearOfBirth:        rd.yob,
+      sexAtBirth:         rd.sexAtBirth,
+      orientation:        rd.orientation || '',
+      organs:             rd.organs || [],
+      riskFlags:          rd.riskFlags || [],
+      emailConsent:       form.emailConsent.checked,
+      smsConsent:         form.smsConsent.checked,
+      remarketingConsent: form.remarketingConsent.checked,
+      sourcePath:         '/prevention-roadmap',
     };
 
-    btn.textContent = 'Saving\u2026';
-    btn.disabled = true;
+    btn.textContent = 'Saving\u2026'; btn.disabled = true;
 
     try {
       const res = await fetch(PREVENTION_API, {
@@ -1564,7 +1745,7 @@ If you are unsure which variant you carry, review your genetic testing report or
       });
       if (!res.ok) throw new Error('HTTP ' + res.status);
       form.style.display = 'none';
-      document.getElementById('optin-success').classList.add('visible');
+      document.getElementById('oi-basic-success').style.display = 'block';
     } catch (err) {
       console.error('Opt-in error:', err);
       btn.textContent = 'Sorry, something went wrong. Try again.';
@@ -1572,6 +1753,15 @@ If you are unsure which variant you carry, review your genetic testing report or
       btn.disabled = false;
     }
   }
+
+  // ── On load: if logged in, immediately show logged-in state in opt-in ────
+  document.addEventListener('DOMContentLoaded', () => {
+    const tok = localStorage.getItem('ebh-profile-jwt');
+    if (tok && isProfileTokenValid && isProfileTokenValid(tok)) {
+      document.getElementById('optin-loggedin').style.display = 'block';
+      document.getElementById('optin-forms').style.display    = 'none';
+    }
+  });
 </script>
 
 <script src="js/cookies.js"></script>
