@@ -352,6 +352,21 @@
   .launch-grid { display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;align-items:start; }
   @media(max-width:900px) { .launch-grid { grid-template-columns:1fr; } }
 
+  /* ── Draggable Tabs ── */
+  .tab-btn { cursor: grab; }
+  .tab-btn.dragging { opacity: 0.4; cursor: grabbing; }
+  .tabs.drag-over-target .tab-btn:not(.dragging) { transition: transform 0.15s; }
+
+  /* ── Web Posts Panel ── */
+  .wp-post-card { background:var(--paper-card);border:1px solid var(--paper-warm);border-radius:10px;padding:1rem 1.25rem;margin-bottom:0.75rem;display:flex;align-items:flex-start;gap:1rem; }
+  .wp-post-card:hover { box-shadow:0 2px 12px rgba(0,0,0,0.06); }
+  .wp-post-thumb { width:72px;height:54px;border-radius:6px;object-fit:cover;flex-shrink:0;background:var(--paper-warm);display:flex;align-items:center;justify-content:center;font-size:1.4rem;color:var(--ink-faint); }
+  .wp-post-info { flex:1;min-width:0; }
+  .wp-post-title { font-size:0.97rem;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
+  .wp-post-meta { font-size:0.76rem;color:var(--ink-faint);margin-top:0.2rem; }
+  .wp-post-preview { font-size:0.8rem;color:var(--ink-light);margin-top:0.25rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:440px; }
+  .wp-post-actions { display:flex;gap:0.4rem;flex-shrink:0;align-items:center; }
+
   /* ── Newsletter Panel ── */
   .nl-sub-row { display:flex;align-items:center;gap:0.5rem;padding:0.38rem 0.4rem;border-bottom:1px solid var(--paper-warm);font-size:0.8rem; }
   .nl-sub-row:last-child { border-bottom:none; }
@@ -470,6 +485,7 @@
       <button class="tab-btn" data-tab="activecampaigns">Active Campaigns<span class="tab-sub">manage · pause</span></button>
       <button class="tab-btn" data-tab="connections">Connections<span class="tab-sub">accounts · clients</span></button>
       <button class="tab-btn" data-tab="newsletter">Newsletter<span class="tab-sub">write · schedule</span></button>
+      <button class="tab-btn" data-tab="webposts">Web Posts<span class="tab-sub">write · edit</span></button>
     </div>
 
     <!-- ══ MY ACCOUNT PANEL ══ -->
@@ -1830,6 +1846,64 @@
 
     </div><!-- end panel-newsletter -->
 
+    <!-- ══ WEB POSTS PANEL ══ -->
+    <div id="panel-webposts" style="display:none">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:0.75rem">
+        <div>
+          <h2 style="font-family:var(--serif);font-size:1.2rem;font-weight:700;color:var(--ink);margin:0">Web Posts</h2>
+          <p style="font-size:0.8rem;color:var(--ink-faint);margin:0.2rem 0 0">Manage public articles on evidencebasedhealth.me</p>
+        </div>
+        <button class="btn-add-client" onclick="openPostEditor(null)">+ New Post</button>
+      </div>
+
+      <!-- Post list -->
+      <div id="wp-loading" style="display:flex;align-items:center;gap:0.7rem;color:var(--ink-faint);font-size:0.88rem;padding:3rem 0">
+        <div class="spinner"></div> Loading posts…
+      </div>
+      <div id="wp-empty" style="display:none;text-align:center;padding:5rem 2rem;color:var(--ink-faint)">
+        <div style="font-size:2.2rem;margin-bottom:0.75rem;opacity:0.5">📄</div>
+        <p style="font-size:0.93rem;line-height:1.8">No posts yet.<br>Click <strong>+ New Post</strong> to write your first article.</p>
+      </div>
+      <div id="wp-list"></div>
+    </div><!-- end panel-webposts -->
+
+    <!-- ══ POST EDITOR DRAWER ══ -->
+    <div id="post-drawer-overlay" class="drawer-overlay" onclick="closePostEditor()"></div>
+    <div id="post-drawer" class="drawer" role="dialog" aria-modal="true">
+      <div class="drawer-header">
+        <span class="drawer-title" id="post-drawer-title">New Post</span>
+        <button class="drawer-close-x" onclick="closePostEditor()">✕</button>
+      </div>
+      <div class="drawer-body">
+        <div class="drawer-section">
+          <div class="drawer-section-title">Title &amp; Metadata</div>
+          <div class="form-row"><label>Title (Subject Line)</label>
+            <input type="text" id="pd-title" placeholder="e.g. Why Sleep Matters More Than You Think" oninput="pdAutoSlug()">
+          </div>
+          <div class="form-row"><label>Slug <span class="hint">URL path</span></label>
+            <input type="text" id="pd-slug" placeholder="e.g. why-sleep-matters">
+          </div>
+          <div class="form-row"><label>Preview Text <span class="hint">shown in email previews &amp; cards</span></label>
+            <input type="text" id="pd-preview" placeholder="One-line teaser…">
+          </div>
+          <div class="form-row"><label>Hero Image URL <span class="hint">optional</span></label>
+            <input type="url" id="pd-image" placeholder="https://…">
+          </div>
+        </div>
+        <div class="drawer-section">
+          <div class="drawer-section-title">Full Post HTML <span style="font-weight:400;font-size:0.78rem;color:var(--ink-faint)">— HTML allowed, &lt;p&gt; &lt;strong&gt; &lt;em&gt; &lt;h2&gt; etc.</span></div>
+          <textarea id="pd-body" rows="18" style="width:100%;padding:0.68rem 0.9rem;border:1px solid var(--paper-warm);border-radius:6px;font-family:'Courier New',monospace;font-size:0.82rem;color:var(--ink);background:var(--paper);resize:vertical;line-height:1.6" placeholder="&lt;p&gt;Write your article here. HTML is supported.&lt;/p&gt;"></textarea>
+        </div>
+        <div id="pd-status" class="status-bar"></div>
+      </div>
+      <div class="drawer-footer">
+        <button class="btn-drawer-save" id="pd-save-btn" onclick="savePostFromDrawer()">Save &amp; Publish</button>
+        <a id="pd-view-link" href="#" target="_blank" style="display:none;padding:0.72rem 1rem;background:none;color:var(--accent);border:1px solid var(--accent-rule);border-radius:6px;font-family:var(--sans);font-size:0.83rem;font-weight:500;text-decoration:none">View →</a>
+        <button class="btn-drawer-delete" id="pd-delete-btn" style="display:none" onclick="deletePostFromDrawer()">Delete</button>
+        <button class="btn-drawer-cancel" onclick="closePostEditor()">Cancel</button>
+      </div>
+    </div>
+
   </div><!-- end dash-content -->
 </div><!-- end dashboard -->
 
@@ -1968,7 +2042,7 @@ document.getElementById('btn-logout').addEventListener('click', () => {
 });
 
 /* ── Tabs ── */
-const ALL_PANELS = ['home','campaign','activecampaigns','connections','newsletter','clients','create','aicreative','audiences','launch'];
+const ALL_PANELS = ['home','campaign','activecampaigns','connections','newsletter','webposts','clients','create','aicreative','audiences','launch'];
 function showTab(t) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === t));
   ALL_PANELS.forEach(p => {
@@ -1978,6 +2052,7 @@ function showTab(t) {
   if (t === 'newsletter')      loadSubscribers();
   if (t === 'activecampaigns') populateACClientSelectors();
   if (t === 'connections')     { /* connections sub-tabs are already visible */ }
+  if (t === 'webposts')        loadWebPosts();
 }
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => showTab(btn.dataset.tab));
@@ -4057,6 +4132,218 @@ function nlImgPreview() {
   if (!p) return;
   if (url) { p.style.display = ''; const img = p.querySelector('img'); if (img) img.src = url; }
   else { p.style.display = 'none'; }
+}
+
+/* ═══════════════════════════════════════════════════
+   DRAGGABLE TABS
+═══════════════════════════════════════════════════ */
+(function initDraggableTabs() {
+  const tabsEl = document.querySelector('.tabs');
+  let dragSrc = null;
+
+  function saveTabOrder() {
+    const order = [...tabsEl.querySelectorAll('.tab-btn')].map(b => b.dataset.tab);
+    localStorage.setItem('ebh-tab-order', JSON.stringify(order));
+  }
+
+  function restoreTabOrder() {
+    try {
+      const saved = JSON.parse(localStorage.getItem('ebh-tab-order') || 'null');
+      if (!Array.isArray(saved)) return;
+      saved.forEach(tabId => {
+        const btn = tabsEl.querySelector(`[data-tab="${tabId}"]`);
+        if (btn) tabsEl.appendChild(btn);
+      });
+    } catch(e) {}
+  }
+  restoreTabOrder();
+
+  tabsEl.addEventListener('dragstart', e => {
+    const btn = e.target.closest('.tab-btn');
+    if (!btn) return;
+    dragSrc = btn;
+    btn.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', btn.dataset.tab);
+  });
+
+  tabsEl.addEventListener('dragend', e => {
+    const btn = e.target.closest('.tab-btn');
+    if (!btn) return;
+    btn.classList.remove('dragging');
+    dragSrc = null;
+    saveTabOrder();
+  });
+
+  tabsEl.addEventListener('dragover', e => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    const target = e.target.closest('.tab-btn');
+    if (!target || target === dragSrc) return;
+    const rect = target.getBoundingClientRect();
+    const insertBefore = e.clientX < rect.left + rect.width / 2;
+    tabsEl.insertBefore(dragSrc, insertBefore ? target : target.nextSibling);
+  });
+
+  tabsEl.setAttribute('aria-label', 'Tabs — drag to reorder');
+  [...tabsEl.querySelectorAll('.tab-btn')].forEach(btn => {
+    btn.setAttribute('draggable', 'true');
+    btn.title = btn.title || 'Drag to reorder';
+  });
+})();
+
+/* ═══════════════════════════════════════════════════
+   WEB POSTS PANEL
+═══════════════════════════════════════════════════ */
+let wpPosts = [];
+let wpEditingSlug = null; // null = new post
+
+async function loadWebPosts() {
+  const loading = document.getElementById('wp-loading');
+  const listEl  = document.getElementById('wp-list');
+  const emptyEl = document.getElementById('wp-empty');
+  loading.style.display = 'flex';
+  listEl.innerHTML = '';
+  emptyEl.style.display = 'none';
+  try {
+    const res  = await fetch(`${API}/list-posts`, { headers: authHeaders() });
+    const data = await res.json();
+    wpPosts = data.posts || [];
+    loading.style.display = 'none';
+    if (!wpPosts.length) { emptyEl.style.display = ''; return; }
+    listEl.innerHTML = wpPosts.map(p => {
+      const date = p.publishedAt ? new Date(p.publishedAt).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }) : '';
+      const thumbHtml = p.imageUrl
+        ? `<img class="wp-post-thumb" src="${p.imageUrl}" alt="" style="width:72px;height:54px;border-radius:6px;object-fit:cover;flex-shrink:0">`
+        : `<div class="wp-post-thumb">📄</div>`;
+      return `<div class="wp-post-card">
+        ${thumbHtml}
+        <div class="wp-post-info">
+          <div class="wp-post-title">${p.subjectLine || '(untitled)'}</div>
+          <div class="wp-post-meta">${date ? `Published ${date}` : ''} ${p.slug ? `· /${p.slug}` : ''}</div>
+          ${p.previewText ? `<div class="wp-post-preview">${p.previewText}</div>` : ''}
+        </div>
+        <div class="wp-post-actions">
+          <a href="https://evidencebasedhealth.me/post.html?slug=${encodeURIComponent(p.slug)}" target="_blank" class="camp-btn" style="text-decoration:none">View</a>
+          <button class="camp-btn" onclick="openPostEditor('${p.slug.replace(/'/g,"\\'")}')">Edit</button>
+        </div>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    loading.style.display = 'none';
+    listEl.innerHTML = `<div class="status-bar error" style="display:block">Failed to load posts: ${e.message}</div>`;
+  }
+}
+
+function openPostEditor(slug) {
+  wpEditingSlug = slug;
+  const isNew = !slug;
+  document.getElementById('post-drawer-title').textContent = isNew ? 'New Post' : 'Edit Post';
+  document.getElementById('pd-delete-btn').style.display  = isNew ? 'none' : '';
+  document.getElementById('pd-view-link').style.display   = isNew ? 'none' : '';
+  document.getElementById('pd-status').style.cssText = 'display:none';
+
+  if (isNew) {
+    document.getElementById('pd-title').value   = '';
+    document.getElementById('pd-slug').value    = '';
+    document.getElementById('pd-preview').value = '';
+    document.getElementById('pd-image').value   = '';
+    document.getElementById('pd-body').value    = '';
+  } else {
+    const post = wpPosts.find(p => p.slug === slug);
+    if (post) {
+      document.getElementById('pd-title').value   = post.subjectLine || '';
+      document.getElementById('pd-slug').value    = post.slug || '';
+      document.getElementById('pd-preview').value = post.previewText || '';
+      document.getElementById('pd-image').value   = post.imageUrl || '';
+      // Load full body — needs a separate GET /post call since list doesn't return body
+      document.getElementById('pd-body').value    = ''; // will be loaded below
+      fetchPostBody(slug);
+      const viewLink = document.getElementById('pd-view-link');
+      viewLink.href = `https://evidencebasedhealth.me/post.html?slug=${encodeURIComponent(slug)}`;
+    }
+  }
+
+  document.getElementById('post-drawer-overlay').classList.add('open');
+  document.getElementById('post-drawer').classList.add('open');
+  document.getElementById('pd-title').focus();
+}
+
+async function fetchPostBody(slug) {
+  try {
+    const res  = await fetch(`${API}/post?slug=${encodeURIComponent(slug)}`);
+    const data = await res.json();
+    document.getElementById('pd-body').value = data.fullPostHtml || '';
+  } catch(e) {}
+}
+
+function closePostEditor() {
+  document.getElementById('post-drawer-overlay').classList.remove('open');
+  document.getElementById('post-drawer').classList.remove('open');
+}
+
+function pdAutoSlug() {
+  if (wpEditingSlug) return; // don't overwrite slug when editing
+  const title = document.getElementById('pd-title').value;
+  const slug  = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  document.getElementById('pd-slug').value = slug;
+}
+
+async function savePostFromDrawer() {
+  const title   = document.getElementById('pd-title').value.trim();
+  const slug    = document.getElementById('pd-slug').value.trim().replace(/\s+/g, '-').toLowerCase();
+  const preview = document.getElementById('pd-preview').value.trim();
+  const image   = document.getElementById('pd-image').value.trim();
+  const body    = document.getElementById('pd-body').value.trim();
+  const statusEl = document.getElementById('pd-status');
+
+  if (!title) { statusEl.className = 'status-bar error'; statusEl.style.display = 'block'; statusEl.textContent = 'Title is required.'; return; }
+  if (!slug)  { statusEl.className = 'status-bar error'; statusEl.style.display = 'block'; statusEl.textContent = 'Slug is required.'; return; }
+  if (!body)  { statusEl.className = 'status-bar error'; statusEl.style.display = 'block'; statusEl.textContent = 'Post body cannot be empty.'; return; }
+
+  const btn = document.getElementById('pd-save-btn');
+  btn.disabled = true; btn.textContent = 'Saving…';
+  statusEl.className = 'status-bar loading'; statusEl.style.display = 'block'; statusEl.textContent = 'Saving post…';
+
+  try {
+    const res = await fetch(`${API}/update-post`, {
+      method: 'PUT', headers: authHeaders(),
+      body: JSON.stringify({ slug, subjectLine: title, previewText: preview, fullPostHtml: body, imageUrl: image }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Save failed');
+    statusEl.className = 'status-bar success';
+    statusEl.innerHTML = `Saved! <a href="${data.url}" target="_blank">View post →</a>`;
+    const viewLink = document.getElementById('pd-view-link');
+    viewLink.href = data.url; viewLink.style.display = '';
+    document.getElementById('pd-delete-btn').style.display = '';
+    wpEditingSlug = slug;
+    document.getElementById('post-drawer-title').textContent = 'Edit Post';
+    await loadWebPosts(); // refresh list
+  } catch(e) {
+    statusEl.className = 'status-bar error'; statusEl.textContent = 'Error: ' + e.message;
+  } finally {
+    btn.disabled = false; btn.textContent = 'Save & Publish';
+  }
+}
+
+async function deletePostFromDrawer() {
+  if (!wpEditingSlug) return;
+  if (!confirm(`Delete "${document.getElementById('pd-title').value}"? This cannot be undone.`)) return;
+  const btn = document.getElementById('pd-delete-btn');
+  btn.disabled = true; btn.textContent = 'Deleting…';
+  try {
+    const res = await fetch(`${API}/delete-post?slug=${encodeURIComponent(wpEditingSlug)}`, {
+      method: 'DELETE', headers: authHeaders(),
+    });
+    if (!res.ok) throw new Error('Delete failed');
+    closePostEditor();
+    await loadWebPosts();
+  } catch(e) {
+    alert('Delete failed: ' + e.message);
+  } finally {
+    btn.disabled = false; btn.textContent = 'Delete';
+  }
 }
 </script>
 
