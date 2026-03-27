@@ -1695,7 +1695,10 @@
                 <input type="url" id="nl-img-url" placeholder="https://… (or upload above)" oninput="nlImgPreview()">
                 <div id="nl-img-preview" style="display:none;margin-top:0.5rem"><img style="max-width:100%;max-height:140px;border-radius:6px;border:1px solid var(--border)" alt="preview"></div>
               </div>
-              <button class="btn-submit" id="btn-generate-post">✨ Generate Post with AI</button>
+              <div style="display:flex;gap:0.6rem;flex-wrap:wrap;align-items:center">
+                <button class="btn-submit" id="btn-generate-post" style="flex:1;margin-bottom:0">✨ Generate Post with AI</button>
+                <button type="button" class="btn-sm" id="btn-regenerate-post" style="display:none;white-space:nowrap;padding:0.6rem 1rem;font-size:0.82rem" title="Regenerate with same settings">↺ Regenerate</button>
+              </div>
               <div class="status-bar" id="nl-gen-status"></div>
             </div>
 
@@ -3728,6 +3731,7 @@ document.getElementById('btn-generate-post').addEventListener('click', async () 
     document.getElementById('nl-social-ig').textContent = data.socialInstagram || '';
     if (data.research) { document.getElementById('nl-research-body').textContent = data.research; }
     document.getElementById('nl-preview-wrap').style.display = '';
+    document.getElementById('btn-regenerate-post').style.display = '';
     // Enable send buttons
     document.getElementById('btn-send-all').style.cssText = '';
     document.getElementById('btn-publish-post').disabled = false;
@@ -3741,9 +3745,11 @@ document.getElementById('btn-generate-post').addEventListener('click', async () 
   }
 });
 
+document.getElementById('btn-regenerate-post').addEventListener('click', () => {
+  document.getElementById('btn-generate-post').click();
+});
+
 document.getElementById('btn-send-test').addEventListener('click', async () => {
-  if (!nlPostData) return showStatus('nl-send-status','error','Generate a post first.');
-  const testEmail = document.getElementById('nl-test-email').value.trim();
   if (!testEmail) return showStatus('nl-send-status','error','Enter a test email address.');
   showStatus('nl-send-status','loading','<span class="spinner" style="display:inline-block;vertical-align:middle;margin-right:0.5rem"></span>Sending test…');
   document.getElementById('btn-send-test').disabled = true;
