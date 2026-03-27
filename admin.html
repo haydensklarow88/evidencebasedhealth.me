@@ -3872,11 +3872,17 @@ async function loadNLDrafts() {
 }
 
 async function saveNLDraft(status = 'draft', scheduledAt = null) {
-  const subjectEl = document.getElementById('nl-subject-line') || document.getElementById('nl-subject');
   const payload = {
-    subjectLine: subjectEl?.value || subjectEl?.textContent || nlPostData?.subjectLine || '(no subject)',
-    body: nlPostData?.bodyHtml || '',
-    imageUrl: document.getElementById('nl-img-url')?.value || '',
+    subjectLine:  nlPostData?.subjectLine  || '(no subject)',
+    body:         nlPostData?.bodyHtml     || '',
+    fullPostHtml: nlPostData?.fullPostHtml || '',
+    previewText:  nlPostData?.previewText  || '',
+    socialX:      nlPostData?.socialX      || '',
+    socialLinkedIn: nlPostData?.socialLinkedIn || '',
+    socialInstagram: nlPostData?.socialInstagram || '',
+    slug:         nlPostData?.slug         || '',
+    citations:    nlPostData?.citations    || [],
+    imageUrl:     document.getElementById('nl-img-url')?.value || '',
     status,
   };
   if (scheduledAt) payload.scheduledAt = scheduledAt;
@@ -3904,13 +3910,28 @@ function loadNLDraftIntoEditor(draftId) {
     .then(arr => {
       const d = arr.find(x => x.draftId === draftId);
       if (!d) return;
-      // Restore nlPostData so send/schedule/test-email all work
-      nlPostData = { subjectLine: d.subjectLine || '', bodyHtml: d.bodyHtml || '', bodyText: '', previewText: '' };
-      // Populate subject and image inputs
-      const subjectEl = document.getElementById('nl-subject-line') || document.getElementById('nl-subject');
-      if (subjectEl) subjectEl.value = d.subjectLine || '';
+      // Restore nlPostData so ALL actions work (send, schedule, publish, test)
+      nlPostData = {
+        subjectLine:     d.subjectLine      || '',
+        bodyHtml:        d.bodyHtml         || '',
+        fullPostHtml:    d.fullPostHtml     || '',
+        bodyText:        '',
+        previewText:     d.previewText      || '',
+        socialX:         d.socialX          || '',
+        socialLinkedIn:  d.socialLinkedIn   || '',
+        socialInstagram: d.socialInstagram  || '',
+        slug:            d.slug             || '',
+        citations:       d.citations        || [],
+      };
+      // Populate subject display
+      const subjectText = document.getElementById('nl-subject-text');
+      if (subjectText) subjectText.textContent = d.subjectLine || '';
       const imgEl = document.getElementById('nl-img-url');
       if (imgEl) imgEl.value = d.imageUrl || '';
+      // Restore social captions
+      const sx = document.getElementById('nl-social-x');   if (sx) sx.textContent  = d.socialX || '';
+      const sl = document.getElementById('nl-social-li');  if (sl) sl.textContent  = d.socialLinkedIn || '';
+      const si = document.getElementById('nl-social-ig');  if (si) si.textContent  = d.socialInstagram || '';
       // Restore body preview
       const previewWrap = document.getElementById('nl-preview-wrap');
       if (previewWrap) previewWrap.style.display = '';
