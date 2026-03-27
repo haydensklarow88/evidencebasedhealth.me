@@ -3847,10 +3847,9 @@ async function loadNLDrafts() {
 
 async function saveNLDraft(status = 'draft', scheduledAt = null) {
   const subjectEl = document.getElementById('nl-subject-line') || document.getElementById('nl-subject');
-  const bodyEl    = document.getElementById('nl-body') || document.getElementById('newsletter-preview');
   const payload = {
-    subjectLine: subjectEl?.value || subjectEl?.textContent || '(no subject)',
-    body: bodyEl?.value || bodyEl?.innerHTML || '',
+    subjectLine: subjectEl?.value || subjectEl?.textContent || nlPostData?.subjectLine || '(no subject)',
+    body: nlPostData?.bodyHtml || '',
     imageUrl: document.getElementById('nl-img-url')?.value || '',
     status,
   };
@@ -3873,19 +3872,30 @@ async function deleteNLDraft(draftId) {
 
 function loadNLDraftIntoEditor(draftId) {
   switchNLTab('write');
-  // Fetch and populate — basic stub, full hydration requires draft data
   showStatus('nl-send-status', 'loading', 'Loading draft…');
   fetch(`${API}/nl-drafts`, { headers: authHeaders() })
     .then(r => r.json())
     .then(arr => {
       const d = arr.find(x => x.draftId === draftId);
       if (!d) return;
+      // Restore nlPostData so send/schedule/test-email all work
+      nlPostData = { subjectLine: d.subjectLine || '', bodyHtml: d.bodyHtml || '', bodyText: '', previewText: '' };
+      // Populate subject and image inputs
       const subjectEl = document.getElementById('nl-subject-line') || document.getElementById('nl-subject');
       if (subjectEl) subjectEl.value = d.subjectLine || '';
       const imgEl = document.getElementById('nl-img-url');
       if (imgEl) imgEl.value = d.imageUrl || '';
+      // Restore body preview
+      const previewWrap = document.getElementById('nl-preview-wrap');
+      if (previewWrap) previewWrap.style.display = '';
+      const bodyPreview = document.getElementById('nl-body-preview');
+      if (bodyPreview) bodyPreview.innerHTML = d.bodyHtml || '';
+      // Re-enable send/draft/schedule buttons
+      document.getElementById('btn-send-all').style.cssText = '';
+      document.getElementById('btn-save-nl-draft').disabled = false;
+      document.getElementById('btn-schedule-nl').disabled = false;
       showStatus('nl-send-status', 'success', 'Draft loaded. Edit and send when ready.');
-    }).catch(() => {});
+    }).catch(() => showStatus('nl-send-status', 'error', 'Failed to load draft.'));
 }
 
 document.getElementById('btn-save-nl-draft')?.addEventListener('click', () => saveNLDraft('draft'));
