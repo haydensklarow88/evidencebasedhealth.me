@@ -56,6 +56,8 @@
 
   /* â”€â”€ NAV â”€â”€ */
   nav {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--paper);
     border-bottom: 1px solid var(--paper-warm);
     padding: 0 2rem;
     height: 58px;
@@ -80,8 +82,11 @@
     color: var(--ink-light);
     text-decoration: none;
     letter-spacing: 0.02em;
+    padding-bottom: 3px;
+    border-bottom: 2px solid transparent;
   }
   .nav-link:hover { color: var(--accent); }
+  .nav-link.active { color: var(--accent); font-weight: 600; border-bottom-color: var(--accent); }
   .nav-link-cta { color: var(--accent); font-weight: 500; }
 
   /* â”€â”€ PAGE â”€â”€ */
@@ -276,6 +281,7 @@
     <a href="about.html" class="nav-link">About</a>
     <a href="newsletter.html" class="nav-link">Newsletter</a>
     <a href="prevention-roadmap.html" class="nav-link">Prevention Roadmap</a>
+    <a href="index.html" class="nav-link active" aria-current="page">Home</a>
   </div>
 </nav>
 

@@ -22,6 +22,8 @@
   body { background: var(--paper); color: var(--ink); font-family: var(--sans); font-weight: 300; line-height: 1.75; -webkit-font-smoothing: antialiased; }
 
   nav {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--paper);
     border-bottom: 1px solid var(--paper-warm);
     padding: 0 2rem; height: 58px;
     display: flex; align-items: center; justify-content: space-between;
@@ -29,8 +31,9 @@
   .nav-logo { font-family: var(--serif); font-size: 0.95rem; color: var(--accent); font-style: italic; text-decoration: none; letter-spacing: 0.01em; }
   .nav-logo span { font-style: normal; font-weight: 700; }
   .nav-links { display: flex; align-items: center; gap: 1.5rem; }
-  .nav-link { font-size: 0.8rem; color: var(--ink-light); text-decoration: none; letter-spacing: 0.02em; }
+  .nav-link { font-size: 0.8rem; color: var(--ink-light); text-decoration: none; letter-spacing: 0.02em; padding-bottom: 3px; border-bottom: 2px solid transparent; }
   .nav-link:hover { color: var(--accent); }
+  .nav-link.active { color: var(--accent); font-weight: 600; border-bottom-color: var(--accent); }
   .nav-link-cta { color: var(--accent); font-weight: 500; }
 
   main { max-width: var(--max); margin: 0 auto; padding: 4rem 2rem 6rem; }
@@ -123,6 +126,7 @@
 <nav>
   <a href="index.html" class="nav-logo"><span>Evidence&#8209;Based</span> Health</a>
   <div class="nav-links">
+    <a href="about.html" class="nav-link active" aria-current="page">About</a>
     <a href="newsletter.html" class="nav-link">Newsletter</a>
     <a href="prevention-roadmap.html" class="nav-link">Prevention Roadmap</a>
     <a href="index.html" class="nav-link nav-link-cta">Get the brief &rarr;</a>
@@ -132,16 +136,12 @@
 <main>
   <div class="page-label">About</div>
   <h1>A PA who sees what happens when prevention doesn&rsquo;t work.</h1>
-  <p class="intro">I&rsquo;m a physician assistant in acute care surgery with over a decade of experience managing hospitalized patients at their sickest. I spend my days reading imaging and labs on people with acute surgical emergencies &mdash; and caring for them and their families when everything is on the line. In 2024, I was named <strong>National PA of the Year for Innovation</strong> by the AAPA. This newsletter is what I wish existed when the people I treat were 20 years younger.</p>
+  <p class="intro">I&rsquo;m a physician assistant in acute care surgery with over a decade of experience managing hospitalized patients at their sickest. I spend my days reading imaging and labs on people with acute surgical emergencies &mdash; and caring for them and their families when everything is on the line. This newsletter is what I wish existed when the people I treat were 20 years younger.</p>
 
   <div class="credentials">
     <div class="cred-item">
       <div class="cred-marker"></div>
       <div class="cred-text"><strong>Acute Care Surgery PA &mdash; 10+ years</strong><br>Managing hospitalized patients through surgical emergencies: diverticulitis, small&#8209;bowel obstructions, appendicitis, gallbladder disease, and more.</div>
-    </div>
-    <div class="cred-item">
-      <div class="cred-marker"></div>
-      <div class="cred-text"><strong>2024 National PA of the Year &mdash; Innovation (AAPA)</strong><br>Recognized nationally for bringing new thinking to patient care and healthcare delivery.</div>
     </div>
     <div class="cred-item">
       <div class="cred-marker"></div>

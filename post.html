@@ -22,6 +22,8 @@
   body { background: var(--paper); color: var(--ink); font-family: var(--sans); font-weight: 300; line-height: 1.8; -webkit-font-smoothing: antialiased; }
 
   nav {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--paper);
     border-bottom: 1px solid var(--paper-warm);
     padding: 0 2rem; height: 58px;
     display: flex; align-items: center; justify-content: space-between;
@@ -29,8 +31,9 @@
   .nav-logo { font-family: var(--serif); font-size: 0.95rem; color: var(--accent); font-style: italic; text-decoration: none; letter-spacing: 0.01em; }
   .nav-logo span { font-style: normal; font-weight: 700; }
   .nav-links { display: flex; align-items: center; gap: 1.5rem; }
-  .nav-link { font-size: 0.8rem; color: var(--ink-light); text-decoration: none; letter-spacing: 0.02em; }
+  .nav-link { font-size: 0.8rem; color: var(--ink-light); text-decoration: none; letter-spacing: 0.02em; padding-bottom: 3px; border-bottom: 2px solid transparent; }
   .nav-link:hover { color: var(--accent); }
+  .nav-link.active { color: var(--accent); font-weight: 600; border-bottom-color: var(--accent); }
   .nav-link-cta { color: var(--accent); font-weight: 500; }
 
   main { max-width: var(--max); margin: 0 auto; padding: 3.5rem 2rem 6rem; }
