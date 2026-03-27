@@ -3745,6 +3745,9 @@ function toggleWizSchedule() {
 }
 
 async function submitWizCampaign(mode) {
+  // Prevent double-submission
+  document.querySelectorAll('.wiz-pub-btn').forEach(b => b.disabled = true);
+  document.getElementById('btn-confirm-schedule') && (document.getElementById('btn-confirm-schedule').disabled = true);
   showStatus('wiz-pub-status', 'loading', `Creating ${wizState.platform} campaign…`);
   try {
     if (wizState.platform === 'meta') {
@@ -3758,6 +3761,7 @@ async function submitWizCampaign(mode) {
     }
   } catch(e) {
     showStatus('wiz-pub-status', 'error', e.message);
+    document.querySelectorAll('.wiz-pub-btn').forEach(b => b.disabled = false);
   }
 }
 
