@@ -892,8 +892,24 @@
           </div>
         </div>
         <div class="form-card">
-          <div class="card-title">Ad Groups <span style="font-weight:300;letter-spacing:0;text-transform:none;font-size:0.77rem;color:var(--ink-faint)"> — enable/customise themes; each needs 3+ headlines</span></div>
-          <p style="font-size:0.8rem;color:var(--ink-faint);margin:0 0 0.75rem">Toggle each theme on/off. Click ▾ to edit keywords and headlines per group. All enabled groups become separate ad groups in one campaign.</p>
+          <div class="card-title">✨ Generate Copy with AI <span style="font-weight:300;letter-spacing:0;text-transform:none;font-size:0.77rem;color:var(--ink-faint)"> — optional; fills all ad groups + descriptions instantly</span></div>
+          <div class="form-inline">
+            <div class="form-row">
+              <label for="g-ai-audience">Target Audience</label>
+              <input type="text" id="g-ai-audience" placeholder="e.g. Adults 35–65 interested in preventive health" value="Adults 35–65 interested in preventive health">
+            </div>
+            <div class="form-row">
+              <label for="g-ai-extra">Extra context <span class="hint">optional</span></label>
+              <input type="text" id="g-ai-extra" placeholder="Seasonal angle, hooks, etc." autocomplete="off">
+            </div>
+          </div>
+          <button class="btn-submit" id="btn-g-gen-ai" style="margin-top:0.7rem">✨ Generate with AI</button>
+          <div class="status-bar" id="g-ai-status"></div>
+          <div id="g-ai-variants-wrap" style="display:none;margin-top:0.75rem"></div>
+        </div>
+        <div class="form-card">
+          <div class="card-title">Ad Groups <span style="font-weight:300;letter-spacing:0;text-transform:none;font-size:0.77rem;color:var(--ink-faint)"> — enable/customise themes; click a group to edit headlines &amp; keywords</span></div>
+          <p style="font-size:0.8rem;color:var(--ink-faint);margin:0 0 0.75rem">Toggle each theme on/off. Click the group name to expand and edit headlines. All enabled groups become separate ad groups in one campaign.</p>
           <div id="adgroups-wrap"></div>
         </div>
         <div class="form-card">
@@ -2556,21 +2572,21 @@ function initAdGroups() {
       <div class="ag-head" onclick="toggleAgBody(${idx})">
         <input type="checkbox" class="ag-toggle" id="ag-toggle-${idx}" checked onclick="event.stopPropagation();toggleAgEnabled(${idx})">
         <label class="ag-head-label" for="ag-toggle-${idx}" onclick="event.stopPropagation()">${esc(grp.name)}</label>
-        <span class="ag-chevron" id="ag-chev-${idx}">&#9662;</span>
+        <span class="ag-chevron" id="ag-chev-${idx}">&#9656;</span>
       </div>
-      <div class="ag-body" id="ag-body-${idx}">
+      <div class="ag-body ag-hidden" id="ag-body-${idx}">
+        <div class="form-row" style="margin-bottom:0.45rem">
+          <label style="font-size:0.77rem;margin-bottom:0.2rem">Headlines <span class="hint">3–5, max 30 chars each</span></label>
+          <div id="ag-hl-${idx}">${grp.headlines.map(h => `<div class="ag-hl-row"><input type="text" class="ag-headline" maxlength="30" value="${esc(h)}" oninput="updateAgCharCount(this)"><span class="ag-char-count">${h.length}/30</span></div>`).join('')}</div>
+          <button type="button" class="btn-sm" onclick="addAgHeadline(${idx})" style="margin-top:0.3rem;font-size:0.75rem;padding:0.25rem 0.65rem">+ Add Headline</button>
+        </div>
         <div class="form-row" style="margin-bottom:0.45rem">
           <label style="font-size:0.77rem;margin-bottom:0.2rem">Group Name</label>
           <input type="text" id="ag-name-${idx}" value="${esc(grp.name)}" style="font-size:0.81rem;padding:0.3rem 0.5rem">
         </div>
         <div class="form-row" style="margin-bottom:0.45rem">
           <label style="font-size:0.77rem;margin-bottom:0.2rem">Keywords <span class="hint">one per line — education terms, not drug brand names</span></label>
-          <textarea id="ag-kw-${idx}" rows="5" style="font-size:0.79rem">${grp.keywords.join('\n')}</textarea>
-        </div>
-        <div class="form-row">
-          <label style="font-size:0.77rem;margin-bottom:0.2rem">Headlines <span class="hint">3–5, max 30 chars each</span></label>
-          <div id="ag-hl-${idx}">${grp.headlines.map(h => `<div class="ag-hl-row"><input type="text" class="ag-headline" maxlength="30" value="${esc(h)}" oninput="updateAgCharCount(this)"><span class="ag-char-count">${h.length}/30</span></div>`).join('')}</div>
-          <button type="button" class="btn-sm" onclick="addAgHeadline(${idx})" style="margin-top:0.3rem;font-size:0.75rem;padding:0.25rem 0.65rem">+ Add Headline</button>
+          <textarea id="ag-kw-${idx}" rows="4" style="font-size:0.79rem">${grp.keywords.join('\n')}</textarea>
         </div>
       </div>`;
     wrap.appendChild(card);
@@ -2615,6 +2631,79 @@ function collectAdGroups() {
   return groups;
 }
 initAdGroups();
+
+/* ── Google inline AI Copy Generator ── */
+document.getElementById('btn-g-gen-ai').addEventListener('click', async () => {
+  const btn      = document.getElementById('btn-g-gen-ai');
+  const audience = document.getElementById('g-ai-audience').value.trim() || 'Adults 35–65 interested in preventive health';
+  const extra    = document.getElementById('g-ai-extra').value.trim();
+  const offer    = document.getElementById('g-name').value.trim() || 'EBH Newsletter — evidence-based health education';
+  btn.disabled   = true;
+  showStatus('g-ai-status', 'loading', '✨ Generating 5 ad copy variants…');
+  document.getElementById('g-ai-variants-wrap').style.display = 'none';
+  try {
+    const res  = await fetch(`${API}/generate-ad-copy`, {
+      method: 'POST', headers: authHeaders(),
+      body: JSON.stringify({ platform: 'Google', offer, objective: 'newsletter_signups', audience, brand: 'Evidence-Based Health', extra }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'AI generation failed');
+    renderGoogleInlineVariants(data.variants || []);
+    document.getElementById('g-ai-status').className = 'status-bar';
+  } catch (ex) { showStatus('g-ai-status', 'error', `Error: ${esc(ex.message)}`); }
+  finally { btn.disabled = false; }
+});
+
+function renderGoogleInlineVariants(variants) {
+  const wrap = document.getElementById('g-ai-variants-wrap');
+  if (!variants.length) { wrap.style.display = 'none'; return; }
+  wrap._variants = variants;
+  wrap.innerHTML = `<div style="font-size:0.78rem;font-weight:600;color:var(--ink-mid);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.04em">Choose a variant — applies headlines to all ad groups:</div>` +
+    variants.map((v, i) => `
+    <div class="ai-variant-card" style="margin-bottom:0.5rem">
+      <div class="ai-variant-head">
+        <span class="ai-variant-num">Variant ${i + 1}</span>
+        <button class="btn-sm" style="font-size:0.73rem;padding:0.2rem 0.7rem;background:var(--accent);color:#fff;border-color:var(--accent)" onclick="applyGoogleAIVariant(${i})">Apply to Ad Groups →</button>
+      </div>
+      <div class="ai-variant-body">
+        <div class="ai-field-row"><span class="ai-field-label">HL 1</span><span class="ai-field-val"><strong>${esc(v.headline || '')}</strong></span></div>
+        ${v.headline2 ? `<div class="ai-field-row"><span class="ai-field-label">HL 2</span><span class="ai-field-val">${esc(v.headline2)}</span></div>` : ''}
+        ${v.headline3 ? `<div class="ai-field-row"><span class="ai-field-label">HL 3</span><span class="ai-field-val">${esc(v.headline3)}</span></div>` : ''}
+        <div class="ai-field-row"><span class="ai-field-label">Desc</span><span class="ai-field-val">${esc(v.primaryText || v.description || '')}</span></div>
+        ${v.description2 ? `<div class="ai-field-row"><span class="ai-field-label">Desc 2</span><span class="ai-field-val">${esc(v.description2)}</span></div>` : ''}
+      </div>
+    </div>`).join('');
+  wrap.style.display = '';
+}
+
+function applyGoogleAIVariant(idx) {
+  const wrap    = document.getElementById('g-ai-variants-wrap');
+  const variant = wrap._variants?.[idx];
+  if (!variant) return;
+  const hs = [variant.headline, variant.headline2, variant.headline3].filter(Boolean).map(h => h.slice(0, 30));
+  // Apply same headlines to ALL enabled ad groups and expand each body
+  document.querySelectorAll('.ag-card:not(.ag-disabled)').forEach(card => {
+    const agIdx = card.dataset.idx;
+    const hlWrap = document.getElementById(`ag-hl-${agIdx}`);
+    if (!hlWrap) return;
+    hlWrap.innerHTML = '';
+    hs.forEach(h => {
+      const row = document.createElement('div'); row.className = 'ag-hl-row';
+      row.innerHTML = `<input type="text" class="ag-headline" maxlength="30" value="${esc(h)}" oninput="updateAgCharCount(this)"><span class="ag-char-count">${h.length}/30</span>`;
+      hlWrap.appendChild(row);
+    });
+    const body = document.getElementById(`ag-body-${agIdx}`);
+    const chev = document.getElementById(`ag-chev-${agIdx}`);
+    if (body) { body.classList.remove('ag-hidden'); if (chev) chev.innerHTML = '&#9662;'; }
+  });
+  // Fill descriptions
+  document.getElementById('g-desc-wrap').innerHTML = '';
+  const d1 = (variant.primaryText || variant.description || '').slice(0, 90);
+  if (d1) { const i = addInputRow('g-desc-wrap', 'Description N (90 chars max)', 90); i.value = d1; i.dispatchEvent(new Event('input')); }
+  if (variant.description2) { const i = addInputRow('g-desc-wrap', 'Description N (90 chars max)', 90); i.value = variant.description2.slice(0, 90); i.dispatchEvent(new Event('input')); }
+  wrap.style.display = 'none';
+  showStatus('g-ai-status', 'success', '✓ AI copy applied — review headlines below, then click Create Google Campaign.');
+}
 
 /* ── Optimize with Past Data ── */
 document.getElementById('btn-optimize-google').addEventListener('click', async () => {
