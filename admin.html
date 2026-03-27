@@ -1708,6 +1708,7 @@
               <button class="btn-sm" id="btn-send-test" style="width:100%;margin-bottom:0.6rem">Send Test Email</button>
               <div style="display:flex;flex-direction:column;gap:0.5rem;margin-bottom:0.7rem">
                 <button class="btn-submit" id="btn-send-all" style="opacity:0.5;pointer-events:none">📧 Send to All Subscribers</button>
+                <button class="btn-sm" id="btn-publish-post" style="width:100%" disabled>🌐 Publish to Website</button>
                 <button class="btn-sm" id="btn-save-nl-draft" style="width:100%" disabled>💾 Save as Draft</button>
                 <button class="btn-sm" id="btn-schedule-nl" style="width:100%" disabled>📅 Schedule Send</button>
               </div>
@@ -3565,6 +3566,7 @@ document.getElementById('btn-generate-post').addEventListener('click', async () 
     document.getElementById('nl-preview-wrap').style.display = '';
     // Enable send buttons
     document.getElementById('btn-send-all').style.cssText = '';
+    document.getElementById('btn-publish-post').disabled = false;
     document.getElementById('btn-save-nl-draft').disabled = false;
     document.getElementById('btn-schedule-nl').disabled = false;
     showStatus('nl-gen-status','success','✓ Post generated. Review the preview, then send a test or broadcast to all subscribers.');
@@ -3590,6 +3592,30 @@ document.getElementById('btn-send-test').addEventListener('click', async () => {
     showStatus('nl-send-status','error',`Send failed: ${esc(ex.message)}`);
   } finally {
     document.getElementById('btn-send-test').disabled = false;
+  }
+});
+
+document.getElementById('btn-publish-post')?.addEventListener('click', async () => {
+  if (!nlPostData) return showStatus('nl-send-status','error','Generate a post first.');
+  const btn = document.getElementById('btn-publish-post');
+  btn.disabled = true;
+  showStatus('nl-send-status','loading','<span class="spinner" style="display:inline-block;vertical-align:middle;margin-right:0.5rem"></span>Publishing to website…');
+  try {
+    const res  = await fetch(`${API}/publish-post`, { method: 'POST', headers: authHeaders(), body: JSON.stringify({
+      slug:         nlPostData.slug,
+      subjectLine:  nlPostData.subjectLine,
+      previewText:  nlPostData.previewText,
+      bodyHtml:     nlPostData.bodyHtml,
+      fullPostHtml: nlPostData.fullPostHtml,
+      imageUrl:     document.getElementById('nl-img-url')?.value || '',
+      citations:    nlPostData.citations || [],
+    }) });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Publish failed');
+    showStatus('nl-send-status','success',`✓ Published! <a href="${esc(data.url)}" target="_blank" style="color:var(--accent)">${esc(data.url)}</a>`);
+  } catch (ex) {
+    showStatus('nl-send-status','error',`Publish failed: ${esc(ex.message)}`);
+    btn.disabled = false;
   }
 });
 
@@ -3892,6 +3918,7 @@ function loadNLDraftIntoEditor(draftId) {
       if (bodyPreview) bodyPreview.innerHTML = d.bodyHtml || '';
       // Re-enable send/draft/schedule buttons
       document.getElementById('btn-send-all').style.cssText = '';
+      document.getElementById('btn-publish-post').disabled = false;
       document.getElementById('btn-save-nl-draft').disabled = false;
       document.getElementById('btn-schedule-nl').disabled = false;
       showStatus('nl-send-status', 'success', 'Draft loaded. Edit and send when ready.');
