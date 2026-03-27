@@ -1708,8 +1708,8 @@
               <button class="btn-sm" id="btn-send-test" style="width:100%;margin-bottom:0.6rem">Send Test Email</button>
               <div style="display:flex;flex-direction:column;gap:0.5rem;margin-bottom:0.7rem">
                 <button class="btn-submit" id="btn-send-all" style="opacity:0.5;pointer-events:none">📧 Send to All Subscribers</button>
-                <button class="btn-sm" id="btn-save-nl-draft" style="width:100%">💾 Save as Draft</button>
-                <button class="btn-sm" id="btn-schedule-nl" style="width:100%">📅 Schedule Send</button>
+                <button class="btn-sm" id="btn-save-nl-draft" style="width:100%" disabled>💾 Save as Draft</button>
+                <button class="btn-sm" id="btn-schedule-nl" style="width:100%" disabled>📅 Schedule Send</button>
               </div>
               <div id="nl-sched-row" style="display:none;margin-bottom:0.6rem">
                 <input type="datetime-local" id="nl-sched-dt" style="width:100%;margin-bottom:0.5rem">
@@ -3565,6 +3565,8 @@ document.getElementById('btn-generate-post').addEventListener('click', async () 
     document.getElementById('nl-preview-wrap').style.display = '';
     // Enable send buttons
     document.getElementById('btn-send-all').style.cssText = '';
+    document.getElementById('btn-save-nl-draft').disabled = false;
+    document.getElementById('btn-schedule-nl').disabled = false;
     showStatus('nl-gen-status','success','✓ Post generated. Review the preview, then send a test or broadcast to all subscribers.');
   } catch (ex) {
     showStatus('nl-gen-status','error',`Generation failed: ${esc(ex.message)}`);
