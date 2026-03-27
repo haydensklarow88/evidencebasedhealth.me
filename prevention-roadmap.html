@@ -595,6 +595,36 @@
 
       <div class="divider"></div>
 
+      <!-- Sexual orientation -->
+      <div class="field-group">
+        <span class="field-label">Sexual orientation <span style="text-transform:none;letter-spacing:0;font-weight:300;color:var(--ink-faint)">(optional)</span></span>
+        <p class="field-hint">Some guidelines recommend additional screenings (e.g. STI, hepatitis, HIV) based on sexual behavior. Selecting an option may add relevant preventive care items to your roadmap.</p>
+        <div class="radio-group" id="orientation-group">
+          <label class="radio-row">
+            <input type="radio" name="orientation" value="straight">
+            Straight / heterosexual
+          </label>
+          <label class="radio-row">
+            <input type="radio" name="orientation" value="gay-lesbian">
+            Gay / lesbian
+          </label>
+          <label class="radio-row">
+            <input type="radio" name="orientation" value="bisexual">
+            Bisexual
+          </label>
+          <label class="radio-row">
+            <input type="radio" name="orientation" value="queer">
+            Queer / pansexual
+          </label>
+          <label class="radio-row">
+            <input type="radio" name="orientation" value="prefer-not">
+            Prefer not to say
+          </label>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
       <!-- Anatomy checkboxes -->
       <div class="field-group">
         <span class="field-label">Organs / anatomy <span style="text-transform:none;letter-spacing:0;font-weight:300;color:var(--ink-faint)">(check all that apply)</span></span>
@@ -710,26 +740,7 @@
       <p class="results-summary" id="results-summary"></p>
       <ul class="screening-list" id="screening-list"></ul>
 
-      <!-- Perplexity detail cards appear here, inside the same results card -->
-      <div id="perplexity-section" style="display:none;">
-        <div id="pp-divider" style="border-top:1px solid var(--paper-warm);margin:1.6rem 0 1.4rem;display:flex;align-items:center;gap:0.8rem;">
-          <span style="font-size:0.72rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-faint);white-space:nowrap;">Guideline detail</span>
-          <span style="font-size:0.7rem;color:var(--ink-faint);">via Perplexity AI</span>
-        </div>
-        <div id="pp-loading">
-          <p style="color:var(--ink-light);font-size:0.85rem;font-style:italic;padding:0.5rem 0;">Searching current USPSTF, ACS, and medical society guidelines&#8230;</p>
-        </div>
-        <div id="pp-content" style="display:none;">
-          <ul class="screening-list" id="pp-list"></ul>
-          <div id="pp-citations" style="display:none;margin-top:0.8rem;padding-top:1rem;border-top:1px solid var(--paper-warm);">
-            <p style="font-size:0.72rem;font-weight:500;color:var(--ink-faint);margin-bottom:0.6rem;letter-spacing:0.06em;text-transform:uppercase;">Sources</p>
-            <ul id="pp-citations-list" style="list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:0.5rem;"></ul>
-          </div>
-        </div>
-        <div id="pp-error" style="display:none;">
-          <p style="font-size:0.83rem;color:var(--ink-light);">Could not load additional guideline detail.</p>
-        </div>
-      </div>
+      <!-- Perplexity detail section removed -->
 
       <div class="results-disclaimer">
         Everyone&rsquo;s situation is different. Timing, frequency, and the right screening test depend on your full medical history, which only your clinician knows. Use this as a conversation starter &mdash; not a final decision tool.
@@ -819,11 +830,12 @@
   function computeRoadmap(e) {
     e.preventDefault();
 
-    const yob    = parseInt(document.getElementById('yob').value, 10);
-    const age    = new Date().getFullYear() - yob;
-    const sex    = document.querySelector('input[name="sex"]:checked')?.value || '';
-    const organs = [...document.querySelectorAll('input[name="organs"]:checked')].map(i => i.value);
-    const risks  = [...document.querySelectorAll('input[name="risk"]:checked')].map(i => i.value);
+    const yob         = parseInt(document.getElementById('yob').value, 10);
+    const age         = new Date().getFullYear() - yob;
+    const sex         = document.querySelector('input[name="sex"]:checked')?.value || '';
+    const orientation = document.querySelector('input[name="orientation"]:checked')?.value || '';
+    const organs      = [...document.querySelectorAll('input[name="organs"]:checked')].map(i => i.value);
+    const risks       = [...document.querySelectorAll('input[name="risk"]:checked')].map(i => i.value);
 
     if (isNaN(age) || age < 18 || age > 120) {
       alert('Please enter a valid year of birth.');
@@ -1511,113 +1523,13 @@ If you are unsure which variant you carry, review your genetic testing report or
     }
 
     // Stash computed data so the opt-in form can send it
-    window._roadmapData = { yob, sexAtBirth: sex, organs, riskFlags: risks };
+    window._roadmapData = { yob, sexAtBirth: sex, orientation, organs, riskFlags: risks };
 
     // Show opt-in
     optInEl.classList.add('visible');
 
     // Scroll to results
     resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-    // ── PERPLEXITY RESEARCH ────────────────────────────────────────────────
-    const ppSection = document.getElementById('perplexity-section');
-    ppSection.style.display = '';
-    document.getElementById('pp-loading').style.display = '';
-    document.getElementById('pp-content').style.display = 'none';
-    document.getElementById('pp-error').style.display = 'none';
-    fetchPerplexityRoadmap({ yearOfBirth: yob, sexAtBirth: sex, organs, riskFlags: risks });
-  }
-
-  // ── PERPLEXITY RENDERER ────────────────────────────────────────────────────
-  function renderPerplexityIntoList(md, citations) {
-    const ppList = document.getElementById('pp-list');
-    ppList.innerHTML = '';
-
-    // Normalise single/triple # to ##
-    const normalised = md.replace(/^#{1,3} /gm, '## ');
-    const sections = normalised.split(/\n(?=## )/).map(s => s.trim()).filter(s => s.startsWith('## '));
-
-    sections.forEach(section => {
-      const lines   = section.split('\n');
-      const title   = lines[0].replace(/^##\s*/, '').trim();
-      const rawBody = lines.slice(1).join('\n').replace(/^[\n\-]+/, '').replace(/[\n\-]+$/, '').trim();
-      if (!rawBody) return;
-
-      const bodyHtml = rawBody
-        .replace(/\*\*([^*]+):\*\*/g, '<strong class="pp-label">$1:</strong>')
-        .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
-        .replace(/https?:\/\/\S+/g, '')
-        .replace(/\[(\d+)\]/g, (_, n) => {
-          const url = citations[parseInt(n, 10) - 1];
-          return url && /^https?:\/\//.test(url)
-            ? `<sup><a href="${escAttr(url)}" target="_blank" rel="noopener noreferrer" class="pp-cite">${n}</a></sup>`
-            : `<sup class="pp-cite">${n}</sup>`;
-        })
-        .split(/\n{2,}/)
-        .filter(p => p.trim())
-        .map(p => `<p>${p.trim().replace(/\n/g, ' ')}</p>`)
-        .join('');
-
-      const li = document.createElement('li');
-      li.className = 'screening-item';
-      li.innerHTML = `
-        <div class="screening-header">
-          <span class="screening-badge badge-guideline">Guideline</span>
-          <span class="screening-title">${escHtml(title)}</span>
-        </div>
-        <div class="screening-body pp-section-body">${bodyHtml}</div>`;
-      ppList.appendChild(li);
-    });
-  }
-
-  function escHtml(s) {
-    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-  function escAttr(s) {
-    return String(s).replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-  }
-
-  async function fetchPerplexityRoadmap(profile) {
-    try {
-      const res  = await fetch(ROADMAP_API, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(profile),
-      });
-      const data = await res.json();
-      if (!res.ok || !data.content) throw new Error(data.error || 'Empty response');
-
-      const citations = Array.isArray(data.citations) ? data.citations : [];
-      renderPerplexityIntoList(data.content, citations);
-
-      document.getElementById('pp-loading').style.display = 'none';
-      document.getElementById('pp-content').style.display = '';
-
-      if (citations.length > 0) {
-        const list = document.getElementById('pp-citations-list');
-        list.innerHTML = '';
-        citations.forEach((url, i) => {
-          if (!/^https?:\/\//.test(url)) return;
-          const li = document.createElement('li');
-          li.style.cssText = 'display:inline-flex;align-items:baseline;gap:0.3rem;background:var(--paper);border:1px solid var(--paper-warm);border-radius:2px;padding:0.2rem 0.5rem;';
-          const num = document.createElement('span');
-          num.style.cssText = 'color:var(--ink-faint);font-size:0.68rem;font-family:var(--serif);';
-          num.textContent = `${i + 1}.`;
-          const a = document.createElement('a');
-          a.href = url; a.target = '_blank'; a.rel = 'noopener noreferrer';
-          try { a.textContent = new URL(url).hostname.replace(/^www\./, ''); } catch { a.textContent = url; }
-          a.title = url;
-          a.style.cssText = 'color:var(--accent);text-decoration:underline;text-underline-offset:2px;font-size:0.75rem;';
-          li.appendChild(num); li.appendChild(a);
-          list.appendChild(li);
-        });
-        document.getElementById('pp-citations').style.display = '';
-      }
-    } catch (err) {
-      document.getElementById('pp-loading').style.display = 'none';
-      document.getElementById('pp-error').style.display = '';
-      console.error('Perplexity roadmap error:', err);
-    }
   }
 
   // ── PROFILE OPT-IN SUBMIT ────────────────────────────────────────────────
