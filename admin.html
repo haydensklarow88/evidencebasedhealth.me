@@ -603,13 +603,11 @@
         <div style="display:flex;align-items:center">
           <div class="wsd wiz-active" data-step="1"><div class="wsd-num">1</div><div class="wsd-label">Platform</div></div>
           <div class="wsd-line" id="wl-12"></div>
-          <div class="wsd" data-step="2"><div class="wsd-num">2</div><div class="wsd-label">Mode</div></div>
-          <div class="wsd-line" id="wl-23"></div>
-          <div class="wsd" data-step="3"><div class="wsd-num">3</div><div class="wsd-label">Setup</div></div>
+          <div class="wsd" data-step="3"><div class="wsd-num">2</div><div class="wsd-label">Setup</div></div>
           <div class="wsd-line" id="wl-34"></div>
-          <div class="wsd" data-step="4"><div class="wsd-num">4</div><div class="wsd-label">Policy</div></div>
+          <div class="wsd" data-step="4"><div class="wsd-num">3</div><div class="wsd-label">Policy</div></div>
           <div class="wsd-line" id="wl-45"></div>
-          <div class="wsd" data-step="5"><div class="wsd-num">5</div><div class="wsd-label">Publish</div></div>
+          <div class="wsd" data-step="5"><div class="wsd-num">4</div><div class="wsd-label">Publish</div></div>
         </div>
       </div>
 
@@ -635,9 +633,8 @@
         </div>
       </div>
 
-      <!-- Step 2: Mode selection -->
+      <!-- Step 2: Mode selection (removed — merged into form) -->
       <div id="wp-2" style="display:none">
-        <button class="wizard-back-btn" onclick="wizGoTo(1)">← Back</button>
         <h2 class="wizard-pane-title" id="wp2-title">How would you like to build this?</h2>
         <div class="wizard-mode-grid">
           <button class="wizard-mode-card" id="wmc-ai" onclick="selectWizMode('ai')">
@@ -655,7 +652,7 @@
 
       <!-- Step 3: Setup (AI brief + platform forms) -->
       <div id="wp-3" style="display:none">
-        <button class="wizard-back-btn" onclick="wizGoTo(2)">← Back</button>
+        <button class="wizard-back-btn" onclick="wizGoTo(1)">← Back</button>
 
         <!-- AI Brief (visible when mode=ai) -->
         <div id="wp3-ai" style="display:none">
@@ -3825,19 +3822,16 @@ let wizState = { platform: null, mode: null, step: 1 };
 
 function selectWizPlat(plat) {
   wizState.platform = plat;
+  wizState.mode = 'manual';
   document.querySelectorAll('.wizard-plat-card').forEach(c => c.classList.toggle('wiz-sel', c.id === 'wpc-' + plat));
-  const title = document.getElementById('wp2-title');
-  if (title) title.textContent = `How would you like to build this ${plat === 'meta' ? 'Meta' : 'Google'} campaign?`;
-  wizGoTo(2);
+  showPlatTab(plat);
+  const aiSection = document.getElementById('wp3-ai');
+  if (aiSection) aiSection.style.display = 'none';
+  wizGoTo(3);
 }
 
 function selectWizMode(mode) {
-  wizState.mode = mode;
-  document.querySelectorAll('.wizard-mode-card').forEach(c => c.classList.toggle('wiz-sel', c.id === 'wmc-' + mode));
-  showPlatTab(wizState.platform);
-  const aiSection = document.getElementById('wp3-ai');
-  if (aiSection) aiSection.style.display = mode === 'ai' ? '' : 'none';
-  wizGoTo(3);
+  wizState.mode = mode; // kept for any existing references
 }
 
 function wizGoTo(step) {
@@ -3854,10 +3848,6 @@ function wizGoTo(step) {
     line.classList.toggle('wiz-done', idx + 1 < step);
   });
   wizState.step = step;
-  if (step === 3) {
-    const field = document.getElementById('wai-audience');
-    if (!field.value) wizAutofillAudience();
-  }
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
