@@ -808,7 +808,6 @@
 <script>
   // ── CONFIG ────────────────────────────────────────────────────────────────
   const PREVENTION_API = 'https://lvsofp8c9g.execute-api.us-east-1.amazonaws.com/prod/prevention-profile';
-  const ROADMAP_API    = 'https://lvsofp8c9g.execute-api.us-east-1.amazonaws.com/prod/roadmap';
   // ─────────────────────────────────────────────────────────────────────────
 
   // Set year-of-birth max dynamically so it always reflects ≥18 requirement
@@ -1545,13 +1544,13 @@ If you are unsure which variant you carry, review your genetic testing report or
       phone:               form.phone.value.trim() || null,
       yearOfBirth:         rd.yob,
       sexAtBirth:          rd.sexAtBirth,
+      orientation:         rd.orientation || '',
       organs:              rd.organs || [],
       riskFlags:           rd.riskFlags || [],
       emailConsent:        form.emailConsent.checked,
       smsConsent:          form.smsConsent.checked,
       remarketingConsent:  form.remarketingConsent.checked,
       sourcePath:          '/prevention-roadmap',
-      userAgent:           navigator.userAgent,
     };
 
     btn.textContent = 'Saving\u2026';
@@ -1573,7 +1572,6 @@ If you are unsure which variant you carry, review your genetic testing report or
       btn.disabled = false;
     }
   }
-}
 </script>
 
 <script src="js/cookies.js"></script>
