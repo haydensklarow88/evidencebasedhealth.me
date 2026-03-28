@@ -242,7 +242,7 @@
 
     var fetchPromise;
     if (missing.length > 0) {
-      var BATCH = 50;
+      var BATCH = 15;
       var batches = [];
       for (var b = 0; b < missing.length; b += BATCH) {
         batches.push(missing.slice(b, b + BATCH));
