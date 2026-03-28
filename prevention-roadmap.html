@@ -955,6 +955,7 @@
         });
       } else if (age > 85) {
         // No card — USPSTF recommends against screening above 85
+      }
     }
 
     // ── CERVICAL ────────────────────────────────────────────────────────────
@@ -1593,8 +1594,9 @@ If you are unsure which variant you carry, review your genetic testing report or
     // Show opt-in
     optInEl.classList.add('visible');
 
-    // Scroll to results
-    resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Scroll to results (offset for sticky nav ~60px)
+    const top = resultsEl.getBoundingClientRect().top + window.pageYOffset - 72;
+    window.scrollTo({ top, behavior: 'smooth' });
   }
 
   // ── Profile token validity check (client-side only) ──────────────────────
