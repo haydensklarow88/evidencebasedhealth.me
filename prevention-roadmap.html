@@ -517,8 +517,20 @@
 
   /* ── RESPONSIVE ── */
   @media (max-width: 600px) {
-    .q-card, .results-card, .optin-card { padding: 1.6rem; }
-    h1 { font-size: 1.7rem; }
+    nav { padding: 0 1rem; }
+    .nav-links { gap: 0.75rem; }
+    .nav-link { font-size: 0.72rem; }
+    .nav-link-cta { display: none; }
+    .q-card, .results-card, .optin-card { padding: 1.4rem 1.25rem; }
+    h1 { font-size: 1.6rem; }
+    .page-hero { padding: 2.5rem 1rem 2rem; }
+    .quiz-wrap { padding: 0 1rem 4rem; }
+  }
+  @media (max-width: 380px) {
+    .nav-links { gap: 0.5rem; }
+    .nav-link { font-size: 0.68rem; letter-spacing: 0; }
+    h1 { font-size: 1.4rem; }
+    .q-card, .results-card, .optin-card { padding: 1.1rem 1rem; }
   }
 </style>
 </head>
@@ -793,9 +805,13 @@
             <span>Send me email reminders when I&rsquo;m approaching a screening age</span>
           </label>
           <label class="consent-row">
-            <input type="checkbox" name="smsConsent">
+            <input type="checkbox" name="smsConsent" onchange="toggleRegSmsPhone(this.checked)">
             <span>Also send SMS reminders. Msg &amp; data rates may apply.</span>
           </label>
+          <div id="reg-sms-phone-wrap" style="display:none;margin:0.3rem 0 0.6rem 1.65rem">
+            <input type="tel" class="input-field" name="phone" placeholder="+1 555 000 1234" autocomplete="tel" style="margin-bottom:0">
+            <div style="font-size:0.72rem;color:var(--ink-faint);margin-top:0.25rem">Reply STOP at any time to opt out.</div>
+          </div>
           <p style="font-size:0.75rem;color:var(--ink-faint);margin:0.9rem 0 1rem;line-height:1.6">
             <strong>Privacy:</strong> We store your email, year of birth, and anonymous health profile only.
             No name. No full date of birth. Passwords are hashed and never stored in plain text.
@@ -1627,6 +1643,10 @@ If you are unsure which variant you carry, review your genetic testing report or
   }
 
   // ── Create account from roadmap ──────────────────────────────────────────
+  function toggleRegSmsPhone(checked) {
+    document.getElementById('reg-sms-phone-wrap').style.display = checked ? 'block' : 'none';
+  }
+
   async function oiRegister(e) {
     e.preventDefault();
     const form  = e.target;
@@ -1652,6 +1672,7 @@ If you are unsure which variant you carry, review your genetic testing report or
           riskFlags:    rd.riskFlags || [],
           emailConsent: form.emailConsent.checked,
           smsConsent:   form.smsConsent.checked,
+          phone:        form.phone?.value?.trim() || '',
         }),
       });
       const data = await res.json();

@@ -327,9 +327,26 @@
   }
   .consent-row input[type="checkbox"] { margin-top: 0.15rem; accent-color: var(--accent); }
 
-  @media (max-width: 500px) {
-    .tl-item { grid-template-columns: 1fr; gap: 0.3rem 0; }
+  @media (max-width: 600px) {
+    nav { padding: 0 1rem; }
+    .nav-links { gap: 0.75rem; }
+    .nav-link { font-size: 0.72rem; }
+    .nav-link-cta { display: none; }
+    .page-header { padding: 2rem 1rem 1.25rem; }
+    main { padding: 0 1rem 4rem; }
+    .profile-card { padding: 1.2rem 1.25rem; }
+    .tl-item { grid-template-columns: 72px 1fr; gap: 0 0.75rem; }
+    .tl-done-btn, .tl-undo-btn { font-size: 0.62rem; padding: 0.18rem 0.4rem; }
     .dash-header { flex-direction: column; align-items: flex-start; }
+    .dash-header > div:last-child { flex-wrap: wrap; gap: 0.4rem; }
+    .auth-wrap { padding: 1.5rem 1.25rem 1.25rem; margin: 1rem auto 3rem; }
+    .profile-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 380px) {
+    .nav-links { gap: 0.5rem; }
+    .nav-link { font-size: 0.68rem; letter-spacing: 0; }
+    .tl-item { grid-template-columns: 1fr; gap: 0.25rem 0; }
+    .tl-done-btn, .tl-undo-btn { margin-top: 0.3rem; }
   }
 </style>
 </head>
@@ -477,8 +494,12 @@
           <input type="checkbox" id="pref-email"> Send me email reminders when a screening age is approaching
         </label>
         <label class="consent-row">
-          <input type="checkbox" id="pref-sms"> Also send SMS reminders (message &amp; data rates apply)
+          <input type="checkbox" id="pref-sms" onchange="toggleSmsPhone(this.checked)"> Also send SMS reminders (message &amp; data rates may apply)
         </label>
+        <div id="sms-phone-wrap" style="display:none;margin:0.4rem 0 0.6rem 1.65rem">
+          <input type="tel" id="pref-phone" style="width:100%;max-width:280px;padding:0.6rem 0.8rem;border:1px solid var(--paper-warm);border-radius:6px;font-family:var(--sans);font-size:0.88rem;color:var(--ink);background:var(--paper);outline:none" placeholder="+1 555 000 1234" autocomplete="tel">
+          <div style="font-size:0.72rem;color:var(--ink-faint);margin-top:0.3rem">US / Canada format. Reply STOP at any time to opt out.</div>
+        </div>
         <button class="btn-ghost" style="margin-top:0.75rem;font-size:0.8rem" onclick="saveConsent()">Save preferences</button>
         <span id="consent-saved" style="font-size:0.8rem;color:var(--accent);margin-left:0.75rem;display:none">&#10003; Saved</span>
       </div>
@@ -701,10 +722,15 @@ async function handlePwChange(e) {
 }
 
 // ── Save consent prefs ────────────────────────────────────────────────────────
+function toggleSmsPhone(checked) {
+  document.getElementById('sms-phone-wrap').style.display = checked ? 'block' : 'none';
+}
+
 async function saveConsent() {
   const token = getToken();
   const emailConsent = document.getElementById('pref-email').checked;
   const smsConsent   = document.getElementById('pref-sms').checked;
+  const phone        = document.getElementById('pref-phone').value.trim();
   // Pull current profile to keep other fields intact
   const profile = window._cachedProfile;
   if (!profile) return;
@@ -712,7 +738,7 @@ async function saveConsent() {
   await fetch(`${API}/profile`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-    body: JSON.stringify({ ...profile, emailConsent, smsConsent }),
+    body: JSON.stringify({ ...profile, emailConsent, smsConsent, phone }),
   });
   const el = document.getElementById('consent-saved');
   el.style.display = 'inline';
@@ -751,6 +777,10 @@ async function loadDashboard() {
   // Consent toggles
   document.getElementById('pref-email').checked = !!profile.emailConsent;
   document.getElementById('pref-sms').checked   = !!profile.smsConsent;
+  if (profile.smsConsent && profile.phone) {
+    toggleSmsPhone(true);
+    document.getElementById('pref-phone').value = profile.phone;
+  }
 
   // Timeline
   renderTimeline(profile);
