@@ -3747,6 +3747,8 @@ document.getElementById('btn-regenerate-post').addEventListener('click', () => {
 });
 
 document.getElementById('btn-send-test').addEventListener('click', async () => {
+  if (!nlPostData) return showStatus('nl-send-status','error','Generate a post first.');
+  const testEmail = document.getElementById('nl-test-email').value.trim();
   if (!testEmail) return showStatus('nl-send-status','error','Enter a test email address.');
   showStatus('nl-send-status','loading','<span class="spinner" style="display:inline-block;vertical-align:middle;margin-right:0.5rem"></span>Sending test…');
   document.getElementById('btn-send-test').disabled = true;
