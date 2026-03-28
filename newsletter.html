@@ -102,6 +102,23 @@
   }
   .btn-cta:hover { background: var(--accent-mid); }
 
+  /* Archive */
+  .archive-section { margin-top: 3rem; }
+  .archive-post {
+    display: grid; grid-template-columns: 1fr auto;
+    align-items: baseline; gap: 1rem;
+    padding: 1rem 0; border-bottom: 1px solid var(--paper-warm);
+    text-decoration: none; color: inherit;
+  }
+  .archive-post:first-child { border-top: 1px solid var(--paper-warm); }
+  .archive-post:hover .archive-title { color: var(--accent); }
+  .archive-title { font-size: 0.97rem; font-weight: 500; color: var(--ink); line-height: 1.5; }
+  .archive-preview { font-size: 0.82rem; color: var(--ink-light); margin-top: 0.2rem; }
+  .archive-date { font-size: 0.78rem; color: var(--ink-faint); white-space: nowrap; }
+  .archive-loading { color: var(--ink-faint); font-size: 0.88rem; padding: 1.5rem 0; display: flex; align-items: center; gap: 0.5rem; }
+  .spinner { width:18px;height:18px;border:2px solid var(--accent-rule);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;display:inline-block;flex-shrink:0; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
   footer {
     border-top: 1px solid var(--paper-warm); padding: 1.5rem 2rem;
     text-align: center; font-size: 0.75rem; color: var(--ink-faint);
@@ -183,6 +200,13 @@
     </div>
   </div>
 
+  <div class="archive-section">
+    <h2 style="padding-top:2.5rem;border-top:1px solid var(--paper-warm)">Past evidence briefs</h2>
+    <div id="archive-loading" class="archive-loading"><span class="spinner"></span> Loading&hellip;</div>
+    <div id="archive-list"></div>
+    <div id="archive-empty" style="display:none;font-size:0.9rem;color:var(--ink-faint);padding:1rem 0">No posts published yet.</div>
+  </div>
+
   <div class="cta-row">
     <p class="cta-p">Free. Weekly. Unsubscribe anytime.</p>
     <a href="index.html" class="btn-cta">Subscribe now &rarr;</a>
@@ -198,5 +222,33 @@
 </footer>
 
 <script src="js/cookies.js"></script>
+<script>
+const API = 'https://lvsofp8c9g.execute-api.us-east-1.amazonaws.com/prod';
+(async function loadArchive() {
+  try {
+    const res  = await fetch(`${API}/list-posts`);
+    const data = await res.json();
+    const posts = data.posts || [];
+    document.getElementById('archive-loading').style.display = 'none';
+    if (!posts.length) { document.getElementById('archive-empty').style.display = ''; return; }
+    document.getElementById('archive-list').innerHTML = posts.map(p => {
+      const date = p.publishedAt
+        ? new Date(p.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+        : '';
+      const title   = (p.subjectLine || '').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      const preview = (p.previewText || '').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      return `<a class="archive-post" href="post.html?slug=${encodeURIComponent(p.slug)}">
+        <div>
+          <div class="archive-title">${title}</div>
+          ${preview ? `<div class="archive-preview">${preview}</div>` : ''}
+        </div>
+        <div class="archive-date">${date}</div>
+      </a>`;
+    }).join('');
+  } catch(e) {
+    document.getElementById('archive-loading').style.display = 'none';
+  }
+})();
+</script>
 </body>
 </html>
