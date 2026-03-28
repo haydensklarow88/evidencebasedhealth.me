@@ -358,14 +358,20 @@
   .tabs.drag-over-target .tab-btn:not(.dragging) { transition: transform 0.15s; }
 
   /* ── Web Posts Panel ── */
-  .wp-post-card { background:var(--paper-card);border:1px solid var(--paper-warm);border-radius:10px;padding:1rem 1.25rem;margin-bottom:0.75rem;display:flex;align-items:flex-start;gap:1rem; }
-  .wp-post-card:hover { box-shadow:0 2px 12px rgba(0,0,0,0.06); }
-  .wp-post-thumb { width:72px;height:54px;border-radius:6px;object-fit:cover;flex-shrink:0;background:var(--paper-warm);display:flex;align-items:center;justify-content:center;font-size:1.4rem;color:var(--ink-faint); }
-  .wp-post-info { flex:1;min-width:0; }
-  .wp-post-title { font-size:0.97rem;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
-  .wp-post-meta { font-size:0.76rem;color:var(--ink-faint);margin-top:0.2rem; }
-  .wp-post-preview { font-size:0.8rem;color:var(--ink-light);margin-top:0.25rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:440px; }
-  .wp-post-actions { display:flex;gap:0.4rem;flex-shrink:0;align-items:center; }
+  .wp-table { width:100%;border-collapse:collapse;font-size:0.85rem; }
+  .wp-table thead th { text-align:left;font-size:0.72rem;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-faint);padding:0 0.75rem 0.6rem;border-bottom:2px solid var(--paper-warm);white-space:nowrap; }
+  .wp-table tbody tr { border-bottom:1px solid var(--paper-warm);transition:background 0.15s; }
+  .wp-table tbody tr:hover { background:var(--paper-warm); }
+  .wp-table td { padding:0.75rem;vertical-align:middle; }
+  .wp-table td:last-child { white-space:nowrap; }
+  .wp-col-title { font-weight:600;color:var(--ink);max-width:310px; }
+  .wp-col-title div { white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:300px; }
+  .wp-col-preview { color:var(--ink-light);max-width:240px; }
+  .wp-col-preview div { white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:230px;font-size:0.8rem; }
+  .wp-col-date { color:var(--ink-faint);white-space:nowrap;font-size:0.8rem; }
+  .wp-col-slug { color:var(--ink-faint);font-size:0.78rem;font-family:monospace;max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
+  .wp-btn-del { background:transparent;border:1px solid #e5b3b3;color:#b94a4a;border-radius:4px;padding:0.28rem 0.65rem;font-size:0.78rem;cursor:pointer;line-height:1; }
+  .wp-btn-del:hover { background:#fdf0f0; }
 
   /* ── Newsletter Panel ── */
   .nl-sub-row { display:flex;align-items:center;gap:0.5rem;padding:0.38rem 0.4rem;border-bottom:1px solid var(--paper-warm);font-size:0.8rem; }
@@ -4298,24 +4304,35 @@ async function loadWebPosts() {
     wpPosts = data.posts || [];
     loading.style.display = 'none';
     if (!wpPosts.length) { emptyEl.style.display = ''; return; }
-    listEl.innerHTML = wpPosts.map(p => {
-      const date = p.publishedAt ? new Date(p.publishedAt).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }) : '';
-      const thumbHtml = p.imageUrl
-        ? `<img class="wp-post-thumb" src="${p.imageUrl}" alt="" style="width:72px;height:54px;border-radius:6px;object-fit:cover;flex-shrink:0">`
-        : `<div class="wp-post-thumb">📄</div>`;
-      return `<div class="wp-post-card">
-        ${thumbHtml}
-        <div class="wp-post-info">
-          <div class="wp-post-title">${p.subjectLine || '(untitled)'}</div>
-          <div class="wp-post-meta">${date ? `Published ${date}` : ''} ${p.slug ? `· /${p.slug}` : ''}</div>
-          ${p.previewText ? `<div class="wp-post-preview">${p.previewText}</div>` : ''}
-        </div>
-        <div class="wp-post-actions">
-          <a href="https://evidencebasedhealth.me/post.html?slug=${encodeURIComponent(p.slug)}" target="_blank" class="camp-btn" style="text-decoration:none">View</a>
-          <button class="camp-btn" onclick="openPostEditor('${p.slug.replace(/'/g,"\\'")}')">Edit</button>
-        </div>
-      </div>`;
+    const rows = wpPosts.map(p => {
+      const date = p.publishedAt ? new Date(p.publishedAt).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }) : '—';
+      const safeSlug = p.slug.replace(/'/g, "\\'");
+      const safeTitle = (p.subjectLine || '(untitled)').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+      const safePreview = (p.previewText || '').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      return `<tr>
+        <td class="wp-col-title"><div title="${safeTitle}">${safeTitle}</div></td>
+        <td class="wp-col-preview"><div title="${safePreview}">${safePreview || '<span style="color:var(--ink-faint)">—</span>'}</div></td>
+        <td class="wp-col-date">${date}</td>
+        <td class="wp-col-slug">/${p.slug}</td>
+        <td style="white-space:nowrap">
+          <div style="display:flex;gap:0.4rem;align-items:center">
+            <a href="https://evidencebasedhealth.me/post.html?slug=${encodeURIComponent(p.slug)}" target="_blank" class="camp-btn" style="text-decoration:none">View</a>
+            <button class="camp-btn" onclick="openPostEditor('${safeSlug}')">Edit</button>
+            <button class="wp-btn-del" onclick="deletePostInline('${safeSlug}', '${safeTitle.replace(/'/g,"\\'")}')">Delete</button>
+          </div>
+        </td>
+      </tr>`;
     }).join('');
+    listEl.innerHTML = `<table class="wp-table">
+      <thead><tr>
+        <th style="width:30%">Title</th>
+        <th style="width:30%">Preview</th>
+        <th style="width:10%">Published</th>
+        <th style="width:15%">Slug</th>
+        <th style="width:15%">Actions</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
   } catch(e) {
     loading.style.display = 'none';
     listEl.innerHTML = `<div class="status-bar error" style="display:block">Failed to load posts: ${e.message}</div>`;
@@ -4430,6 +4447,19 @@ async function deletePostFromDrawer() {
     alert('Delete failed: ' + e.message);
   } finally {
     btn.disabled = false; btn.textContent = 'Delete';
+  }
+}
+
+async function deletePostInline(slug, title) {
+  if (!confirm(`Delete "${title}"? This cannot be undone.`)) return;
+  try {
+    const res = await fetch(`${API}/delete-post?slug=${encodeURIComponent(slug)}`, {
+      method: 'DELETE', headers: authHeaders(),
+    });
+    if (!res.ok) throw new Error('Delete failed');
+    await loadWebPosts();
+  } catch(e) {
+    alert('Delete failed: ' + e.message);
   }
 }
 </script>
