@@ -299,6 +299,28 @@
     font-size: 0.88rem;
     color: var(--ink-mid);
   }
+  .pf-edit-label {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 0.25rem;
+  }
+  .pf-edit-input {
+    width: 100%;
+    padding: 0.55rem 0.75rem;
+    border: 1px solid var(--paper-warm);
+    border-radius: 6px;
+    font-family: var(--sans);
+    font-size: 0.88rem;
+    color: var(--ink);
+    background: var(--paper);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .pf-edit-input:focus { border-color: var(--accent); }
   .actions-row {
     display: flex;
     gap: 0.75rem;
@@ -479,14 +501,80 @@
     <div class="profile-card">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:0.5rem">
         <p class="section-heading">Your profile</p>
-        <a href="prevention-roadmap.html" class="btn-ghost" style="font-size:0.78rem">Edit on roadmap page &rarr;</a>
+        <button id="edit-profile-btn" class="btn-ghost" style="font-size:0.78rem" onclick="toggleProfileEdit()">Edit profile</button>
       </div>
       <p class="section-sub" style="margin-bottom:0.75rem">Anonymous health profile — no name or full date of birth stored.</p>
       <div class="profile-grid" id="profile-grid">
         <!-- filled by JS -->
       </div>
 
-      <!-- Email / SMS consent toggles -->
+      <!-- Inline edit form -->
+      <div id="profile-edit-form" style="display:none;margin-top:1.2rem;padding-top:1.1rem;border-top:1px solid var(--paper-warm)">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem 1.5rem;margin-bottom:1rem">
+          <div>
+            <label class="pf-edit-label">Year of birth</label>
+            <input type="number" id="edit-yob" class="pf-edit-input" min="1920" max="2010" placeholder="e.g. 1988">
+          </div>
+          <div>
+            <label class="pf-edit-label">Sex assigned at birth</label>
+            <select id="edit-sex" class="pf-edit-input">
+              <option value="">— select —</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="intersex">Intersex / biological variation</option>
+              <option value="prefer-not">Prefer not to say</option>
+            </select>
+          </div>
+          <div>
+            <label class="pf-edit-label">Sexual orientation</label>
+            <select id="edit-orient" class="pf-edit-input">
+              <option value="">— select —</option>
+              <option value="straight">Heterosexual / straight</option>
+              <option value="gay-lesbian">Gay / lesbian</option>
+              <option value="bisexual">Bisexual</option>
+              <option value="queer">Queer</option>
+              <option value="prefer-not">Prefer not to say</option>
+            </select>
+          </div>
+        </div>
+        <div style="margin-bottom:0.9rem">
+          <p class="pf-edit-label" style="margin-bottom:0.45rem">Anatomy (select all that apply)</p>
+          <div style="display:flex;flex-wrap:wrap;gap:0.3rem 1.5rem">
+            <label class="consent-row"><input type="checkbox" id="edit-organ-colon"> Colon</label>
+            <label class="consent-row"><input type="checkbox" id="edit-organ-cervix"> Cervix</label>
+            <label class="consent-row"><input type="checkbox" id="edit-organ-prostate"> Prostate</label>
+            <label class="consent-row"><input type="checkbox" id="edit-organ-breasts"> Breast tissue</label>
+          </div>
+        </div>
+        <div style="margin-bottom:1rem">
+          <p class="pf-edit-label" style="margin-bottom:0.45rem">Risk factors (select all that apply)</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.25rem 1.5rem">
+            <label class="consent-row"><input type="checkbox" id="edit-risk-lynch-syndrome"> Lynch syndrome</label>
+            <label class="consent-row"><input type="checkbox" id="edit-risk-crc-family"> Family history of colorectal cancer</label>
+            <label class="consent-row"><input type="checkbox" id="edit-risk-crc-polyps"> Prior colorectal polyps</label>
+            <label class="consent-row"><input type="checkbox" id="edit-risk-prostate-family"> Family history of prostate cancer</label>
+            <label class="consent-row"><input type="checkbox" id="edit-risk-brca"> BRCA1/2 gene variant</label>
+            <label class="consent-row"><input type="checkbox" id="edit-risk-breast-family"> Family history of breast cancer</label>
+            <label class="consent-row"><input type="checkbox" id="edit-risk-smoker-ldct"> Heavy smoker (LDCT eligible)</label>
+            <label class="consent-row"><input type="checkbox" id="edit-risk-ever-smoker"> Ever smoked</label>
+            <label class="consent-row"><input type="checkbox" id="edit-risk-aaa-family"> Family history of AAA</label>
+            <label class="consent-row"><input type="checkbox" id="edit-risk-stk11"> STK11 / Peutz-Jeghers</label>
+            <label class="consent-row"><input type="checkbox" id="edit-risk-cdkn2a"> CDKN2A / FAMMM</label>
+            <label class="consent-row"><input type="checkbox" id="edit-risk-hereditary-pancreatitis"> Hereditary pancreatitis</label>
+            <label class="consent-row"><input type="checkbox" id="edit-risk-palb2-atm"> PALB2 or ATM variant</label>
+            <label class="consent-row"><input type="checkbox" id="edit-risk-family-pancreatic"> Family history of pancreatic cancer</label>
+            <label class="consent-row"><input type="checkbox" id="edit-risk-skin-high-risk"> High-risk skin (prior melanoma / many moles)</label>
+            <label class="consent-row"><input type="checkbox" id="edit-risk-tobacco-alcohol"> Tobacco + heavy alcohol use</label>
+          </div>
+        </div>
+        <div style="display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap">
+          <button class="btn-ghost" style="background:var(--accent);color:#fff;border-color:var(--accent);font-size:0.82rem" onclick="saveProfile()">Save profile</button>
+          <button class="btn-ghost" style="font-size:0.82rem" onclick="toggleProfileEdit()">Cancel</button>
+          <span id="profile-saved" style="font-size:0.8rem;color:var(--accent);display:none">&#10003; Saved</span>
+        </div>
+      </div>
+
+      <!-- Notification preferences -->
       <div style="margin-top:1.4rem;padding-top:1.2rem;border-top:1px solid var(--paper-warm)">
         <p style="font-size:0.78rem;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:0.75rem">Notification preferences</p>
         <label class="consent-row">
@@ -720,6 +808,56 @@ async function handlePwChange(e) {
     errEl.textContent = err.message; errEl.classList.add('visible');
   } finally {
     btn.textContent = 'Save password'; btn.disabled = false;
+  }
+}
+
+// ── Profile edit ─────────────────────────────────────────────────────────────
+const ORGANS    = ['colon','cervix','prostate','breasts'];
+const RISKFLAGS = ['lynch-syndrome','crc-family','crc-polyps','prostate-family','brca',
+  'breast-family','smoker-ldct','ever-smoker','aaa-family','stk11','cdkn2a',
+  'hereditary-pancreatitis','palb2-atm','family-pancreatic','skin-high-risk','tobacco-alcohol'];
+
+function toggleProfileEdit() {
+  const form = document.getElementById('profile-edit-form');
+  const btn  = document.getElementById('edit-profile-btn');
+  const open = form.style.display === 'none';
+  form.style.display = open ? 'block' : 'none';
+  btn.textContent    = open ? 'Cancel edit' : 'Edit profile';
+  if (open) populateProfileEdit();
+}
+
+function populateProfileEdit() {
+  const p = window._cachedProfile || {};
+  document.getElementById('edit-yob').value    = p.yearOfBirth || '';
+  document.getElementById('edit-sex').value    = p.sexAtBirth  || '';
+  document.getElementById('edit-orient').value = p.orientation || '';
+  ORGANS.forEach(o    => { document.getElementById('edit-organ-' + o).checked    = (p.organs    || []).includes(o); });
+  RISKFLAGS.forEach(r => { document.getElementById('edit-risk-'  + r).checked    = (p.riskFlags || []).includes(r); });
+}
+
+async function saveProfile() {
+  const token     = getToken();
+  const organs    = ORGANS.filter(o    => document.getElementById('edit-organ-' + o).checked);
+  const riskFlags = RISKFLAGS.filter(r => document.getElementById('edit-risk-'  + r).checked);
+  const updated   = {
+    ...window._cachedProfile,
+    yearOfBirth: document.getElementById('edit-yob').value,
+    sexAtBirth:  document.getElementById('edit-sex').value,
+    orientation: document.getElementById('edit-orient').value,
+    organs, riskFlags,
+  };
+  const res = await fetch(`${API}/profile`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+    body: JSON.stringify(updated),
+  });
+  if (res.ok) {
+    window._cachedProfile = updated;
+    renderProfileGrid(updated);
+    renderTimeline(updated);
+    const el = document.getElementById('profile-saved');
+    el.style.display = 'inline';
+    setTimeout(() => { el.style.display = 'none'; }, 2500);
   }
 }
 
