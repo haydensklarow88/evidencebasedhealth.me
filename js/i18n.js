@@ -162,12 +162,28 @@
     return elements;
   }
 
-  // ── Translation API call ──────────────────────────────────────────────────
+  // ── Current page slug ────────────────────────────────────────────────────
+  function pageSlug() {
+    return location.pathname.replace(/^.*\//, '').replace(/\.html$/, '') || 'index';
+  }
+
+  // ── Load pre-built translation map from DynamoDB via GET /translations ───
+  function loadPrebuilt(langCode) {
+    return fetch(API + '/translations?lang=' + encodeURIComponent(langCode) + '&page=' + encodeURIComponent(pageSlug()))
+      .then(function (res) {
+        if (!res.ok) return null;
+        return res.json();
+      }).then(function (data) {
+        return (data && data.map) ? data.map : null;
+      }).catch(function () { return null; });
+  }
+
+  // ── Translation API call (fallback for strings not in pre-built map) ──────
   function translateTexts(texts, langCode, langName) {
     return fetch(API + '/translate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ texts: texts, targetLang: langCode, langName: langName }),
+      body: JSON.stringify({ texts: texts, targetLang: langCode, langName: langName, page: pageSlug() }),
     }).then(function (res) {
       if (!res.ok) throw new Error('Translation API ' + res.status);
       return res.json();
@@ -230,42 +246,49 @@
     var elements = collectElements();
     var originalTexts = elements.map(function (el) { return (el.innerText || '').trim(); });
 
-    var cache = getCache(langCode) || {};
-    var missing = [];
-    var missingIdx = [];
-    for (var i = 0; i < originalTexts.length; i++) {
-      if (!cache[originalTexts[i]]) {
-        missing.push(originalTexts[i]);
-        missingIdx.push(i);
-      }
-    }
+    // Check localStorage cache first
+    var localCache = getCache(langCode) || {};
 
-    var fetchPromise;
-    if (missing.length > 0) {
-      var BATCH = 15;
-      var batches = [];
-      for (var b = 0; b < missing.length; b += BATCH) {
-        batches.push(missing.slice(b, b + BATCH));
+    // Try loading pre-built map from DynamoDB (instant for pre-translated langs)
+    return loadPrebuilt(langCode).then(function (prebuilt) {
+      // Merge pre-built into local cache; pre-built is authoritative
+      var cache = Object.assign({}, localCache, prebuilt || {});
+
+      var missing = [];
+      for (var i = 0; i < originalTexts.length; i++) {
+        if (!cache[originalTexts[i]]) missing.push(originalTexts[i]);
       }
-      fetchPromise = batches.reduce(function (p, batch) {
-        return p.then(function () {
-          return translateTexts(batch, langCode, lang.name).then(function (translated) {
-            for (var j = 0; j < batch.length; j++) {
-              cache[batch[j]] = (translated && translated[j]) ? translated[j] : batch[j];
-            }
+
+      var fetchPromise;
+      if (missing.length > 0) {
+        // Fallback: translate remaining strings via API (auto-writes to DynamoDB)
+        var BATCH = 15;
+        var batches = [];
+        for (var b = 0; b < missing.length; b += BATCH) {
+          batches.push(missing.slice(b, b + BATCH));
+        }
+        fetchPromise = batches.reduce(function (p, batch) {
+          return p.then(function () {
+            return translateTexts(batch, langCode, lang.name).then(function (translated) {
+              for (var j = 0; j < batch.length; j++) {
+                cache[batch[j]] = (translated && translated[j]) ? translated[j] : batch[j];
+              }
+            });
           });
+        }, Promise.resolve()).then(function () {
+          setCache(langCode, cache);
         });
-      }, Promise.resolve()).then(function () {
+      } else {
+        // All strings found in pre-built map — save to local cache and done
         setCache(langCode, cache);
-      });
-    } else {
-      fetchPromise = Promise.resolve();
-    }
+        fetchPromise = Promise.resolve();
+      }
 
-    return fetchPromise.then(function () {
-      applyTranslations(elements, originalTexts, cache);
-      document.documentElement.dir = lang.dir || 'ltr';
-      document.documentElement.lang = langCode;
+      return fetchPromise.then(function () {
+        applyTranslations(elements, originalTexts, cache);
+        document.documentElement.dir = lang.dir || 'ltr';
+        document.documentElement.lang = langCode;
+      });
     });
   }
 
