@@ -381,14 +381,17 @@
     }
 
     var toast = document.getElementById('i18n-toast');
-    if (toast) toast.style.display = 'block';
+    if (toast) { toast.textContent = 'Translating\u2026'; toast.style.display = 'block'; }
 
     translatePage(code).then(function () {
       saveLangProfile(code);
+      if (toast) toast.style.display = 'none';
     }).catch(function (err) {
       console.error('i18n translate error:', err);
-    }).finally(function () {
-      if (toast) toast.style.display = 'none';
+      if (toast) { toast.textContent = 'Translation unavailable'; }
+      setTimeout(function () {
+        if (toast) { toast.style.display = 'none'; toast.textContent = 'Translating\u2026'; }
+      }, 3000);
     });
   }
 
@@ -405,10 +408,11 @@
     }
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
+  // Run immediately if DOM is ready (script at end of body), else wait
+  if (document.body && document.readyState !== 'loading') {
     init();
+  } else {
+    document.addEventListener('DOMContentLoaded', init);
   }
 
   // Public API

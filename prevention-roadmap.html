@@ -556,10 +556,11 @@
     <h1>What should <em>you</em> be talking to your clinician about?</h1>
     <p class="hero-sub">Answer a few quick questions about your age and anatomy. We&rsquo;ll show you which cancer screenings and preventive conversations are most relevant for you right now, according to current guidelines.</p>
     <!-- LANGUAGE SELECTOR -->
-    <div id="lang-banner" style="margin-top:1.2rem;display:flex;align-items:center;gap:0.65rem;flex-wrap:wrap">
-      <span style="font-size:0.78rem;color:rgba(255,255,255,0.75);letter-spacing:0.02em">Read in your language:</span>
-      <div id="lang-pills" style="display:flex;gap:0.4rem;flex-wrap:wrap"></div>
-      <button id="lang-more-btn" style="font-size:0.75rem;color:rgba(255,255,255,0.75);background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.3);border-radius:20px;padding:0.22rem 0.7rem;cursor:pointer;font-family:inherit">More &rarr;</button>
+    <div id="lang-banner" style="margin-top:1.4rem;padding-top:1.2rem;border-top:1px solid var(--paper-warm);display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap">
+      <span style="font-size:0.75rem;color:var(--ink-faint);letter-spacing:0.06em;font-weight:500;text-transform:uppercase">Read in your language</span>
+      <div id="lang-pills" style="display:flex;gap:0.35rem;flex-wrap:wrap"></div>
+      <button id="lang-more-btn" style="font-size:0.75rem;color:var(--accent-mid);background:transparent;border:1px solid var(--accent-rule);border-radius:20px;padding:0.22rem 0.7rem;cursor:pointer;font-family:inherit;transition:border-color .15s,color .15s" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--accent-rule)';this.style.color='var(--accent-mid)'">More &rarr;</button>
+      <span id="lang-status" style="font-size:0.75rem;color:var(--ink-faint);display:none"></span>
     </div>
   </div>
 </div>
@@ -1796,12 +1797,23 @@ If you are unsure which variant you carry, review your genetic testing report or
 
 <script src="js/i18n.js"></script>
 <script>
-// Render prominent language pills after i18n.js loads
 (function () {
   var TOP = ['es','fr','zh','ar','hi','pt','de','ko','ja','ru','vi','tr','it','pl','tl'];
   var pills = document.getElementById('lang-pills');
   var moreBtn = document.getElementById('lang-more-btn');
+  var statusEl = document.getElementById('lang-status');
   if (!pills || typeof window.ebhI18n === 'undefined') return;
+
+  function pillStyle(active) {
+    return 'font-size:0.75rem;padding:0.25rem 0.8rem;border-radius:20px;cursor:pointer;font-family:inherit;transition:background .15s,color .15s,border-color .15s;border:1px solid ' + (active ? 'var(--accent)' : 'var(--accent-rule)') + ';background:' + (active ? 'var(--accent)' : 'transparent') + ';color:' + (active ? '#fff' : 'var(--ink-mid)') + ';font-weight:' + (active ? '500' : '400');
+  }
+
+  function setActive(code) {
+    pills.querySelectorAll('button').forEach(function (b) {
+      b.style.cssText = pillStyle(b.dataset.code === code);
+    });
+  }
+
   var saved = window.ebhI18n.getSaved();
   TOP.forEach(function (code) {
     var lang = window.ebhI18n.languages.filter(function (l) { return l.code === code; })[0];
@@ -1809,19 +1821,16 @@ If you are unsure which variant you carry, review your genetic testing report or
     var btn = document.createElement('button');
     btn.textContent = lang.native;
     btn.dataset.code = code;
-    var active = saved === code;
-    btn.style.cssText = 'font-size:0.75rem;padding:0.22rem 0.75rem;border-radius:20px;cursor:pointer;font-family:inherit;transition:background .15s,color .15s;border:1px solid rgba(255,255,255,0.35);background:' + (active ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.15)') + ';color:' + (active ? '#1a5c3a' : '#fff') + ';font-weight:' + (active ? '600' : '400');
+    btn.style.cssText = pillStyle(saved === code);
     btn.addEventListener('click', function () {
+      if (statusEl) { statusEl.textContent = 'Translating\u2026'; statusEl.style.display = 'inline'; }
+      setActive(code);
       window.ebhI18n.select(code);
-      pills.querySelectorAll('button').forEach(function (b) {
-        var isActive = b.dataset.code === code;
-        b.style.background = isActive ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.15)';
-        b.style.color = isActive ? '#1a5c3a' : '#fff';
-        b.style.fontWeight = isActive ? '600' : '400';
-      });
+      setTimeout(function () { if (statusEl) statusEl.style.display = 'none'; }, 5000);
     });
     pills.appendChild(btn);
   });
+
   if (moreBtn) {
     moreBtn.addEventListener('click', function () {
       var globeBtn = document.getElementById('i18n-btn');
