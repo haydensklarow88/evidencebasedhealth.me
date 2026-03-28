@@ -571,6 +571,7 @@
           <button class="btn-ghost" style="background:var(--accent);color:#fff;border-color:var(--accent);font-size:0.82rem" onclick="saveProfile()">Save profile</button>
           <button class="btn-ghost" style="font-size:0.82rem" onclick="toggleProfileEdit()">Cancel</button>
           <span id="profile-saved" style="font-size:0.8rem;color:var(--accent);display:none">&#10003; Saved</span>
+          <span id="profile-save-err" style="font-size:0.8rem;color:#c0392b;display:none"></span>
         </div>
       </div>
 
@@ -584,11 +585,12 @@
           <input type="checkbox" id="pref-sms" onchange="toggleSmsPhone(this.checked)"> Also send SMS reminders (message &amp; data rates may apply)
         </label>
         <div id="sms-phone-wrap" style="display:none;margin:0.4rem 0 0.6rem 1.65rem">
-          <input type="tel" id="pref-phone" style="width:100%;max-width:280px;padding:0.6rem 0.8rem;border:1px solid var(--paper-warm);border-radius:6px;font-family:var(--sans);font-size:0.88rem;color:var(--ink);background:var(--paper);outline:none" placeholder="+1 555 000 1234" autocomplete="tel">
-          <div style="font-size:0.72rem;color:var(--ink-faint);margin-top:0.3rem">US / Canada format. Reply STOP at any time to opt out.</div>
+          <input type="tel" id="pref-phone" style="width:100%;max-width:280px;padding:0.6rem 0.8rem;border:1px solid var(--paper-warm);border-radius:6px;font-family:var(--sans);font-size:0.88rem;color:var(--ink);background:var(--paper);outline:none" placeholder="+1 555 000 1234" autocomplete="tel" onblur="formatPhoneInput(this)">
+          <div style="font-size:0.72rem;color:var(--ink-faint);margin-top:0.3rem">Will be formatted to +1XXXXXXXXXX. Reply STOP at any time to opt out.</div>
         </div>
         <button class="btn-ghost" style="margin-top:0.75rem;font-size:0.8rem" onclick="saveConsent()">Save preferences</button>
         <span id="consent-saved" style="font-size:0.8rem;color:var(--accent);margin-left:0.75rem;display:none">&#10003; Saved</span>
+        <span id="consent-save-err" style="font-size:0.8rem;color:#c0392b;margin-left:0.75rem;display:none"></span>
       </div>
     </div>
 
@@ -836,7 +838,9 @@ function populateProfileEdit() {
 }
 
 async function saveProfile() {
-  const token     = getToken();
+  const token  = getToken();
+  const errEl  = document.getElementById('profile-save-err');
+  errEl.style.display = 'none';
   const organs    = ORGANS.filter(o    => document.getElementById('edit-organ-' + o).checked);
   const riskFlags = RISKFLAGS.filter(r => document.getElementById('edit-risk-'  + r).checked);
   const updated   = {
@@ -846,19 +850,37 @@ async function saveProfile() {
     orientation: document.getElementById('edit-orient').value,
     organs, riskFlags,
   };
-  const res = await fetch(`${API}/profile`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-    body: JSON.stringify(updated),
-  });
-  if (res.ok) {
+  try {
+    const res  = await fetch(`${API}/profile`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify(updated),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || `Save failed (${res.status})`);
     window._cachedProfile = updated;
     renderProfileGrid(updated);
     renderTimeline(updated);
     const el = document.getElementById('profile-saved');
     el.style.display = 'inline';
     setTimeout(() => { el.style.display = 'none'; }, 2500);
+  } catch (err) {
+    errEl.textContent = err.message;
+    errEl.style.display = 'inline';
   }
+}
+
+// ── Phone formatting ─────────────────────────────────────────────────────────
+function toE164(raw) {
+  const digits = raw.replace(/\D/g, '');
+  if (digits.length === 10) return '+1' + digits;
+  if (digits.length === 11 && digits[0] === '1') return '+' + digits;
+  if (digits.length > 7) return '+' + digits; // international best-effort
+  return raw;
+}
+function formatPhoneInput(el) {
+  const v = el.value.trim();
+  if (v) el.value = toE164(v);
 }
 
 // ── Save consent prefs ────────────────────────────────────────────────────────
@@ -867,22 +889,33 @@ function toggleSmsPhone(checked) {
 }
 
 async function saveConsent() {
-  const token = getToken();
+  const token  = getToken();
+  const errEl  = document.getElementById('consent-save-err');
+  errEl.style.display = 'none';
   const emailConsent = document.getElementById('pref-email').checked;
   const smsConsent   = document.getElementById('pref-sms').checked;
-  const phone        = document.getElementById('pref-phone').value.trim();
-  // Pull current profile to keep other fields intact
+  const rawPhone     = document.getElementById('pref-phone').value.trim();
+  const phone        = rawPhone ? toE164(rawPhone) : '';
+  if (phone) document.getElementById('pref-phone').value = phone;
   const profile = window._cachedProfile;
   if (!profile) return;
 
-  await fetch(`${API}/profile`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-    body: JSON.stringify({ ...profile, emailConsent, smsConsent, phone }),
-  });
-  const el = document.getElementById('consent-saved');
-  el.style.display = 'inline';
-  setTimeout(() => { el.style.display = 'none'; }, 2500);
+  try {
+    const res  = await fetch(`${API}/profile`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({ ...profile, emailConsent, smsConsent, phone }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || `Save failed (${res.status})`);
+    window._cachedProfile = { ...profile, emailConsent, smsConsent, phone };
+    const el = document.getElementById('consent-saved');
+    el.style.display = 'inline';
+    setTimeout(() => { el.style.display = 'none'; }, 2500);
+  } catch (err) {
+    errEl.textContent = err.message;
+    errEl.style.display = 'inline';
+  }
 }
 
 // ── Load dashboard ────────────────────────────────────────────────────────────
