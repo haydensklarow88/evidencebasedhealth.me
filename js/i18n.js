@@ -119,12 +119,18 @@
     return false;
   }
 
+  function hasInputChild(el) {
+    return !!el.querySelector('input, select, textarea');
+  }
+
   function collectElements() {
     var selectors = [
       'nav .nav-logo', 'nav .nav-link',
+      '.page-hero .page-label', '.page-hero h1', '.page-hero p',
+      '.edu-notice p',
       'main h1', 'main h2', 'main h3', 'main h4',
       'main p', 'main li', 'main label',
-      'main button', 'main .page-label',
+      'main button', 'main .page-label', 'main .field-label',
       'main .intro', 'main .cred-text', 'main .reason-text',
       'main .section-sub', 'main .section-heading',
       'main .optin-sub', 'main .auth-sub',
@@ -142,7 +148,7 @@
         document.querySelectorAll(sel).forEach(function (el) {
           if (seen.indexOf(el) !== -1) return;
           if (el.closest('[data-no-translate]')) return;
-          if (hasBlockChild(el)) return;
+          if (hasBlockChild(el) || hasInputChild(el)) return;
           var text = (el.innerText || '').trim();
           if (!text || text.length < 2) return;
           // Skip pure numbers, symbols, emails, URLs
@@ -420,6 +426,19 @@
     select: selectLang,
     getSaved: getSavedLang,
     languages: LANGUAGES,
+    retranslate: function () {
+      var code = getSavedLang();
+      if (code === 'en') return;
+      restorePage();
+      var toast = document.getElementById('i18n-toast');
+      if (toast) { toast.textContent = 'Translating\u2026'; toast.style.display = 'block'; }
+      translatePage(code).then(function () {
+        if (toast) toast.style.display = 'none';
+      }).catch(function (err) {
+        console.error('i18n retranslate error:', err);
+        if (toast) { toast.textContent = 'Translation unavailable'; setTimeout(function () { if (toast) { toast.style.display = 'none'; toast.textContent = 'Translating\u2026'; } }, 3000); }
+      });
+    },
   };
 
 }());

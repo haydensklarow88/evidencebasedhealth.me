@@ -562,6 +562,7 @@
       <button id="lang-more-btn" style="font-size:0.75rem;color:var(--accent-mid);background:transparent;border:1px solid var(--accent-rule);border-radius:20px;padding:0.22rem 0.7rem;cursor:pointer;font-family:inherit;transition:border-color .15s,color .15s" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--accent-rule)';this.style.color='var(--accent-mid)'">More &rarr;</button>
       <span id="lang-status" style="font-size:0.75rem;color:var(--ink-faint);display:none"></span>
     </div>
+    <p style="font-size:0.68rem;color:var(--ink-faint);margin-top:0.45rem;margin-bottom:0">AI-powered translation &mdash; first translation may take a few seconds</p>
   </div>
 </div>
 
@@ -1578,6 +1579,8 @@ If you are unsure which variant you carry, review your genetic testing report or
     const listEl      = document.getElementById('screening-list');
     const optInEl     = document.getElementById('opt-in');
 
+    // Clear any prior translation markers so retranslate() picks up fresh content
+    document.querySelectorAll('#results [data-orig-content]').forEach(el => el.removeAttribute('data-orig-content'));
     listEl.innerHTML  = '';
     resultsEl.classList.add('visible');
 
@@ -1621,6 +1624,11 @@ If you are unsure which variant you carry, review your genetic testing report or
     // Scroll to results (offset for sticky nav ~60px)
     const top = resultsEl.getBoundingClientRect().top + window.pageYOffset - 72;
     window.scrollTo({ top, behavior: 'smooth' });
+
+    // Re-apply active translation to newly rendered results
+    if (window.ebhI18n && window.ebhI18n.getSaved() !== 'en') {
+      window.ebhI18n.retranslate();
+    }
   }
 
   // ── Profile token validity check (client-side only) ──────────────────────
