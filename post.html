@@ -44,9 +44,9 @@
   }
   h1 {
     font-family: var(--serif);
-    font-size: clamp(1.2rem, 2.4vw, 1.56rem);
-    line-height: 1.2; font-weight: 700; color: var(--ink);
-    letter-spacing: -0.02em; margin-bottom: 1rem;
+    font-size: clamp(1.85rem, 4vw, 2.6rem);
+    line-height: 1.15; font-weight: 700; color: var(--ink);
+    letter-spacing: -0.02em; margin-bottom: 0.75rem;
   }
   .article-meta {
     font-size: 0.78rem; color: var(--ink-faint); margin-bottom: 2.5rem;
@@ -209,6 +209,13 @@ async function loadPost() {
 
     const articleBody = document.getElementById('article-body');
     articleBody.innerHTML = data.fullPostHtml || '<p>Full article not available.</p>';
+    // Strip leading h2 that duplicates the h1 title above
+    const firstH2 = articleBody.querySelector('h2:first-child, p:first-child + h2, h2');
+    if (firstH2) {
+      // Only remove if it's the very first meaningful element
+      const firstEl = articleBody.firstElementChild;
+      if (firstEl && firstEl.tagName === 'H2') firstEl.remove();
+    }
     // Strip self-referential CTA links (email artifact: "Read the full evidence brief →")
     articleBody.querySelectorAll('a[href*="post.html?slug="]').forEach(a => {
       const p = a.closest('p');
