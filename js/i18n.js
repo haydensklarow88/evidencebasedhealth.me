@@ -148,7 +148,7 @@
         document.querySelectorAll(sel).forEach(function (el) {
           if (seen.indexOf(el) !== -1) return;
           if (el.closest('[data-no-translate]')) return;
-          if (hasBlockChild(el) || hasInputChild(el)) return;
+          if (hasBlockChild(el)) return;
           var text = (el.innerText || '').trim();
           if (!text || text.length < 2) return;
           // Skip pure numbers, symbols, emails, URLs
@@ -184,7 +184,30 @@
       var translated = map[orig];
       if (translated && translated !== orig) {
         if (!el.dataset.origContent) el.dataset.origContent = el.innerHTML;
-        el.innerText = translated;
+        if (hasInputChild(el)) {
+          // Modify text nodes in-place so input/checkbox elements and their
+          // event listeners are preserved intact.
+          var textSet = false;
+          var nodes = el.childNodes;
+          for (var n = 0; n < nodes.length; n++) {
+            var node = nodes[n];
+            if (node.nodeType === 3 && node.textContent.trim()) {
+              if (!textSet) {
+                var ws = node.textContent.match(/^\s*/)[0];
+                node.textContent = ws + translated;
+                textSet = true;
+              } else {
+                node.textContent = ''; // clear extra text (from inline-element labels)
+              }
+            } else if (node.nodeType === 1 &&
+                       node.tagName !== 'INPUT' && node.tagName !== 'SELECT' && node.tagName !== 'TEXTAREA') {
+              // Hide inline elements like <strong> whose text is now in the translation
+              node.style.display = 'none';
+            }
+          }
+        } else {
+          el.innerText = translated;
+        }
       }
     }
   }
