@@ -3759,7 +3759,7 @@ document.getElementById('btn-send-test').addEventListener('click', async () => {
   showStatus('nl-send-status','loading','<span class="spinner" style="display:inline-block;vertical-align:middle;margin-right:0.5rem"></span>Sending test…');
   document.getElementById('btn-send-test').disabled = true;
   try {
-    const res  = await fetch(`${API}/send-newsletter`, { method: 'POST', headers: authHeaders(), body: JSON.stringify({ subjectLine: nlPostData.subjectLine, bodyHtml: nlPostData.bodyHtml, bodyText: nlPostData.bodyText, previewText: nlPostData.previewText, testOnly: true, testEmail }) });
+    const res  = await fetch(`${API}/send-newsletter`, { method: 'POST', headers: authHeaders(), body: JSON.stringify({ subjectLine: nlPostData.subjectLine, bodyHtml: nlPostData.bodyHtml, bodyText: nlPostData.bodyText, previewText: nlPostData.previewText, imageUrl: document.getElementById('nl-img-url')?.value || '', testOnly: true, testEmail }) });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Send failed');
     showStatus('nl-send-status','success',`✓ Test email sent to ${esc(testEmail)}. Check your inbox!`);
@@ -3801,7 +3801,7 @@ document.getElementById('btn-send-all').addEventListener('click', async () => {
   showStatus('nl-send-status','loading','<span class="spinner" style="display:inline-block;vertical-align:middle;margin-right:0.5rem"></span>Sending to all subscribers…');
   document.getElementById('btn-send-all').disabled = true;
   try {
-    const res  = await fetch(`${API}/send-newsletter`, { method: 'POST', headers: authHeaders(), body: JSON.stringify({ subjectLine: nlPostData.subjectLine, bodyHtml: nlPostData.bodyHtml, bodyText: nlPostData.bodyText, previewText: nlPostData.previewText }) });
+    const res  = await fetch(`${API}/send-newsletter`, { method: 'POST', headers: authHeaders(), body: JSON.stringify({ subjectLine: nlPostData.subjectLine, bodyHtml: nlPostData.bodyHtml, bodyText: nlPostData.bodyText, previewText: nlPostData.previewText, imageUrl: document.getElementById('nl-img-url')?.value || '' }) });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Send failed');
     showStatus('nl-send-status','success',`✓ Sent to ${data.sent} subscriber(s).${data.errors ? ` (${data.errors} failed)` : ''}`);
@@ -4203,9 +4203,12 @@ async function handleImgUpload(input, targetId, previewId) {
       method: 'POST', headers: authHeaders(),
       body: JSON.stringify({ fileName: file.name, contentType: file.type }),
     });
-    const { uploadUrl, fileUrl } = await res.json();
-    if (!res.ok) throw new Error('Could not get upload URL');
-    await fetch(uploadUrl, { method: 'PUT', body: file, headers: { 'Content-Type': file.type } });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Could not get upload URL');
+    const { uploadUrl, fileUrl } = data;
+    if (!uploadUrl) throw new Error('No upload URL returned');
+    const putRes = await fetch(uploadUrl, { method: 'PUT', body: file, headers: { 'Content-Type': file.type } });
+    if (!putRes.ok) throw new Error(`S3 upload failed (${putRes.status})`);
     const targetEl = document.getElementById(targetId);
     if (targetEl) targetEl.value = fileUrl;
     const preview = document.getElementById(previewId);
