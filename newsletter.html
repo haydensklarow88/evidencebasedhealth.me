@@ -102,6 +102,39 @@
   }
   .btn-cta:hover { background: var(--accent-mid); }
 
+  /* Featured post card */
+  .featured-card {
+    display: grid; grid-template-columns: 140px 1fr;
+    gap: 1.5rem; align-items: start;
+    background: var(--paper-card); border: 1px solid var(--paper-warm);
+    border-radius: 10px; padding: 1.5rem; margin-bottom: 2.5rem;
+    text-decoration: none; color: inherit;
+    transition: box-shadow 0.15s;
+  }
+  .featured-card:hover { box-shadow: 0 4px 24px rgba(0,0,0,0.07); }
+  .featured-card img {
+    width: 100%; aspect-ratio: 1; object-fit: cover; object-position: top;
+    border-radius: 6px; display: block;
+  }
+  .featured-label {
+    font-size: 0.65rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--accent-mid); margin-bottom: 0.45rem;
+  }
+  .featured-title {
+    font-family: var(--serif); font-size: 1.05rem; font-weight: 700;
+    color: var(--ink); line-height: 1.35; margin-bottom: 0.65rem;
+  }
+  .featured-preview {
+    font-size: 0.88rem; color: var(--ink-light); line-height: 1.7; margin-bottom: 0.85rem;
+  }
+  .featured-read {
+    font-size: 0.8rem; font-weight: 500; color: var(--accent); letter-spacing: 0.02em;
+  }
+  @media (max-width: 520px) {
+    .featured-card { grid-template-columns: 1fr; }
+    .featured-card img { max-width: 120px; aspect-ratio: 1; }
+  }
+
   /* Archive */
   .archive-section { margin-top: 1rem; }
   .archive-post {
@@ -145,6 +178,17 @@
   <h1>Evidence briefs</h1>
   <p class="intro">Free weekly health insights &mdash; evidence-based, no agenda.
   <a href="index.html" style="color:var(--accent);text-decoration:underline;text-underline-offset:2px">Subscribe to get them in your inbox &rarr;</a></p>
+
+  <!-- Featured first post -->
+  <a class="featured-card" href="post.html?slug=why-preventive-medicine-cant-wait">
+    <img src="https://ebh-media-uploads.s3.amazonaws.com/uploads/1774700708687_founderphoto.png" alt="Hayden Slarow, PA-C">
+    <div>
+      <div class="featured-label">Inaugural Issue &mdash; Mar 28, 2026</div>
+      <div class="featured-title">Why Preventive Medicine Can&rsquo;t Wait</div>
+      <div class="featured-preview">Serious disease is showing up earlier and without warning &mdash; in people who are working full time, raising children, and feel &ldquo;too young&rdquo; to worry about screening. Here&rsquo;s what the evidence actually says, and the one conversation that could change everything.</div>
+      <div class="featured-read">Read the full brief &rarr;</div>
+    </div>
+  </a>
 
   <div class="archive-section">
     <h2>The weekly briefs</h2>
