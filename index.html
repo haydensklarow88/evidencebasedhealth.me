@@ -49,9 +49,6 @@
     font-weight: 300;
     line-height: 1.7;
     -webkit-font-smoothing: antialiased;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
   }
 
   /* â”€â”€ NAV â”€â”€ */
@@ -91,15 +88,12 @@
 
   /* â”€â”€ PAGE â”€â”€ */
   .page {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 4rem 2rem 5rem;
+    padding: 5rem 2rem 4rem;
   }
   .page-inner {
     width: 100%;
     max-width: var(--max);
+    margin: 0 auto;
   }
 
   /* â”€â”€ EYEBROW â”€â”€ */
@@ -221,7 +215,6 @@
     text-align: center;
     font-size: 0.75rem;
     color: var(--ink-faint);
-    flex-shrink: 0;
   }
   footer a { color: var(--ink-light); text-decoration: none; }
   footer a:hover { color: var(--accent); }
@@ -270,6 +263,61 @@
     .cookie-actions { width: 100%; }
     .cookie-btn { flex: 1; text-align: center; }
   }
+
+  /* ── WHAT TO EXPECT ── */
+  .wtx-section {
+    border-top: 2px solid var(--paper-warm);
+    padding: 4rem 2rem 5rem;
+  }
+  .wtx-inner {
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  .wtx-label {
+    font-size: 0.7rem; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--accent-mid); margin-bottom: 1rem; display: block;
+  }
+  .wtx-h1 {
+    font-family: var(--serif);
+    font-size: clamp(1.4rem, 3vw, 1.9rem);
+    font-weight: 700; line-height: 1.2; color: var(--ink);
+    letter-spacing: -0.02em; margin-bottom: 1rem;
+  }
+  .wtx-intro {
+    font-size: 0.97rem; color: var(--ink-mid);
+    line-height: 1.8; margin-bottom: 2.5rem; font-weight: 300;
+  }
+  .get-list { display: flex; flex-direction: column; }
+  .get-item {
+    display: grid; grid-template-columns: 1.8rem 1fr;
+    gap: 1rem; padding: 1.3rem 0;
+    border-bottom: 1px solid var(--paper-warm); align-items: start;
+  }
+  .get-item:first-child { border-top: 1px solid var(--paper-warm); }
+  .get-item:last-child { border-bottom: none; }
+  .get-arrow { color: var(--accent-mid); font-size: 0.9rem; padding-top: 0.2rem; }
+  .get-body h4 {
+    font-family: var(--serif); font-size: 0.97rem; font-weight: 700;
+    color: var(--ink); margin-bottom: 0.3rem;
+  }
+  .get-body p { font-size: 0.88rem; color: var(--ink-light); line-height: 1.7; }
+  .wtx-h2 {
+    font-family: var(--serif); font-size: 1.1rem; font-weight: 700; color: var(--ink);
+    margin: 2.5rem 0 1.2rem; padding-top: 2rem; border-top: 1px solid var(--paper-warm);
+  }
+  .pillar-list { display: flex; flex-direction: column; }
+  .pillar-item {
+    display: grid; grid-template-columns: 2.2rem 1fr;
+    align-items: baseline; gap: 1rem;
+    padding: 0.85rem 0; border-bottom: 1px solid var(--paper-warm);
+  }
+  .pillar-item:last-child { border-bottom: none; }
+  .pillar-num {
+    font-family: var(--serif); font-size: 0.78rem;
+    font-weight: 700; color: var(--accent-rule); letter-spacing: 0.02em;
+  }
+  .pillar-title { font-size: 0.95rem; color: var(--ink-mid); line-height: 1.5; }
+  .pillar-title strong { font-weight: 500; color: var(--ink); }
 </style>
 </head>
 <body>
@@ -312,6 +360,70 @@
     <p class="fine">By subscribing you agree to receive a weekly educational email. Unsubscribe anytime. <a href="privacy.html">Privacy Policy</a> &middot; <a href="disclaimer.html">Disclaimer</a></p>
   </div>
 </div>
+
+<!-- WHAT TO EXPECT -->
+<section class="wtx-section">
+  <div class="wtx-inner">
+    <span class="wtx-label">What to expect</span>
+    <h2 class="wtx-h1">One brief email. Once a week. Actually useful.</h2>
+    <p class="wtx-intro">Evidence-based insights on hormones, strength, and metabolic health &mdash; written by a clinician who spends his days treating people who didn&rsquo;t get this information early enough. No products. No agenda. Plain language.</p>
+
+    <div class="get-list">
+      <div class="get-item">
+        <div class="get-arrow">&rarr;</div>
+        <div class="get-body">
+          <h4>2&ndash;3 things to know or do</h4>
+          <p>Actionable guidance on hormones, metabolic health, and everyday habits &mdash; rooted in current medical evidence and explained in plain language.</p>
+        </div>
+      </div>
+      <div class="get-item">
+        <div class="get-arrow">&rarr;</div>
+        <div class="get-body">
+          <h4>1 tiny experiment</h4>
+          <p>Small enough to actually try &mdash; a 10&#8209;minute walk after a meal, a protein target, a simple sleep tweak. One thing per week.</p>
+        </div>
+      </div>
+      <div class="get-item">
+        <div class="get-arrow">&rarr;</div>
+        <div class="get-body">
+          <h4>1 conversation starter</h4>
+          <p>Something you can bring to a partner, parent, friend, or your own clinician to open a better health conversation.</p>
+        </div>
+      </div>
+      <div class="get-item">
+        <div class="get-arrow">&rarr;</div>
+        <div class="get-body">
+          <h4>No agenda</h4>
+          <p>No products to sell, no supplements to push &mdash; just the honest signal extracted from the noise.</p>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="wtx-h2">Topics covered</h3>
+    <div class="pillar-list">
+      <div class="pillar-item">
+        <span class="pillar-num">01</span>
+        <span class="pillar-title"><strong>Hormones</strong> &mdash; TRT, peptides, GLP&#8209;1s, thyroid, cortisol, sex hormones across the lifespan</span>
+      </div>
+      <div class="pillar-item">
+        <span class="pillar-num">02</span>
+        <span class="pillar-title"><strong>Strength and body composition</strong> &mdash; resistance training, protein, recovery, and what the evidence actually says</span>
+      </div>
+      <div class="pillar-item">
+        <span class="pillar-num">03</span>
+        <span class="pillar-title"><strong>Metabolic health</strong> &mdash; blood glucose, insulin resistance, cardiovascular risk, diet, and gut health</span>
+      </div>
+      <div class="pillar-item">
+        <span class="pillar-num">04</span>
+        <span class="pillar-title"><strong>Preventive screening</strong> &mdash; which screenings matter, at what ages, and what to ask your clinician</span>
+      </div>
+      <div class="pillar-item">
+        <span class="pillar-num">05</span>
+        <span class="pillar-title"><strong>Plain&#8209;language education</strong> &mdash; understanding labs, imaging, diagnoses, and risk numbers so you can participate in your own care</span>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- FOOTER -->
 <footer>
