@@ -206,7 +206,13 @@ async function loadPost() {
       img.style.display = 'block';
     }
 
-    document.getElementById('article-body').innerHTML = data.fullPostHtml || '<p>Full article not available.</p>';
+    const articleBody = document.getElementById('article-body');
+    articleBody.innerHTML = data.fullPostHtml || '<p>Full article not available.</p>';
+    // Strip self-referential CTA links (email artifact: "Read the full evidence brief →")
+    articleBody.querySelectorAll('a[href*="post.html?slug="]').forEach(a => {
+      const p = a.closest('p');
+      if (p && p.textContent.trim().length < 80) p.remove();
+    });
 
     document.getElementById('loading-state').style.display = 'none';
     document.getElementById('article-wrap').style.display = 'block';
