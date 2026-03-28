@@ -532,9 +532,12 @@ function loadCompletions()  { try { return JSON.parse(localStorage.getItem(COMPL
 function saveCompletions(c) { localStorage.setItem(COMPLETIONS_KEY, JSON.stringify(c)); }
 function titleKey(t)        { return t.toLowerCase().replace(/[^a-z0-9]+/g, '-'); }
 
-function markComplete(key, title, note, interval, isOneTime) {
+window._tlItems = {};
+function markComplete(key) {
+  const item = window._tlItems[key];
+  if (!item) return;
   const c = loadCompletions();
-  c[key] = { key, title, note, interval, isOneTime,
+  c[key] = { key, title: item.title, note: item.note, interval: item.interval, isOneTime: item.isOneTime,
     completedYear: new Date().getFullYear(),
     completedAt: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) };
   saveCompletions(c);
@@ -952,6 +955,10 @@ function renderTimeline(profile) {
   }
   upcoming.sort((a, b) => a.yearsAway - b.yearsAway);
 
+  // Populate global lookup so onclick handlers can retrieve item data by key
+  window._tlItems = {};
+  for (const item of upcoming) window._tlItems[item.key] = item;
+
   list.innerHTML = upcoming.length ? upcoming.map(item => {
     const ya = item.yearsAway;
     let badgeClass, badgeText, whenText;
@@ -979,7 +986,7 @@ function renderTimeline(profile) {
         <div class="tl-note">${item.note}</div>
         <div class="tl-when">${whenText}</div>
       </div>
-      <button class="tl-done-btn" onclick="markComplete(${JSON.stringify(item.key)},${JSON.stringify(item.title)},${JSON.stringify(item.note)},${item.interval},${item.isOneTime})">&#10003;&nbsp;Mark done</button>
+      <button class="tl-done-btn" onclick="markComplete('${item.key}')">&#10003;&nbsp;Mark done</button>
     </li>`;
   }).join('') : '<li class="tl-empty">All caught up &mdash; no upcoming screenings.</li>';
 
@@ -993,7 +1000,7 @@ function renderTimeline(profile) {
         <div class="tl-note">${c.note}</div>
         <div class="tl-when">Completed ${c.completedAt}${c.isOneTime ? ' &mdash; one-time test' : ` &mdash; next due in ~${c.interval} yr`}</div>
       </div>
-      <button class="tl-undo-btn" onclick="undoComplete(${JSON.stringify(c.key)})">Undo</button>
+      <button class="tl-undo-btn" onclick="undoComplete('${c.key}')">Undo</button>
     </li>`).join('');
     histCard.style.display = 'block';
   } else {
