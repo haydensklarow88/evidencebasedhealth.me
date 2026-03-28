@@ -224,11 +224,11 @@
   }
 
   /* ── timeline ── */
-  .timeline { list-style: none; margin-bottom: 3rem; }
+  .timeline { list-style: none; margin-bottom: 1.5rem; }
   .tl-item {
     display: grid;
-    grid-template-columns: 100px 1fr;
-    gap: 0 1.2rem;
+    grid-template-columns: 90px 1fr auto;
+    gap: 0 1rem;
     padding: 0.9rem 0;
     border-bottom: 1px solid var(--paper-warm);
     align-items: start;
@@ -248,10 +248,28 @@
   .badge-due     { background: #fff3cd; color: #7a5c00; }
   .badge-soon    { background: #e3f1e8; color: #1a5c3a; }
   .badge-future  { background: var(--paper); color: var(--ink-faint); border: 1px solid var(--paper-warm); }
+  .badge-done    { background: var(--paper-warm); color: var(--ink-faint); }
   .tl-title { font-size: 0.9rem; font-weight: 500; color: var(--ink); line-height: 1.4; }
   .tl-note  { font-size: 0.78rem; color: var(--ink-light); margin-top: 0.2rem; }
   .tl-when  { font-size: 0.72rem; color: var(--ink-faint); margin-top: 0.2rem; }
   .tl-empty { font-size: 0.88rem; color: var(--ink-faint); padding: 1.5rem 0; }
+  .tl-done-btn {
+    font-size: 0.68rem; font-weight: 500; color: var(--accent);
+    background: none; border: 1px solid currentColor; border-radius: 3px;
+    padding: 0.22rem 0.55rem; cursor: pointer; white-space: nowrap;
+    font-family: var(--sans); opacity: 0.6; transition: opacity 0.15s;
+    margin-top: 0.1rem;
+  }
+  .tl-done-btn:hover { opacity: 1; }
+  .tl-undo-btn {
+    font-size: 0.68rem; color: var(--ink-faint);
+    background: none; border: 1px solid var(--paper-warm); border-radius: 3px;
+    padding: 0.22rem 0.55rem; cursor: pointer; white-space: nowrap;
+    font-family: var(--sans); opacity: 0.7; transition: opacity 0.15s;
+    margin-top: 0.1rem;
+  }
+  .tl-undo-btn:hover { opacity: 1; border-color: var(--ink-faint); color: var(--ink-light); }
+  .tl-item-hist .tl-title { color: var(--ink-light); }
 
   /* ── profile card ── */
   .profile-card {
@@ -431,6 +449,16 @@
       </ul>
     </div>
 
+    <!-- COMPLETED SCREENINGS HISTORY -->
+    <div class="profile-card" id="history-card" style="display:none">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.25rem">
+        <p class="section-heading">Completed screenings</p>
+        <button class="tl-undo-btn" style="margin-top:0;font-size:0.72rem" onclick="clearHistory()">Clear all</button>
+      </div>
+      <p class="section-sub">Recurring items reappear in upcoming reminders when they&rsquo;re next due.</p>
+      <ul class="timeline" id="history-list"></ul>
+    </div>
+
     <!-- PROFILE SUMMARY -->
     <div class="profile-card">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:0.5rem">
@@ -478,6 +506,30 @@
 <script>
 const API   = 'https://lvsofp8c9g.execute-api.us-east-1.amazonaws.com/prod';
 const TOKEN_KEY = 'ebh-profile-jwt';
+const COMPLETIONS_KEY = 'ebh-completions-v1';
+
+function loadCompletions()  { try { return JSON.parse(localStorage.getItem(COMPLETIONS_KEY) || '{}'); } catch { return {}; } }
+function saveCompletions(c) { localStorage.setItem(COMPLETIONS_KEY, JSON.stringify(c)); }
+function titleKey(t)        { return t.toLowerCase().replace(/[^a-z0-9]+/g, '-'); }
+
+function markComplete(key, title, note, interval, isOneTime) {
+  const c = loadCompletions();
+  c[key] = { key, title, note, interval, isOneTime,
+    completedYear: new Date().getFullYear(),
+    completedAt: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) };
+  saveCompletions(c);
+  renderTimeline(window._cachedProfile);
+}
+function undoComplete(key) {
+  const c = loadCompletions(); delete c[key];
+  saveCompletions(c);
+  renderTimeline(window._cachedProfile);
+}
+function clearHistory() {
+  if (!confirm('Clear all completion history?')) return;
+  localStorage.removeItem(COMPLETIONS_KEY);
+  renderTimeline(window._cachedProfile);
+}
 
 // ── Auth state ────────────────────────────────────────────────────────────────
 function getToken()        { return localStorage.getItem(TOKEN_KEY); }
@@ -738,99 +790,101 @@ function computeTimeline(profile) {
 
   if (!yob || currentAge < 15 || currentAge > 120) return [];
 
-  function add(title, startAge, endAge, note) {
+  function add(title, startAge, endAge, note, interval) {
     if (currentAge > endAge) return;
     const nextDue   = Math.max(startAge, currentAge);
     const yearsAway = nextDue - currentAge;
-    items.push({ title, nextDue, yearsAway, note, endAge });
+    const isOneTime = !interval;
+    const key = titleKey(title);
+    items.push({ title, key, nextDue, yearsAway, note, endAge, interval: interval || 0, isOneTime });
   }
 
   // ── Colorectal ────────────────────────────────────────────────────────────
   if (organs.includes('colon')) {
     const lynch = risks.includes('lynch-syndrome');
     const high  = !lynch && (risks.includes('crc-family') || risks.includes('crc-polyps'));
-    if (lynch) add('Colorectal cancer screening — Lynch syndrome', 25, 75, 'Colonoscopy every 1–2 yr (NCCN)');
-    else if (high) add('Colorectal cancer screening — high-risk', 40, 75, 'Every 3–5 yr (ACS)');
-    else add('Colorectal cancer screening', 45, 75, 'Every 3–10 yr depending on test (USPSTF 2021 Grade B)');
+    if (lynch) add('Colorectal cancer screening — Lynch syndrome', 25, 75, 'Colonoscopy every 1–2 yr (NCCN)', 1);
+    else if (high) add('Colorectal cancer screening — high-risk', 40, 75, 'Every 3–5 yr (ACS)', 3);
+    else add('Colorectal cancer screening', 45, 75, 'Every 3–10 yr depending on test (USPSTF 2021 Grade B)', 3);
   }
 
   // ── Cervical ──────────────────────────────────────────────────────────────
   if (organs.includes('cervix')) {
-    add('Cervical cancer screening', 21, 65, 'Pap every 3 yr; or Pap+HPV cotesting every 5 yr age 30+ (USPSTF 2018 Grade A)');
+    add('Cervical cancer screening', 21, 65, 'Pap every 3 yr; or Pap+HPV cotesting every 5 yr age 30+ (USPSTF 2018 Grade A)', 3);
   }
 
   // ── Prostate PSA ──────────────────────────────────────────────────────────
   if (organs.includes('prostate')) {
     const highRisk = risks.includes('prostate-family') || risks.includes('brca');
-    if (highRisk) add('Prostate cancer screening — PSA (high-risk)', 45, 75, 'Discuss annual PSA with clinician (ACS / NCCN)');
-    else add('Prostate cancer screening — PSA', 55, 70, 'Shared decision-making discussion (USPSTF 2018 Grade C)');
+    if (highRisk) add('Prostate cancer screening — PSA (high-risk)', 45, 75, 'Discuss annual PSA with clinician (ACS / NCCN)', 1);
+    else add('Prostate cancer screening — PSA', 55, 70, 'Shared decision-making discussion (USPSTF 2018 Grade C)', 2);
   }
 
   // ── Breast ────────────────────────────────────────────────────────────────
   if (organs.includes('breasts')) {
     const brca    = risks.includes('brca');
     const famRisk = !brca && risks.includes('breast-family');
-    if (brca)       add('Breast cancer screening — BRCA variant', 25, 999, 'Annual MRI + mammogram (NCCN)');
-    else if (famRisk) add('Breast cancer screening — family history', 40, 999, 'Annual mammogram; discuss MRI (ACS)');
-    else add('Breast cancer screening', 40, 74, 'Annual or biennial mammogram (USPSTF 2024 Grade B)');
+    if (brca)         add('Breast cancer screening — BRCA variant', 25, 999, 'Annual MRI + mammogram (NCCN)', 1);
+    else if (famRisk) add('Breast cancer screening — family history', 40, 999, 'Annual mammogram; discuss MRI (ACS)', 1);
+    else add('Breast cancer screening', 40, 74, 'Annual or biennial mammogram (USPSTF 2024 Grade B)', 1);
   }
 
   // ── Lung LDCT ─────────────────────────────────────────────────────────────
   if (risks.includes('smoker-ldct')) {
-    add('Lung cancer screening — annual LDCT', 50, 80, '≥20 pack-year history, current or quit <15 yr (USPSTF 2021 Grade B)');
+    add('Lung cancer screening — annual LDCT', 50, 80, '≥20 pack-year history, current or quit <15 yr (USPSTF 2021 Grade B)', 1);
   }
 
   // ── AAA ultrasound ────────────────────────────────────────────────────────
   if (organs.includes('prostate') && (risks.includes('ever-smoker') || risks.includes('aaa-family'))) {
-    add('Abdominal aortic aneurysm — ultrasound', 65, 75, 'One-time or periodic (USPSTF 2019 Grade B)');
+    add('Abdominal aortic aneurysm — ultrasound', 65, 75, 'One-time ultrasound (USPSTF 2019 Grade B)', 0);
   }
 
   // ── Osteoporosis DXA ─────────────────────────────────────────────────────
   if (!organs.includes('prostate') && (organs.includes('cervix') || organs.includes('breasts'))) {
-    add('Osteoporosis screening — DXA', 65, 999, 'Every 2–5 yr based on results (USPSTF 2018 Grade B)');
+    add('Osteoporosis screening — DXA', 65, 999, 'Every 2–5 yr based on results (USPSTF 2018 Grade B)', 2);
   }
 
   // ── Pancreatic (hereditary) ───────────────────────────────────────────────
   if (risks.includes('stk11'))
-    add('Pancreatic cancer screening — Peutz-Jeghers (STK11)', 30, 999, 'Annual EUS or MRI/MRCP (NCCN)');
+    add('Pancreatic cancer screening — Peutz-Jeghers (STK11)', 30, 999, 'Annual EUS or MRI/MRCP (NCCN)', 1);
   if (risks.includes('cdkn2a'))
-    add('Pancreatic cancer screening — FAMMM (CDKN2A)', 40, 999, 'Annual imaging (NCCN)');
+    add('Pancreatic cancer screening — FAMMM (CDKN2A)', 40, 999, 'Annual imaging (NCCN)', 1);
   if (risks.includes('hereditary-pancreatitis'))
-    add('Pancreatic cancer screening — hereditary pancreatitis', 40, 999, 'Annual imaging (NCCN)');
+    add('Pancreatic cancer screening — hereditary pancreatitis', 40, 999, 'Annual imaging (NCCN)', 1);
   if (risks.includes('palb2-atm') || (risks.includes('brca') && (risks.includes('family-pancreatic') || risks.includes('lynch-syndrome'))))
-    add('Pancreatic cancer screening — high-risk gene variant', 50, 999, 'Annual EUS or MRI (NCCN)');
+    add('Pancreatic cancer screening — high-risk gene variant', 50, 999, 'Annual EUS or MRI (NCCN)', 1);
   if (risks.includes('family-pancreatic') && !risks.includes('stk11') && !risks.includes('cdkn2a'))
-    add('Pancreatic cancer — family history discussion', 40, 999, 'Discuss screening eligibility with clinician');
+    add('Pancreatic cancer — family history discussion', 40, 999, 'Discuss screening eligibility with clinician', 3);
 
   // ── HCV (one-time) ────────────────────────────────────────────────────────
-  add('Hepatitis C (HCV) — one-time blood test', 18, 79, 'Anti-HCV antibody; curative treatment now available (USPSTF 2020 Grade B)');
+  add('Hepatitis C (HCV) — one-time blood test', 18, 79, 'Anti-HCV antibody; curative treatment now available (USPSTF 2020 Grade B)', 0);
 
   // ── HIV ───────────────────────────────────────────────────────────────────
-  add('HIV screening', 15, 65, 'At least once; more often if at ongoing risk (USPSTF 2019 Grade A)');
+  add('HIV screening', 15, 65, 'At least once; more often if at ongoing risk (USPSTF 2019 Grade A)', 3);
 
   // ── Blood pressure ────────────────────────────────────────────────────────
-  add('Blood pressure screening', 18, 999, currentAge >= 40 ? 'Annual check (USPSTF 2021 Grade A)' : 'Every 3–5 yr if normal');
+  add('Blood pressure screening', 18, 999, currentAge >= 40 ? 'Annual check (USPSTF 2021 Grade A)' : 'Every 3–5 yr if normal', currentAge >= 40 ? 1 : 3);
 
   // ── Lipids ────────────────────────────────────────────────────────────────
-  add('Cholesterol / lipid panel', 19, 999, currentAge >= 40 ? 'Every 1–5 yr (ACC/AHA 2026)' : 'Every 4–6 yr if normal');
+  add('Cholesterol / lipid panel', 19, 999, currentAge >= 40 ? 'Every 1–5 yr (ACC/AHA 2026)' : 'Every 4–6 yr if normal', currentAge >= 40 ? 1 : 4);
 
   // ── Diabetes ──────────────────────────────────────────────────────────────
-  add('Prediabetes & type 2 diabetes screening', 35, 70, 'Every 3 yr if normal; HbA1c or fasting glucose (USPSTF 2021 Grade B)');
+  add('Prediabetes & type 2 diabetes screening', 35, 70, 'Every 3 yr if normal; HbA1c or fasting glucose (USPSTF 2021 Grade B)', 3);
 
   // ── Fall risk ─────────────────────────────────────────────────────────────
-  add('Fall risk assessment', 65, 999, 'Annual multifactorial assessment (USPSTF / CDC STEADI Grade B)');
+  add('Fall risk assessment', 65, 999, 'Annual multifactorial assessment (USPSTF / CDC STEADI Grade B)', 1);
 
   // ── Skin ──────────────────────────────────────────────────────────────────
   if (risks.includes('skin-high-risk'))
-    add('Skin cancer screening — dermatology', 18, 999, 'Annual full-body exam if high-risk');
+    add('Skin cancer screening — dermatology', 18, 999, 'Annual full-body exam if high-risk', 1);
 
   // ── Oral ──────────────────────────────────────────────────────────────────
   if (risks.includes('tobacco-alcohol') || risks.includes('ever-smoker'))
-    add('Oral cancer screening', 18, 999, 'At annual dental/medical visit (USPSTF Grade I — discuss with clinician)');
+    add('Oral cancer screening', 18, 999, 'At annual dental/medical visit (USPSTF Grade I — discuss with clinician)', 1);
 
   // ── Bladder ───────────────────────────────────────────────────────────────
   if (risks.includes('ever-smoker'))
-    add('Bladder cancer discussion', 40, 999, 'Discuss with clinician if never previously evaluated (USPSTF Grade I)');
+    add('Bladder cancer discussion', 40, 999, 'Discuss with clinician if never previously evaluated (USPSTF Grade I)', 0);
 
   // Sort: overdue first, then soonest
   return items.sort((a, b) => a.yearsAway - b.yearsAway);
@@ -838,21 +892,43 @@ function computeTimeline(profile) {
 
 // ── Render timeline ───────────────────────────────────────────────────────────
 function renderTimeline(profile) {
-  const list  = document.getElementById('timeline-list');
-  const items = computeTimeline(profile);
+  const list     = document.getElementById('timeline-list');
+  const histList = document.getElementById('history-list');
+  const histCard = document.getElementById('history-card');
+  const allItems = computeTimeline(profile);
+  const completions = loadCompletions();
+  const yob = Number(profile.yearOfBirth);
+  const now = new Date().getFullYear();
+  const age = now - yob;
 
-  if (!items.length) {
+  if (!allItems.length) {
     list.innerHTML = '<li class="tl-empty">No screening timeline available yet — <a href="prevention-roadmap.html">complete your prevention roadmap</a> to populate this page.</li>';
+    histCard.style.display = 'none';
     return;
   }
 
-  list.innerHTML = items.map(item => {
+  // Build upcoming list — one-time completed items are hidden; recurring items shift to next occurrence
+  const upcoming = [];
+  for (const item of allItems) {
+    const comp = completions[item.key];
+    if (!comp) {
+      upcoming.push(item);
+    } else if (!item.isOneTime) {
+      const nextDueYear = comp.completedYear + item.interval;
+      const nextDueAge  = nextDueYear - yob;
+      if (nextDueAge > item.endAge) continue;
+      upcoming.push({ ...item, nextDue: nextDueAge, yearsAway: nextDueAge - age });
+    }
+    // one-time + completed → history only
+  }
+  upcoming.sort((a, b) => a.yearsAway - b.yearsAway);
+
+  list.innerHTML = upcoming.length ? upcoming.map(item => {
     const ya = item.yearsAway;
     let badgeClass, badgeText, whenText;
-
     if (ya <= 0) {
       badgeClass = 'badge-overdue';
-      badgeText  = ya < 0 ? 'Overdue' : 'Due now';
+      badgeText  = ya < 0 ? 'Overdue' : 'Due';
       whenText   = 'Discuss at your next visit';
     } else if (ya <= 2) {
       badgeClass = 'badge-due';
@@ -867,7 +943,6 @@ function renderTimeline(profile) {
       badgeText  = `Age ${item.nextDue}`;
       whenText   = `In ${ya} years`;
     }
-
     return `<li class="tl-item">
       <span class="tl-badge ${badgeClass}">${badgeText}</span>
       <div>
@@ -875,8 +950,26 @@ function renderTimeline(profile) {
         <div class="tl-note">${item.note}</div>
         <div class="tl-when">${whenText}</div>
       </div>
+      <button class="tl-done-btn" onclick="markComplete(${JSON.stringify(item.key)},${JSON.stringify(item.title)},${JSON.stringify(item.note)},${item.interval},${item.isOneTime})">&#10003;&nbsp;Mark done</button>
     </li>`;
-  }).join('');
+  }).join('') : '<li class="tl-empty">All caught up &mdash; no upcoming screenings.</li>';
+
+  // History section
+  const histItems = Object.values(completions);
+  if (histItems.length) {
+    histList.innerHTML = histItems.map(c => `<li class="tl-item tl-item-hist">
+      <span class="tl-badge badge-done">Done</span>
+      <div>
+        <div class="tl-title">${c.title}</div>
+        <div class="tl-note">${c.note}</div>
+        <div class="tl-when">Completed ${c.completedAt}${c.isOneTime ? ' &mdash; one-time test' : ` &mdash; next due in ~${c.interval} yr`}</div>
+      </div>
+      <button class="tl-undo-btn" onclick="undoComplete(${JSON.stringify(c.key)})">Undo</button>
+    </li>`).join('');
+    histCard.style.display = 'block';
+  } else {
+    histCard.style.display = 'none';
+  }
 }
 
 // ── On page load ──────────────────────────────────────────────────────────────
