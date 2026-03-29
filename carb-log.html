@@ -126,6 +126,29 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
 .ai-thinking .dots span:nth-child(2) { animation-delay: .2s; }
 .ai-thinking .dots span:nth-child(3) { animation-delay: .4s; }
 @keyframes blink { 0%,80%,100%{opacity:.2} 40%{opacity:1} }
+.ai-warning { display: flex; align-items: flex-start; gap: 8px; background: #FEF3C7; border: 1px solid #FDE68A; border-radius: var(--radius-sm); padding: 8px 12px; font-size: 12px; color: #92400E; margin-top: 8px; line-height: 1.5; }
+.ai-warning svg { flex-shrink: 0; margin-top: 1px; }
+/* AI REVIEW PANEL */
+.ai-review { display: none; margin-top: 10px; border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; }
+.ai-review.show { display: block; }
+.ai-review-header { background: var(--cream); padding: 9px 14px; font-size: 12px; font-weight: 600; color: var(--ink-muted); text-transform: uppercase; letter-spacing: .05em; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.ai-review-item { padding: 10px 14px; border-bottom: 1px solid var(--border); }
+.ai-review-item:last-child { border-bottom: none; }
+.ai-review-desc { font-size: 13px; font-weight: 500; color: var(--ink); margin-bottom: 3px; }
+.ai-review-source { font-size: 11px; color: var(--ink-muted); margin-bottom: 7px; }
+.ai-review-source span { background: var(--cream); border: 1px solid var(--border); border-radius: 3px; padding: 1px 5px; font-family: monospace; font-size: 11px; color: var(--ink-mid); }
+.ai-review-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.ai-review-grams { width: 72px; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 5px 8px; font-size: 13px; font-family: var(--font-body); color: var(--ink); background: var(--warm-white); text-align: center; }
+.ai-review-grams:focus { outline: none; border-color: var(--sage); }
+.ai-review-macros { display: flex; gap: 10px; font-size: 12px; font-weight: 600; }
+.ai-review-macros .c { color: var(--sage); } .ai-review-macros .f { color: var(--blue); } .ai-review-macros .n { color: var(--amber); }
+.ai-remove-btn { margin-left: auto; font-size: 11px; color: var(--ink-muted); background: none; border: none; cursor: pointer; padding: 2px 6px; border-radius: 3px; }
+.ai-remove-btn:hover { background: var(--red-light); color: var(--red-soft); }
+.ai-review-meal-row { padding: 8px 14px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; font-size: 13px; }
+.ai-review-meal-row label { color: var(--ink-muted); font-size: 12px; }
+.ai-review-meal-select { border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 4px 8px; font-family: var(--font-body); font-size: 13px; background: var(--warm-white); color: var(--ink); cursor: pointer; }
+.ai-review-meal-select:focus { outline: none; border-color: var(--sage); }
+.ai-review-footer { padding: 10px 14px; display: flex; gap: 8px; background: var(--cream); }
 
 /* ADD BAR */
 .add-bar { background: var(--warm-white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1rem 1.25rem; display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
@@ -458,20 +481,45 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
         <div class="ai-icon">✨</div>
         <div>
           <div class="ai-bar-title">Log with natural language</div>
-          <div class="ai-bar-sub">Describe what you ate — OpenAI parses it, USDA FDC provides the real nutrition data.</div>
+          <div class="ai-bar-sub">AI estimates portions — <strong>always review before confirming.</strong></div>
         </div>
       </div>
       <div class="ai-input-row">
         <textarea class="ai-textarea" id="ai-input" rows="2" placeholder="e.g. 'I had a cup of oatmeal with half a banana and a glass of orange juice for breakfast'"></textarea>
         <button class="btn-ai" id="ai-btn" onclick="handleAILog()">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-          Log it
+          Parse
         </button>
+      </div>
+      <div class="ai-warning">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <span>AI estimates are <strong>approximations only</strong>. Portion weights and food matches may be incorrect. Always verify carb values before using for insulin dosing or medical decisions.</span>
       </div>
       <div class="ai-thinking" id="ai-thinking">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        <span>Parsing with OpenAI, looking up in USDA FDC</span>
+        <span>Parsing with OpenAI, looking up in USDA FDC…</span>
         <span class="dots"><span>.</span><span>.</span><span>.</span></span>
+      </div>
+      <!-- AI REVIEW PANEL -->
+      <div class="ai-review" id="ai-review">
+        <div class="ai-review-header">
+          <span>Review before logging</span>
+          <button class="ai-remove-btn" onclick="cancelAIReview()">✕ Cancel</button>
+        </div>
+        <div class="ai-review-meal-row">
+          <label>Log to meal:</label>
+          <select class="ai-review-meal-select" id="ai-review-meal">
+            <option value="breakfast">Breakfast</option>
+            <option value="lunch">Lunch</option>
+            <option value="dinner">Dinner</option>
+            <option value="snacks">Snacks</option>
+          </select>
+        </div>
+        <div id="ai-review-items"></div>
+        <div class="ai-review-footer">
+          <button class="btn-primary" style="flex:1;" onclick="confirmAILog()">Confirm &amp; Log</button>
+          <button class="btn-ghost" onclick="cancelAIReview()">Discard</button>
+        </div>
       </div>
     </div>
 
@@ -1039,14 +1087,16 @@ function confirmAddFood() {
 }
 
 // ── OPENAI NATURAL LANGUAGE LOGGING (via Lambda proxy) ───────────
+let pendingAIItems = []; // [{description, fdcName, fdcFood, grams}]
+
 async function handleAILog() {
   const text = document.getElementById('ai-input').value.trim();
   if (!text) { showToast('Describe what you ate first'); return; }
 
   document.getElementById('ai-btn').disabled = true;
   document.getElementById('ai-thinking').classList.add('show');
+  document.getElementById('ai-review').classList.remove('show');
   try {
-    // Step 1: parse via Lambda proxy (OpenAI key stays server-side)
     const parseRes = await fetch(`${API}/ai-parse-food`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -1058,42 +1108,100 @@ async function handleAILog() {
     const items = parsed.items || [];
     if (!items.length) throw new Error('No food items found in description');
 
-    // Step 2: look up each item in USDA FDC (also via proxy)
-    let added = 0;
+    pendingAIItems = [];
     for (const item of items) {
       const results = await fdcSearch(item.search_query, 8);
-      if (!results.length) continue;
-      // Pick the result whose name best matches the search query (avoid wrong foods)
+      if (!results.length) { pendingAIItems.push({ description: item.description, fdcName: 'No USDA match — enter manually', fdcFood: null, grams: item.quantity_grams || 100 }); continue; }
       const q = item.search_query.toLowerCase();
       const queryWords = q.split(/\s+/).filter(w => w.length > 2);
-      const scored = results.map(f => {
-        const n = f.name.toLowerCase();
-        const hits = queryWords.filter(w => n.includes(w)).length;
-        return { f, hits };
-      });
+      const scored = results.map(f => { const n = f.name.toLowerCase(); return { f, hits: queryWords.filter(w => n.includes(w)).length }; });
       scored.sort((a, b) => b.hits - a.hits);
-      const f = scored[0].f;
-      const g = item.quantity_grams || 100;
-      logs[meal].push({
-        name: item.description, brand: f.brand || 'USDA FDC',
-        serving: item.description + ' (~' + Math.round(g) + 'g)',
-        carbs: Math.round(f.carbs100g * g / 100),
-        fiber: Math.round(f.fiber100g * g / 100),
-        mult: 1,
-      });
-      added++;
+      pendingAIItems.push({ description: item.description, fdcName: scored[0].f.name, fdcFood: scored[0].f, grams: item.quantity_grams || 100 });
     }
-    saveDay();
-    renderAll();
-    document.getElementById('ai-input').value = '';
-    showToast(added + ' item' + (added !== 1 ? 's' : '') + ' logged to ' + meal);
-    scrollToMeal(meal);
+
+    // Set meal selector
+    document.getElementById('ai-review-meal').value = meal;
+    renderAIReview();
+    document.getElementById('ai-review').classList.add('show');
   } catch(e) {
     showToast('Error: ' + e.message);
   } finally {
     document.getElementById('ai-btn').disabled = false;
     document.getElementById('ai-thinking').classList.remove('show');
   }
+}
+
+function renderAIReview() {
+  const container = document.getElementById('ai-review-items');
+  if (!pendingAIItems.length) { container.innerHTML = '<div style="padding:12px 14px;font-size:13px;color:var(--ink-muted);">No items to review.</div>'; return; }
+  container.innerHTML = pendingAIItems.map((item, i) => {
+    const f = item.fdcFood;
+    const g = item.grams;
+    const carbs = f ? Math.round(f.carbs100g * g / 100) : 0;
+    const fiber = f ? Math.round(f.fiber100g * g / 100) : 0;
+    const net   = Math.max(0, carbs - fiber);
+    return `<div class="ai-review-item" id="ai-ri-${i}">
+      <div class="ai-review-desc">${escHtml(item.description)}</div>
+      <div class="ai-review-source">USDA match: <span>${escHtml(item.fdcName)}</span></div>
+      <div class="ai-review-row">
+        <input class="ai-review-grams" type="number" min="1" step="1" value="${Math.round(g)}" oninput="updateAIReviewItem(${i},this.value)" title="Edit grams">
+        <span style="font-size:12px;color:var(--ink-muted);">g</span>
+        <div class="ai-review-macros">
+          <span class="c" id="ai-rc-${i}">${carbs}g carbs</span>
+          <span class="f" id="ai-rf-${i}">${fiber}g fiber</span>
+          <span class="n" id="ai-rn-${i}">${net}g net</span>
+        </div>
+        <button class="ai-remove-btn" onclick="removeAIReviewItem(${i})">Remove</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function updateAIReviewItem(i, val) {
+  const g = Math.max(1, parseFloat(val) || 1);
+  pendingAIItems[i].grams = g;
+  const f = pendingAIItems[i].fdcFood;
+  if (!f) return;
+  const carbs = Math.round(f.carbs100g * g / 100);
+  const fiber = Math.round(f.fiber100g * g / 100);
+  const net   = Math.max(0, carbs - fiber);
+  document.getElementById('ai-rc-' + i).textContent = carbs + 'g carbs';
+  document.getElementById('ai-rf-' + i).textContent = fiber + 'g fiber';
+  document.getElementById('ai-rn-' + i).textContent = net + 'g net';
+}
+
+function removeAIReviewItem(i) {
+  pendingAIItems.splice(i, 1);
+  if (!pendingAIItems.length) { cancelAIReview(); return; }
+  renderAIReview();
+}
+
+function cancelAIReview() {
+  pendingAIItems = [];
+  document.getElementById('ai-review').classList.remove('show');
+}
+
+function confirmAILog() {
+  if (!pendingAIItems.length) return;
+  const meal = document.getElementById('ai-review-meal').value;
+  let added = 0;
+  for (const item of pendingAIItems) {
+    if (!item.fdcFood) continue;
+    const f = item.fdcFood, g = item.grams;
+    logs[meal].push({
+      name: item.description, brand: item.fdcFood.brand || 'USDA FDC',
+      serving: item.description + ' (~' + Math.round(g) + 'g)',
+      carbs: Math.round(f.carbs100g * g / 100),
+      fiber: Math.round(f.fiber100g * g / 100),
+      mult: 1,
+    });
+    added++;
+  }
+  saveDay(); renderAll();
+  document.getElementById('ai-input').value = '';
+  cancelAIReview();
+  showToast(added + ' item' + (added !== 1 ? 's' : '') + ' logged to ' + meal);
+  scrollToMeal(meal);
 }
 
 // ── RENDER ────────────────────────────────────────────────────────
