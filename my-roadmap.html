@@ -1,8 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <meta name="description" content="Log in to view your saved prevention roadmap, upcoming screenings, and personalized reminders.">
 <title>My Roadmap &mdash; Evidence-Based Health</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,7 +23,7 @@
   html { font-size: 16px; scroll-behavior: smooth; }
   body { background: var(--paper); color: var(--ink); font-family: var(--sans); font-weight: 300; line-height: 1.75; -webkit-font-smoothing: antialiased; }
 
-  /* ── nav ── */
+  /* â”€â”€ nav â”€â”€ */
   nav {
     position: sticky; top: 0; z-index: 100;
     background: var(--paper);
@@ -38,7 +39,7 @@
   .nav-link.active { color: var(--accent); font-weight: 600; border-bottom-color: var(--accent); }
   .nav-link-cta { color: var(--accent); font-weight: 500; }
 
-  /* ── page header ── */
+  /* â”€â”€ page header â”€â”€ */
   .page-header { padding: 3rem 2rem 2rem; max-width: var(--max); margin: 0 auto; }
   .page-label { font-size: 0.7rem; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent-mid); margin-bottom: 0.75rem; }
   .page-header h1 { font-family: var(--serif); font-size: clamp(1.6rem, 3.5vw, 2.3rem); line-height: 1.2; font-weight: 700; color: var(--ink); letter-spacing: -0.02em; margin-bottom: 0.6rem; }
@@ -54,7 +55,7 @@
   footer a { color: var(--ink-light); text-decoration: none; }
   footer a:hover { color: var(--accent); }
 
-  /* ── auth forms ── */
+  /* â”€â”€ auth forms â”€â”€ */
   .auth-wrap {
     max-width: 420px;
     margin: 2rem auto 4rem;
@@ -170,7 +171,7 @@
   }
   .privacy-note a { color: var(--accent-mid); text-decoration: underline; text-underline-offset: 2px; }
 
-  /* ── dashboard ── */
+  /* â”€â”€ dashboard â”€â”€ */
   #dashboard { display: none; }
   .dash-header {
     display: flex;
@@ -223,7 +224,7 @@
     margin-bottom: 1.4rem;
   }
 
-  /* ── timeline ── */
+  /* â”€â”€ timeline â”€â”€ */
   .timeline { list-style: none; margin-bottom: 1.5rem; }
   .tl-item {
     display: grid;
@@ -271,7 +272,7 @@
   .tl-undo-btn:hover { opacity: 1; border-color: var(--ink-faint); color: var(--ink-light); }
   .tl-item-hist .tl-title { color: var(--ink-light); }
 
-  /* ── profile card ── */
+  /* â”€â”€ profile card â”€â”€ */
   .profile-card {
     background: var(--paper-card);
     border: 1px solid var(--paper-warm);
@@ -329,7 +330,7 @@
     margin-top: 0.75rem;
   }
 
-  /* ── password change form ── */
+  /* â”€â”€ password change form â”€â”€ */
   .pw-change {
     max-width: 420px;
     margin-top: 1.5rem;
@@ -337,7 +338,7 @@
   }
   .pw-change.visible { display: block; }
 
-  /* ── consent toggles ── */
+  /* â”€â”€ consent toggles â”€â”€ */
   .consent-row {
     display: flex;
     align-items: flex-start;
@@ -393,7 +394,7 @@
 
 <main>
 
-  <!-- ── AUTH SECTION (shown when not logged in) ─────────────────── -->
+  <!-- â”€â”€ AUTH SECTION (shown when not logged in) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
   <div id="auth-section">
     <div class="auth-wrap">
       <h2 id="auth-heading">Log in to your roadmap</h2>
@@ -414,7 +415,7 @@
         </div>
         <div class="field">
           <label for="login-password">Password</label>
-          <input type="password" id="login-password" name="password" placeholder="••••••••" required autocomplete="current-password">
+          <input type="password" id="login-password" name="password" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" required autocomplete="current-password">
         </div>
         <button type="submit" class="btn-primary" id="login-btn">Log in &rarr;</button>
         <p class="auth-switch">Don&rsquo;t have an account? <a onclick="showTab('register')">Create one</a>.</p>
@@ -446,7 +447,7 @@
     </div>
   </div>
 
-  <!-- ── DASHBOARD (shown when logged in) ──────────────────────── -->
+  <!-- â”€â”€ DASHBOARD (shown when logged in) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
   <div id="dashboard">
 
     <div class="dash-header">
@@ -503,7 +504,7 @@
         <p class="section-heading">Your profile</p>
         <button id="edit-profile-btn" class="btn-ghost" style="font-size:0.78rem" onclick="toggleProfileEdit()">Edit profile</button>
       </div>
-      <p class="section-sub" style="margin-bottom:0.75rem">Anonymous health profile — no name or full date of birth stored.</p>
+      <p class="section-sub" style="margin-bottom:0.75rem">Anonymous health profile â€” no name or full date of birth stored.</p>
       <div class="profile-grid" id="profile-grid">
         <!-- filled by JS -->
       </div>
@@ -518,7 +519,7 @@
           <div>
             <label class="pf-edit-label">Sex assigned at birth</label>
             <select id="edit-sex" class="pf-edit-input">
-              <option value="">— select —</option>
+              <option value="">â€” select â€”</option>
               <option value="male">Male</option>
               <option value="female">Female</option>
               <option value="intersex">Intersex / biological variation</option>
@@ -528,7 +529,7 @@
           <div>
             <label class="pf-edit-label">Sexual orientation</label>
             <select id="edit-orient" class="pf-edit-input">
-              <option value="">— select —</option>
+              <option value="">â€” select â€”</option>
               <option value="straight">Heterosexual / straight</option>
               <option value="gay-lesbian">Gay / lesbian</option>
               <option value="bisexual">Bisexual</option>
@@ -644,12 +645,12 @@ function clearHistory() {
   renderTimeline(window._cachedProfile);
 }
 
-// ── Auth state ────────────────────────────────────────────────────────────────
+// â”€â”€ Auth state â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function getToken()        { return localStorage.getItem(TOKEN_KEY); }
 function saveToken(t)      { localStorage.setItem(TOKEN_KEY, t); }
 function clearToken()      { localStorage.removeItem(TOKEN_KEY); }
 
-// Decode JWT payload (no signature verification — server does that on every request)
+// Decode JWT payload (no signature verification â€” server does that on every request)
 function decodeJWT(token) {
   try {
     const b64 = token.split('.')[1];
@@ -664,7 +665,7 @@ function isTokenValid(token) {
   return p.exp > Math.floor(Date.now() / 1000);
 }
 
-// ── Tab switcher ──────────────────────────────────────────────────────────────
+// â”€â”€ Tab switcher â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function showTab(tab) {
   const isLogin = tab === 'login';
   document.getElementById('login-form').hidden    = !isLogin;
@@ -682,7 +683,7 @@ function showAuthError(msg) {
   el.classList.add('visible');
 }
 
-// ── Login ─────────────────────────────────────────────────────────────────────
+// â”€â”€ Login â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function handleLogin(e) {
   e.preventDefault();
   const form = e.target;
@@ -709,7 +710,7 @@ async function handleLogin(e) {
   }
 }
 
-// ── Register ──────────────────────────────────────────────────────────────────
+// â”€â”€ Register â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function handleRegister(e) {
   e.preventDefault();
   const form = e.target;
@@ -731,7 +732,7 @@ async function handleRegister(e) {
       body: JSON.stringify({
         email:       form.email.value.trim(),
         password:    password,
-        yearOfBirth: 0,   // no profile data yet — user can fill via roadmap page
+        yearOfBirth: 0,   // no profile data yet â€” user can fill via roadmap page
       }),
     });
     const data = await res.json();
@@ -746,14 +747,14 @@ async function handleRegister(e) {
   }
 }
 
-// ── Logout ────────────────────────────────────────────────────────────────────
+// â”€â”€ Logout â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function handleLogout() {
   clearToken();
   document.getElementById('dashboard').style.display    = 'none';
   document.getElementById('auth-section').style.display = 'block';
 }
 
-// ── Delete account ────────────────────────────────────────────────────────────
+// â”€â”€ Delete account â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function handleDeleteAccount() {
   if (!confirm('Permanently delete your account and all profile data? This cannot be undone.')) return;
   const token = getToken();
@@ -770,7 +771,7 @@ async function handleDeleteAccount() {
   }
 }
 
-// ── Password change ───────────────────────────────────────────────────────────
+// â”€â”€ Password change â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function showPwChange() {
   document.getElementById('pw-change-wrap').style.display = 'block';
   document.getElementById('pw-change-wrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -813,7 +814,7 @@ async function handlePwChange(e) {
   }
 }
 
-// ── Profile edit ─────────────────────────────────────────────────────────────
+// â”€â”€ Profile edit â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const ORGANS    = ['colon','cervix','prostate','breasts'];
 const RISKFLAGS = ['lynch-syndrome','crc-family','crc-polyps','prostate-family','brca',
   'breast-family','smoker-ldct','ever-smoker','aaa-family','stk11','cdkn2a',
@@ -870,7 +871,7 @@ async function saveProfile() {
   }
 }
 
-// ── Phone formatting ─────────────────────────────────────────────────────────
+// â”€â”€ Phone formatting â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function toE164(raw) {
   const digits = raw.replace(/\D/g, '');
   if (digits.length === 10) return '+1' + digits;
@@ -883,7 +884,7 @@ function formatPhoneInput(el) {
   if (v) el.value = toE164(v);
 }
 
-// ── Save consent prefs ────────────────────────────────────────────────────────
+// â”€â”€ Save consent prefs â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function toggleSmsPhone(checked) {
   document.getElementById('sms-phone-wrap').style.display = checked ? 'block' : 'none';
 }
@@ -918,7 +919,7 @@ async function saveConsent() {
   }
 }
 
-// ── Load dashboard ────────────────────────────────────────────────────────────
+// â”€â”€ Load dashboard â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function loadDashboard() {
   const token = getToken();
   const res = await fetch(`${API}/profile`, {
@@ -959,7 +960,7 @@ async function loadDashboard() {
   renderTimeline(profile);
 }
 
-// ── Profile grid ──────────────────────────────────────────────────────────────
+// â”€â”€ Profile grid â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function renderProfileGrid(p) {
   const currentAge = p.yearOfBirth ? new Date().getFullYear() - Number(p.yearOfBirth) : null;
 
@@ -983,7 +984,7 @@ function renderProfileGrid(p) {
     </div>`).join('');
 }
 
-// ── Timeline computation ──────────────────────────────────────────────────────
+// â”€â”€ Timeline computation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function computeTimeline(profile) {
   const yob        = Number(profile.yearOfBirth);
   const currentAge = new Date().getFullYear() - yob;
@@ -1002,90 +1003,90 @@ function computeTimeline(profile) {
     items.push({ title, key, nextDue, yearsAway, note, endAge, interval: interval || 0, isOneTime });
   }
 
-  // ── Colorectal ────────────────────────────────────────────────────────────
+  // â”€â”€ Colorectal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   if (organs.includes('colon')) {
     const lynch = risks.includes('lynch-syndrome');
     const high  = !lynch && (risks.includes('crc-family') || risks.includes('crc-polyps'));
-    if (lynch) add('Colorectal cancer screening — Lynch syndrome', 25, 75, 'Colonoscopy every 1–2 yr (NCCN)', 1);
-    else if (high) add('Colorectal cancer screening — high-risk', 40, 75, 'Every 3–5 yr (ACS)', 3);
-    else add('Colorectal cancer screening', 45, 75, 'Every 3–10 yr depending on test (USPSTF 2021 Grade B)', 3);
+    if (lynch) add('Colorectal cancer screening â€” Lynch syndrome', 25, 75, 'Colonoscopy every 1â€“2 yr (NCCN)', 1);
+    else if (high) add('Colorectal cancer screening â€” high-risk', 40, 75, 'Every 3â€“5 yr (ACS)', 3);
+    else add('Colorectal cancer screening', 45, 75, 'Every 3â€“10 yr depending on test (USPSTF 2021 Grade B)', 3);
   }
 
-  // ── Cervical ──────────────────────────────────────────────────────────────
+  // â”€â”€ Cervical â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   if (organs.includes('cervix')) {
     add('Cervical cancer screening', 21, 65, 'Pap every 3 yr; or Pap+HPV cotesting every 5 yr age 30+ (USPSTF 2018 Grade A)', 3);
   }
 
-  // ── Prostate PSA ──────────────────────────────────────────────────────────
+  // â”€â”€ Prostate PSA â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   if (organs.includes('prostate')) {
     const highRisk = risks.includes('prostate-family') || risks.includes('brca');
-    if (highRisk) add('Prostate cancer screening — PSA (high-risk)', 45, 75, 'Discuss annual PSA with clinician (ACS / NCCN)', 1);
-    else add('Prostate cancer screening — PSA', 55, 70, 'Shared decision-making discussion (USPSTF 2018 Grade C)', 2);
+    if (highRisk) add('Prostate cancer screening â€” PSA (high-risk)', 45, 75, 'Discuss annual PSA with clinician (ACS / NCCN)', 1);
+    else add('Prostate cancer screening â€” PSA', 55, 70, 'Shared decision-making discussion (USPSTF 2018 Grade C)', 2);
   }
 
-  // ── Breast ────────────────────────────────────────────────────────────────
+  // â”€â”€ Breast â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   if (organs.includes('breasts')) {
     const brca    = risks.includes('brca');
     const famRisk = !brca && risks.includes('breast-family');
-    if (brca)         add('Breast cancer screening — BRCA variant', 25, 999, 'Annual MRI + mammogram (NCCN)', 1);
-    else if (famRisk) add('Breast cancer screening — family history', 40, 999, 'Annual mammogram; discuss MRI (ACS)', 1);
+    if (brca)         add('Breast cancer screening â€” BRCA variant', 25, 999, 'Annual MRI + mammogram (NCCN)', 1);
+    else if (famRisk) add('Breast cancer screening â€” family history', 40, 999, 'Annual mammogram; discuss MRI (ACS)', 1);
     else add('Breast cancer screening', 40, 74, 'Annual or biennial mammogram (USPSTF 2024 Grade B)', 1);
   }
 
-  // ── Lung LDCT ─────────────────────────────────────────────────────────────
+  // â”€â”€ Lung LDCT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   if (risks.includes('smoker-ldct')) {
-    add('Lung cancer screening — annual LDCT', 50, 80, '≥20 pack-year history, current or quit <15 yr (USPSTF 2021 Grade B)', 1);
+    add('Lung cancer screening â€” annual LDCT', 50, 80, 'â‰¥20 pack-year history, current or quit <15 yr (USPSTF 2021 Grade B)', 1);
   }
 
-  // ── AAA ultrasound ────────────────────────────────────────────────────────
+  // â”€â”€ AAA ultrasound â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   if (organs.includes('prostate') && (risks.includes('ever-smoker') || risks.includes('aaa-family'))) {
-    add('Abdominal aortic aneurysm — ultrasound', 65, 75, 'One-time ultrasound (USPSTF 2019 Grade B)', 0);
+    add('Abdominal aortic aneurysm â€” ultrasound', 65, 75, 'One-time ultrasound (USPSTF 2019 Grade B)', 0);
   }
 
-  // ── Osteoporosis DXA ─────────────────────────────────────────────────────
+  // â”€â”€ Osteoporosis DXA â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   if (!organs.includes('prostate') && (organs.includes('cervix') || organs.includes('breasts'))) {
-    add('Osteoporosis screening — DXA', 65, 999, 'Every 2–5 yr based on results (USPSTF 2018 Grade B)', 2);
+    add('Osteoporosis screening â€” DXA', 65, 999, 'Every 2â€“5 yr based on results (USPSTF 2018 Grade B)', 2);
   }
 
-  // ── Pancreatic (hereditary) ───────────────────────────────────────────────
+  // â”€â”€ Pancreatic (hereditary) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   if (risks.includes('stk11'))
-    add('Pancreatic cancer screening — Peutz-Jeghers (STK11)', 30, 999, 'Annual EUS or MRI/MRCP (NCCN)', 1);
+    add('Pancreatic cancer screening â€” Peutz-Jeghers (STK11)', 30, 999, 'Annual EUS or MRI/MRCP (NCCN)', 1);
   if (risks.includes('cdkn2a'))
-    add('Pancreatic cancer screening — FAMMM (CDKN2A)', 40, 999, 'Annual imaging (NCCN)', 1);
+    add('Pancreatic cancer screening â€” FAMMM (CDKN2A)', 40, 999, 'Annual imaging (NCCN)', 1);
   if (risks.includes('hereditary-pancreatitis'))
-    add('Pancreatic cancer screening — hereditary pancreatitis', 40, 999, 'Annual imaging (NCCN)', 1);
+    add('Pancreatic cancer screening â€” hereditary pancreatitis', 40, 999, 'Annual imaging (NCCN)', 1);
   if (risks.includes('palb2-atm') || (risks.includes('brca') && (risks.includes('family-pancreatic') || risks.includes('lynch-syndrome'))))
-    add('Pancreatic cancer screening — high-risk gene variant', 50, 999, 'Annual EUS or MRI (NCCN)', 1);
+    add('Pancreatic cancer screening â€” high-risk gene variant', 50, 999, 'Annual EUS or MRI (NCCN)', 1);
   if (risks.includes('family-pancreatic') && !risks.includes('stk11') && !risks.includes('cdkn2a'))
-    add('Pancreatic cancer — family history discussion', 40, 999, 'Discuss screening eligibility with clinician', 3);
+    add('Pancreatic cancer â€” family history discussion', 40, 999, 'Discuss screening eligibility with clinician', 3);
 
-  // ── HCV (one-time) ────────────────────────────────────────────────────────
-  add('Hepatitis C (HCV) — one-time blood test', 18, 79, 'Anti-HCV antibody; curative treatment now available (USPSTF 2020 Grade B)', 0);
+  // â”€â”€ HCV (one-time) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  add('Hepatitis C (HCV) â€” one-time blood test', 18, 79, 'Anti-HCV antibody; curative treatment now available (USPSTF 2020 Grade B)', 0);
 
-  // ── HIV ───────────────────────────────────────────────────────────────────
+  // â”€â”€ HIV â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   add('HIV screening', 15, 65, 'At least once; more often if at ongoing risk (USPSTF 2019 Grade A)', 3);
 
-  // ── Blood pressure ────────────────────────────────────────────────────────
-  add('Blood pressure screening', 18, 999, currentAge >= 40 ? 'Annual check (USPSTF 2021 Grade A)' : 'Every 3–5 yr if normal', currentAge >= 40 ? 1 : 3);
+  // â”€â”€ Blood pressure â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  add('Blood pressure screening', 18, 999, currentAge >= 40 ? 'Annual check (USPSTF 2021 Grade A)' : 'Every 3â€“5 yr if normal', currentAge >= 40 ? 1 : 3);
 
-  // ── Lipids ────────────────────────────────────────────────────────────────
-  add('Cholesterol / lipid panel', 19, 999, currentAge >= 40 ? 'Every 1–5 yr (ACC/AHA 2026)' : 'Every 4–6 yr if normal', currentAge >= 40 ? 1 : 4);
+  // â”€â”€ Lipids â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  add('Cholesterol / lipid panel', 19, 999, currentAge >= 40 ? 'Every 1â€“5 yr (ACC/AHA 2026)' : 'Every 4â€“6 yr if normal', currentAge >= 40 ? 1 : 4);
 
-  // ── Diabetes ──────────────────────────────────────────────────────────────
+  // â”€â”€ Diabetes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   add('Prediabetes & type 2 diabetes screening', 35, 70, 'Every 3 yr if normal; HbA1c or fasting glucose (USPSTF 2021 Grade B)', 3);
 
-  // ── Fall risk ─────────────────────────────────────────────────────────────
+  // â”€â”€ Fall risk â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   add('Fall risk assessment', 65, 999, 'Annual multifactorial assessment (USPSTF / CDC STEADI Grade B)', 1);
 
-  // ── Skin ──────────────────────────────────────────────────────────────────
+  // â”€â”€ Skin â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   if (risks.includes('skin-high-risk'))
-    add('Skin cancer screening — dermatology', 18, 999, 'Annual full-body exam if high-risk', 1);
+    add('Skin cancer screening â€” dermatology', 18, 999, 'Annual full-body exam if high-risk', 1);
 
-  // ── Oral ──────────────────────────────────────────────────────────────────
+  // â”€â”€ Oral â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   if (risks.includes('tobacco-alcohol') || risks.includes('ever-smoker'))
-    add('Oral cancer screening', 18, 999, 'At annual dental/medical visit (USPSTF Grade I — discuss with clinician)', 1);
+    add('Oral cancer screening', 18, 999, 'At annual dental/medical visit (USPSTF Grade I â€” discuss with clinician)', 1);
 
-  // ── Bladder ───────────────────────────────────────────────────────────────
+  // â”€â”€ Bladder â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   if (risks.includes('ever-smoker'))
     add('Bladder cancer discussion', 40, 999, 'Discuss with clinician if never previously evaluated (USPSTF Grade I)', 0);
 
@@ -1093,7 +1094,7 @@ function computeTimeline(profile) {
   return items.sort((a, b) => a.yearsAway - b.yearsAway);
 }
 
-// ── Render timeline ───────────────────────────────────────────────────────────
+// â”€â”€ Render timeline â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function renderTimeline(profile) {
   const list     = document.getElementById('timeline-list');
   const histList = document.getElementById('history-list');
@@ -1105,12 +1106,12 @@ function renderTimeline(profile) {
   const age = now - yob;
 
   if (!allItems.length) {
-    list.innerHTML = '<li class="tl-empty">No screening timeline available yet — <a href="prevention-roadmap.html">complete your prevention roadmap</a> to populate this page.</li>';
+    list.innerHTML = '<li class="tl-empty">No screening timeline available yet â€” <a href="prevention-roadmap.html">complete your prevention roadmap</a> to populate this page.</li>';
     histCard.style.display = 'none';
     return;
   }
 
-  // Build upcoming list — one-time completed items are hidden; recurring items shift to next occurrence
+  // Build upcoming list â€” one-time completed items are hidden; recurring items shift to next occurrence
   const upcoming = [];
   for (const item of allItems) {
     const comp = completions[item.key];
@@ -1122,7 +1123,7 @@ function renderTimeline(profile) {
       if (nextDueAge > item.endAge) continue;
       upcoming.push({ ...item, nextDue: nextDueAge, yearsAway: nextDueAge - age });
     }
-    // one-time + completed → history only
+    // one-time + completed â†’ history only
   }
   upcoming.sort((a, b) => a.yearsAway - b.yearsAway);
 
@@ -1179,7 +1180,7 @@ function renderTimeline(profile) {
   }
 }
 
-// ── On page load ──────────────────────────────────────────────────────────────
+// â”€â”€ On page load â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 (async function init() {
   const params = new URLSearchParams(window.location.search);
   const token  = getToken();

@@ -1,0 +1,15 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#f5f5f0"/>
+  <!-- left accent bar -->
+  <rect x="0" y="0" width="8" height="630" fill="#1c3524"/>
+  <!-- logo mark -->
+  <rect x="80" y="200" width="100" height="100" rx="20" fill="#1c3524"/>
+  <text x="130" y="245" font-family="Georgia, serif" font-size="38" font-style="italic" fill="#a8d4b4" text-anchor="middle" dominant-baseline="central">eb</text>
+  <text x="130" y="282" font-family="Georgia, serif" font-size="13" font-weight="bold" fill="#5aa86e" text-anchor="middle" dominant-baseline="central" letter-spacing="3">HEALTH</text>
+  <!-- site name -->
+  <text x="210" y="238" font-family="Georgia, serif" font-size="52" font-style="italic" fill="#1c3524" dominant-baseline="central">Evidence-Based</text>
+  <text x="210" y="300" font-family="Georgia, serif" font-size="52" fill="#1c3524" dominant-baseline="central">Health</text>
+  <!-- tagline -->
+  <text x="80" y="380" font-family="Arial, sans-serif" font-size="24" fill="#4a6857" dominant-baseline="central">Hormones · Strength · Metabolic Health</text>
+  <text x="80" y="430" font-family="Arial, sans-serif" font-size="18" fill="#7a9a87" dominant-baseline="central">evidencebasedhealth.me</text>
+</svg>

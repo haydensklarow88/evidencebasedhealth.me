@@ -1,9 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Portal — Evidence-Based Health</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<title>Admin Portal â€” Evidence-Based Health</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,7 +19,7 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { font-size: 16px; } body { background: var(--paper); color: var(--ink); font-family: var(--sans); font-weight: 400; line-height: 1.6; -webkit-font-smoothing: antialiased; }
 
-  /* ── Login ── */
+  /* â”€â”€ Login â”€â”€ */
   #login-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem; }
   .login-card { background: var(--paper-card); border: 1px solid var(--paper-warm); border-radius: 12px; padding: 2.75rem 2.5rem; width: 100%; max-width: 400px; text-align: center; box-shadow: 0 4px 32px rgba(0,0,0,0.06); }
   .login-logo { font-family: var(--serif); font-size: 1rem; color: var(--accent); font-style: italic; margin-bottom: 0.35rem; }
@@ -30,7 +31,7 @@
   .btn-login:hover { background: var(--accent-mid); }
   .login-error { margin-top: 1rem; font-size: 0.84rem; color: var(--red-soft); min-height: 1.2em; }
 
-  /* ── Dashboard nav ── */
+  /* â”€â”€ Dashboard nav â”€â”€ */
   #dashboard { display: none; }
   #dash-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(247,245,240,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--paper-warm); height: 58px; display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; }
   .dash-logo { font-family: var(--serif); font-size: 0.93rem; color: var(--accent); font-style: italic; }
@@ -40,7 +41,7 @@
   .btn-logout { font-size: 0.78rem; color: var(--ink-light); background: none; border: none; cursor: pointer; font-family: var(--sans); padding: 0.3rem 0.6rem; border-radius: 4px; transition: background 0.15s; }
   .btn-logout:hover { background: var(--paper-warm); }
 
-  /* ── Content & Tabs ── */
+  /* â”€â”€ Content & Tabs â”€â”€ */
   .dash-content { max-width: 1280px; margin: 0 auto; padding: 76px 2rem 4rem; }
   .tabs { display: flex; border-bottom: 2px solid var(--paper-warm); margin-bottom: 2.25rem; }
   .tab-btn { padding: 0.65rem 1.35rem; font-family: var(--sans); font-size: 0.88rem; font-weight: 500; color: var(--ink-light); background: none; border: none; border-bottom: 2px solid transparent; margin-bottom: -2px; cursor: pointer; transition: color 0.2s, border-color 0.2s; letter-spacing: 0.03em; display: flex; flex-direction: column; align-items: center; gap: 0.15rem; }
@@ -48,7 +49,7 @@
   .tab-btn:hover:not(.active) { color: var(--ink-mid); }
   .tab-sub { font-size: 0.65rem; font-weight: 400; letter-spacing: 0.02em; opacity: 0.7; white-space: nowrap; }
 
-  /* ── Client Grid ── */
+  /* â”€â”€ Client Grid â”€â”€ */
   .clients-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.6rem; flex-wrap: wrap; gap: 1rem; }
   .clients-header h2 { font-family: var(--serif); font-size: 1.2rem; font-weight: 700; color: var(--ink); }
   .btn-add-client { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.65rem 1.2rem; background: var(--accent); color: #fff; border: none; border-radius: 7px; font-family: var(--sans); font-size: 0.84rem; font-weight: 500; cursor: pointer; transition: background 0.15s; }
@@ -79,7 +80,7 @@
   .spinner { display: inline-block; width: 18px; height: 18px; border: 2px solid var(--paper-warm); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* ── Drawer ── */
+  /* â”€â”€ Drawer â”€â”€ */
   .drawer-overlay { display: none; position: fixed; inset: 0; z-index: 150; background: rgba(15,26,20,0.3); backdrop-filter: blur(2px); }
   .drawer-overlay.open { display: block; }
   .drawer { position: fixed; top: 0; right: 0; bottom: 0; z-index: 160; width: 460px; max-width: 100vw; background: var(--paper-card); border-left: 1px solid var(--paper-warm); display: flex; flex-direction: column; transform: translateX(100%); transition: transform 0.28s cubic-bezier(0.4,0,0.2,1); box-shadow: -4px 0 40px rgba(0,0,0,0.1); }
@@ -99,25 +100,25 @@
   .btn-drawer-cancel { padding: 0.72rem 1rem; background: none; color: var(--ink-light); border: 1px solid var(--paper-warm); border-radius: 6px; font-family: var(--sans); font-size: 0.83rem; font-weight: 500; cursor: pointer; transition: background 0.15s; }
   .btn-drawer-cancel:hover { background: var(--paper-warm); }
 
-  /* ── Color swatches ── */
+  /* â”€â”€ Color swatches â”€â”€ */
   .color-swatches { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.4rem; }
   .color-swatch { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform 0.12s, border-color 0.12s; outline: none; }
   .color-swatch:hover { transform: scale(1.12); }
   .color-swatch.selected { border-color: var(--ink); transform: scale(1.12); box-shadow: 0 0 0 2px #fff inset; }
 
-  /* ── Custom fields ── */
+  /* â”€â”€ Custom fields â”€â”€ */
   .custom-field-row { display: flex; gap: 0.5rem; margin-bottom: 0.5rem; align-items: center; }
   .custom-field-row input { flex: 1; }
   .btn-remove { background: none; border: none; cursor: pointer; color: var(--ink-faint); font-size: 1.05rem; padding: 0.3rem; transition: color 0.12s; line-height: 1; }
   .btn-remove:hover { color: var(--red-soft); }
 
-  /* ── Client selector bar ── */
+  /* â”€â”€ Client selector bar â”€â”€ */
   .client-sel-bar { display: flex; align-items: center; gap: 0.7rem; padding: 0.7rem 1rem; background: var(--paper-warm); border: 1px solid var(--paper-warm); border-radius: 8px; margin-bottom: 1.5rem; }
   .client-sel-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; background: var(--ink-faint); transition: background 0.2s; }
   .client-sel-label { font-size: 0.78rem; font-weight: 500; color: var(--ink-light); white-space: nowrap; }
   .client-sel-bar select { flex: 1; background: none; border: none; font-family: var(--sans); font-size: 0.88rem; color: var(--ink); cursor: pointer; outline: none; }
 
-  /* ── Forms ── */
+  /* â”€â”€ Forms â”€â”€ */
   .panel-grid { display: grid; grid-template-columns: 1fr 370px; gap: 2.25rem; align-items: start; }
   @media (max-width: 960px) { .panel-grid { grid-template-columns: 1fr; } }
   .form-card { background: var(--paper-card); border: 1px solid var(--paper-warm); border-radius: 10px; padding: 1.6rem 1.75rem; margin-bottom: 1.1rem; }
@@ -138,7 +139,7 @@
   .char-count { text-align: right; font-size: 0.7rem; color: var(--ink-faint); margin-top: 0.22rem; }
   .char-count.warn { color: var(--red-soft); }
 
-  /* ── Interests ── */
+  /* â”€â”€ Interests â”€â”€ */
   .interest-search-row { display: flex; gap: 0.5rem; margin-bottom: 0.65rem; }
   .interest-search-row input { flex: 1; }
   .btn-sm { padding: 0.65rem 1rem; background: var(--accent-light); color: var(--accent); border: 1px solid var(--accent-rule); border-radius: 6px; font-family: var(--sans); font-size: 0.78rem; font-weight: 500; cursor: pointer; white-space: nowrap; transition: background 0.15s; }
@@ -151,7 +152,7 @@
   .pill-selected button:hover { color: var(--red-soft); }
   .interest-hint { font-size: 0.77rem; color: var(--ink-faint); padding: 0.2rem 0; }
 
-  /* ── Submit/status ── */
+  /* â”€â”€ Submit/status â”€â”€ */
   .btn-submit { width: 100%; padding: 0.95rem; background: var(--accent); color: #fff; border: none; border-radius: 7px; font-family: var(--sans); font-size: 0.88rem; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; cursor: pointer; transition: background 0.2s; }
   .btn-submit:hover { background: var(--accent-mid); }
   .btn-submit:disabled { background: var(--ink-faint); cursor: not-allowed; }
@@ -162,7 +163,7 @@
   .status-bar a { color: inherit; text-decoration: underline; }
   .status-bar code { background: rgba(0,0,0,0.06); padding: 0.1rem 0.3rem; border-radius: 3px; font-size: 0.82em; }
 
-  /* ── FB Preview ── */
+  /* â”€â”€ FB Preview â”€â”€ */
   .preview-sticky { position: sticky; top: 72px; }
   .preview-label { font-size: 0.69rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-light); margin-bottom: 0.65rem; }
   .fb-card { background: #fff; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; font-family: -apple-system,'Helvetica Neue',Arial,sans-serif; box-shadow: 0 2px 10px rgba(0,0,0,0.07); }
@@ -183,7 +184,7 @@
   .fb-action { flex: 1; padding: 0.55rem; text-align: center; font-size: 0.79rem; font-weight: 600; color: #65676b; border: none; background: none; cursor: default; }
   .preview-note { font-size: 0.71rem; color: var(--ink-faint); margin-top: 0.65rem; line-height: 1.5; }
 
-  /* ── Google output ── */
+  /* â”€â”€ Google output â”€â”€ */
   .google-output { display: none; margin-top: 1.5rem; }
   .google-output.visible { display: block; }
   .loc-tab { padding:0.35rem 0.8rem;border:1.5px solid var(--border);border-radius:20px;background:transparent;color:var(--ink-mid);font-size:0.8rem;cursor:pointer;transition:border-color .15s,background .15s,color .15s; }
@@ -216,7 +217,7 @@
   .open-google-btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.65rem 1.2rem; background: var(--accent); color: #fff; border-radius: 7px; font-family: var(--sans); font-size: 0.85rem; font-weight: 500; text-decoration: none; transition: background 0.2s; margin-top: 1.25rem; }
   .open-google-btn:hover { background: var(--accent-mid); }
 
-  /* ── My Account ── */
+  /* â”€â”€ My Account â”€â”€ */
   .home-header { margin-bottom:2rem; }
   .home-hero { display:flex;align-items:center;gap:1.1rem; }
   .home-avatar { width:52px;height:52px;border-radius:12px;background:var(--accent);color:#fff;font-family:var(--serif);font-weight:700;font-size:1.1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0; }
@@ -239,7 +240,7 @@
   .quick-link:hover { background:var(--paper-warm); }
   .ql-icon { width:24px;height:24px;border-radius:6px;color:#fff;font-size:0.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--serif); }
 
-  /* ── Create Ad platform sub-tabs ── */
+  /* â”€â”€ Create Ad platform sub-tabs â”€â”€ */
   .create-ad-header { margin-bottom:1.5rem; }
   .create-ad-platform-tabs { display:flex;gap:0.5rem;flex-wrap:wrap; }
   .plat-tab { display:inline-flex;align-items:center;gap:0.5rem;padding:0.6rem 1.1rem;border:1.5px solid var(--paper-warm);border-radius:8px;background:var(--paper-card);font-family:var(--sans);font-size:0.85rem;font-weight:500;color:var(--ink-mid);cursor:pointer;transition:border-color .15s,background .15s; }
@@ -248,7 +249,7 @@
   .plat-tab.disabled { opacity:.45;cursor:not-allowed; }
   .plat-tab-icon { width:22px;height:22px;border-radius:5px;color:#fff;font-size:0.8rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--serif); }
 
-  /* ── Connections page ── */
+  /* â”€â”€ Connections page â”€â”€ */
   .connections-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(420px,1fr));gap:1.25rem; }
   @media(max-width:600px) { .connections-grid { grid-template-columns:1fr; } }
   .conn-card { background:var(--paper-card);border:1px solid var(--paper-warm);border-radius:10px;overflow:hidden; }
@@ -271,7 +272,7 @@
   .conn-steps { padding-left:1.2rem;font-size:0.82rem;color:var(--ink-mid);line-height:1.7; }
   .conn-steps code { background:var(--paper-warm);padding:0.1rem 0.35rem;border-radius:3px;font-size:0.8em; }
 
-  /* ── Ad Groups builder ── */
+  /* â”€â”€ Ad Groups builder â”€â”€ */
   .ag-card { border:1px solid var(--border); border-radius:6px; margin-bottom:0.6rem; overflow:hidden; }
   .ag-card.ag-disabled .ag-body { opacity:0.5; pointer-events:none; }
   .ag-head { display:flex; align-items:center; gap:0.6rem; padding:0.55rem 0.75rem; background:var(--paper); cursor:pointer; user-select:none; }
@@ -284,7 +285,7 @@
   .ag-hl-row { display:flex; align-items:center; gap:0.4rem; margin-bottom:0.22rem; }
   .ag-hl-row input { flex:1; font-size:0.79rem !important; padding:0.25rem 0.45rem !important; }
 
-  /* ── Site Analytics (GA4) ── */
+  /* â”€â”€ Site Analytics (GA4) â”€â”€ */
   .ga4-section { margin-top:1.5rem; background:var(--paper-card); border:1px solid var(--border); border-radius:10px; overflow:hidden; }
   .ga4-section-header { display:flex; align-items:center; justify-content:space-between; padding:0.85rem 1rem; border-bottom:1px solid var(--border); font-weight:600; font-size:0.92rem; }
   .ga4-inner { padding:1rem; }
@@ -305,7 +306,7 @@
   .camp-detail-row { display:none; background:var(--paper); }
   .camp-detail-row.open { display:table-row; }
   .camp-detail-cell { padding:0.65rem 0.9rem; font-size:0.8rem; color:var(--ink-mid); }
-  /* ── AI Creative panel ── */
+  /* â”€â”€ AI Creative panel â”€â”€ */
   .ai-brief-grid { display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;align-items:start; }
   @media(max-width:820px) { .ai-brief-grid { grid-template-columns:1fr; } }
   .ai-variants-wrap { margin-top:1.5rem; }
@@ -320,7 +321,7 @@
   .ai-image-concept { background:var(--paper);border:1px solid var(--paper-warm);border-radius:5px;padding:0.45rem 0.65rem;font-size:0.78rem;color:var(--ink-light);font-style:italic;margin-top:0.3rem; }
   .ai-loading-pulse { display:flex;align-items:center;gap:0.8rem;padding:2rem 0;color:var(--ink-faint);font-size:0.88rem; }
 
-  /* ── Audiences panel ── */
+  /* â”€â”€ Audiences panel â”€â”€ */
   .audiences-grid { display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;align-items:start; }
   @media(max-width:820px) { .audiences-grid { grid-template-columns:1fr; } }
   .aud-card { background:var(--paper-card);border:1px solid var(--paper-warm);border-radius:10px;overflow:hidden; }
@@ -335,7 +336,7 @@
   .aud-seg-desc { font-size:0.75rem;color:var(--ink-faint);margin-top:0.1rem;line-height:1.5; }
   .aud-action-row { display:flex;flex-wrap:wrap;gap:0.45rem;margin-top:0.8rem; }
 
-  /* ── Weekly Insights ── */
+  /* â”€â”€ Weekly Insights â”€â”€ */
   .insights-section { margin-top:1.5rem;background:var(--paper-card);border:1px solid var(--paper-warm);border-radius:10px;overflow:hidden; }
   .insights-header { display:flex;align-items:center;justify-content:space-between;padding:0.85rem 1rem;border-bottom:1px solid var(--paper-warm); }
   .insights-inner { padding:1rem 1.1rem; }
@@ -348,16 +349,16 @@
   .insights-item { font-size:0.82rem;color:var(--ink-mid);margin-bottom:0.4rem;line-height:1.5; }
   .insights-item strong { color:var(--accent); }
 
-  /* ── Campaign Launcher ── */
+  /* â”€â”€ Campaign Launcher â”€â”€ */
   .launch-grid { display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;align-items:start; }
   @media(max-width:900px) { .launch-grid { grid-template-columns:1fr; } }
 
-  /* ── Draggable Tabs ── */
+  /* â”€â”€ Draggable Tabs â”€â”€ */
   .tab-btn { cursor: grab; }
   .tab-btn.dragging { opacity: 0.4; cursor: grabbing; }
   .tabs.drag-over-target .tab-btn:not(.dragging) { transition: transform 0.15s; }
 
-  /* ── Web Posts Panel ── */
+  /* â”€â”€ Web Posts Panel â”€â”€ */
   .wp-table { width:100%;border-collapse:collapse;font-size:0.85rem; }
   .wp-table thead th { text-align:left;font-size:0.72rem;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-faint);padding:0 0.75rem 0.6rem;border-bottom:2px solid var(--paper-warm);white-space:nowrap; }
   .wp-table tbody tr { border-bottom:1px solid var(--paper-warm);transition:background 0.15s; }
@@ -373,7 +374,7 @@
   .wp-btn-del { background:transparent;border:1px solid #e5b3b3;color:#b94a4a;border-radius:4px;padding:0.28rem 0.65rem;font-size:0.78rem;cursor:pointer;line-height:1; }
   .wp-btn-del:hover { background:#fdf0f0; }
 
-  /* ── Newsletter Panel ── */
+  /* â”€â”€ Newsletter Panel â”€â”€ */
   .nl-sub-row { display:flex;align-items:center;gap:0.5rem;padding:0.38rem 0.4rem;border-bottom:1px solid var(--paper-warm);font-size:0.8rem; }
   .nl-sub-row:last-child { border-bottom:none; }
   .nl-status-badge { display:inline-block;padding:0.1rem 0.4rem;border-radius:10px;font-size:0.68rem;font-weight:600;text-transform:uppercase;letter-spacing:0.04em; }
@@ -401,7 +402,7 @@
   .launch-result.error { background:#fef2f2;color:var(--red-soft);border:1px solid #fecaca; }
   .launch-prefill-bar { padding:0.7rem 1rem;background:var(--accent-light);border:1px solid var(--accent-rule);border-radius:8px;font-size:0.82rem;color:var(--ink-mid);margin-bottom:1.25rem;display:none; }
 
-  /* ── Campaign Wizard ── */
+  /* â”€â”€ Campaign Wizard â”€â”€ */
   .wizard-pane-title { font-family:var(--serif);font-size:1.1rem;font-weight:700;color:var(--ink);margin:0 0 1.4rem; }
   .wizard-back-btn { background:none;border:none;color:var(--accent);font-family:var(--sans);font-size:0.84rem;font-weight:500;cursor:pointer;padding:0;display:inline-flex;align-items:center;gap:0.3rem;margin-bottom:1.25rem; }
   .wizard-back-btn:hover { text-decoration:underline; }
@@ -441,17 +442,17 @@
   .policy-result-item.pass { background:#f0fdf4;border:1px solid #a7f3d0;color:#065f46; }
   .policy-result-item.warn { background:#fffbeb;border:1px solid #fde68a;color:#92400e; }
   .policy-result-item.fail { background:#fef2f2;border:1px solid #fecaca;color:#c0392b; }
-  /* ── Active Campaigns tab ── */
+  /* â”€â”€ Active Campaigns tab â”€â”€ */
   .ac-plat-tabs { display:flex;gap:0.5rem;margin-bottom:1.25rem; }
   .ac-plat-tab { padding:0.45rem 1.1rem;border:1.5px solid var(--border);border-radius:20px;background:transparent;color:var(--ink-mid);font-size:0.82rem;cursor:pointer;transition:all .15s;font-family:var(--sans); }
   .ac-plat-tab.active { border-color:var(--accent);background:var(--accent);color:#fff; }
-  /* ── Newsletter sub-tabs ── */
+  /* â”€â”€ Newsletter sub-tabs â”€â”€ */
   .nl-sub-tabs { display:flex;gap:0.5rem;margin-bottom:1.75rem;border-bottom:1px solid var(--border);padding-bottom:0.85rem; }
   .nl-sub-tab { padding:0.4rem 1rem;border:1.5px solid var(--border);border-radius:20px;background:transparent;color:var(--ink-mid);font-size:0.82rem;cursor:pointer;transition:all .15s;font-family:var(--sans); }
   .nl-sub-tab.active { border-color:var(--accent);background:var(--accent);color:#fff; }
   .nl-pane { display:none; }
   .nl-pane.active { display:block; }
-  /* ── Connections sub-nav ── */
+  /* â”€â”€ Connections sub-nav â”€â”€ */
   .conn-sub-nav { display:flex;gap:0.5rem;margin-bottom:1.75rem; }
   .conn-sub-tab { padding:0.4rem 1rem;border:1.5px solid var(--border);border-radius:20px;background:transparent;color:var(--ink-mid);font-size:0.82rem;cursor:pointer;transition:all .15s;font-family:var(--sans); }
   .conn-sub-tab.active { border-color:var(--accent);background:var(--accent);color:#fff; }
@@ -461,7 +462,7 @@
 </head>
 <body>
 
-<!-- ── Login ── -->
+<!-- â”€â”€ Login â”€â”€ -->
 <div id="login-screen">
   <div class="login-card">
     <div class="login-logo"><span>EBH</span> Admin Portal</div>
@@ -474,7 +475,7 @@
   </div>
 </div>
 
-<!-- ── Dashboard ── -->
+<!-- â”€â”€ Dashboard â”€â”€ -->
 <div id="dashboard">
   <nav id="dash-nav">
     <div class="dash-logo"><span>EBH</span> Admin</div>
@@ -487,34 +488,34 @@
   <div class="dash-content">
     <div class="tabs">
       <button class="tab-btn active" data-tab="home">Dashboard</button>
-      <button class="tab-btn" data-tab="campaign">Create Campaign<span class="tab-sub">Meta · Google</span></button>
-      <button class="tab-btn" data-tab="activecampaigns">Active Campaigns<span class="tab-sub">manage · pause</span></button>
-      <button class="tab-btn" data-tab="connections">Connections<span class="tab-sub">accounts · clients</span></button>
-      <button class="tab-btn" data-tab="newsletter">Newsletter<span class="tab-sub">write · schedule</span></button>
-      <button class="tab-btn" data-tab="webposts">Web Posts<span class="tab-sub">write · edit</span></button>
+      <button class="tab-btn" data-tab="campaign">Create Campaign<span class="tab-sub">Meta Â· Google</span></button>
+      <button class="tab-btn" data-tab="activecampaigns">Active Campaigns<span class="tab-sub">manage Â· pause</span></button>
+      <button class="tab-btn" data-tab="connections">Connections<span class="tab-sub">accounts Â· clients</span></button>
+      <button class="tab-btn" data-tab="newsletter">Newsletter<span class="tab-sub">write Â· schedule</span></button>
+      <button class="tab-btn" data-tab="webposts">Web Posts<span class="tab-sub">write Â· edit</span></button>
     </div>
 
-    <!-- ══ MY ACCOUNT PANEL ══ -->
+    <!-- â•â• MY ACCOUNT PANEL â•â• -->
     <div id="panel-home">
       <div class="home-header">
         <div class="home-hero">
           <div class="home-avatar">EBH</div>
           <div>
             <div class="home-org">Evidence-Based Health</div>
-            <div class="home-sub">evidencebasedhealth.me · Agency Admin</div>
+            <div class="home-sub">evidencebasedhealth.me Â· Agency Admin</div>
           </div>
         </div>
       </div>
       <div style="background:var(--accent-light);border:1px solid var(--accent-rule);border-radius:10px;padding:1rem 1.25rem;margin-bottom:1.5rem">
         <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--accent);margin-bottom:0.55rem">Recommended Workflow</div>
         <div style="display:flex;flex-wrap:wrap;gap:0.4rem 0;align-items:center;font-size:0.82rem;color:var(--ink-mid);line-height:1.7">
-          <button onclick="showTab('campaign')" style="background:none;border:none;padding:0;color:var(--accent);font-weight:600;cursor:pointer;font-family:var(--sans);font-size:0.82rem">① Create Campaign</button>
-          <span style="color:var(--ink-faint);padding:0 0.4rem">→ choose platform →</span>
-          <span style="color:var(--ink-mid)">AI or Manual → Policy Check →</span>
-          <button onclick="showTab('campaign')" style="background:none;border:none;padding:0 0.35rem;color:var(--accent);font-weight:600;cursor:pointer;font-family:var(--sans);font-size:0.82rem">② 🚀 Publish</button>
-          <span style="color:var(--ink-faint);padding:0 0.4rem">→ manage in →</span>
-          <button onclick="showTab('activecampaigns')" style="background:none;border:none;padding:0;color:var(--accent);font-weight:600;cursor:pointer;font-family:var(--sans);font-size:0.82rem">③ Active Campaigns</button>
-          <span style="color:var(--ink-faint);padding:0 0.4rem">→ pause, resume, monitor</span>
+          <button onclick="showTab('campaign')" style="background:none;border:none;padding:0;color:var(--accent);font-weight:600;cursor:pointer;font-family:var(--sans);font-size:0.82rem">â‘  Create Campaign</button>
+          <span style="color:var(--ink-faint);padding:0 0.4rem">â†’ choose platform â†’</span>
+          <span style="color:var(--ink-mid)">AI or Manual â†’ Policy Check â†’</span>
+          <button onclick="showTab('campaign')" style="background:none;border:none;padding:0 0.35rem;color:var(--accent);font-weight:600;cursor:pointer;font-family:var(--sans);font-size:0.82rem">â‘¡ ðŸš€ Publish</button>
+          <span style="color:var(--ink-faint);padding:0 0.4rem">â†’ manage in â†’</span>
+          <button onclick="showTab('activecampaigns')" style="background:none;border:none;padding:0;color:var(--accent);font-weight:600;cursor:pointer;font-family:var(--sans);font-size:0.82rem">â‘¢ Active Campaigns</button>
+          <span style="color:var(--ink-faint);padding:0 0.4rem">â†’ pause, resume, monitor</span>
         </div>
       </div>
       <div class="home-grid">
@@ -525,7 +526,7 @@
               <div class="platform-icon" style="background:#1877f2">f</div>
               <div class="platform-info">
                 <div class="platform-card-name">Meta Ads <span style="font-size:0.68rem;opacity:0.6;font-weight:400">Facebook &amp; Instagram</span></div>
-                <div class="platform-card-desc">Cold audiences &amp; retargeting — guided wizard</div>
+                <div class="platform-card-desc">Cold audiences &amp; retargeting â€” guided wizard</div>
               </div>
             </button>
             <button class="platform-card" onclick="goCreateAd('google')">
@@ -548,19 +549,19 @@
           <div class="home-section-title">Quick Links</div>
           <div class="quick-links">
             <a class="quick-link" href="https://ads.google.com" target="_blank" rel="noopener">
-              <span class="ql-icon" style="background:#4285f4">G</span>Google Ads Manager ↗
+              <span class="ql-icon" style="background:#4285f4">G</span>Google Ads Manager â†—
             </a>
             <a class="quick-link" href="https://www.facebook.com/adsmanager" target="_blank" rel="noopener">
-              <span class="ql-icon" style="background:#1877f2">f</span>Meta Ads Manager ↗
+              <span class="ql-icon" style="background:#1877f2">f</span>Meta Ads Manager â†—
             </a>
             <a class="quick-link" href="https://analytics.google.com" target="_blank" rel="noopener">
-              <span class="ql-icon" style="background:#e37400">A</span>Google Analytics ↗
+              <span class="ql-icon" style="background:#e37400">A</span>Google Analytics â†—
             </a>
             <a class="quick-link" href="https://search.google.com/search-console" target="_blank" rel="noopener">
-              <span class="ql-icon" style="background:#34a853">S</span>Search Console ↗
+              <span class="ql-icon" style="background:#34a853">S</span>Search Console â†—
             </a>
             <a class="quick-link" href="https://evidencebasedhealth.me" target="_blank" rel="noopener">
-              <span class="ql-icon" style="background:#1a5c3a">🌿</span>Live Site ↗
+              <span class="ql-icon" style="background:#1a5c3a">ðŸŒ¿</span>Live Site â†—
             </a>
           </div>
         </div>
@@ -569,8 +570,8 @@
       <!-- Site Analytics -->
       <div class="ga4-section">
         <div class="ga4-section-header">
-          <span>📊 Site Analytics — Last 30 Days</span>
-          <button type="button" class="btn-sm" id="btn-load-ga4" style="padding:0.35rem 0.9rem;font-size:0.8rem">↻ Load</button>
+          <span>ðŸ“Š Site Analytics â€” Last 30 Days</span>
+          <button type="button" class="btn-sm" id="btn-load-ga4" style="padding:0.35rem 0.9rem;font-size:0.8rem">â†» Load</button>
         </div>
         <div id="ga4-wrap" class="ga4-inner">
           <p style="font-size:0.83rem;color:var(--ink-faint);margin:0">Click Load to pull live data from Google Analytics.</p>
@@ -581,16 +582,16 @@
       <div class="insights-section">
         <div class="insights-header">
           <div>
-            <div style="font-size:0.92rem;font-weight:600;color:var(--ink)">🤖 Weekly Performance Insights</div>
+            <div style="font-size:0.92rem;font-weight:600;color:var(--ink)">ðŸ¤– Weekly Performance Insights</div>
             <div style="font-size:0.73rem;color:var(--ink-faint);margin-top:0.1rem">AI-powered summary of top audiences, creatives &amp; optimization suggestions</div>
           </div>
-          <button type="button" class="btn-sm" id="btn-load-insights" style="padding:0.35rem 0.9rem;font-size:0.8rem">↻ Analyze</button>
+          <button type="button" class="btn-sm" id="btn-load-insights" style="padding:0.35rem 0.9rem;font-size:0.8rem">â†» Analyze</button>
         </div>
         <div id="insights-inner" class="insights-inner">
           <div class="insights-client-row">
             <label style="font-size:0.8rem;font-weight:500;color:var(--ink-mid);white-space:nowrap">Client:</label>
             <select id="insights-client-sel" style="flex:1;max-width:260px;padding:0.4rem 0.65rem;border:1px solid var(--paper-warm);border-radius:6px;font-family:var(--sans);font-size:0.84rem;background:var(--paper);color:var(--ink)">
-              <option value="">— My account (EBH default) —</option>
+              <option value="">â€” My account (EBH default) â€”</option>
             </select>
           </div>
           <p style="font-size:0.83rem;color:var(--ink-faint);margin:0">Select a client and click Analyze to see last-week performance + AI recommendations.</p>
@@ -598,10 +599,10 @@
       </div>
     </div>
 
-    <!-- ══ CLIENTS PANEL (legacy stub — content now in conn-clients) ══ -->
+    <!-- â•â• CLIENTS PANEL (legacy stub â€” content now in conn-clients) â•â• -->
     <div id="panel-clients" style="display:none"></div>
 
-    <!-- ══ CREATE CAMPAIGN WIZARD ══ -->
+    <!-- â•â• CREATE CAMPAIGN WIZARD â•â• -->
     <div id="panel-campaign" style="display:none">
 
       <!-- Wizard progress bar -->
@@ -624,12 +625,12 @@
           <button class="wizard-plat-card" id="wpc-meta" onclick="selectWizPlat('meta')">
             <div class="wpc-icon" style="background:#1877f2">f</div>
             <div class="wpc-name">Meta Ads</div>
-            <div class="wpc-desc">Facebook &amp; Instagram · Cold audiences &amp; retargeting</div>
+            <div class="wpc-desc">Facebook &amp; Instagram Â· Cold audiences &amp; retargeting</div>
           </button>
           <button class="wizard-plat-card" id="wpc-google" onclick="selectWizPlat('google')">
             <div class="wpc-icon" style="background:#4285f4">G</div>
             <div class="wpc-name">Google Search</div>
-            <div class="wpc-desc">Intent-driven search ads · Keywords &amp; responsive text</div>
+            <div class="wpc-desc">Intent-driven search ads Â· Keywords &amp; responsive text</div>
           </button>
           <button class="wizard-plat-card" disabled>
             <div class="wpc-icon" style="background:#010101">TT</div>
@@ -639,35 +640,35 @@
         </div>
       </div>
 
-      <!-- Step 2: Mode selection (removed — merged into form) -->
+      <!-- Step 2: Mode selection (removed â€” merged into form) -->
       <div id="wp-2" style="display:none">
         <h2 class="wizard-pane-title" id="wp2-title">How would you like to build this?</h2>
         <div class="wizard-mode-grid">
           <button class="wizard-mode-card" id="wmc-ai" onclick="selectWizMode('ai')">
-            <div class="wmc-icon">✨</div>
+            <div class="wmc-icon">âœ¨</div>
             <div class="wmc-name">AI Generated</div>
-            <div class="wmc-desc">Describe your goal and AI writes all copy — headlines, descriptions, keywords. All editable before publishing.</div>
+            <div class="wmc-desc">Describe your goal and AI writes all copy â€” headlines, descriptions, keywords. All editable before publishing.</div>
           </button>
           <button class="wizard-mode-card" id="wmc-manual" onclick="selectWizMode('manual')">
-            <div class="wmc-icon">⚙</div>
+            <div class="wmc-icon">âš™</div>
             <div class="wmc-name">Manual</div>
-            <div class="wmc-desc">Full control over every attribute — targeting, bidding, keywords, ad copy.</div>
+            <div class="wmc-desc">Full control over every attribute â€” targeting, bidding, keywords, ad copy.</div>
           </button>
         </div>
       </div>
 
       <!-- Step 3: Setup (AI brief + platform forms) -->
       <div id="wp-3" style="display:none">
-        <button class="wizard-back-btn" onclick="wizGoTo(1)">← Back</button>
+        <button class="wizard-back-btn" onclick="wizGoTo(1)">â† Back</button>
 
         <!-- AI Brief (visible when mode=ai) -->
         <div id="wp3-ai" style="display:none">
           <div class="form-card" style="margin-bottom:1.25rem">
-            <div class="card-title">✨ AI Creative Brief</div>
+            <div class="card-title">âœ¨ AI Creative Brief</div>
             <div class="ai-brief-grid">
               <div class="form-row">
                 <label for="wai-client">Client</label>
-                <select id="wai-client"><option value="">— My account —</option></select>
+                <select id="wai-client"><option value="">â€” My account â€”</option></select>
               </div>
               <div class="form-row">
                 <label for="wai-offer">Offer / Topic</label>
@@ -678,55 +679,55 @@
                   <option value="cancer prevention and screening">Cancer prevention &amp; screening</option>
                   <option value="metabolic health and weight management">Metabolic health &amp; weight</option>
                   <option value="evidence-based health newsletter">Evidence-based health newsletter</option>
-                  <option value="__custom__">Other / Custom…</option>
+                  <option value="__custom__">Other / Customâ€¦</option>
                 </select>
-                <input type="text" id="wai-offer-custom" placeholder="Describe your topic…" style="display:none;margin-top:0.5rem">
+                <input type="text" id="wai-offer-custom" placeholder="Describe your topicâ€¦" style="display:none;margin-top:0.5rem">
               </div>
               <div class="form-row">
                 <label for="wai-objective">Objective</label>
                 <select id="wai-objective">
-                  <option value="Traffic to education page">Traffic — education page</option>
-                  <option value="Lead capture — newsletter signup">Lead — newsletter signup</option>
+                  <option value="Traffic to education page">Traffic â€” education page</option>
+                  <option value="Lead capture â€” newsletter signup">Lead â€” newsletter signup</option>
                   <option value="Awareness of evidence-based approach">Awareness</option>
-                  <option value="__custom__">Other / Custom…</option>
+                  <option value="__custom__">Other / Customâ€¦</option>
                 </select>
-                <input type="text" id="wai-objective-custom" placeholder="Describe your objective…" style="display:none;margin-top:0.5rem">
+                <input type="text" id="wai-objective-custom" placeholder="Describe your objectiveâ€¦" style="display:none;margin-top:0.5rem">
               </div>
               <div class="form-row">
-                <label for="wai-audience" style="display:flex;align-items:center;justify-content:space-between">Target Audience <button type="button" id="btn-wiz-regen-audience" style="font-size:0.75rem;padding:0.2rem 0.6rem;border:1.5px solid var(--accent-rule);border-radius:20px;background:transparent;color:var(--accent);cursor:pointer;font-family:var(--sans);font-weight:500">↺ Regenerate</button></label>
-                <input type="text" id="wai-audience" placeholder="e.g. Adults 35–65 interested in preventive health">
+                <label for="wai-audience" style="display:flex;align-items:center;justify-content:space-between">Target Audience <button type="button" id="btn-wiz-regen-audience" style="font-size:0.75rem;padding:0.2rem 0.6rem;border:1.5px solid var(--accent-rule);border-radius:20px;background:transparent;color:var(--accent);cursor:pointer;font-family:var(--sans);font-weight:500">â†º Regenerate</button></label>
+                <input type="text" id="wai-audience" placeholder="e.g. Adults 35â€“65 interested in preventive health">
               </div>
               <div class="form-row" style="grid-column:1/-1">
                 <label for="wai-extra">Extra Context <span class="hint">optional</span></label>
-                <textarea id="wai-extra" rows="2" placeholder="Hooks, brand voice, seasonal angles…"></textarea>
+                <textarea id="wai-extra" rows="2" placeholder="Hooks, brand voice, seasonal anglesâ€¦"></textarea>
               </div>
             </div>
-            <button class="btn-submit" id="btn-wiz-gen-ai" style="margin-top:0.75rem">✨ Generate with AI</button>
+            <button class="btn-submit" id="btn-wiz-gen-ai" style="margin-top:0.75rem">âœ¨ Generate with AI</button>
             <div class="status-bar" id="wai-status"></div>
           </div>
           <div id="wai-variants" style="display:none;margin-bottom:1.25rem"></div>
           <div id="wp3-ai-applied" style="display:none;background:var(--accent-light);border:1px solid var(--accent-rule);border-radius:7px;padding:0.7rem 1rem;font-size:0.82rem;color:var(--ink-mid);margin-bottom:1rem">
-            ✓ AI copy applied below — review the form and click <strong>Policy Review →</strong> when ready.
+            âœ“ AI copy applied below â€” review the form and click <strong>Policy Review â†’</strong> when ready.
           </div>
         </div>
 
         <!-- Platform forms (sub-meta / sub-google) are inserted here -->
-      <!-- ── META SUB-PANEL ── -->
+      <!-- â”€â”€ META SUB-PANEL â”€â”€ -->
       <div id="sub-meta">
-    <!-- ══ META PANEL ══ -->
+    <!-- â•â• META PANEL â•â• -->
     <div id="panel-meta">
       <div class="client-sel-bar">
         <div class="client-sel-dot" id="meta-sel-dot"></div>
         <span class="client-sel-label">Client:</span>
         <select id="meta-client-sel">
-          <option value="">— My account (default) —</option>
+          <option value="">â€” My account (default) â€”</option>
         </select>
       </div>
       <div class="panel-grid">
         <div>
           <div class="form-card">
             <div class="card-title">Campaign Settings</div>
-            <div class="form-row"><label for="m-name">Campaign Name</label><input type="text" id="m-name" placeholder="e.g. EBH Newsletter – Spring 2026" autocomplete="off"></div>
+            <div class="form-row"><label for="m-name">Campaign Name</label><input type="text" id="m-name" placeholder="e.g. EBH Newsletter â€“ Spring 2026" autocomplete="off"></div>
             <div class="form-inline">
               <div class="form-row"><label for="m-objective">Objective</label>
                 <select id="m-objective">
@@ -754,7 +755,7 @@
           </div>
           <div class="form-card">
             <div class="card-title">Ad Copy</div>
-            <div class="form-row"><label for="m-primary-text">Primary Text <span class="hint">125 chars</span></label><textarea id="m-primary-text" rows="3" placeholder="Most people don't know when they're due for cancer screening. We fix that — evidence-based, plain-language, no hype. Free weekly brief."></textarea><div class="char-count" id="cc-primary">0 / 125</div></div>
+            <div class="form-row"><label for="m-primary-text">Primary Text <span class="hint">125 chars</span></label><textarea id="m-primary-text" rows="3" placeholder="Most people don't know when they're due for cancer screening. We fix that â€” evidence-based, plain-language, no hype. Free weekly brief."></textarea><div class="char-count" id="cc-primary">0 / 125</div></div>
             <div class="form-row"><label for="m-headline">Headline <span class="hint">40 chars</span></label><input type="text" id="m-headline" placeholder="Free Evidence-Based Health Brief"><div class="char-count" id="cc-headline">0 / 40</div></div>
             <div class="form-row"><label for="m-description">Description <span class="hint">optional, 30 chars</span></label><input type="text" id="m-description" placeholder="Science. No agenda."><div class="char-count" id="cc-desc">0 / 30</div></div>
             <div class="form-row">
@@ -762,51 +763,51 @@
               <div class="img-drop-zone" id="meta-img-drop" onclick="document.getElementById('meta-img-file').click()" style="margin-bottom:0.5rem">
                 <input type="file" id="meta-img-file" accept="image/*" style="display:none" onchange="handleImgUpload(this,'m-image-url','meta-img-preview')">
                 <div id="meta-img-drop-content">
-                  <div style="font-size:1.3rem;margin-bottom:0.25rem">📁</div>
+                  <div style="font-size:1.3rem;margin-bottom:0.25rem">ðŸ“</div>
                   <div style="font-size:0.82rem;color:var(--ink-mid)">Click to upload or drag &amp; drop</div>
-                  <div style="font-size:0.74rem;color:var(--ink-faint);margin-top:0.15rem">JPG, PNG · max 10MB · recommended 1200×628</div>
+                  <div style="font-size:0.74rem;color:var(--ink-faint);margin-top:0.15rem">JPG, PNG Â· max 10MB Â· recommended 1200Ã—628</div>
                 </div>
               </div>
-              <input type="url" id="m-image-url" placeholder="https://… (or upload above)">
+              <input type="url" id="m-image-url" placeholder="https://â€¦ (or upload above)">
               <div id="meta-img-preview" style="display:none;margin-top:0.5rem"><img style="max-width:100%;max-height:160px;border-radius:6px;border:1px solid var(--border)" alt="preview"></div>
             </div>
             <div class="form-row"><label for="m-dest-url">Destination URL</label><input type="url" id="m-dest-url" value="https://evidencebasedhealth.me"></div>
           </div>
-          <!-- hidden submit — triggered programmatically from wizard step 5 -->
+          <!-- hidden submit â€” triggered programmatically from wizard step 5 -->
           <button class="btn-submit" id="btn-create-meta" style="display:none">Create Meta Campaign</button>
           <div class="status-bar" id="meta-status"></div>
         </div>
         <div class="preview-sticky">
-          <div class="preview-label">Live Preview — Facebook</div>
+          <div class="preview-label">Live Preview â€” Facebook</div>
           <div class="fb-card">
-            <div class="fb-header"><div class="fb-avatar" id="prev-avatar">🌿</div><div><div class="fb-page-name" id="prev-page-name">Evidence-Based Health</div><div class="fb-sponsored">Sponsored · 🌐</div></div></div>
-            <div class="fb-primary-text" id="prev-text">Your primary text will appear here…</div>
+            <div class="fb-header"><div class="fb-avatar" id="prev-avatar">ðŸŒ¿</div><div><div class="fb-page-name" id="prev-page-name">Evidence-Based Health</div><div class="fb-sponsored">Sponsored Â· ðŸŒ</div></div></div>
+            <div class="fb-primary-text" id="prev-text">Your primary text will appear hereâ€¦</div>
             <div class="fb-img-wrap" id="prev-img-wrap"><div class="fb-img-placeholder">Ad image</div></div>
             <div class="fb-link-row">
               <div class="fb-link-info"><div class="fb-link-domain" id="prev-domain">EVIDENCEBASEDHEALTH.ME</div><div class="fb-link-headline" id="prev-headline">Free Evidence-Based Health Brief</div><div class="fb-link-desc" id="prev-desc">Science. No agenda.</div></div>
               <div class="fb-cta">Sign Up</div>
             </div>
-            <div class="fb-actions"><div class="fb-action">👍 Like</div><div class="fb-action">💬 Comment</div><div class="fb-action">↗ Share</div></div>
+            <div class="fb-actions"><div class="fb-action">ðŸ‘ Like</div><div class="fb-action">ðŸ’¬ Comment</div><div class="fb-action">â†— Share</div></div>
           </div>
-          <p class="preview-note">Campaigns are created in <strong>Paused</strong> status — review in Ads Manager before activating.</p>
+          <p class="preview-note">Campaigns are created in <strong>Paused</strong> status â€” review in Ads Manager before activating.</p>
         </div>
       </div>
     </div>
       </div><!-- end sub-meta -->
       <div id="sub-google" style="display:none">
 
-    <!-- ══ GOOGLE PANEL ══ -->
+    <!-- â•â• GOOGLE PANEL â•â• -->
     <div id="panel-google">
       <div style="max-width:700px">
         <div class="client-sel-bar">
           <div class="client-sel-dot" id="google-sel-dot"></div>
           <span class="client-sel-label">Client:</span>
           <select id="google-client-sel">
-            <option value="">— My account (default) —</option>
+            <option value="">â€” My account (default) â€”</option>
           </select>
         </div>
         <div id="google-compliance-notice" style="background:#fffbeb;border:1px solid #fbbf24;border-radius:6px;padding:0.65rem 0.9rem;margin-bottom:0.9rem;font-size:0.8rem;color:#92400e;line-height:1.5;display:none">
-          <strong>⚠ Compliance mode active</strong> — This client is not LegitScript certified.
+          <strong>âš  Compliance mode active</strong> â€” This client is not LegitScript certified.
           All keywords and ad copy must stay in the <strong>education + lifestyle lane</strong>.
           No drug brand names, no prescription access language, no guarantee claims.
           Add certification status in the Clients tab to unlock pharmaceutical ad copy.
@@ -814,20 +815,20 @@
         <div class="form-card">
           <div class="card-title">Campaign Settings</div>
           <div class="form-inline">
-            <div class="form-row"><label for="g-name">Campaign Name</label><input type="text" id="g-name" placeholder="EBH Newsletter – Search" autocomplete="off"></div>
+            <div class="form-row"><label for="g-name">Campaign Name</label><input type="text" id="g-name" placeholder="EBH Newsletter â€“ Search" autocomplete="off"></div>
             <div class="form-row"><label for="g-budget">Daily Budget ($)</label><input type="number" id="g-budget" placeholder="15" min="1"></div>
           </div>
           <div class="form-row"><label for="g-final-url">Final URL</label><input type="url" id="g-final-url" value="https://evidencebasedhealth.me"></div>
           <div class="form-row">
-            <label for="g-bidding">Bidding Strategy <span class="hint">start with Clicks — switch to Conversions after 20–30 signups</span></label>
+            <label for="g-bidding">Bidding Strategy <span class="hint">start with Clicks â€” switch to Conversions after 20â€“30 signups</span></label>
             <select id="g-bidding">
               <option value="clicks" selected>Maximize Clicks (recommended for new campaigns)</option>
-              <option value="conversions">Maximize Conversions (after 20–30 signups)</option>
+              <option value="conversions">Maximize Conversions (after 20â€“30 signups)</option>
             </select>
           </div>
           <div class="form-row" style="flex-direction:row;align-items:center;gap:0.6rem;margin-top:0.1rem">
             <input type="checkbox" id="g-search-partners" style="width:auto;margin:0;cursor:pointer">
-            <label for="g-search-partners" style="margin:0;font-weight:400;font-size:0.82rem;cursor:pointer">Include Search Partners (AOL, Ask.com) <span class="hint" style="display:inline">— off by default for a clean test</span></label>
+            <label for="g-search-partners" style="margin:0;font-weight:400;font-size:0.82rem;cursor:pointer">Include Search Partners (AOL, Ask.com) <span class="hint" style="display:inline">â€” off by default for a clean test</span></label>
           </div>
         </div>
         <div class="form-card">
@@ -895,34 +896,34 @@
           </div>
         </div>
         <div class="form-card">
-          <div class="card-title">✨ Generate Copy with AI <span style="font-weight:300;letter-spacing:0;text-transform:none;font-size:0.77rem;color:var(--ink-faint)"> — optional; fills all ad groups + descriptions instantly</span></div>
+          <div class="card-title">âœ¨ Generate Copy with AI <span style="font-weight:300;letter-spacing:0;text-transform:none;font-size:0.77rem;color:var(--ink-faint)"> â€” optional; fills all ad groups + descriptions instantly</span></div>
           <div class="form-inline">
             <div class="form-row">
               <label for="g-ai-audience">Target Audience</label>
-              <input type="text" id="g-ai-audience" placeholder="e.g. Adults 35–65 interested in preventive health" value="Adults 35–65 interested in preventive health">
+              <input type="text" id="g-ai-audience" placeholder="e.g. Adults 35â€“65 interested in preventive health" value="Adults 35â€“65 interested in preventive health">
             </div>
             <div class="form-row">
               <label for="g-ai-extra">Extra context <span class="hint">optional</span></label>
               <input type="text" id="g-ai-extra" placeholder="Seasonal angle, hooks, etc." autocomplete="off">
             </div>
           </div>
-          <button class="btn-submit" id="btn-g-gen-ai" style="margin-top:0.7rem">✨ Generate with AI</button>
+          <button class="btn-submit" id="btn-g-gen-ai" style="margin-top:0.7rem">âœ¨ Generate with AI</button>
           <div class="status-bar" id="g-ai-status"></div>
           <div id="g-ai-variants-wrap" style="display:none;margin-top:0.75rem"></div>
         </div>
         <div class="form-card">
-          <div class="card-title">Ad Groups <span style="font-weight:300;letter-spacing:0;text-transform:none;font-size:0.77rem;color:var(--ink-faint)"> — enable/customise themes; click a group to edit headlines &amp; keywords</span></div>
+          <div class="card-title">Ad Groups <span style="font-weight:300;letter-spacing:0;text-transform:none;font-size:0.77rem;color:var(--ink-faint)"> â€” enable/customise themes; click a group to edit headlines &amp; keywords</span></div>
           <p style="font-size:0.8rem;color:var(--ink-faint);margin:0 0 0.75rem">Toggle each theme on/off. Click the group name to expand and edit headlines. All enabled groups become separate ad groups in one campaign.</p>
           <div id="adgroups-wrap"></div>
         </div>
         <div class="form-card">
-          <div class="card-title">Descriptions <span style="font-weight:300;letter-spacing:0;text-transform:none;font-size:0.77rem;color:var(--ink-faint)"> — 2–4, max 90 chars each</span></div>
+          <div class="card-title">Descriptions <span style="font-weight:300;letter-spacing:0;text-transform:none;font-size:0.77rem;color:var(--ink-faint)"> â€” 2â€“4, max 90 chars each</span></div>
           <div id="g-desc-wrap"></div>
           <button type="button" class="btn-sm" id="btn-add-d" style="margin-top:0.5rem;">+ Add Description</button>
         </div>
         <div style="display:flex;gap:0.75rem;flex-wrap:wrap;align-items:center;margin-bottom:0.25rem">
           <button class="btn-submit" id="btn-gen-google" style="flex:1;margin-bottom:0">Create Google Campaign (Paused)</button>
-          <button type="button" class="btn-sm" id="btn-optimize-google" style="white-space:nowrap;padding:0.6rem 1.1rem;font-size:0.82rem">⚡ Optimize with Past Data</button>
+          <button type="button" class="btn-sm" id="btn-optimize-google" style="white-space:nowrap;padding:0.6rem 1.1rem;font-size:0.82rem">âš¡ Optimize with Past Data</button>
         </div>
         <div class="status-bar" id="optimize-status"></div>
         <div class="status-bar" id="google-status"></div>
@@ -935,21 +936,21 @@
               <div>Account: <span id="go-account"></span></div>
             </div>
             <div id="go-adgroups" style="margin-top:0.85rem"></div>
-            <a id="go-review-link" href="#" target="_blank" rel="noopener" class="open-google-btn" style="display:inline-flex;margin-top:1rem">Review in Google Ads ↗</a>
+            <a id="go-review-link" href="#" target="_blank" rel="noopener" class="open-google-btn" style="display:inline-flex;margin-top:1rem">Review in Google Ads â†—</a>
           </div>
-          <p style="font-size:0.77rem;color:var(--ink-faint);margin-top:0.5rem">Campaign and ad are created in <strong>Paused</strong> status — enable them after reviewing in Google Ads Manager.</p>
+          <p style="font-size:0.77rem;color:var(--ink-faint);margin-top:0.5rem">Campaign and ad are created in <strong>Paused</strong> status â€” enable them after reviewing in Google Ads Manager.</p>
         </div>
 
         <!-- Policy Intelligence -->
         <div class="form-card" style="margin-top:1.25rem">
           <div class="card-title" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between" onclick="togglePolicyIntel()">
-            <span>🧠 Policy Intelligence <span id="pi-badge" style="display:none;font-size:0.72rem;font-weight:600;background:var(--accent);color:#fff;border-radius:20px;padding:0.1rem 0.55rem;vertical-align:middle;margin-left:0.4rem"></span></span>
-            <span id="pi-chev" style="font-size:0.85rem;color:var(--ink-faint)">▾</span>
+            <span>ðŸ§  Policy Intelligence <span id="pi-badge" style="display:none;font-size:0.72rem;font-weight:600;background:var(--accent);color:#fff;border-radius:20px;padding:0.1rem 0.55rem;vertical-align:middle;margin-left:0.4rem"></span></span>
+            <span id="pi-chev" style="font-size:0.85rem;color:var(--ink-faint)">â–¾</span>
           </div>
           <div id="pi-body" style="display:none;margin-top:0.75rem">
             <p style="font-size:0.79rem;color:var(--ink-mid);margin:0 0 0.75rem">Terms learned from Google Ads policy rejections. <strong>Hard-blocked</strong> ones are pre-filtered before campaign creation. Remove any that are false positives.</p>
             <div style="display:flex;gap:0.5rem;align-items:center;margin-bottom:0.75rem">
-              <button type="button" class="btn-sm" onclick="loadPolicyViolations()">↺ Refresh</button>
+              <button type="button" class="btn-sm" onclick="loadPolicyViolations()">â†º Refresh</button>
               <span id="pi-count" style="font-size:0.79rem;color:var(--ink-mid)"></span>
             </div>
             <div id="pi-list"></div>
@@ -960,7 +961,7 @@
         <div class="form-card" style="margin-top:1.25rem">
           <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;padding-bottom:0.6rem;border-bottom:1px solid var(--border)">
             <span>Manage Existing Campaigns</span>
-            <button type="button" class="btn-sm" id="btn-load-campaigns" style="padding:0.35rem 0.9rem;font-size:0.8rem">↻ Load</button>
+            <button type="button" class="btn-sm" id="btn-load-campaigns" style="padding:0.35rem 0.9rem;font-size:0.8rem">â†» Load</button>
           </div>
           <div id="campaigns-list-wrap" style="margin-top:0.75rem">
             <p style="font-size:0.83rem;color:var(--ink-faint);margin:0">Click Load to list campaigns for the selected account.</p>
@@ -972,40 +973,40 @@
 
         <!-- Proceed button (bottom of step 3) -->
         <div style="margin-top:1.75rem;display:flex;justify-content:flex-end">
-          <button class="btn-submit" id="btn-wp3-next" style="width:auto;padding:0.8rem 2.5rem" onclick="wizGoTo(4)">Policy Review →</button>
+          <button class="btn-submit" id="btn-wp3-next" style="width:auto;padding:0.8rem 2.5rem" onclick="wizGoTo(4)">Policy Review â†’</button>
         </div>
 
       </div><!-- end wp-3 -->
 
       <!-- Step 4: Policy Review -->
       <div id="wp-4" style="display:none">
-        <button class="wizard-back-btn" onclick="wizGoTo(3)">← Back to Form</button>
+        <button class="wizard-back-btn" onclick="wizGoTo(3)">â† Back to Form</button>
         <h2 class="wizard-pane-title">Policy Review</h2>
         <p style="font-size:0.84rem;color:var(--ink-mid);margin-bottom:1.25rem">We check your copy against platform policies before submitting. Issues are auto-corrected where possible.</p>
-        <button class="btn-submit" style="width:auto;padding:0.8rem 2.5rem" id="btn-run-policy" onclick="runWizPolicyCheck()">Run Policy Check ▸</button>
+        <button class="btn-submit" style="width:auto;padding:0.8rem 2.5rem" id="btn-run-policy" onclick="runWizPolicyCheck()">Run Policy Check â–¸</button>
         <div id="wiz-policy-results" style="margin-top:1.25rem"></div>
         <div id="btn-proceed-publish" style="display:none;margin-top:1.25rem">
-          <button class="btn-submit" style="width:auto;padding:0.8rem 2.5rem" onclick="wizGoTo(5)">Continue to Publish →</button>
+          <button class="btn-submit" style="width:auto;padding:0.8rem 2.5rem" onclick="wizGoTo(5)">Continue to Publish â†’</button>
         </div>
       </div>
 
       <!-- Step 5: Publish -->
       <div id="wp-5" style="display:none">
-        <button class="wizard-back-btn" onclick="wizGoTo(4)">← Back</button>
+        <button class="wizard-back-btn" onclick="wizGoTo(4)">â† Back</button>
         <h2 class="wizard-pane-title">Ready to Publish</h2>
         <div class="wiz-pub-grid">
           <button class="wiz-pub-btn" onclick="submitWizCampaign('live')">
-            <span style="font-size:1.4rem">🚀</span>
+            <span style="font-size:1.4rem">ðŸš€</span>
             <div class="wpb-name">Publish Now</div>
-            <div class="wpb-desc">Create &amp; enable immediately — campaign goes live</div>
+            <div class="wpb-desc">Create &amp; enable immediately â€” campaign goes live</div>
           </button>
           <button class="wiz-pub-btn" onclick="submitWizCampaign('paused')">
-            <span style="font-size:1.4rem">💾</span>
+            <span style="font-size:1.4rem">ðŸ’¾</span>
             <div class="wpb-name">Save as Draft</div>
-            <div class="wpb-desc">Create in Paused status — enable in Ads Manager when ready</div>
+            <div class="wpb-desc">Create in Paused status â€” enable in Ads Manager when ready</div>
           </button>
           <button class="wiz-pub-btn" onclick="toggleWizSchedule()">
-            <span style="font-size:1.4rem">📅</span>
+            <span style="font-size:1.4rem">ðŸ“…</span>
             <div class="wpb-name">Schedule</div>
             <div class="wpb-desc">Pick a date &amp; time to automatically enable</div>
           </button>
@@ -1015,7 +1016,7 @@
             <label>Launch Date &amp; Time</label>
             <input type="datetime-local" id="wiz-sched-dt">
           </div>
-          <button class="btn-submit" style="margin-top:0.75rem" onclick="submitWizCampaign('scheduled')">Schedule Campaign ▸</button>
+          <button class="btn-submit" style="margin-top:0.75rem" onclick="submitWizCampaign('scheduled')">Schedule Campaign â–¸</button>
         </div>
         <div class="status-bar" id="wiz-pub-status"></div>
         <div id="wiz-pub-result" style="display:none;margin-top:1.25rem"></div>
@@ -1023,7 +1024,7 @@
 
     </div><!-- end panel-campaign -->
 
-    <!-- ══ ACTIVE CAMPAIGNS PANEL ══ -->
+    <!-- â•â• ACTIVE CAMPAIGNS PANEL â•â• -->
     <div id="panel-activecampaigns" style="display:none">
       <div style="margin-bottom:1.5rem">
         <div style="font-family:var(--serif);font-size:1.15rem;font-weight:700;color:var(--ink);margin-bottom:0.25rem">Active Campaigns</div>
@@ -1037,9 +1038,9 @@
       <div id="ac-google">
         <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem">
           <select id="ac-google-client" style="flex:1;max-width:260px">
-            <option value="">— My account (default) —</option>
+            <option value="">â€” My account (default) â€”</option>
           </select>
-          <button class="btn-sm" id="btn-ac-load-google" onclick="acLoadGoogle()">↺ Load</button>
+          <button class="btn-sm" id="btn-ac-load-google" onclick="acLoadGoogle()">â†º Load</button>
         </div>
         <div id="ac-google-wrap">
           <p style="font-size:0.83rem;color:var(--ink-faint);margin:0">Click Load to show campaigns.</p>
@@ -1049,9 +1050,9 @@
       <div id="ac-meta" style="display:none">
         <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem">
           <select id="ac-meta-client" style="flex:1;max-width:260px">
-            <option value="">— My account (default) —</option>
+            <option value="">â€” My account (default) â€”</option>
           </select>
-          <button class="btn-sm" id="btn-ac-load-meta" onclick="acLoadMeta()">↺ Load</button>
+          <button class="btn-sm" id="btn-ac-load-meta" onclick="acLoadMeta()">â†º Load</button>
         </div>
         <div id="ac-meta-wrap">
           <p style="font-size:0.83rem;color:var(--ink-faint);margin:0">Click Load to show Meta campaigns.</p>
@@ -1062,12 +1063,12 @@
     <!-- legacy panels kept in DOM (no nav buttons) -->
     <div id="panel-create" style="display:none"></div>
 
-      <!-- ══ AI CREATIVE PANEL ══ -->
+      <!-- â•â• AI CREATIVE PANEL â•â• -->
 
     <div id="panel-aicreative" style="display:none">
       <div style="margin-bottom:1.5rem">
         <div style="font-family:var(--serif);font-size:1.2rem;font-weight:700;color:var(--ink);margin-bottom:0.35rem">AI Copy Generator</div>
-        <div style="font-size:0.82rem;color:var(--ink-faint)">Fill in a brief and AI writes 5 education-first ad variants. Click <strong>&ldquo;Launch →&rdquo;</strong> on your favourite to auto-fill the Campaign Launcher.</div>
+        <div style="font-size:0.82rem;color:var(--ink-faint)">Fill in a brief and AI writes 5 education-first ad variants. Click <strong>&ldquo;Launch â†’&rdquo;</strong> on your favourite to auto-fill the Campaign Launcher.</div>
       </div>
       <div style="max-width:760px">
         <div class="form-card">
@@ -1076,7 +1077,7 @@
             <div class="form-row">
               <label for="ai-client">Client</label>
               <select id="ai-client">
-                <option value="">— My account (EBH) —</option>
+                <option value="">â€” My account (EBH) â€”</option>
               </select>
             </div>
             <div class="form-row">
@@ -1100,32 +1101,32 @@
             <div class="form-row">
               <label for="ai-objective">Campaign Objective</label>
               <select id="ai-objective">
-                <option value="Traffic to education page">Traffic — education page</option>
-                <option value="Lead capture — newsletter signup">Lead — newsletter signup</option>
-                <option value="Lead capture — eligibility quiz">Lead — eligibility quiz</option>
+                <option value="Traffic to education page">Traffic â€” education page</option>
+                <option value="Lead capture â€” newsletter signup">Lead â€” newsletter signup</option>
+                <option value="Lead capture â€” eligibility quiz">Lead â€” eligibility quiz</option>
                 <option value="Brand awareness">Brand awareness</option>
               </select>
             </div>
             <div class="form-row" style="grid-column:1/-1">
               <label for="ai-audience" style="display:flex;align-items:center;justify-content:space-between">
                 Target Audience
-                <button type="button" id="btn-autofill-audience" style="font-size:0.7rem;padding:0.15rem 0.55rem;background:var(--accent-light);color:var(--accent);border:1px solid var(--accent-rule);border-radius:4px;cursor:pointer;font-family:var(--sans);font-weight:500;white-space:nowrap">✨ Auto-fill</button>
+                <button type="button" id="btn-autofill-audience" style="font-size:0.7rem;padding:0.15rem 0.55rem;background:var(--accent-light);color:var(--accent);border:1px solid var(--accent-rule);border-radius:4px;cursor:pointer;font-family:var(--sans);font-weight:500;white-space:nowrap">âœ¨ Auto-fill</button>
               </label>
               <input type="text" id="ai-audience" placeholder="Select topic + objective above, then click Auto-fill" autocomplete="off">
             </div>
             <div class="form-row" style="grid-column:1/-1">
-              <label for="ai-extra">Additional Context <span class="hint">optional — winning angles, brand voice, restrictions</span></label>
+              <label for="ai-extra">Additional Context <span class="hint">optional â€” winning angles, brand voice, restrictions</span></label>
               <textarea id="ai-extra" rows="2" placeholder="e.g. Winning hook so far: 'doctor explaining safety'. Avoid any direct prescription language."></textarea>
             </div>
           </div>
-          <button class="btn-submit" id="btn-gen-ai" style="margin-top:0.5rem">✨ Generate 5 Ad Variants</button>
+          <button class="btn-submit" id="btn-gen-ai" style="margin-top:0.5rem">âœ¨ Generate 5 Ad Variants</button>
           <div class="status-bar" id="ai-status"></div>
         </div>
         <div class="ai-variants-wrap" id="ai-variants-wrap" style="display:none"></div>
       </div>
     </div>
 
-    <!-- ══ AUDIENCES PANEL ══ -->
+    <!-- â•â• AUDIENCES PANEL â•â• -->
     <div id="panel-audiences" style="display:none">
       <div style="margin-bottom:1.5rem">
         <div style="font-family:var(--serif);font-size:1.2rem;font-weight:700;color:var(--ink);margin-bottom:0.35rem">Audience Strategy</div>
@@ -1137,7 +1138,7 @@
         <div class="aud-card">
           <div class="aud-card-head">
             <div>
-              <div class="aud-card-title">📈 GA4 Audiences → Google Ads</div>
+              <div class="aud-card-title">ðŸ“ˆ GA4 Audiences â†’ Google Ads</div>
               <div class="aud-card-sub">Build in GA4 and publish to Google Ads for bid observation/remarketing</div>
             </div>
           </div>
@@ -1146,7 +1147,7 @@
               <div class="aud-seg-dot" style="background:#4285f4"></div>
               <div>
                 <div class="aud-seg-name">All Visitors (30 / 60 / 180 days)</div>
-                <div class="aud-seg-desc">Condition: <code>session_start</code> in last 30–180 days. Use as top-level remarketing list in Google Ads.</div>
+                <div class="aud-seg-desc">Condition: <code>session_start</code> in last 30â€“180 days. Use as top-level remarketing list in Google Ads.</div>
               </div>
             </div>
             <div class="aud-segment">
@@ -1164,11 +1165,11 @@
               </div>
             </div>
             <div class="aud-action-row">
-              <a href="https://analytics.google.com" target="_blank" rel="noopener" class="btn-sm" style="text-decoration:none">Open GA4 Audiences ↗</a>
-              <a href="https://ads.google.com/aw/audiences" target="_blank" rel="noopener" class="btn-sm" style="text-decoration:none">Google Ads Audiences ↗</a>
+              <a href="https://analytics.google.com" target="_blank" rel="noopener" class="btn-sm" style="text-decoration:none">Open GA4 Audiences â†—</a>
+              <a href="https://ads.google.com/aw/audiences" target="_blank" rel="noopener" class="btn-sm" style="text-decoration:none">Google Ads Audiences â†—</a>
             </div>
             <div style="margin-top:0.85rem;font-size:0.78rem;color:var(--ink-faint);line-height:1.6">
-              In GA4 → Admin → Audiences, create each segment above. Then link your GA4 property to Google Ads (Admin → Google Ads Links). Audiences publish within 24–48 hours.
+              In GA4 â†’ Admin â†’ Audiences, create each segment above. Then link your GA4 property to Google Ads (Admin â†’ Google Ads Links). Audiences publish within 24â€“48 hours.
             </div>
           </div>
         </div>
@@ -1177,7 +1178,7 @@
         <div class="aud-card">
           <div class="aud-card-head">
             <div>
-              <div class="aud-card-title">🎯 Meta Custom Audiences</div>
+              <div class="aud-card-title">ðŸŽ¯ Meta Custom Audiences</div>
               <div class="aud-card-sub">Website visitors segmented by topic for retargeting + lookalikes</div>
             </div>
             <button type="button" class="btn-sm" id="btn-create-meta-audiences" style="white-space:nowrap">Create All</button>
@@ -1187,7 +1188,7 @@
               <div class="aud-seg-dot" style="background:#1877f2"></div>
               <div>
                 <div class="aud-seg-name">All Website Visitors</div>
-                <div class="aud-seg-desc">All PageView events — 30, 60, and 180-day windows. Broad retargeting base.</div>
+                <div class="aud-seg-desc">All PageView events â€” 30, 60, and 180-day windows. Broad retargeting base.</div>
               </div>
             </div>
             <div class="aud-segment">
@@ -1208,15 +1209,15 @@
               <div class="aud-seg-dot" style="background:#1a5c3a"></div>
               <div>
                 <div class="aud-seg-name">Leads (Subscribers)</div>
-                <div class="aud-seg-desc">Fired <code>Lead</code> event. Seed for 1–2% Lookalike Audiences.</div>
+                <div class="aud-seg-desc">Fired <code>Lead</code> event. Seed for 1â€“2% Lookalike Audiences.</div>
               </div>
             </div>
             <div class="aud-action-row">
-              <a href="https://www.facebook.com/adsmanager/audiences" target="_blank" rel="noopener" class="btn-sm" style="text-decoration:none">Meta Audiences Manager ↗</a>
+              <a href="https://www.facebook.com/adsmanager/audiences" target="_blank" rel="noopener" class="btn-sm" style="text-decoration:none">Meta Audiences Manager â†—</a>
             </div>
             <div id="meta-aud-status" style="margin-top:0.65rem"></div>
             <div style="margin-top:0.85rem;font-size:0.78rem;color:var(--ink-faint);line-height:1.6">
-              "Create All" will create these as <strong>Website Custom Audiences</strong> via the Meta Marketing API for the selected client's ad account. Lookalike creation is manual in Ads Manager after audiences accumulate ≥100 people.
+              "Create All" will create these as <strong>Website Custom Audiences</strong> via the Meta Marketing API for the selected client's ad account. Lookalike creation is manual in Ads Manager after audiences accumulate â‰¥100 people.
             </div>
           </div>
         </div>
@@ -1225,8 +1226,8 @@
         <div class="aud-card">
           <div class="aud-card-head">
             <div>
-              <div class="aud-card-title">🔁 Lookalike Strategy</div>
-              <div class="aud-card-sub">Meta 1–2% lookalikes from warm audiences</div>
+              <div class="aud-card-title">ðŸ” Lookalike Strategy</div>
+              <div class="aud-card-sub">Meta 1â€“2% lookalikes from warm audiences</div>
             </div>
           </div>
           <div class="aud-card-body">
@@ -1234,13 +1235,13 @@
               <div class="aud-seg-dot" style="background:#1877f2"></div>
               <div>
                 <div class="aud-seg-name">Leads Lookalike (1%)</div>
-                <div class="aud-seg-desc">Seed: Lead event audience. Most valuable — finds people similar to your actual subscribers.</div>
+                <div class="aud-seg-desc">Seed: Lead event audience. Most valuable â€” finds people similar to your actual subscribers.</div>
               </div>
             </div>
             <div class="aud-segment">
               <div class="aud-seg-dot" style="background:#7c3aed"></div>
               <div>
-                <div class="aud-seg-name">Engaged Topic Lookalike (1–2%)</div>
+                <div class="aud-seg-name">Engaged Topic Lookalike (1â€“2%)</div>
                 <div class="aud-seg-desc">Seed: GLP-1/Peptide/TRT audience. Finds people likely to engage with medical education content.</div>
               </div>
             </div>
@@ -1248,14 +1249,14 @@
               <div class="aud-seg-dot" style="background:#0ea5e9"></div>
               <div>
                 <div class="aud-seg-name">Email List Lookalike</div>
-                <div class="aud-seg-desc">Upload hashed subscriber list to Meta (via Custom Audience → Customer List) then create lookalike. Requires GDPR opt-in or US CAN-SPAM consent.</div>
+                <div class="aud-seg-desc">Upload hashed subscriber list to Meta (via Custom Audience â†’ Customer List) then create lookalike. Requires GDPR opt-in or US CAN-SPAM consent.</div>
               </div>
             </div>
             <div class="aud-action-row">
-              <a href="https://www.facebook.com/adsmanager/audiences/create/lookalike" target="_blank" rel="noopener" class="btn-sm" style="text-decoration:none">Create Lookalike in Meta ↗</a>
+              <a href="https://www.facebook.com/adsmanager/audiences/create/lookalike" target="_blank" rel="noopener" class="btn-sm" style="text-decoration:none">Create Lookalike in Meta â†—</a>
             </div>
             <div style="margin-top:0.75rem;font-size:0.78rem;color:var(--ink-faint);line-height:1.6">
-              Lookalikes need ≥ 100 source audience members. Start at 1%, then expand to 2–3% once you have conversion data.
+              Lookalikes need â‰¥ 100 source audience members. Start at 1%, then expand to 2â€“3% once you have conversion data.
             </div>
           </div>
         </div>
@@ -1264,34 +1265,34 @@
         <div class="aud-card">
           <div class="aud-card-head">
             <div>
-              <div class="aud-card-title">📋 Recommended Campaign Structure</div>
-              <div class="aud-card-sub">Per client — education-first, two-funnel model</div>
+              <div class="aud-card-title">ðŸ“‹ Recommended Campaign Structure</div>
+              <div class="aud-card-sub">Per client â€” education-first, two-funnel model</div>
             </div>
           </div>
           <div class="aud-card-body">
             <div style="font-size:0.82rem;color:var(--ink-mid);line-height:1.75">
-              <strong style="color:var(--ink)">Meta — Cold/Top-of-Funnel</strong><br>
+              <strong style="color:var(--ink)">Meta â€” Cold/Top-of-Funnel</strong><br>
               Objective: Traffic or Engagement<br>
               Targeting: Lookalikes (Leads 1%) + Advantage+ broad<br>
-              Creative: Education-only → drives to EBH article or partner education page<br><br>
+              Creative: Education-only â†’ drives to EBH article or partner education page<br><br>
 
-              <strong style="color:var(--ink)">Meta — Warm Retargeting</strong><br>
+              <strong style="color:var(--ink)">Meta â€” Warm Retargeting</strong><br>
               Objective: Leads<br>
               Targeting: GLP-1/Peptide/TRT visitors + Engaged Visitors<br>
               Creative: "Take our 2-min eligibility quiz with [Partner]"<br><br>
 
-              <strong style="color:var(--ink)">Google — Search</strong><br>
+              <strong style="color:var(--ink)">Google â€” Search</strong><br>
               Targeting: Symptom/lifestyle keywords (not drug terms)<br>
               Audiences: High-Intent Learners + Leads as Observation +30%<br>
               Assets: Educational headlines<br><br>
 
-              <strong style="color:var(--ink)">Google — Performance Max</strong><br>
+              <strong style="color:var(--ink)">Google â€” Performance Max</strong><br>
               Seed: Leads audience + email subscriber customer list<br>
               Assets: Education-first visuals + headlines
             </div>
             <div class="aud-action-row" style="margin-top:1rem">
-              <button class="btn-sm" onclick="goCreateAd('meta')">Create Meta Campaign →</button>
-              <button class="btn-sm" onclick="goCreateAd('google')">Create Google Campaign →</button>
+              <button class="btn-sm" onclick="goCreateAd('meta')">Create Meta Campaign â†’</button>
+              <button class="btn-sm" onclick="goCreateAd('google')">Create Google Campaign â†’</button>
             </div>
           </div>
         </div>
@@ -1299,25 +1300,25 @@
       </div>
     </div>
 
-    <!-- ══ CAMPAIGN LAUNCHER PANEL ══ -->
+    <!-- â•â• CAMPAIGN LAUNCHER PANEL â•â• -->
     <div id="panel-launch" style="display:none">
       <div style="margin-bottom:1.5rem">
-        <div style="font-family:var(--serif);font-size:1.2rem;font-weight:700;color:var(--ink);margin-bottom:0.35rem">🚀 Campaign Launcher</div>
-        <div style="font-size:0.82rem;color:var(--ink-faint)">Creates the full Meta campaign structure — campaign → ad set → creative → ad — in one click. Everything launches as <strong>Paused</strong> so you review in Meta Ads Manager before going live. <em>Use <strong>AI Copy</strong> tab to pre-fill the creative fields automatically.</em></div>
+        <div style="font-family:var(--serif);font-size:1.2rem;font-weight:700;color:var(--ink);margin-bottom:0.35rem">ðŸš€ Campaign Launcher</div>
+        <div style="font-size:0.82rem;color:var(--ink-faint)">Creates the full Meta campaign structure â€” campaign â†’ ad set â†’ creative â†’ ad â€” in one click. Everything launches as <strong>Paused</strong> so you review in Meta Ads Manager before going live. <em>Use <strong>AI Copy</strong> tab to pre-fill the creative fields automatically.</em></div>
       </div>
-      <div class="launch-prefill-bar" id="launch-prefill-bar">✅ AI variant pre-filled below — edit as needed, then hit Launch.</div>
+      <div class="launch-prefill-bar" id="launch-prefill-bar">âœ… AI variant pre-filled below â€” edit as needed, then hit Launch.</div>
       <div class="launch-grid">
 
         <!-- Cold / Education -->
         <div class="launch-card">
           <div class="launch-card-badge">Cold / Top-of-Funnel</div>
           <div class="launch-card-title">Education Campaign</div>
-          <div class="launch-card-sub">Traffic or Engagement objective — Lookalike or broad Advantage+ targeting. Drives to your education content.</div>
+          <div class="launch-card-sub">Traffic or Engagement objective â€” Lookalike or broad Advantage+ targeting. Drives to your education content.</div>
 
           <div class="launch-section-label">Campaign Settings</div>
           <div class="form-row">
             <label>Campaign Name</label>
-            <input type="text" id="cold-name" placeholder="e.g. EBH GLP-1 Education — Cold Mar 2026" autocomplete="off">
+            <input type="text" id="cold-name" placeholder="e.g. EBH GLP-1 Education â€” Cold Mar 2026" autocomplete="off">
           </div>
           <div class="launch-row-2">
             <div class="form-row">
@@ -1337,12 +1338,12 @@
           <div class="form-row">
             <label>Audience Type</label>
             <select id="cold-aud-type" onchange="document.getElementById('cold-lookalike-row').style.display=this.value==='lookalike'?'':'none'">
-              <option value="broad">Broad — Advantage+ (Meta auto-optimizes)</option>
+              <option value="broad">Broad â€” Advantage+ (Meta auto-optimizes)</option>
               <option value="lookalike">Lookalike Audience ID</option>
             </select>
           </div>
           <div id="cold-lookalike-row" class="form-row" style="display:none">
-            <label>Lookalike Audience ID <span class="hint">from Meta Ads Manager → Audiences</span></label>
+            <label>Lookalike Audience ID <span class="hint">from Meta Ads Manager â†’ Audiences</span></label>
             <input type="text" id="cold-aud-id" placeholder="e.g. 23843012345" autocomplete="off">
           </div>
           <div class="launch-row-2">
@@ -1360,11 +1361,11 @@
             <input type="url" id="cold-url" value="https://evidencebasedhealth.me" autocomplete="off">
           </div>
           <div class="form-row">
-            <label>Headline <span class="hint">≤ 40 chars</span></label>
+            <label>Headline <span class="hint">â‰¤ 40 chars</span></label>
             <input type="text" id="cold-headline" maxlength="40" placeholder="e.g. Understanding GLP-1 Medications: A Doctor's Guide" autocomplete="off">
           </div>
           <div class="form-row">
-            <label>Primary Text <span class="hint">≤ 125 chars</span></label>
+            <label>Primary Text <span class="hint">â‰¤ 125 chars</span></label>
             <textarea id="cold-text" maxlength="125" rows="2" placeholder="e.g. Learn what GLP-1 medications do, evidence-based benefits, and what to know before starting."></textarea>
           </div>
           <div class="launch-row-2">
@@ -1382,10 +1383,10 @@
             </div>
           </div>
           <div class="form-row">
-            <label>Image URL <span class="hint">optional — hosted image</span></label>
+            <label>Image URL <span class="hint">optional â€” hosted image</span></label>
             <input type="url" id="cold-image" placeholder="https://..." autocomplete="off">
           </div>
-          <button class="launch-btn" id="btn-launch-cold">🚀 Launch Cold Campaign</button>
+          <button class="launch-btn" id="btn-launch-cold">ðŸš€ Launch Cold Campaign</button>
           <div class="launch-result" id="cold-result" style="display:none"></div>
         </div>
 
@@ -1393,12 +1394,12 @@
         <div class="launch-card">
           <div class="launch-card-badge" style="background:#eff6ff;color:#1877f2;border-color:#bfdbfe">Warm / Remarketing</div>
           <div class="launch-card-title">Remarketing Campaign</div>
-          <div class="launch-card-sub">Leads objective — targets your Meta Custom Audiences. Use audience IDs from the Audiences tab → Create All.</div>
+          <div class="launch-card-sub">Leads objective â€” targets your Meta Custom Audiences. Use audience IDs from the Audiences tab â†’ Create All.</div>
 
           <div class="launch-section-label">Campaign Settings</div>
           <div class="form-row">
             <label>Campaign Name</label>
-            <input type="text" id="rmkt-name" placeholder="e.g. EBH GLP-1 Remarketing — Leads Mar 2026" autocomplete="off">
+            <input type="text" id="rmkt-name" placeholder="e.g. EBH GLP-1 Remarketing â€” Leads Mar 2026" autocomplete="off">
           </div>
           <div class="launch-row-2">
             <div class="form-row">
@@ -1416,11 +1417,11 @@
 
           <div class="launch-section-label">Targeting</div>
           <div class="form-row">
-            <label>Custom Audience IDs <span class="hint">comma-separated IDs from Audiences tab → Create All</span></label>
+            <label>Custom Audience IDs <span class="hint">comma-separated IDs from Audiences tab â†’ Create All</span></label>
             <textarea id="rmkt-aud-ids" rows="2" placeholder="e.g. 23843012345, 23843012346 (GLP-1 visitors, Engaged visitors)"></textarea>
           </div>
           <div class="form-row">
-            <label>Exclude Audience IDs <span class="hint">optional — exclude existing leads to avoid waste</span></label>
+            <label>Exclude Audience IDs <span class="hint">optional â€” exclude existing leads to avoid waste</span></label>
             <input type="text" id="rmkt-excl-ids" placeholder="e.g. 23843012347 (Leads audience)" autocomplete="off">
           </div>
           <div class="launch-row-2">
@@ -1438,11 +1439,11 @@
             <input type="url" id="rmkt-url" value="https://evidencebasedhealth.me" autocomplete="off">
           </div>
           <div class="form-row">
-            <label>Headline <span class="hint">≤ 40 chars</span></label>
+            <label>Headline <span class="hint">â‰¤ 40 chars</span></label>
             <input type="text" id="rmkt-headline" maxlength="40" placeholder="e.g. Take Our 2-Min GLP-1 Readiness Check" autocomplete="off">
           </div>
           <div class="form-row">
-            <label>Primary Text <span class="hint">≤ 125 chars</span></label>
+            <label>Primary Text <span class="hint">â‰¤ 125 chars</span></label>
             <textarea id="rmkt-text" maxlength="125" rows="2" placeholder="e.g. Curious if GLP-1 therapy is right for you? Answer 5 quick questions to find out."></textarea>
           </div>
           <div class="launch-row-2">
@@ -1463,7 +1464,7 @@
             <label>Image URL <span class="hint">optional</span></label>
             <input type="url" id="rmkt-image" placeholder="https://..." autocomplete="off">
           </div>
-          <button class="launch-btn rmkt" id="btn-launch-rmkt">🚀 Launch Remarketing Campaign</button>
+          <button class="launch-btn rmkt" id="btn-launch-rmkt">ðŸš€ Launch Remarketing Campaign</button>
           <div class="launch-result" id="rmkt-result" style="display:none"></div>
         </div>
 
@@ -1486,18 +1487,18 @@
             <div class="conn-logo">G</div>
             <div>
               <div class="conn-name">Google Ads</div>
-              <div class="conn-sub">Search campaigns — already connected</div>
+              <div class="conn-sub">Search campaigns â€” already connected</div>
             </div>
-            <span class="conn-status connected">✓ Connected</span>
+            <span class="conn-status connected">âœ“ Connected</span>
           </div>
           <div class="conn-body">
             <div class="conn-detail"><span class="conn-label">Customer ID</span><span>757-154-6419</span></div>
             <div class="conn-detail"><span class="conn-label">MCC Account</span><span>665-481-1776</span></div>
             <div class="conn-detail"><span class="conn-label">API Version</span><span>v20</span></div>
             <div class="conn-links">
-              <a href="https://ads.google.com" target="_blank" rel="noopener" class="conn-link">Google Ads Manager ↗</a>
-              <a href="https://developers.google.com/google-ads/api/docs/oauth/overview" target="_blank" rel="noopener" class="conn-link">Re-authorize OAuth ↗</a>
-              <a href="https://developers.google.com/google-ads/api/reference/rpc/v20/overview" target="_blank" rel="noopener" class="conn-link">API v20 Docs ↗</a>
+              <a href="https://ads.google.com" target="_blank" rel="noopener" class="conn-link">Google Ads Manager â†—</a>
+              <a href="https://developers.google.com/google-ads/api/docs/oauth/overview" target="_blank" rel="noopener" class="conn-link">Re-authorize OAuth â†—</a>
+              <a href="https://developers.google.com/google-ads/api/reference/rpc/v20/overview" target="_blank" rel="noopener" class="conn-link">API v20 Docs â†—</a>
             </div>
           </div>
         </div>
@@ -1505,19 +1506,19 @@
         <!-- Google Ads Conversion Tracking card -->
         <div class="conn-card">
           <div class="conn-card-head" style="background:#34a853">
-            <div class="conn-logo" style="font-size:1rem">⬡</div>
+            <div class="conn-logo" style="font-size:1rem">â¬¡</div>
             <div>
               <div class="conn-name">Conversion Tracking</div>
-              <div class="conn-sub">Newsletter Signup — Google Ads</div>
+              <div class="conn-sub">Newsletter Signup â€” Google Ads</div>
             </div>
             <span id="conv-status-badge" class="conn-status empty">Not Set Up</span>
           </div>
           <div class="conn-body">
-            <p style="font-size:0.82rem;color:#555;margin:0 0 0.75rem">Tracks newsletter signups as conversions so Google can optimize your ad bidding automatically. Run once — applies to all campaigns.</p>
+            <p style="font-size:0.82rem;color:#555;margin:0 0 0.75rem">Tracks newsletter signups as conversions so Google can optimize your ad bidding automatically. Run once â€” applies to all campaigns.</p>
             <div id="conv-result" style="display:none;margin-bottom:0.75rem">
-              <div class="conn-detail"><span class="conn-label">Conversion Action</span><span id="conv-name">—</span></div>
-              <div class="conn-detail"><span class="conn-label">Conversion Label</span><span id="conv-label" style="font-family:monospace;font-size:0.8rem">—</span></div>
-              <div class="conn-detail"><span class="conn-label">Status</span><span id="conv-action-status" style="color:#15803d">—</span></div>
+              <div class="conn-detail"><span class="conn-label">Conversion Action</span><span id="conv-name">â€”</span></div>
+              <div class="conn-detail"><span class="conn-label">Conversion Label</span><span id="conv-label" style="font-family:monospace;font-size:0.8rem">â€”</span></div>
+              <div class="conn-detail"><span class="conn-label">Status</span><span id="conv-action-status" style="color:#15803d">â€”</span></div>
             </div>
             <div id="conv-status" class="status-bar"></div>
             <button id="btn-setup-conv" class="btn btn-primary" style="width:100%;margin-top:0.5rem">Set Up Conversion Tracking</button>
@@ -1529,18 +1530,18 @@
             <div class="conn-logo">f</div>
             <div>
               <div class="conn-name">Meta (Facebook / Instagram)</div>
-              <div class="conn-sub">Marketing API — connected</div>
+              <div class="conn-sub">Marketing API â€” connected</div>
             </div>
-            <span class="conn-status connected">✓ Connected</span>
+            <span class="conn-status connected">âœ“ Connected</span>
           </div>
           <div class="conn-body">
             <div class="conn-detail"><span class="conn-label">Ad Account</span><span>act_719254284605537</span></div>
             <div class="conn-detail"><span class="conn-label">Page ID</span><span>1003750956158809</span></div>
-            <div class="conn-detail"><span class="conn-label">Status</span><span style="color:#15803d">Access token set ✓ — expires ~60 days, regenerate in Graph Explorer</span></div>
+            <div class="conn-detail"><span class="conn-label">Status</span><span style="color:#15803d">Access token set âœ“ â€” expires ~60 days, regenerate in Graph Explorer</span></div>
             <div class="conn-links">
-              <a href="https://developers.facebook.com/tools/explorer" target="_blank" rel="noopener" class="conn-link">Regenerate Token ↗</a>
-              <a href="https://www.facebook.com/adsmanager" target="_blank" rel="noopener" class="conn-link">Meta Ads Manager ↗</a>
-              <a href="https://developers.facebook.com/docs/marketing-apis" target="_blank" rel="noopener" class="conn-link">Marketing API Docs ↗</a>
+              <a href="https://developers.facebook.com/tools/explorer" target="_blank" rel="noopener" class="conn-link">Regenerate Token â†—</a>
+              <a href="https://www.facebook.com/adsmanager" target="_blank" rel="noopener" class="conn-link">Meta Ads Manager â†—</a>
+              <a href="https://developers.facebook.com/docs/marketing-apis" target="_blank" rel="noopener" class="conn-link">Marketing API Docs â†—</a>
             </div>
           </div>
         </div>
@@ -1556,15 +1557,15 @@
           </div>
           <div class="conn-body">
             <div class="conn-links">
-              <a href="https://ads.tiktok.com/marketing_api/homepage" target="_blank" rel="noopener" class="conn-link">TikTok for Business ↗</a>
-              <a href="https://ads.tiktok.com/marketing_api/docs" target="_blank" rel="noopener" class="conn-link">TikTok Ads API Docs ↗</a>
+              <a href="https://ads.tiktok.com/marketing_api/homepage" target="_blank" rel="noopener" class="conn-link">TikTok for Business â†—</a>
+              <a href="https://ads.tiktok.com/marketing_api/docs" target="_blank" rel="noopener" class="conn-link">TikTok Ads API Docs â†—</a>
             </div>
             <div class="conn-how">
               <div class="conn-how-title">How to connect TikTok Ads</div>
               <ol class="conn-steps">
                 <li>Go to <strong>ads.tiktok.com</strong> and create a Business account</li>
                 <li>Apply for <strong>Marketing API</strong> access in TikTok for Business</li>
-                <li>Create an app → get your <strong>App ID</strong> and <strong>Access Token</strong></li>
+                <li>Create an app â†’ get your <strong>App ID</strong> and <strong>Access Token</strong></li>
                 <li>Add a client in the Clients tab with your TikTok Advertiser ID + token</li>
               </ol>
             </div>
@@ -1578,34 +1579,34 @@
               <div class="conn-name">Google Analytics</div>
               <div class="conn-sub">Via Google Tag already on site</div>
             </div>
-            <span class="conn-status connected">✓ Active</span>
+            <span class="conn-status connected">âœ“ Active</span>
           </div>
           <div class="conn-body">
             <div class="conn-links">
-              <a href="https://analytics.google.com" target="_blank" rel="noopener" class="conn-link">Google Analytics ↗</a>
-              <a href="https://search.google.com/search-console" target="_blank" rel="noopener" class="conn-link">Search Console ↗</a>
-              <a href="https://tagmanager.google.com" target="_blank" rel="noopener" class="conn-link">Tag Manager ↗</a>
+              <a href="https://analytics.google.com" target="_blank" rel="noopener" class="conn-link">Google Analytics â†—</a>
+              <a href="https://search.google.com/search-console" target="_blank" rel="noopener" class="conn-link">Search Console â†—</a>
+              <a href="https://tagmanager.google.com" target="_blank" rel="noopener" class="conn-link">Tag Manager â†—</a>
             </div>
           </div>
         </div>
 
         <div class="conn-card">
           <div class="conn-card-head" style="background:#ff9900">
-            <div class="conn-logo">λ</div>
+            <div class="conn-logo">Î»</div>
             <div>
               <div class="conn-name">AWS Backend</div>
               <div class="conn-sub">Lambda + DynamoDB + API Gateway</div>
             </div>
-            <span class="conn-status connected">✓ Active</span>
+            <span class="conn-status connected">âœ“ Active</span>
           </div>
           <div class="conn-body">
             <div class="conn-detail"><span class="conn-label">API Endpoint</span><span style="font-size:0.76rem;word-break:break-all">lvsofp8c9g.execute-api.us-east-1.amazonaws.com/prod</span></div>
             <div class="conn-detail"><span class="conn-label">Lambda</span><span>adHandler (Node 20.x)</span></div>
             <div class="conn-detail"><span class="conn-label">Table</span><span>AdClients (DynamoDB)</span></div>
             <div class="conn-links">
-              <a href="https://us-east-1.console.aws.amazon.com/lambda/home?region=us-east-1#/functions/adHandler" target="_blank" rel="noopener" class="conn-link">Lambda Console ↗</a>
-              <a href="https://us-east-1.console.aws.amazon.com/dynamodbv2/home?region=us-east-1#tables" target="_blank" rel="noopener" class="conn-link">DynamoDB Console ↗</a>
-              <a href="https://us-east-1.console.aws.amazon.com/apigateway" target="_blank" rel="noopener" class="conn-link">API Gateway ↗</a>
+              <a href="https://us-east-1.console.aws.amazon.com/lambda/home?region=us-east-1#/functions/adHandler" target="_blank" rel="noopener" class="conn-link">Lambda Console â†—</a>
+              <a href="https://us-east-1.console.aws.amazon.com/dynamodbv2/home?region=us-east-1#tables" target="_blank" rel="noopener" class="conn-link">DynamoDB Console â†—</a>
+              <a href="https://us-east-1.console.aws.amazon.com/apigateway" target="_blank" rel="noopener" class="conn-link">API Gateway â†—</a>
             </div>
           </div>
         </div>
@@ -1619,10 +1620,10 @@
           <h2 style="margin:0">Client Portfolios</h2>
           <button class="btn-add-client" id="btn-add-client">+ Add Client</button>
         </div>
-        <div id="clients-loading" class="loading-row"><div class="spinner"></div> Loading clients…</div>
+        <div id="clients-loading" class="loading-row"><div class="spinner"></div> Loading clientsâ€¦</div>
         <div id="client-grid" class="client-grid" style="display:none"></div>
         <div id="clients-empty" class="client-empty" style="display:none">
-          <div class="client-empty-icon">🗂</div>
+          <div class="client-empty-icon">ðŸ—‚</div>
           <p>No clients yet.<br>Add your first client to get started.</p>
         </div>
       </div>
@@ -1633,22 +1634,22 @@
 
       <!-- Newsletter sub-tabs -->
       <div class="nl-sub-tabs">
-        <button class="nl-sub-tab active" data-nlpane="write" onclick="switchNLTab('write')">✍ Write</button>
-        <button class="nl-sub-tab" data-nlpane="drafts" onclick="switchNLTab('drafts')">📋 Scheduled &amp; Drafts</button>
-        <button class="nl-sub-tab" data-nlpane="autopilot" onclick="switchNLTab('autopilot')">🤖 Autopilot</button>
+        <button class="nl-sub-tab active" data-nlpane="write" onclick="switchNLTab('write')">âœ Write</button>
+        <button class="nl-sub-tab" data-nlpane="drafts" onclick="switchNLTab('drafts')">ðŸ“‹ Scheduled &amp; Drafts</button>
+        <button class="nl-sub-tab" data-nlpane="autopilot" onclick="switchNLTab('autopilot')">ðŸ¤– Autopilot</button>
       </div>
 
-      <!-- ── WRITE pane ── -->
+      <!-- â”€â”€ WRITE pane â”€â”€ -->
       <div id="nlp-write" class="nl-pane active">
         <div class="panel-grid">
 
           <!-- Left: Generator + Preview -->
           <div>
             <div class="form-card">
-              <div class="card-title">✨ AI Post Generator</div>
+              <div class="card-title">âœ¨ AI Post Generator</div>
               <div class="form-row">
                 <label for="nl-topic">Topic / Prompt <span class="hint">what to write about this week</span></label>
-                <textarea id="nl-topic" rows="2" placeholder="e.g. New research on semaglutide and cardiovascular outcomes — what patients really need to know"></textarea>
+                <textarea id="nl-topic" rows="2" placeholder="e.g. New research on semaglutide and cardiovascular outcomes â€” what patients really need to know"></textarea>
               </div>
               <div class="form-inline">
                 <div class="form-row">
@@ -1682,7 +1683,7 @@
               </div>
               <div class="form-row">
                 <label for="nl-context">Extra Context <span class="hint">optional</span></label>
-                <textarea id="nl-context" rows="2" placeholder="e.g. Tie in a recent news story, target patients who are already on GLP-1s, use this hook…"></textarea>
+                <textarea id="nl-context" rows="2" placeholder="e.g. Tie in a recent news story, target patients who are already on GLP-1s, use this hookâ€¦"></textarea>
               </div>
               <!-- Newsletter image upload -->
               <div class="form-row" style="margin-top:0.5rem">
@@ -1690,17 +1691,17 @@
                 <div class="img-drop-zone" id="nl-img-drop" onclick="document.getElementById('nl-img-file').click()" style="margin-bottom:0.5rem">
                   <input type="file" id="nl-img-file" accept="image/*" style="display:none" onchange="handleImgUpload(this,'nl-img-url','nl-img-preview')">
                   <div>
-                    <div style="font-size:1.2rem;margin-bottom:0.2rem">📁</div>
+                    <div style="font-size:1.2rem;margin-bottom:0.2rem">ðŸ“</div>
                     <div style="font-size:0.82rem;color:var(--ink-mid)">Upload header image</div>
-                    <div style="font-size:0.74rem;color:var(--ink-faint);margin-top:0.1rem">JPG, PNG · recommended 1200×628</div>
+                    <div style="font-size:0.74rem;color:var(--ink-faint);margin-top:0.1rem">JPG, PNG Â· recommended 1200Ã—628</div>
                   </div>
                 </div>
-                <input type="url" id="nl-img-url" placeholder="https://… (or upload above)" oninput="nlImgPreview()">
+                <input type="url" id="nl-img-url" placeholder="https://â€¦ (or upload above)" oninput="nlImgPreview()">
                 <div id="nl-img-preview" style="display:none;margin-top:0.5rem"><img style="max-width:100%;max-height:140px;border-radius:6px;border:1px solid var(--border)" alt="preview"></div>
               </div>
               <div style="display:flex;gap:0.6rem;flex-wrap:wrap;align-items:center">
-                <button class="btn-submit" id="btn-generate-post" style="flex:1;margin-bottom:0">✨ Generate Post with AI</button>
-                <button type="button" class="btn-sm" id="btn-regenerate-post" style="display:none;white-space:nowrap;padding:0.6rem 1rem;font-size:0.82rem" title="Regenerate with same settings">↺ Regenerate</button>
+                <button class="btn-submit" id="btn-generate-post" style="flex:1;margin-bottom:0">âœ¨ Generate Post with AI</button>
+                <button type="button" class="btn-sm" id="btn-regenerate-post" style="display:none;white-space:nowrap;padding:0.6rem 1rem;font-size:0.82rem" title="Regenerate with same settings">â†º Regenerate</button>
               </div>
               <div class="status-bar" id="nl-gen-status"></div>
             </div>
@@ -1727,7 +1728,7 @@
                   </div>
                 </div>
                 <div style="margin-top:0.85rem">
-                  <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:0.4rem;cursor:pointer" onclick="var b=document.getElementById('nl-research-body');b.style.display=b.style.display==='none'?'':'none'">Research Grounding ▾ <span style="font-size:0.65rem;font-weight:400;text-transform:none;letter-spacing:0">(click to expand)</span></div>
+                  <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:0.4rem;cursor:pointer" onclick="var b=document.getElementById('nl-research-body');b.style.display=b.style.display==='none'?'':'none'">Research Grounding â–¾ <span style="font-size:0.65rem;font-weight:400;text-transform:none;letter-spacing:0">(click to expand)</span></div>
                   <div id="nl-research-body" style="display:none;background:var(--paper);border:1px solid var(--paper-warm);border-radius:6px;padding:0.85rem 1rem;font-size:0.79rem;color:var(--ink-mid);line-height:1.75;white-space:pre-wrap;max-height:300px;overflow-y:auto"></div>
                 </div>
               </div>
@@ -1745,10 +1746,10 @@
               </div>
               <button class="btn-sm" id="btn-send-test" style="width:100%;margin-bottom:0.6rem">Send Test Email</button>
               <div style="display:flex;flex-direction:column;gap:0.5rem;margin-bottom:0.7rem">
-                <button class="btn-submit" id="btn-send-all" style="opacity:0.5;pointer-events:none">📧 Send to All Subscribers</button>
-                <button class="btn-sm" id="btn-publish-post" style="width:100%" disabled>🌐 Publish to Website</button>
-                <button class="btn-sm" id="btn-save-nl-draft" style="width:100%" disabled>💾 Save as Draft</button>
-                <button class="btn-sm" id="btn-schedule-nl" style="width:100%" disabled>📅 Schedule Send</button>
+                <button class="btn-submit" id="btn-send-all" style="opacity:0.5;pointer-events:none">ðŸ“§ Send to All Subscribers</button>
+                <button class="btn-sm" id="btn-publish-post" style="width:100%" disabled>ðŸŒ Publish to Website</button>
+                <button class="btn-sm" id="btn-save-nl-draft" style="width:100%" disabled>ðŸ’¾ Save as Draft</button>
+                <button class="btn-sm" id="btn-schedule-nl" style="width:100%" disabled>ðŸ“… Schedule Send</button>
               </div>
               <div id="nl-sched-row" style="display:none;margin-bottom:0.6rem">
                 <input type="datetime-local" id="nl-sched-dt" style="width:100%;margin-bottom:0.5rem">
@@ -1763,12 +1764,12 @@
                 <button class="btn-sm" id="btn-refresh-subs" style="padding:0.25rem 0.6rem;font-size:0.72rem">Refresh</button>
               </div>
               <div style="display:flex;gap:0.6rem;margin-bottom:1rem">
-                <div class="nl-count-box"><div class="nl-count-num" id="nl-count-active">—</div><div class="nl-count-lbl">Active</div></div>
-                <div class="nl-count-box"><div class="nl-count-num muted" id="nl-count-total">—</div><div class="nl-count-lbl">Total</div></div>
+                <div class="nl-count-box"><div class="nl-count-num" id="nl-count-active">â€”</div><div class="nl-count-lbl">Active</div></div>
+                <div class="nl-count-box"><div class="nl-count-num muted" id="nl-count-total">â€”</div><div class="nl-count-lbl">Total</div></div>
               </div>
-              <button class="btn-sm" id="btn-export-csv" style="width:100%;margin-bottom:0.85rem">⬇ Export CSV</button>
+              <button class="btn-sm" id="btn-export-csv" style="width:100%;margin-bottom:0.85rem">â¬‡ Export CSV</button>
               <div id="nl-sub-table-wrap" style="max-height:380px;overflow-y:auto">
-                <div class="loading-row" id="nl-sub-loading"><div class="spinner"></div>Loading…</div>
+                <div class="loading-row" id="nl-sub-loading"><div class="spinner"></div>Loadingâ€¦</div>
                 <table id="nl-sub-table" style="display:none;width:100%;border-collapse:collapse">
                   <thead><tr>
                     <th style="text-align:left;padding:0.3rem 0.4rem;border-bottom:2px solid var(--paper-warm);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600">Email</th>
@@ -1785,22 +1786,22 @@
         </div>
       </div><!-- end nlp-write -->
 
-      <!-- ── SCHEDULED & DRAFTS pane ── -->
+      <!-- â”€â”€ SCHEDULED & DRAFTS pane â”€â”€ -->
       <div id="nlp-drafts" class="nl-pane">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem">
           <h2 style="font-family:var(--serif);font-size:1rem;font-weight:700;color:var(--ink);margin:0">Scheduled &amp; Drafts</h2>
-          <button class="btn-sm" onclick="loadNLDrafts()">↺ Refresh</button>
+          <button class="btn-sm" onclick="loadNLDrafts()">â†º Refresh</button>
         </div>
         <div id="nl-drafts-list">
           <p style="font-size:0.83rem;color:var(--ink-faint)">No drafts yet. Generate a post in the Write tab and save it as a draft or schedule it.</p>
         </div>
       </div>
 
-      <!-- ── AUTOPILOT pane ── -->
+      <!-- â”€â”€ AUTOPILOT pane â”€â”€ -->
       <div id="nlp-autopilot" class="nl-pane">
         <div style="max-width:580px">
           <div class="form-card">
-            <div class="card-title">🤖 Autopilot — AI Weekly Newsletter</div>
+            <div class="card-title">ðŸ¤– Autopilot â€” AI Weekly Newsletter</div>
             <p style="font-size:0.82rem;color:var(--ink-mid);margin-bottom:1.25rem;line-height:1.65">Configure a recurring AI-generated newsletter. Each week, the AI generates a post on your chosen topic and sends it automatically.</p>
             <div style="display:flex;align-items:center;justify-content:space-between;padding:0.85rem 1rem;background:var(--paper);border-radius:8px;border:1px solid var(--border);margin-bottom:1.25rem">
               <div>
@@ -1814,7 +1815,7 @@
             </div>
             <div class="form-row">
               <label for="ap-topic">Weekly Topic Focus</label>
-              <input type="text" id="ap-topic" placeholder="e.g. Latest evidence-based health research — focus on metabolic health">
+              <input type="text" id="ap-topic" placeholder="e.g. Latest evidence-based health research â€” focus on metabolic health">
             </div>
             <div class="form-inline">
               <div class="form-row">
@@ -1868,7 +1869,7 @@
 
     </div><!-- end panel-newsletter -->
 
-    <!-- ══ WEB POSTS PANEL ══ -->
+    <!-- â•â• WEB POSTS PANEL â•â• -->
     <div id="panel-webposts" style="display:none">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:0.75rem">
         <div>
@@ -1880,21 +1881,21 @@
 
       <!-- Post list -->
       <div id="wp-loading" style="display:flex;align-items:center;gap:0.7rem;color:var(--ink-faint);font-size:0.88rem;padding:3rem 0">
-        <div class="spinner"></div> Loading posts…
+        <div class="spinner"></div> Loading postsâ€¦
       </div>
       <div id="wp-empty" style="display:none;text-align:center;padding:5rem 2rem;color:var(--ink-faint)">
-        <div style="font-size:2.2rem;margin-bottom:0.75rem;opacity:0.5">📄</div>
+        <div style="font-size:2.2rem;margin-bottom:0.75rem;opacity:0.5">ðŸ“„</div>
         <p style="font-size:0.93rem;line-height:1.8">No posts yet.<br>Click <strong>+ New Post</strong> to write your first article.</p>
       </div>
       <div id="wp-list"></div>
     </div><!-- end panel-webposts -->
 
-    <!-- ══ POST EDITOR DRAWER ══ -->
+    <!-- â•â• POST EDITOR DRAWER â•â• -->
     <div id="post-drawer-overlay" class="drawer-overlay" onclick="closePostEditor()"></div>
     <div id="post-drawer" class="drawer" role="dialog" aria-modal="true">
       <div class="drawer-header">
         <span class="drawer-title" id="post-drawer-title">New Post</span>
-        <button class="drawer-close-x" onclick="closePostEditor()">✕</button>
+        <button class="drawer-close-x" onclick="closePostEditor()">âœ•</button>
       </div>
       <div class="drawer-body">
         <div class="drawer-section">
@@ -1906,21 +1907,21 @@
             <input type="text" id="pd-slug" placeholder="e.g. why-sleep-matters">
           </div>
           <div class="form-row"><label>Preview Text <span class="hint">shown in email previews &amp; cards</span></label>
-            <input type="text" id="pd-preview" placeholder="One-line teaser…">
+            <input type="text" id="pd-preview" placeholder="One-line teaserâ€¦">
           </div>
           <div class="form-row"><label>Hero Image URL <span class="hint">optional</span></label>
-            <input type="url" id="pd-image" placeholder="https://…">
+            <input type="url" id="pd-image" placeholder="https://â€¦">
           </div>
         </div>
         <div class="drawer-section">
-          <div class="drawer-section-title">Full Post HTML <span style="font-weight:400;font-size:0.78rem;color:var(--ink-faint)">— HTML allowed, &lt;p&gt; &lt;strong&gt; &lt;em&gt; &lt;h2&gt; etc.</span></div>
+          <div class="drawer-section-title">Full Post HTML <span style="font-weight:400;font-size:0.78rem;color:var(--ink-faint)">â€” HTML allowed, &lt;p&gt; &lt;strong&gt; &lt;em&gt; &lt;h2&gt; etc.</span></div>
           <textarea id="pd-body" rows="18" style="width:100%;padding:0.68rem 0.9rem;border:1px solid var(--paper-warm);border-radius:6px;font-family:'Courier New',monospace;font-size:0.82rem;color:var(--ink);background:var(--paper);resize:vertical;line-height:1.6" placeholder="&lt;p&gt;Write your article here. HTML is supported.&lt;/p&gt;"></textarea>
         </div>
         <div id="pd-status" class="status-bar"></div>
       </div>
       <div class="drawer-footer">
         <button class="btn-drawer-save" id="pd-save-btn" onclick="savePostFromDrawer()">Save &amp; Publish</button>
-        <a id="pd-view-link" href="#" target="_blank" style="display:none;padding:0.72rem 1rem;background:none;color:var(--accent);border:1px solid var(--accent-rule);border-radius:6px;font-family:var(--sans);font-size:0.83rem;font-weight:500;text-decoration:none">View →</a>
+        <a id="pd-view-link" href="#" target="_blank" style="display:none;padding:0.72rem 1rem;background:none;color:var(--accent);border:1px solid var(--accent-rule);border-radius:6px;font-family:var(--sans);font-size:0.83rem;font-weight:500;text-decoration:none">View â†’</a>
         <button class="btn-drawer-delete" id="pd-delete-btn" style="display:none" onclick="deletePostFromDrawer()">Delete</button>
         <button class="btn-drawer-cancel" onclick="closePostEditor()">Cancel</button>
       </div>
@@ -1929,12 +1930,12 @@
   </div><!-- end dash-content -->
 </div><!-- end dashboard -->
 
-<!-- ── Client Drawer ── -->
+<!-- â”€â”€ Client Drawer â”€â”€ -->
 <div id="drawer-overlay" class="drawer-overlay"></div>
 <div id="client-drawer" class="drawer" role="dialog" aria-modal="true">
   <div class="drawer-header">
     <span class="drawer-title" id="drawer-title">Add Client</span>
-    <button class="drawer-close-x" id="drawer-close-x" aria-label="Close">✕</button>
+    <button class="drawer-close-x" id="drawer-close-x" aria-label="Close">âœ•</button>
   </div>
   <div class="drawer-body">
 
@@ -1963,7 +1964,7 @@
       <div class="drawer-section-title">Meta (Facebook / Instagram)</div>
       <div class="form-row"><label for="d-m-actid">Ad Account ID <span class="hint">numbers only</span></label><input type="text" id="d-m-actid" placeholder="123456789" autocomplete="off"></div>
       <div class="form-row"><label for="d-m-pageid">Page ID</label><input type="text" id="d-m-pageid" placeholder="987654321" autocomplete="off"></div>
-      <div class="form-row"><label for="d-m-token">Access Token</label><input type="password" id="d-m-token" placeholder="EAA…" autocomplete="new-password"></div>
+      <div class="form-row"><label for="d-m-token">Access Token</label><input type="password" id="d-m-token" placeholder="EAAâ€¦" autocomplete="new-password"></div>
     </div>
 
     <!-- TikTok -->
@@ -1977,8 +1978,8 @@
     <!-- Reporting -->
     <div class="drawer-section">
       <div class="drawer-section-title">Reporting</div>
-      <div class="form-row"><label for="d-looker">Looker Studio Report URL <span class="hint">optional</span></label><input type="url" id="d-looker" placeholder="https://lookerstudio.google.com/reporting/…" autocomplete="off"></div>
-      <div class="form-row"><label for="d-ga4id">GA4 Property ID <span class="hint">optional — numbers only</span></label><input type="text" id="d-ga4id" placeholder="e.g. 530012579" autocomplete="off"></div>
+      <div class="form-row"><label for="d-looker">Looker Studio Report URL <span class="hint">optional</span></label><input type="url" id="d-looker" placeholder="https://lookerstudio.google.com/reporting/â€¦" autocomplete="off"></div>
+      <div class="form-row"><label for="d-ga4id">GA4 Property ID <span class="hint">optional â€” numbers only</span></label><input type="text" id="d-ga4id" placeholder="e.g. 530012579" autocomplete="off"></div>
     </div>
 
     <!-- Compliance -->
@@ -2019,7 +2020,7 @@ let editingClientId = null;
 let selectedInterests = [];
 let selectedColor = '#1a5c3a';
 
-/* ── Helpers ── */
+/* â”€â”€ Helpers â”€â”€ */
 function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function authHeaders() { return { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }; }
 function showStatus(id, type, html) {
@@ -2029,7 +2030,7 @@ function showStatus(id, type, html) {
 }
 function initials(name) { return name.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase() || '?'; }
 
-/* ── Boot ── */
+/* â”€â”€ Boot â”€â”€ */
 function boot() {
   if (token) {
     document.getElementById('login-screen').style.display = 'none';
@@ -2039,7 +2040,7 @@ function boot() {
 }
 boot();
 
-/* ── Login ── */
+/* â”€â”€ Login â”€â”€ */
 document.getElementById('login-form').addEventListener('submit', async (e) => {
   e.preventDefault();
   const pw  = document.getElementById('admin-pw').value;
@@ -2063,7 +2064,7 @@ document.getElementById('btn-logout').addEventListener('click', () => {
   document.getElementById('admin-pw').value = '';
 });
 
-/* ── Tabs ── */
+/* â”€â”€ Tabs â”€â”€ */
 const ALL_PANELS = ['home','campaign','activecampaigns','connections','newsletter','webposts','clients','create','aicreative','audiences','launch'];
 function showTab(t) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === t));
@@ -2080,7 +2081,7 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => showTab(btn.dataset.tab));
 });
 
-/* ── Wizard platform sub-tabs (still used inside Step 3) ── */
+/* â”€â”€ Wizard platform sub-tabs (still used inside Step 3) â”€â”€ */
 let activePlatTab = 'meta';
 function showPlatTab(plat) {
   activePlatTab = plat;
@@ -2094,7 +2095,7 @@ function goCreateAd(plat) {
   selectWizPlat(plat);
 }
 
-/* ── Load & Render Clients ── */
+/* â”€â”€ Load & Render Clients â”€â”€ */
 async function loadClients() {
   document.getElementById('clients-loading').style.display = 'flex';
   document.getElementById('client-grid').style.display   = 'none';
@@ -2145,7 +2146,7 @@ function renderClientGrid() {
       <div class="client-card-actions">
         <button class="client-action" onclick="openDrawer('${esc(c.clientId)}')">Edit</button>
         <button class="client-action primary" onclick="useClientForAds('${esc(c.clientId)}')">Create Ad</button>
-        ${c.lookerUrl ? `<a class="client-action" href="${esc(c.lookerUrl)}" target="_blank" rel="noopener" style="text-decoration:none;text-align:center">📊 Report</a>` : ''}
+        ${c.lookerUrl ? `<a class="client-action" href="${esc(c.lookerUrl)}" target="_blank" rel="noopener" style="text-decoration:none;text-align:center">ðŸ“Š Report</a>` : ''}
       </div>
     </div>`;
   }).join('');
@@ -2182,7 +2183,7 @@ function useClientForAds(clientId) {
   updateSelDot('meta-client-sel', 'meta-sel-dot');
 }
 
-/* ── Client selector dots ── */
+/* â”€â”€ Client selector dots â”€â”€ */
 function updateSelDot(selId, dotId) {
   const sel = document.getElementById(selId);
   const dot = document.getElementById(dotId);
@@ -2208,7 +2209,7 @@ function updateMetaPreview() {
   const domain  = siteUrl ? 'EVIDENCEBASEDHEALTH.ME' : (name.toUpperCase().replace(/\s+/g,'-') + '.COM');
 
   // Avatar + page name in preview
-  const avatarLetter = name.trim()[0]?.toUpperCase() || '🌿';
+  const avatarLetter = name.trim()[0]?.toUpperCase() || 'ðŸŒ¿';
   const pageName = document.getElementById('prev-page-name');
   const avatar   = document.getElementById('prev-avatar');
   if (pageName) pageName.textContent = name;
@@ -2221,7 +2222,7 @@ function updateMetaPreview() {
       avatar.style.fontWeight = '700';
       avatar.style.fontFamily = 'var(--serif)';
     } else {
-      avatar.textContent = '🌿';
+      avatar.textContent = 'ðŸŒ¿';
       avatar.style.background = 'var(--accent-light)';
       avatar.style.color = '';
     }
@@ -2229,16 +2230,16 @@ function updateMetaPreview() {
 
   // Form field placeholders / values
   const year = new Date().getFullYear();
-  document.getElementById('m-name').placeholder = `e.g. ${name} – Spring ${year}`;
+  document.getElementById('m-name').placeholder = `e.g. ${name} â€“ Spring ${year}`;
   document.getElementById('m-primary-text').placeholder =
-    c ? `Tell us about ${name} and what sets it apart…`
+    c ? `Tell us about ${name} and what sets it apartâ€¦`
       : "Most people don't know when they're due for cancer screening. We fix that \u2014 evidence-based, plain-language, no hype. Free weekly brief.";
   document.getElementById('m-headline').placeholder =
     c ? `${name.slice(0,28)}` : 'Free Evidence-Based Health Brief';
   document.getElementById('m-description').placeholder =
     c ? '' : 'Science. No agenda.';
 
-  // Destination URL — only overwrite if the field still has the EBH default or was empty
+  // Destination URL â€” only overwrite if the field still has the EBH default or was empty
   const destField = document.getElementById('m-dest-url');
   if (!destField.value || destField.value === 'https://evidencebasedhealth.me') {
     destField.value = siteUrl;
@@ -2281,7 +2282,7 @@ function updateGooglePanel() {
   if (notice) notice.style.display = (c && c.isCertifiedForRxAds) ? 'none' : '';
 }
 
-/* ── Drawer ── */
+/* â”€â”€ Drawer â”€â”€ */
 function buildColorSwatches() {
   const wrap = document.getElementById('color-swatches');
   wrap.innerHTML = COLORS.map(c =>
@@ -2355,7 +2356,7 @@ function addCustomField(label = '', value = '') {
   row.innerHTML = `
     <input type="text"  placeholder="Label (e.g. LinkedIn)"  value="${esc(label)}" style="max-width:140px">
     <input type="text"  placeholder="Value / Account ID"      value="${esc(value)}">
-    <button class="btn-remove" title="Remove">×</button>`;
+    <button class="btn-remove" title="Remove">Ã—</button>`;
   row.querySelector('.btn-remove').addEventListener('click', () => row.remove());
   wrap.appendChild(row);
 }
@@ -2392,7 +2393,7 @@ document.getElementById('btn-save-client').addEventListener('click', async () =>
   const name = document.getElementById('d-name').value.trim();
   if (!name) { showStatus('drawer-status', 'error', 'Client name is required.'); return; }
   btn.disabled = true;
-  btn.textContent = 'Saving…';
+  btn.textContent = 'Savingâ€¦';
   try {
     const payload = {
       name, color: document.getElementById('d-color').value,
@@ -2440,7 +2441,7 @@ document.getElementById('btn-delete-client').addEventListener('click', async () 
   }
 });
 
-/* ── Age selects ── */
+/* â”€â”€ Age selects â”€â”€ */
 ['m-age-min','m-age-max'].forEach((id, idx) => {
   const sel = document.getElementById(id);
   for (let i = 18; i <= 65; i++) {
@@ -2449,7 +2450,7 @@ document.getElementById('btn-delete-client').addEventListener('click', async () 
   }
 });
 
-/* ── Char counters ── */
+/* â”€â”€ Char counters â”€â”€ */
 function charCounter(inputId, countId, max) {
   const inp = document.getElementById(inputId);
   const cnt = document.getElementById(countId);
@@ -2460,8 +2461,8 @@ charCounter('m-primary-text', 'cc-primary', 125);
 charCounter('m-headline',     'cc-headline', 40);
 charCounter('m-description',  'cc-desc',     30);
 
-/* ── Live preview ── */
-document.getElementById('m-primary-text').addEventListener('input', e => { document.getElementById('prev-text').textContent = e.target.value || 'Your primary text will appear here…'; });
+/* â”€â”€ Live preview â”€â”€ */
+document.getElementById('m-primary-text').addEventListener('input', e => { document.getElementById('prev-text').textContent = e.target.value || 'Your primary text will appear hereâ€¦'; });
 document.getElementById('m-headline').addEventListener('input',     e => { document.getElementById('prev-headline').textContent = e.target.value || 'Free Evidence-Based Health Brief'; });
 document.getElementById('m-description').addEventListener('input',  e => { document.getElementById('prev-desc').textContent = e.target.value; });
 document.getElementById('m-dest-url').addEventListener('input', e => { try { document.getElementById('prev-domain').textContent = new URL(e.target.value).hostname.toUpperCase(); } catch {} });
@@ -2471,10 +2472,10 @@ document.getElementById('m-image-url').addEventListener('input', e => {
   wrap.innerHTML = url ? `<img src="${esc(url)}" alt="Ad image" onerror="this.style.display='none'">` : '<div class="fb-img-placeholder">Ad image</div>';
 });
 
-/* ── Interests ── */
+/* â”€â”€ Interests â”€â”€ */
 function renderSelected() {
   const c = document.getElementById('selected-interests');
-  c.innerHTML = selectedInterests.map(i => `<span class="pill-selected">${esc(i.name)}<button data-id="${esc(i.id)}" title="Remove">×</button></span>`).join('');
+  c.innerHTML = selectedInterests.map(i => `<span class="pill-selected">${esc(i.name)}<button data-id="${esc(i.id)}" title="Remove">Ã—</button></span>`).join('');
   c.querySelectorAll('button').forEach(b => {
     b.addEventListener('click', () => { selectedInterests = selectedInterests.filter(x => x.id !== b.dataset.id); renderSelected(); });
   });
@@ -2484,14 +2485,14 @@ document.getElementById('btn-interest-search').addEventListener('click', async (
   const results = document.getElementById('interest-results');
   const clientId = document.getElementById('meta-client-sel').value;
   if (!q) return;
-  results.innerHTML = '<span class="interest-hint">Searching…</span>';
+  results.innerHTML = '<span class="interest-hint">Searchingâ€¦</span>';
   try {
     const url = `${API}/meta-interests?q=${encodeURIComponent(q)}${clientId ? `&clientId=${encodeURIComponent(clientId)}` : ''}`;
     const res  = await fetch(url, { headers: authHeaders() });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Search failed');
     const items = Array.isArray(data) ? data : [];
-    if (!items.length) { results.innerHTML = '<span class="interest-hint">No results — try a different term</span>'; return; }
+    if (!items.length) { results.innerHTML = '<span class="interest-hint">No results â€” try a different term</span>'; return; }
     results.innerHTML = items.map(i => `<span class="pill-result" data-id="${esc(i.id)}" data-name="${esc(i.name)}">+ ${esc(i.name)}</span>`).join('');
     results.querySelectorAll('.pill-result').forEach(p => {
       p.addEventListener('click', () => {
@@ -2503,7 +2504,7 @@ document.getElementById('btn-interest-search').addEventListener('click', async (
 });
 document.getElementById('interest-q').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); document.getElementById('btn-interest-search').click(); } });
 
-/* ── Create Meta Campaign ── */
+/* â”€â”€ Create Meta Campaign â”€â”€ */
 document.getElementById('btn-create-meta').addEventListener('click', async () => {
   const btn = document.getElementById('btn-create-meta');
   const campaignName   = document.getElementById('m-name').value.trim();
@@ -2523,7 +2524,7 @@ document.getElementById('btn-create-meta').addEventListener('click', async () =>
     showStatus('meta-status', 'error', 'Campaign name, budget, primary text, and headline are required.'); return;
   }
   btn.disabled = true;
-  showStatus('meta-status', 'loading', 'Creating campaign on Meta…');
+  showStatus('meta-status', 'loading', 'Creating campaign on Metaâ€¦');
   try {
     const res  = await fetch(`${API}/create-meta-ad`, {
       method: 'POST', headers: authHeaders(),
@@ -2531,13 +2532,13 @@ document.getElementById('btn-create-meta').addEventListener('click', async () =>
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Ad creation failed');
-    showStatus('meta-status', 'success', `✓ Campaign created (paused). Campaign ID: <code>${esc(data.campaign_id)}</code> · <a href="${esc(data.review_url)}" target="_blank" rel="noopener">Review in Ads Manager ↗</a>`);
+    showStatus('meta-status', 'success', `âœ“ Campaign created (paused). Campaign ID: <code>${esc(data.campaign_id)}</code> Â· <a href="${esc(data.review_url)}" target="_blank" rel="noopener">Review in Ads Manager â†—</a>`);
   } catch (ex) {
     showStatus('meta-status', 'error', `Error: ${esc(ex.message)}`);
   } finally { btn.disabled = false; }
 });
 
-/* ── Google dynamic fields ── */
+/* â”€â”€ Google dynamic fields â”€â”€ */
 function addInputRow(containerId, placeholder, maxLen) {
   const container = document.getElementById(containerId);
   const idx = container.querySelectorAll('.form-row').length + 1;
@@ -2551,11 +2552,11 @@ const defaultDescs = ['Plain-language summaries of research on hormones, strengt
 defaultDescs.forEach(d => { const i = addInputRow('g-desc-wrap','Description N (90 chars max)',90); i.value=d; i.dispatchEvent(new Event('input')); });
 document.getElementById('btn-add-d').addEventListener('click', () => { if (document.querySelectorAll('#g-desc-wrap .form-row').length < 4) addInputRow('g-desc-wrap','Description N (90 chars max)',90); });
 
-/* ── EBH Ad Group templates + helpers ── */
+/* â”€â”€ EBH Ad Group templates + helpers â”€â”€ */
 const EBH_AD_GROUPS = [
   { name: 'GLP-1 & Metabolic Health',
     keywords: ['how do glp-1 medications work','glp-1 therapy explained','glp-1 weight loss research','evidence based metabolic health','glp-1 cardiovascular benefits','glp-1 mechanism of action'],
-    headlines: ['GLP-1 Explained Simply','Evidence-Based GLP-1 Guide','The Science of GLP-1','Free Newsletter — No Hype','PA-Written Health Updates'] },
+    headlines: ['GLP-1 Explained Simply','Evidence-Based GLP-1 Guide','The Science of GLP-1','Free Newsletter â€” No Hype','PA-Written Health Updates'] },
   { name: 'Peptide Therapy Basics',
     keywords: ['what are peptides for health','peptide therapy explained','peptide health education','healing peptides research','peptide therapy basics'],
     headlines: ['Peptide Therapy Explained','What Are Health Peptides?','Science-Backed Peptide Info','Free Health Newsletter','No-Hype Health Education'] },
@@ -2582,7 +2583,7 @@ function initAdGroups() {
       </div>
       <div class="ag-body ag-hidden" id="ag-body-${idx}">
         <div class="form-row" style="margin-bottom:0.45rem">
-          <label style="font-size:0.77rem;margin-bottom:0.2rem">Headlines <span class="hint">3–5, max 30 chars each</span></label>
+          <label style="font-size:0.77rem;margin-bottom:0.2rem">Headlines <span class="hint">3â€“5, max 30 chars each</span></label>
           <div id="ag-hl-${idx}">${grp.headlines.map(h => `<div class="ag-hl-row"><input type="text" class="ag-headline" maxlength="30" value="${esc(h)}" oninput="updateAgCharCount(this)"><span class="ag-char-count">${h.length}/30</span></div>`).join('')}</div>
           <button type="button" class="btn-sm" onclick="addAgHeadline(${idx})" style="margin-top:0.3rem;font-size:0.75rem;padding:0.25rem 0.65rem">+ Add Headline</button>
         </div>
@@ -2591,7 +2592,7 @@ function initAdGroups() {
           <input type="text" id="ag-name-${idx}" value="${esc(grp.name)}" style="font-size:0.81rem;padding:0.3rem 0.5rem">
         </div>
         <div class="form-row" style="margin-bottom:0.45rem">
-          <label style="font-size:0.77rem;margin-bottom:0.2rem">Keywords <span class="hint">one per line — education terms, not drug brand names</span></label>
+          <label style="font-size:0.77rem;margin-bottom:0.2rem">Keywords <span class="hint">one per line â€” education terms, not drug brand names</span></label>
           <textarea id="ag-kw-${idx}" rows="4" style="font-size:0.79rem">${grp.keywords.join('\n')}</textarea>
         </div>
       </div>`;
@@ -2638,14 +2639,14 @@ function collectAdGroups() {
 }
 initAdGroups();
 
-/* ── Google inline AI Copy Generator ── */
+/* â”€â”€ Google inline AI Copy Generator â”€â”€ */
 document.getElementById('btn-g-gen-ai').addEventListener('click', async () => {
   const btn      = document.getElementById('btn-g-gen-ai');
-  const audience = document.getElementById('g-ai-audience').value.trim() || 'Adults 35–65 interested in preventive health';
+  const audience = document.getElementById('g-ai-audience').value.trim() || 'Adults 35â€“65 interested in preventive health';
   const extra    = document.getElementById('g-ai-extra').value.trim();
-  const offer    = document.getElementById('g-name').value.trim() || 'EBH Newsletter — evidence-based health education';
+  const offer    = document.getElementById('g-name').value.trim() || 'EBH Newsletter â€” evidence-based health education';
   btn.disabled   = true;
-  showStatus('g-ai-status', 'loading', '✨ Generating 5 ad copy variants…');
+  showStatus('g-ai-status', 'loading', 'âœ¨ Generating 5 ad copy variantsâ€¦');
   document.getElementById('g-ai-variants-wrap').style.display = 'none';
   try {
     const res  = await fetch(`${API}/generate-ad-copy`, {
@@ -2664,12 +2665,12 @@ function renderGoogleInlineVariants(variants) {
   const wrap = document.getElementById('g-ai-variants-wrap');
   if (!variants.length) { wrap.style.display = 'none'; return; }
   wrap._variants = variants;
-  wrap.innerHTML = `<div style="font-size:0.78rem;font-weight:600;color:var(--ink-mid);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.04em">Choose a variant — applies headlines to all ad groups:</div>` +
+  wrap.innerHTML = `<div style="font-size:0.78rem;font-weight:600;color:var(--ink-mid);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.04em">Choose a variant â€” applies headlines to all ad groups:</div>` +
     variants.map((v, i) => `
     <div class="ai-variant-card" style="margin-bottom:0.5rem">
       <div class="ai-variant-head">
         <span class="ai-variant-num">Variant ${i + 1}</span>
-        <button class="btn-sm" style="font-size:0.73rem;padding:0.2rem 0.7rem;background:var(--accent);color:#fff;border-color:var(--accent)" onclick="applyGoogleAIVariant(${i})">Apply to Ad Groups →</button>
+        <button class="btn-sm" style="font-size:0.73rem;padding:0.2rem 0.7rem;background:var(--accent);color:#fff;border-color:var(--accent)" onclick="applyGoogleAIVariant(${i})">Apply to Ad Groups â†’</button>
       </div>
       <div class="ai-variant-body">
         <div class="ai-field-row"><span class="ai-field-label">HL 1</span><span class="ai-field-val"><strong>${esc(v.headline || '')}</strong></span></div>
@@ -2708,21 +2709,21 @@ function applyGoogleAIVariant(idx) {
   if (d1) { const i = addInputRow('g-desc-wrap', 'Description N (90 chars max)', 90); i.value = d1; i.dispatchEvent(new Event('input')); }
   if (variant.description2) { const i = addInputRow('g-desc-wrap', 'Description N (90 chars max)', 90); i.value = variant.description2.slice(0, 90); i.dispatchEvent(new Event('input')); }
   wrap.style.display = 'none';
-  showStatus('g-ai-status', 'success', '✓ AI copy applied — review headlines below, then click Create Google Campaign.');
+  showStatus('g-ai-status', 'success', 'âœ“ AI copy applied â€” review headlines below, then click Create Google Campaign.');
 }
 
-/* ── Optimize with Past Data ── */
+/* â”€â”€ Optimize with Past Data â”€â”€ */
 document.getElementById('btn-optimize-google').addEventListener('click', async () => {
   const btn      = document.getElementById('btn-optimize-google');
   const clientId = document.getElementById('google-client-sel').value || undefined;
   btn.disabled = true;
-  showStatus('optimize-status','loading','Fetching performance data from Google Ads…');
+  showStatus('optimize-status','loading','Fetching performance data from Google Adsâ€¦');
   try {
     const qs  = clientId ? `?clientId=${encodeURIComponent(clientId)}` : '';
     const res  = await fetch(`${API}/google-insights${qs}`, { headers: authHeaders() });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Failed');
-    if (!data.hasData) { showStatus('optimize-status','error','No performance data yet — run some campaigns first, then optimize.'); return; }
+    if (!data.hasData) { showStatus('optimize-status','error','No performance data yet â€” run some campaigns first, then optimize.'); return; }
 
     // Replace descriptions with top performers (90 chars max)
     const validD = (data.topDescriptions || []).filter(d => d.length <= 90);
@@ -2760,16 +2761,16 @@ document.getElementById('btn-optimize-google').addEventListener('click', async (
     const kCount = kwSrc.length || 0;
     const dCount = validD.length || 0;
     showStatus('optimize-status','success',
-      `✓ Optimized: ${hCount} headline${hCount!==1?'s':''}, ${dCount} description${dCount!==1?'s':''}, ${kCount} keyword${kCount!==1?'s':''} from past 90-day performance data.`);
+      `âœ“ Optimized: ${hCount} headline${hCount!==1?'s':''}, ${dCount} description${dCount!==1?'s':''}, ${kCount} keyword${kCount!==1?'s':''} from past 90-day performance data.`);
   } catch (ex) { showStatus('optimize-status','error',`Error: ${esc(ex.message)}`); }
   finally { btn.disabled = false; }
 });
 
-/* ── Conversion Tracking Setup ── */
+/* â”€â”€ Conversion Tracking Setup â”€â”€ */
 document.getElementById('btn-setup-conv').addEventListener('click', async () => {
   const btn = document.getElementById('btn-setup-conv');
   btn.disabled = true;
-  showStatus('conv-status', 'loading', 'Setting up conversion tracking…');
+  showStatus('conv-status', 'loading', 'Setting up conversion trackingâ€¦');
   try {
     const res  = await fetch(`${API}/setup-conversion`, { headers: authHeaders() });
     const data = await res.json();
@@ -2777,17 +2778,17 @@ document.getElementById('btn-setup-conv').addEventListener('click', async () => 
 
     document.getElementById('conv-result').style.display = '';
     document.getElementById('conv-name').textContent   = data.name || 'Newsletter Signup';
-    document.getElementById('conv-label').textContent  = data.label || '(label not available — check Google Ads)';
-    document.getElementById('conv-action-status').textContent = data.status === 'created' ? '✓ Created now' : '✓ Already exists';
-    document.getElementById('conv-status-badge').textContent  = '✓ Active';
+    document.getElementById('conv-label').textContent  = data.label || '(label not available â€” check Google Ads)';
+    document.getElementById('conv-action-status').textContent = data.status === 'created' ? 'âœ“ Created now' : 'âœ“ Already exists';
+    document.getElementById('conv-status-badge').textContent  = 'âœ“ Active';
     document.getElementById('conv-status-badge').className    = 'conn-status connected';
 
     if (data.label) {
       showStatus('conv-status', 'success',
-        `✓ ${data.status === 'created' ? 'Created' : 'Found existing'} conversion action. Label: ${data.label} — copy it to index.html GOOGLE_CONV_LBL.`);
+        `âœ“ ${data.status === 'created' ? 'Created' : 'Found existing'} conversion action. Label: ${data.label} â€” copy it to index.html GOOGLE_CONV_LBL.`);
     } else {
       showStatus('conv-status', 'success',
-        `✓ Conversion action ${data.status === 'created' ? 'created' : 'found'}. Label not yet available — check Google Ads → Tools → Conversions in a few minutes.`);
+        `âœ“ Conversion action ${data.status === 'created' ? 'created' : 'found'}. Label not yet available â€” check Google Ads â†’ Tools â†’ Conversions in a few minutes.`);
     }
   } catch (ex) {
     showStatus('conv-status', 'error', `Error: ${esc(ex.message)}`);
@@ -2795,7 +2796,7 @@ document.getElementById('btn-setup-conv').addEventListener('click', async () => 
   }
 });
 
-/* ── Create Google Campaign (multi-ad-group) ── */
+/* â”€â”€ Create Google Campaign (multi-ad-group) â”€â”€ */
 document.getElementById('btn-gen-google').addEventListener('click', async () => {
   const btn             = document.getElementById('btn-gen-google');
   const campaignName    = document.getElementById('g-name').value.trim();
@@ -2836,7 +2837,7 @@ document.getElementById('btn-gen-google').addEventListener('click', async () => 
     const addr = document.getElementById('g-radius-addr').value.trim();
     if (!addr) { showStatus('google-status','error','Enter an address for radius targeting.'); return; }
     locationTargeting.radiusMiles = parseInt(document.getElementById('g-radius-miles').value);
-    btn.disabled = true; showStatus('google-status','loading','Geocoding address…');
+    btn.disabled = true; showStatus('google-status','loading','Geocoding addressâ€¦');
     try {
       const geoRes  = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(addr)}&format=json&limit=1`, { headers: { 'Accept-Language': 'en' } });
       const geoData = await geoRes.json();
@@ -2848,7 +2849,7 @@ document.getElementById('btn-gen-google').addEventListener('click', async () => 
   }
 
   btn.disabled = true;
-  showStatus('google-status','loading',`Creating campaign with ${adGroups.length} ad group${adGroups.length!==1?'s':''}… (~${adGroups.length * 8}s)`);
+  showStatus('google-status','loading',`Creating campaign with ${adGroups.length} ad group${adGroups.length!==1?'s':''}â€¦ (~${adGroups.length * 8}s)`);
   try {
     const res  = await fetch(`${API}/create-google-campaign`, {
       method:'POST', headers:authHeaders(),
@@ -2865,19 +2866,19 @@ document.getElementById('btn-gen-google').addEventListener('click', async () => 
       agWrap.innerHTML = data.adGroups.map(g =>
         `<div style="background:var(--paper);border:1px solid var(--border);border-radius:5px;padding:0.5rem 0.75rem;margin-bottom:0.4rem;font-size:0.82rem">
           <div style="font-weight:600;margin-bottom:0.2rem">${esc(g.name)}</div>
-          <div style="color:var(--ink-mid)">ID: <code style="background:var(--paper-warm);padding:0.1rem 0.3rem;border-radius:3px">${esc(g.id)}</code> · ${g.keywords?.length||0} keywords · ${g.headlines?.length||0} headlines</div>
+          <div style="color:var(--ink-mid)">ID: <code style="background:var(--paper-warm);padding:0.1rem 0.3rem;border-radius:3px">${esc(g.id)}</code> Â· ${g.keywords?.length||0} keywords Â· ${g.headlines?.length||0} headlines</div>
         </div>`).join('');
     }
     const link = document.getElementById('go-review-link');
     link.href = data.review_url;
     document.getElementById('google-output').classList.add('visible');
     document.getElementById('google-output').scrollIntoView({ behavior:'smooth', block:'start' });
-    showStatus('google-status','success',`✓ Campaign <strong>${esc(data.campaignName)}</strong> created (paused) with ${data.adGroups?.length||1} ad group${(data.adGroups?.length||1)!==1?'s':''}. <a href="${esc(data.review_url)}" target="_blank" rel="noopener">Open in Google Ads ↗</a>${data.complianceWarnings?.length ? `<br><span style="color:#b45309">⚠ Compliance notes: ${data.complianceWarnings.length} keyword/headline item(s) to review — not LegitScript-certified content detected.</span>` : ''}${data.adGroups?.some(g=>g.adWarning) ? `<br><span style="color:#b45309">⚠ One or more RSA ads were skipped due to Google policy — add them manually in Google Ads: ${data.adGroups.filter(g=>g.adWarning).map(g=>`${esc(g.name)}: ${esc(g.adWarning)}`).join('; ')}</span>` : ''}`);
+    showStatus('google-status','success',`âœ“ Campaign <strong>${esc(data.campaignName)}</strong> created (paused) with ${data.adGroups?.length||1} ad group${(data.adGroups?.length||1)!==1?'s':''}. <a href="${esc(data.review_url)}" target="_blank" rel="noopener">Open in Google Ads â†—</a>${data.complianceWarnings?.length ? `<br><span style="color:#b45309">âš  Compliance notes: ${data.complianceWarnings.length} keyword/headline item(s) to review â€” not LegitScript-certified content detected.</span>` : ''}${data.adGroups?.some(g=>g.adWarning) ? `<br><span style="color:#b45309">âš  One or more RSA ads were skipped due to Google policy â€” add them manually in Google Ads: ${data.adGroups.filter(g=>g.adWarning).map(g=>`${esc(g.name)}: ${esc(g.adWarning)}`).join('; ')}</span>` : ''}`);
   } catch (ex) { showStatus('google-status','error',`Error: ${esc(ex.message)}`);
   } finally { btn.disabled = false; }
 });
 
-/* ── Location targeting tab toggles ── */
+/* â”€â”€ Location targeting tab toggles â”€â”€ */
 document.getElementById('loc-type-tabs').addEventListener('click', e => {
   const tab = e.target.closest('.loc-tab'); if (!tab) return;
   document.querySelectorAll('.loc-tab').forEach(t => t.classList.remove('active'));
@@ -2888,20 +2889,20 @@ document.getElementById('loc-type-tabs').addEventListener('click', e => {
   document.getElementById('loc-radius-wrap').style.display = type === 'radius' ? '' : 'none';
 });
 
-/* ── Policy Intelligence ── */
+/* â”€â”€ Policy Intelligence â”€â”€ */
 function togglePolicyIntel() {
   const body = document.getElementById('pi-body');
   const chev = document.getElementById('pi-chev');
   const open = body.style.display === 'none';
   body.style.display = open ? '' : 'none';
-  chev.textContent   = open ? '▴' : '▾';
+  chev.textContent   = open ? 'â–´' : 'â–¾';
   if (open) loadPolicyViolations();
 }
 
 async function loadPolicyViolations() {
   const list  = document.getElementById('pi-list');
   const count = document.getElementById('pi-count');
-  list.innerHTML = '<p style="font-size:0.82rem;color:var(--ink-faint)">Loading…</p>';
+  list.innerHTML = '<p style="font-size:0.82rem;color:var(--ink-faint)">Loadingâ€¦</p>';
   try {
     const res  = await fetch(`${API}/policy-violations`, { headers: authHeaders() });
     const data = await res.json();
@@ -2927,7 +2928,7 @@ function renderPolicyViolations(violations) {
   const exempted = violations.filter(v =>  v.isExemptible &&  v.wasExempted);
   badge.textContent   = violations.length;
   badge.style.display = '';
-  count.textContent   = `${hard.length} hard-blocked · ${exempted.length} auto-exempted`;
+  count.textContent   = `${hard.length} hard-blocked Â· ${exempted.length} auto-exempted`;
 
   const groups = {};
   for (const v of violations) {
@@ -2949,8 +2950,8 @@ function renderPolicyViolations(violations) {
     for (const v of items) {
       const isHard = !v.isExemptible || !v.wasExempted;
       const statusHtml = isHard
-        ? `<span style="background:#fde8e8;color:#c0392b;border-radius:12px;padding:0.1rem 0.45rem;font-size:0.72rem;white-space:nowrap">⛔ Hard-blocked</span>`
-        : `<span style="background:#e8f5e9;color:#1b7a3e;border-radius:12px;padding:0.1rem 0.45rem;font-size:0.72rem;white-space:nowrap">✓ Auto-exempted</span>`;
+        ? `<span style="background:#fde8e8;color:#c0392b;border-radius:12px;padding:0.1rem 0.45rem;font-size:0.72rem;white-space:nowrap">â›” Hard-blocked</span>`
+        : `<span style="background:#e8f5e9;color:#1b7a3e;border-radius:12px;padding:0.1rem 0.45rem;font-size:0.72rem;white-space:nowrap">âœ“ Auto-exempted</span>`;
       html += `<tr style="border-bottom:1px solid var(--border)">
         <td style="padding:0.35rem 0.4rem;word-break:break-all">${escHtml(v.text)}</td>
         <td style="padding:0.35rem 0.4rem;color:var(--ink-mid)">${escHtml(v.policyName)}</td>
@@ -2984,13 +2985,13 @@ function escHtml(str) {
   return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-/* ── Manage Campaigns ── */
+/* â”€â”€ Manage Campaigns â”€â”€ */
 async function loadCampaigns() {
   const clientId  = document.getElementById('google-client-sel').value || undefined;
   const wrap      = document.getElementById('campaigns-list-wrap');
   const btn       = document.getElementById('btn-load-campaigns');
   btn.disabled    = true;
-  wrap.innerHTML  = '<p style="font-size:0.83rem;color:var(--ink-faint);margin:0">Loading…</p>';
+  wrap.innerHTML  = '<p style="font-size:0.83rem;color:var(--ink-faint);margin:0">Loadingâ€¦</p>';
   try {
     const url = `${API}/list-google-campaigns${clientId ? `?clientId=${encodeURIComponent(clientId)}` : ''}`;
     const res  = await fetch(url, { headers: authHeaders() });
@@ -3010,21 +3011,21 @@ async function loadCampaigns() {
           ${campaigns.map(c => `
             <tr data-cid="${esc(c.id)}">
               <td>
-                <button class="camp-btn" data-action="DETAILS" title="View ad groups &amp; keywords" style="margin-right:0.4rem;font-size:0.72rem;padding:0.15rem 0.45rem">▸</button>
+                <button class="camp-btn" data-action="DETAILS" title="View ad groups &amp; keywords" style="margin-right:0.4rem;font-size:0.72rem;padding:0.15rem 0.45rem">â–¸</button>
                 ${esc(c.name)}
               </td>
-              <td><span class="camp-status ${(c.status||'').toLowerCase()}">${esc(c.status||'—')}</span></td>
-              <td>${c.dailyBudget ? `$${esc(c.dailyBudget)}` : '—'}</td>
+              <td><span class="camp-status ${(c.status||'').toLowerCase()}">${esc(c.status||'â€”')}</span></td>
+              <td>${c.dailyBudget ? `$${esc(c.dailyBudget)}` : 'â€”'}</td>
               <td><div class="camp-actions">
                 ${c.status === 'PAUSED'
-                  ? `<button class="camp-btn" data-action="ENABLED">▶ Enable</button>`
-                  : `<button class="camp-btn" data-action="PAUSED">⏸ Pause</button>`}
-                <button class="camp-btn danger" data-action="DELETE">✕ Delete</button>
+                  ? `<button class="camp-btn" data-action="ENABLED">â–¶ Enable</button>`
+                  : `<button class="camp-btn" data-action="PAUSED">â¸ Pause</button>`}
+                <button class="camp-btn danger" data-action="DELETE">âœ• Delete</button>
               </div></td>
             </tr>
             <tr class="camp-detail-row" id="detail-${esc(c.id)}">
               <td class="camp-detail-cell" colspan="4">
-                <em style="color:var(--ink-faint);font-size:0.78rem">Click ▸ to load ad groups, keywords &amp; headlines…</em>
+                <em style="color:var(--ink-faint);font-size:0.78rem">Click â–¸ to load ad groups, keywords &amp; headlinesâ€¦</em>
               </td>
             </tr>`).join('')}
         </tbody>
@@ -3047,11 +3048,11 @@ document.getElementById('campaigns-list-wrap').addEventListener('click', async e
   if (action === 'DETAILS') {
     const detailRow = document.getElementById(`detail-${campaignId}`);
     if (!detailRow) return;
-    if (detailRow.classList.contains('open')) { detailRow.classList.remove('open'); campBtn.textContent = '▸'; return; }
+    if (detailRow.classList.contains('open')) { detailRow.classList.remove('open'); campBtn.textContent = 'â–¸'; return; }
     detailRow.classList.add('open');
-    campBtn.textContent = '▾';
+    campBtn.textContent = 'â–¾';
     const cell = detailRow.querySelector('.camp-detail-cell');
-    cell.innerHTML = '<em style="color:var(--ink-faint);font-size:0.78rem">Loading…</em>';
+    cell.innerHTML = '<em style="color:var(--ink-faint);font-size:0.78rem">Loadingâ€¦</em>';
     try {
       const qs   = `campaignId=${encodeURIComponent(campaignId)}${clientId ? `&clientId=${encodeURIComponent(clientId)}` : ''}`;
       const res  = await fetch(`${API}/list-campaign-ads?${qs}`, { headers: authHeaders() });
@@ -3090,19 +3091,19 @@ document.getElementById('campaigns-list-wrap').addEventListener('click', async e
   }
 });
 
-/* ── GA4 Site Analytics ── */
+/* â”€â”€ GA4 Site Analytics â”€â”€ */
 document.getElementById('btn-load-ga4').addEventListener('click', async () => {
   const wrap = document.getElementById('ga4-wrap');
   const btn  = document.getElementById('btn-load-ga4');
   btn.disabled = true;
-  wrap.innerHTML = '<p style="font-size:0.83rem;color:var(--ink-faint);margin:0">Loading analytics…</p>';
+  wrap.innerHTML = '<p style="font-size:0.83rem;color:var(--ink-faint);margin:0">Loading analyticsâ€¦</p>';
   try {
     const res  = await fetch(`${API}/ga4-report`, { headers: authHeaders() });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Failed');
     const t = data.totals || {};
     const trafficRows = (data.traffic || []).slice(0,8).map(r =>
-      `<tr><td>${esc(r.dims[0] || '—')}</td><td>${Number(r.metrics[0]).toLocaleString()}</td><td>${Number(r.metrics[1]).toLocaleString()}</td></tr>`).join('');
+      `<tr><td>${esc(r.dims[0] || 'â€”')}</td><td>${Number(r.metrics[0]).toLocaleString()}</td><td>${Number(r.metrics[1]).toLocaleString()}</td></tr>`).join('');
     const cityRows = (data.cities || []).slice(0,8).map(r =>
       `<tr><td>${esc(r.dims[0])}, ${esc(r.dims[1])}</td><td>${Number(r.metrics[0]).toLocaleString()}</td></tr>`).join('');
     const ageRows = (data.ages || []).map(r =>
@@ -3135,7 +3136,7 @@ document.getElementById('btn-load-ga4').addEventListener('click', async () => {
   } finally { btn.disabled = false; }
 });
 
-/* ── AI Creative Generator ── */
+/* â”€â”€ AI Creative Generator â”€â”€ */
 function populateAIClientSel() {
   const sel = document.getElementById('ai-client');
   const insightsSel = document.getElementById('insights-client-sel');
@@ -3153,42 +3154,42 @@ function populateAIClientSel() {
   });
 }
 
-/* ── AI audience auto-fill ── */
+/* â”€â”€ AI audience auto-fill â”€â”€ */
 const AI_AUDIENCE_MAP = {
   'GLP-1 education': {
     'Traffic to education page':          "Adults 30\u201365 curious about GLP-1 / semaglutide who are researching weight-loss or metabolic health options but haven't visited our education page yet",
-    'Lead capture — newsletter signup':   "Adults 30\u201365 interested in GLP-1 or metabolic health who have visited relevant content but haven't subscribed to our newsletter",
-    'Lead capture — eligibility quiz':    "Adults 30\u201365 who have browsed GLP-1 or weight-management content but haven't completed an eligibility or readiness quiz",
+    'Lead capture â€” newsletter signup':   "Adults 30\u201365 interested in GLP-1 or metabolic health who have visited relevant content but haven't subscribed to our newsletter",
+    'Lead capture â€” eligibility quiz':    "Adults 30\u201365 who have browsed GLP-1 or weight-management content but haven't completed an eligibility or readiness quiz",
     'Brand awareness':                    "Broad adults 30\u201365 interested in weight management, metabolic health, or preventive medicine \u2014 no prior exposure to our brand",
   },
   'peptide therapy education': {
     'Traffic to education page':          "Fitness-conscious adults 25\u201355 interested in recovery, anti-aging, or performance optimisation who haven't read our peptide education content",
-    'Lead capture — newsletter signup':   "Adults 25\u201355 who've browsed peptide therapy topics but haven't opted into health content from us",
-    'Lead capture — eligibility quiz':    "Adults 25\u201355 researching peptide therapy who haven't taken a readiness or eligibility quiz",
+    'Lead capture â€” newsletter signup':   "Adults 25\u201355 who've browsed peptide therapy topics but haven't opted into health content from us",
+    'Lead capture â€” eligibility quiz':    "Adults 25\u201355 researching peptide therapy who haven't taken a readiness or eligibility quiz",
     'Brand awareness':                    "Health-aware adults 25\u201355 interested in biohacking, longevity, or sports medicine",
   },
   'TRT and hormone health education': {
     'Traffic to education page':          "Men 35\u201365 experiencing low energy, reduced libido, or fatigue who are researching hormone health but haven't visited our TRT education page",
-    'Lead capture — newsletter signup':   "Men 35\u201365 interested in testosterone or hormone optimisation who haven't yet subscribed to health content",
-    'Lead capture — eligibility quiz':    "Men 35\u201365 who've researched TRT or hormone therapy but haven't completed a candidacy or symptoms quiz",
+    'Lead capture â€” newsletter signup':   "Men 35\u201365 interested in testosterone or hormone optimisation who haven't yet subscribed to health content",
+    'Lead capture â€” eligibility quiz':    "Men 35\u201365 who've researched TRT or hormone therapy but haven't completed a candidacy or symptoms quiz",
     'Brand awareness':                    "Men 35\u201365 broadly interested in men's health, vitality, or preventive medicine",
   },
   'cancer prevention and screening': {
     'Traffic to education page':          "Adults 40\u201370 who may be overdue for preventive cancer screening and haven't seen evidence-based guidance on screening timelines",
-    'Lead capture — newsletter signup':   "Adults 40\u201370 interested in preventive health who haven't yet subscribed to evidence-based screening guidance",
-    'Lead capture — eligibility quiz':    "Adults 40\u201370 who've read about cancer screening but haven't gone through a personalised screening-readiness checklist",
+    'Lead capture â€” newsletter signup':   "Adults 40\u201370 interested in preventive health who haven't yet subscribed to evidence-based screening guidance",
+    'Lead capture â€” eligibility quiz':    "Adults 40\u201370 who've read about cancer screening but haven't gone through a personalised screening-readiness checklist",
     'Brand awareness':                    "Adults 35\u201370 broadly interested in cancer prevention, primary care, or evidence-based health tips",
   },
   'metabolic health and weight management': {
     'Traffic to education page':          "Adults 28\u201360 interested in blood sugar, insulin resistance, or sustainable weight loss who haven't visited our metabolic health content",
-    'Lead capture — newsletter signup':   "Adults 28\u201360 researching metabolic health or weight management who haven't subscribed to science-backed guidance",
-    'Lead capture — eligibility quiz':    "Adults 28\u201360 interested in metabolic optimisation who haven't completed a health profile or quiz",
+    'Lead capture â€” newsletter signup':   "Adults 28\u201360 researching metabolic health or weight management who haven't subscribed to science-backed guidance",
+    'Lead capture â€” eligibility quiz':    "Adults 28\u201360 interested in metabolic optimisation who haven't completed a health profile or quiz",
     'Brand awareness':                    "Adults 28\u201360 broadly interested in nutrition, metabolic fitness, or preventive health improvements",
   },
   'evidence-based health newsletter': {
     'Traffic to education page':          "Health-conscious adults 30\u201365 who regularly read health news but haven't discovered our evidence-based newsletter",
-    'Lead capture — newsletter signup':   "Adults 30\u201365 who've visited health education content but haven't yet signed up for a regular newsletter",
-    'Lead capture — eligibility quiz':    "Adults 30\u201365 interested in personalised health insights who haven't answered a brief health-interests quiz",
+    'Lead capture â€” newsletter signup':   "Adults 30\u201365 who've visited health education content but haven't yet signed up for a regular newsletter",
+    'Lead capture â€” eligibility quiz':    "Adults 30\u201365 interested in personalised health insights who haven't answered a brief health-interests quiz",
     'Brand awareness':                    "Broad adults 30\u201365 interested in health, wellness, or evidence-based medicine \u2014 no prior brand interaction",
   },
 };
@@ -3201,8 +3202,8 @@ function autofillAudience() {
   const base      = AI_AUDIENCE_MAP[offer]?.[objective];
   if (!base) return;
   const platformSuffix = platform === 'Google'
-    ? ' — reached via Google Search'
-    : ' — reached via Facebook / Instagram feed';
+    ? ' â€” reached via Google Search'
+    : ' â€” reached via Facebook / Instagram feed';
   field.value = base + platformSuffix;
   field.style.borderColor = 'var(--accent-mid)';
   field.style.background  = '#fff';
@@ -3211,7 +3212,7 @@ function autofillAudience() {
 
 document.getElementById('btn-autofill-audience').addEventListener('click', autofillAudience);
 
-// ── Wizard audience autofill (reuses the same knowledge map) ────────────────
+// â”€â”€ Wizard audience autofill (reuses the same knowledge map) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function wizEffectiveTopic() {
   const sel = document.getElementById('wai-offer').value;
   return sel === '__custom__' ? document.getElementById('wai-offer-custom').value.trim() : sel;
@@ -3244,7 +3245,7 @@ async function wizRegenAudience() {
   if (wizAutofillAudience()) return; // served from knowledge map instantly
   // Fall back to AI for custom topics
   const origText = btn.textContent;
-  btn.textContent = '⏳ Thinking…';
+  btn.textContent = 'â³ Thinkingâ€¦';
   btn.disabled = true;
   try {
     const res  = await fetch(`${API}/suggest-audience`, {
@@ -3260,7 +3261,7 @@ async function wizRegenAudience() {
       setTimeout(() => { field.style.borderColor = ''; field.style.background = ''; }, 1400);
     }
   } catch(e) {
-    field.placeholder = `⚠ ${e.message} — type your audience manually`;
+    field.placeholder = `âš  ${e.message} â€” type your audience manually`;
   }
   btn.textContent = origText;
   btn.disabled = false;
@@ -3309,7 +3310,7 @@ document.getElementById('btn-gen-ai').addEventListener('click', async () => {
   const brand   = c ? c.name : 'Evidence-Based Health';
 
   btn.disabled = true;
-  showStatus('ai-status', 'loading', '✨ Generating 5 ad variants with AI…');
+  showStatus('ai-status', 'loading', 'âœ¨ Generating 5 ad variants with AIâ€¦');
   document.getElementById('ai-variants-wrap').style.display = 'none';
 
   try {
@@ -3323,7 +3324,7 @@ document.getElementById('btn-gen-ai').addEventListener('click', async () => {
     renderAIVariants(data.variants || [], platform);
     // Show compliance notice if server flagged warnings
     if (data.compliance?.warnings?.length) {
-      showStatus('ai-status', 'error', `⚠️ Compliance check flagged ${data.compliance.warnings.length} issue(s) in generated copy. Review carefully before use:<br><ul style="margin:0.3rem 0 0 1rem;font-size:0.82rem">${data.compliance.warnings.map(w => `<li>${esc(w)}</li>`).join('')}</ul>`);
+      showStatus('ai-status', 'error', `âš ï¸ Compliance check flagged ${data.compliance.warnings.length} issue(s) in generated copy. Review carefully before use:<br><ul style="margin:0.3rem 0 0 1rem;font-size:0.82rem">${data.compliance.warnings.map(w => `<li>${esc(w)}</li>`).join('')}</ul>`);
     } else {
       document.getElementById('ai-status').className = 'status-bar';
     }
@@ -3332,7 +3333,7 @@ document.getElementById('btn-gen-ai').addEventListener('click', async () => {
   } finally { btn.disabled = false; }
 });
 
-// ── Wizard "Generate with AI" button handler ──────────────────────────────────
+// â”€â”€ Wizard "Generate with AI" button handler â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 document.getElementById('btn-wiz-gen-ai')?.addEventListener('click', async () => {
   const btn       = document.getElementById('btn-wiz-gen-ai');
   const clientId  = document.getElementById('wai-client')?.value || undefined;
@@ -3344,13 +3345,13 @@ document.getElementById('btn-wiz-gen-ai')?.addEventListener('click', async () =>
 
   if (!offer)     { showStatus('wai-status', 'error', 'Select or enter a topic first.'); return; }
   if (!objective) { showStatus('wai-status', 'error', 'Select or enter an objective first.'); return; }
-  if (!audience)  { showStatus('wai-status', 'error', 'Target Audience is required — click ↺ Regenerate or type one.'); return; }
+  if (!audience)  { showStatus('wai-status', 'error', 'Target Audience is required â€” click â†º Regenerate or type one.'); return; }
 
   const c     = clients.find(x => x.clientId === clientId);
   const brand = c ? c.name : 'Evidence-Based Health';
 
   btn.disabled = true;
-  showStatus('wai-status', 'loading', '✨ Generating AI ad variants…');
+  showStatus('wai-status', 'loading', 'âœ¨ Generating AI ad variantsâ€¦');
   document.getElementById('wai-variants').style.display = 'none';
 
   try {
@@ -3369,7 +3370,7 @@ document.getElementById('btn-wiz-gen-ai')?.addEventListener('click', async () =>
       <div class="ai-variant-card">
         <div class="ai-variant-head">
           <span class="ai-variant-num">Variant ${i + 1}</span>
-          <button class="btn-sm" style="font-size:0.73rem;padding:0.2rem 0.75rem;background:var(--accent);color:#fff;border-color:var(--accent)" onclick="applyWizVariant(${i})">Use This →</button>
+          <button class="btn-sm" style="font-size:0.73rem;padding:0.2rem 0.75rem;background:var(--accent);color:#fff;border-color:var(--accent)" onclick="applyWizVariant(${i})">Use This â†’</button>
         </div>
         <div class="ai-variant-body">
           <div class="ai-field-row"><span class="ai-field-label">${platform === 'Google' ? 'Headline 1' : 'Headline'}</span><span class="ai-field-val"><strong>${esc(v.headline || '')}</strong></span></div>
@@ -3377,14 +3378,14 @@ document.getElementById('btn-wiz-gen-ai')?.addEventListener('click', async () =>
           ${platform === 'Google' && v.headline3 ? `<div class="ai-field-row"><span class="ai-field-label">Headline 3</span><span class="ai-field-val">${esc(v.headline3)}</span></div>` : ''}
           <div class="ai-field-row"><span class="ai-field-label">${platform === 'Google' ? 'Description' : 'Primary Text'}</span><span class="ai-field-val">${esc(v.primaryText || v.description || '')}</span></div>
           <div class="ai-field-row"><span class="ai-field-label">CTA</span><span class="ai-field-val">${esc(v.cta || '')}</span></div>
-          ${v.imageConcept ? `<div class="ai-image-concept">🖼 ${esc(v.imageConcept)}</div>` : ''}
+          ${v.imageConcept ? `<div class="ai-image-concept">ðŸ–¼ ${esc(v.imageConcept)}</div>` : ''}
         </div>
       </div>`).join('');
     wrap._variants = vars;
     wrap._platform = platform;
     wrap.style.display = '';
     if (data.compliance?.warnings?.length) {
-      showStatus('wai-status', 'error', `⚠️ ${data.compliance.warnings.length} compliance flag(s) — review before publishing.`);
+      showStatus('wai-status', 'error', `âš ï¸ ${data.compliance.warnings.length} compliance flag(s) â€” review before publishing.`);
     } else {
       document.getElementById('wai-status').className = 'status-bar';
     }
@@ -3438,8 +3439,8 @@ function renderAIVariants(variants, platform) {
       <div class="ai-variant-head">
         <span class="ai-variant-num">Variant ${i + 1}</span>
         <div class="ai-variant-actions">
-          <button class="btn-sm" style="font-size:0.73rem;padding:0.2rem 0.6rem" onclick="applyAIVariant(${i})">Use This →</button>
-          <button class="btn-sm" style="font-size:0.73rem;padding:0.2rem 0.6rem;background:var(--accent);color:#fff;border-color:var(--accent)" onclick="prefillLaunch(${i})">Launch →</button>
+          <button class="btn-sm" style="font-size:0.73rem;padding:0.2rem 0.6rem" onclick="applyAIVariant(${i})">Use This â†’</button>
+          <button class="btn-sm" style="font-size:0.73rem;padding:0.2rem 0.6rem;background:var(--accent);color:#fff;border-color:var(--accent)" onclick="prefillLaunch(${i})">Launch â†’</button>
         </div>
       </div>
       <div class="ai-variant-body">
@@ -3458,8 +3459,8 @@ function renderAIVariants(variants, platform) {
           <span class="ai-field-label">CTA</span>
           <span class="ai-field-val">${esc(v.cta || '')}</span>
         </div>
-        ${v.imageConcept ? `<div class="ai-image-concept">🖼 Image concept: ${esc(v.imageConcept)}</div>` : ''}
-        ${v.disclaimer ? `<div style="font-size:0.73rem;color:var(--ink-light);border-top:1px solid var(--border);margin-top:0.5rem;padding-top:0.45rem;line-height:1.4">📋 ${esc(v.disclaimer)}</div>` : ''}
+        ${v.imageConcept ? `<div class="ai-image-concept">ðŸ–¼ Image concept: ${esc(v.imageConcept)}</div>` : ''}
+        ${v.disclaimer ? `<div style="font-size:0.73rem;color:var(--ink-light);border-top:1px solid var(--border);margin-top:0.5rem;padding-top:0.45rem;line-height:1.4">ðŸ“‹ ${esc(v.disclaimer)}</div>` : ''}
       </div>
     </div>`).join('');
   wrap.style.display = '';
@@ -3519,7 +3520,7 @@ function applyAIVariant(idx) {
   }
 }
 
-/* ── Audiences — Meta Custom Audiences ── */
+/* â”€â”€ Audiences â€” Meta Custom Audiences â”€â”€ */
 document.getElementById('btn-create-meta-audiences').addEventListener('click', async () => {
   const btn      = document.getElementById('btn-create-meta-audiences');
   const statusEl = document.getElementById('meta-aud-status');
@@ -3528,7 +3529,7 @@ document.getElementById('btn-create-meta-audiences').addEventListener('click', a
   btn.disabled = true;
   statusEl.className = 'status-bar loading';
   statusEl.style.display = '';
-  statusEl.textContent   = 'Creating Meta Custom Audiences…';
+  statusEl.textContent   = 'Creating Meta Custom Audiencesâ€¦';
   try {
     const res  = await fetch(`${API}/meta-audiences`, {
       method: 'POST',
@@ -3538,14 +3539,14 @@ document.getElementById('btn-create-meta-audiences').addEventListener('click', a
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Failed');
     statusEl.className   = 'status-bar success';
-    statusEl.innerHTML   = `✓ Created ${(data.audiences || []).length} audiences: ${(data.audiences||[]).map(a => esc(a.name)).join(', ')}`;
+    statusEl.innerHTML   = `âœ“ Created ${(data.audiences || []).length} audiences: ${(data.audiences||[]).map(a => esc(a.name)).join(', ')}`;
   } catch (ex) {
     statusEl.className = 'status-bar error';
     statusEl.textContent = `Error: ${ex.message}`;
   } finally { btn.disabled = false; }
 });
 
-/* ── Weekly Insights ── */
+/* â”€â”€ Weekly Insights â”€â”€ */
 document.getElementById('btn-load-insights').addEventListener('click', async () => {
   const btn      = document.getElementById('btn-load-insights');
   const clientId = document.getElementById('insights-client-sel').value || undefined;
@@ -3556,7 +3557,7 @@ document.getElementById('btn-load-insights').addEventListener('click', async () 
   const selRow = wrap.querySelector('.insights-client-row');
   const selHTML = selRow ? selRow.outerHTML : '';
 
-  wrap.innerHTML = selHTML + `<div class="ai-loading-pulse"><div class="spinner"></div> Pulling last-week data from Google Ads + Meta and running AI analysis…</div>`;
+  wrap.innerHTML = selHTML + `<div class="ai-loading-pulse"><div class="spinner"></div> Pulling last-week data from Google Ads + Meta and running AI analysisâ€¦</div>`;
 
   try {
     const res  = await fetch(`${API}/weekly-summary`, {
@@ -3567,8 +3568,8 @@ document.getElementById('btn-load-insights').addEventListener('click', async () 
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Failed');
 
-    const topAuds = (data.topAudiences || []).map(a => `<div class="insights-item"><strong>${esc(a.name)}</strong> — ${esc(a.stat)}</div>`).join('') || '<div class="insights-item" style="color:var(--ink-faint)">No audience data</div>';
-    const topCreatives = (data.topCreatives || []).map(a => `<div class="insights-item"><strong>${esc(a.name)}</strong> — ${esc(a.stat)}</div>`).join('') || '<div class="insights-item" style="color:var(--ink-faint)">No creative data</div>';
+    const topAuds = (data.topAudiences || []).map(a => `<div class="insights-item"><strong>${esc(a.name)}</strong> â€” ${esc(a.stat)}</div>`).join('') || '<div class="insights-item" style="color:var(--ink-faint)">No audience data</div>';
+    const topCreatives = (data.topCreatives || []).map(a => `<div class="insights-item"><strong>${esc(a.name)}</strong> â€” ${esc(a.stat)}</div>`).join('') || '<div class="insights-item" style="color:var(--ink-faint)">No creative data</div>';
     const suggestions = (data.suggestions || []).map((s,i) => `<div class="insights-item">${i+1}. ${esc(s)}</div>`).join('') || '<div class="insights-item" style="color:var(--ink-faint)">No suggestions yet</div>';
 
     wrap.innerHTML = `${selHTML}
@@ -3592,7 +3593,7 @@ document.getElementById('btn-load-insights').addEventListener('click', async () 
   } finally { btn.disabled = false; }
 });
 
-/* ── Campaign Launcher ── */
+/* â”€â”€ Campaign Launcher â”€â”€ */
 async function launchCampaign(type) {
   const isCold   = type === 'cold';
   const pfx      = isCold ? 'cold' : 'rmkt';
@@ -3632,7 +3633,7 @@ async function launchCampaign(type) {
   btn.disabled = true;
   resultEl.className = 'launch-result';
   resultEl.style.display = '';
-  resultEl.textContent = '⏳ Creating campaign, ad set, and ad in Meta…';
+  resultEl.textContent = 'â³ Creating campaign, ad set, and ad in Metaâ€¦';
 
   try {
     const res = await fetch(`${API}/launch-meta-campaign`, {
@@ -3643,9 +3644,9 @@ async function launchCampaign(type) {
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Launch failed');
     resultEl.className = 'launch-result success';
-    resultEl.innerHTML = `✅ Campaign created and <strong>Paused</strong> in Meta.<br>
+    resultEl.innerHTML = `âœ… Campaign created and <strong>Paused</strong> in Meta.<br>
       Campaign: <code>${esc(data.campaignId)}</code> &nbsp; Ad Set: <code>${esc(data.adsetId)}</code> &nbsp; Ad: <code>${esc(data.adId)}</code><br>
-      <a href="${esc(data.previewUrl)}" target="_blank" rel="noopener" style="color:var(--accent);font-weight:500">Review &amp; activate in Meta Ads Manager →</a>`;
+      <a href="${esc(data.previewUrl)}" target="_blank" rel="noopener" style="color:var(--accent);font-weight:500">Review &amp; activate in Meta Ads Manager â†’</a>`;
   } catch (ex) {
     resultEl.className = 'launch-result error';
     resultEl.style.display = '';
@@ -3658,7 +3659,7 @@ async function launchCampaign(type) {
 document.getElementById('btn-launch-cold').addEventListener('click', () => launchCampaign('cold'));
 document.getElementById('btn-launch-rmkt').addEventListener('click', () => launchCampaign('remarketing'));
 
-/* ── Newsletter ── */
+/* â”€â”€ Newsletter â”€â”€ */
 let nlPostData = null;   // stores last generated post
 let nlSubscribers = []; // cached subscriber list
 
@@ -3680,7 +3681,7 @@ async function loadSubscribers() {
     tbody.innerHTML = nlSubscribers.map(s => `
       <tr class="nl-sub-row">
         <td style="padding:0.38rem 0.4rem;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(s.email)}</td>
-        <td style="padding:0.38rem 0.4rem;color:var(--ink-faint);white-space:nowrap;font-size:0.77rem">${s.subscribedAt ? s.subscribedAt.slice(0,10) : '—'}</td>
+        <td style="padding:0.38rem 0.4rem;color:var(--ink-faint);white-space:nowrap;font-size:0.77rem">${s.subscribedAt ? s.subscribedAt.slice(0,10) : 'â€”'}</td>
         <td style="padding:0.38rem 0.4rem"><span class="nl-status-badge ${s.status === 'active' ? 'active' : 'unsubscribed'}">${esc(s.status)}</span></td>
         <td style="padding:0.38rem 0.4rem;text-align:right"><button class="nl-remove-btn" onclick="removeSubscriber('${esc(s.email)}')">Remove</button></td>
       </tr>`).join('');
@@ -3717,7 +3718,7 @@ document.getElementById('btn-generate-post').addEventListener('click', async () 
   const length  = document.getElementById('nl-length').value;
   const extra   = document.getElementById('nl-context').value.trim();
   if (!topic) { showStatus('nl-gen-status','error','Please enter a topic or prompt.'); return; }
-  showStatus('nl-gen-status','loading','<span class="spinner" style="display:inline-block;vertical-align:middle;margin-right:0.5rem"></span>Researching with Perplexity, then writing with AI… (15–30 sec)');
+  showStatus('nl-gen-status','loading','<span class="spinner" style="display:inline-block;vertical-align:middle;margin-right:0.5rem"></span>Researching with Perplexity, then writing with AIâ€¦ (15â€“30 sec)');
   document.getElementById('btn-generate-post').disabled = true;
   document.getElementById('nl-preview-wrap').style.display = 'none';
   try {
@@ -3740,7 +3741,7 @@ document.getElementById('btn-generate-post').addEventListener('click', async () 
     document.getElementById('btn-publish-post').disabled = false;
     document.getElementById('btn-save-nl-draft').disabled = false;
     document.getElementById('btn-schedule-nl').disabled = false;
-    showStatus('nl-gen-status','success','✓ Post generated. Review the preview, then send a test or broadcast to all subscribers.');
+    showStatus('nl-gen-status','success','âœ“ Post generated. Review the preview, then send a test or broadcast to all subscribers.');
   } catch (ex) {
     showStatus('nl-gen-status','error',`Generation failed: ${esc(ex.message)}`);
   } finally {
@@ -3756,13 +3757,13 @@ document.getElementById('btn-send-test').addEventListener('click', async () => {
   if (!nlPostData) return showStatus('nl-send-status','error','Generate a post first.');
   const testEmail = document.getElementById('nl-test-email').value.trim();
   if (!testEmail) return showStatus('nl-send-status','error','Enter a test email address.');
-  showStatus('nl-send-status','loading','<span class="spinner" style="display:inline-block;vertical-align:middle;margin-right:0.5rem"></span>Sending test…');
+  showStatus('nl-send-status','loading','<span class="spinner" style="display:inline-block;vertical-align:middle;margin-right:0.5rem"></span>Sending testâ€¦');
   document.getElementById('btn-send-test').disabled = true;
   try {
     const res  = await fetch(`${API}/send-newsletter`, { method: 'POST', headers: authHeaders(), body: JSON.stringify({ subjectLine: nlPostData.subjectLine, bodyHtml: nlPostData.bodyHtml, bodyText: nlPostData.bodyText, previewText: nlPostData.previewText, imageUrl: document.getElementById('nl-img-url')?.value || '', testOnly: true, testEmail }) });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Send failed');
-    showStatus('nl-send-status','success',`✓ Test email sent to ${esc(testEmail)}. Check your inbox!`);
+    showStatus('nl-send-status','success',`âœ“ Test email sent to ${esc(testEmail)}. Check your inbox!`);
   } catch (ex) {
     showStatus('nl-send-status','error',`Send failed: ${esc(ex.message)}`);
   } finally {
@@ -3774,7 +3775,7 @@ document.getElementById('btn-publish-post')?.addEventListener('click', async () 
   if (!nlPostData) return showStatus('nl-send-status','error','Generate a post first.');
   const btn = document.getElementById('btn-publish-post');
   btn.disabled = true;
-  showStatus('nl-send-status','loading','<span class="spinner" style="display:inline-block;vertical-align:middle;margin-right:0.5rem"></span>Publishing to website…');
+  showStatus('nl-send-status','loading','<span class="spinner" style="display:inline-block;vertical-align:middle;margin-right:0.5rem"></span>Publishing to websiteâ€¦');
   try {
     const res  = await fetch(`${API}/publish-post`, { method: 'POST', headers: authHeaders(), body: JSON.stringify({
       slug:         nlPostData.slug,
@@ -3787,7 +3788,7 @@ document.getElementById('btn-publish-post')?.addEventListener('click', async () 
     }) });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Publish failed');
-    showStatus('nl-send-status','success',`✓ Published! <a href="${esc(data.url)}" target="_blank" style="color:var(--accent)">${esc(data.url)}</a>`);
+    showStatus('nl-send-status','success',`âœ“ Published! <a href="${esc(data.url)}" target="_blank" style="color:var(--accent)">${esc(data.url)}</a>`);
   } catch (ex) {
     showStatus('nl-send-status','error',`Publish failed: ${esc(ex.message)}`);
     btn.disabled = false;
@@ -3798,13 +3799,13 @@ document.getElementById('btn-send-all').addEventListener('click', async () => {
   if (!nlPostData) return showStatus('nl-send-status','error','Generate a post first.');
   const activeCount = parseInt(document.getElementById('nl-count-active').textContent) || 0;
   if (!confirm(`Send "${nlPostData.subjectLine}" to all ${activeCount} active subscriber(s)?`)) return;
-  showStatus('nl-send-status','loading','<span class="spinner" style="display:inline-block;vertical-align:middle;margin-right:0.5rem"></span>Sending to all subscribers…');
+  showStatus('nl-send-status','loading','<span class="spinner" style="display:inline-block;vertical-align:middle;margin-right:0.5rem"></span>Sending to all subscribersâ€¦');
   document.getElementById('btn-send-all').disabled = true;
   try {
     const res  = await fetch(`${API}/send-newsletter`, { method: 'POST', headers: authHeaders(), body: JSON.stringify({ subjectLine: nlPostData.subjectLine, bodyHtml: nlPostData.bodyHtml, bodyText: nlPostData.bodyText, previewText: nlPostData.previewText, imageUrl: document.getElementById('nl-img-url')?.value || '' }) });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Send failed');
-    showStatus('nl-send-status','success',`✓ Sent to ${data.sent} subscriber(s).${data.errors ? ` (${data.errors} failed)` : ''}`);
+    showStatus('nl-send-status','success',`âœ“ Sent to ${data.sent} subscriber(s).${data.errors ? ` (${data.errors} failed)` : ''}`);
   } catch (ex) {
     showStatus('nl-send-status','error',`Send failed: ${esc(ex.message)}`);
   } finally {
@@ -3812,7 +3813,7 @@ document.getElementById('btn-send-all').addEventListener('click', async () => {
   }
 });
 
-/* ── Copy buttons ── */
+/* â”€â”€ Copy buttons â”€â”€ */
 document.addEventListener('click', e => {
   const btn = e.target.closest('.copy-btn'); if (!btn) return;
   const block = document.getElementById(btn.dataset.block);
@@ -3823,9 +3824,9 @@ document.addEventListener('click', e => {
   });
 });
 
-/* ═══════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    WIZARD FUNCTIONS
-═══════════════════════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 let wizState = { platform: null, mode: null, step: 1 };
 
 function selectWizPlat(plat) {
@@ -3864,7 +3865,7 @@ function runWizPolicyCheck() {
   const results = document.getElementById('wiz-policy-results');
   const proceedBtn = document.getElementById('btn-proceed-publish');
   btn.disabled = true;
-  btn.textContent = 'Checking…';
+  btn.textContent = 'Checkingâ€¦';
 
   let textsToCheck = [];
   if (wizState.platform === 'meta') {
@@ -3885,34 +3886,34 @@ function runWizPolicyCheck() {
 
   const issues = [], warnings = [];
   textsToCheck.forEach(text => {
-    if (text && RX_COMMERCIAL.test(text)) issues.push(`Commercial language detected: "${text.slice(0,60)}…"`);
-    if (text && RX_BRANDS.test(text))     warnings.push(`Drug brand name (may need certification): "${text.slice(0,60)}…"`);
+    if (text && RX_COMMERCIAL.test(text)) issues.push(`Commercial language detected: "${text.slice(0,60)}â€¦"`);
+    if (text && RX_BRANDS.test(text))     warnings.push(`Drug brand name (may need certification): "${text.slice(0,60)}â€¦"`);
   });
 
   let html = '';
   if (!issues.length && !warnings.length) {
-    html = '<div class="policy-result-item pass">✓ No policy issues found — copy looks clean.</div>';
+    html = '<div class="policy-result-item pass">âœ“ No policy issues found â€” copy looks clean.</div>';
     if (proceedBtn) proceedBtn.style.display = '';
   } else {
-    issues.forEach(i => { html += `<div class="policy-result-item fail">⛔ ${esc(i)}</div>`; });
-    warnings.forEach(w => { html += `<div class="policy-result-item warn">⚠ ${esc(w)}</div>`; });
+    issues.forEach(i => { html += `<div class="policy-result-item fail">â›” ${esc(i)}</div>`; });
+    warnings.forEach(w => { html += `<div class="policy-result-item warn">âš  ${esc(w)}</div>`; });
     if (!issues.length) {
-      html += '<div style="margin-top:0.75rem"><button class="btn-submit" style="width:auto;padding:0.75rem 2rem" onclick="wizGoTo(5)">Accept &amp; Continue →</button></div>';
+      html += '<div style="margin-top:0.75rem"><button class="btn-submit" style="width:auto;padding:0.75rem 2rem" onclick="wizGoTo(5)">Accept &amp; Continue â†’</button></div>';
       if (proceedBtn) proceedBtn.style.display = 'none';
     } else {
-      html += '<div style="margin-top:0.75rem;display:flex;gap:0.75rem;flex-wrap:wrap"><button class="btn-sm" onclick="wizAutoCorrect()">✨ Auto-correct with AI</button><button class="wizard-back-btn" onclick="wizGoTo(3)" style="margin:0">← Edit Manually</button></div>';
+      html += '<div style="margin-top:0.75rem;display:flex;gap:0.75rem;flex-wrap:wrap"><button class="btn-sm" onclick="wizAutoCorrect()">âœ¨ Auto-correct with AI</button><button class="wizard-back-btn" onclick="wizGoTo(3)" style="margin:0">â† Edit Manually</button></div>';
     }
   }
   results.innerHTML = html;
   btn.disabled = false;
-  btn.textContent = 'Run Policy Check ▸';
+  btn.textContent = 'Run Policy Check â–¸';
 }
 
 async function wizAutoCorrect() {
   const results = document.getElementById('wiz-policy-results');
   const offer = wizEffectiveTopic() || 'health education';
   const obj   = wizEffectiveObjective() || 'Traffic to education page';
-  results.innerHTML = '<p style="font-size:0.83rem;color:var(--ink-faint)">⏳ Auto-correcting with AI…</p>';
+  results.innerHTML = '<p style="font-size:0.83rem;color:var(--ink-faint)">â³ Auto-correcting with AIâ€¦</p>';
   try {
     const res = await fetch(`${API}/generate-ad-copy`, {
       method: 'POST', headers: authHeaders(),
@@ -3927,7 +3928,7 @@ async function wizAutoCorrect() {
         if (v.primaryText)  { const el = document.getElementById('m-primary-text'); if (el) el.value = v.primaryText.slice(0,125); }
       }
     }
-    results.innerHTML = '<div class="policy-result-item pass">✓ Auto-corrected. Review your form in Step 3, then re-run check.</div><div style="margin-top:0.75rem"><button class="wizard-back-btn" style="margin:0" onclick="wizGoTo(3)">← Review Form</button></div>';
+    results.innerHTML = '<div class="policy-result-item pass">âœ“ Auto-corrected. Review your form in Step 3, then re-run check.</div><div style="margin-top:0.75rem"><button class="wizard-back-btn" style="margin:0" onclick="wizGoTo(3)">â† Review Form</button></div>';
   } catch(e) {
     results.innerHTML = `<div class="policy-result-item fail">Auto-correct failed: ${esc(e.message)}</div>`;
   }
@@ -3942,7 +3943,7 @@ async function submitWizCampaign(mode) {
   // Prevent double-submission
   document.querySelectorAll('.wiz-pub-btn').forEach(b => b.disabled = true);
   document.getElementById('btn-confirm-schedule') && (document.getElementById('btn-confirm-schedule').disabled = true);
-  showStatus('wiz-pub-status', 'loading', `Creating ${wizState.platform} campaign…`);
+  showStatus('wiz-pub-status', 'loading', `Creating ${wizState.platform} campaignâ€¦`);
   try {
     if (wizState.platform === 'meta') {
       document.getElementById('btn-create-meta')?.click();
@@ -3959,9 +3960,9 @@ async function submitWizCampaign(mode) {
   }
 }
 
-/* ═══════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    ACTIVE CAMPAIGNS FUNCTIONS
-═══════════════════════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 function switchACTab(plat) {
   document.querySelectorAll('.ac-plat-tab').forEach(t => t.classList.toggle('active', t.dataset.aplat === plat));
   const gEl = document.getElementById('ac-google');
@@ -3975,7 +3976,7 @@ async function acLoadGoogle() {
   const wrap = document.getElementById('ac-google-wrap');
   const btn  = document.getElementById('btn-ac-load-google');
   if (btn) btn.disabled = true;
-  wrap.innerHTML = '<p style="font-size:0.83rem;color:var(--ink-faint)">Loading…</p>';
+  wrap.innerHTML = '<p style="font-size:0.83rem;color:var(--ink-faint)">Loadingâ€¦</p>';
   try {
     const url = `${API}/list-google-campaigns${clientId ? `?clientId=${encodeURIComponent(clientId)}` : ''}`;
     const res  = await fetch(url, { headers: authHeaders() });
@@ -3986,7 +3987,7 @@ async function acLoadGoogle() {
     if (typeof renderCampaignsTable === 'function') {
       wrap.innerHTML = renderCampaignsTable(campaigns, clientId, 'ac');
     } else {
-      wrap.innerHTML = campaigns.map(c => `<div style="border:1px solid var(--border);border-radius:8px;padding:0.9rem 1rem;margin-bottom:0.6rem;display:flex;justify-content:space-between;align-items:center"><div><strong style="font-size:0.88rem">${esc(c.name)}</strong><div style="font-size:0.75rem;color:var(--ink-faint);margin-top:0.1rem">Status: ${esc(c.status)} · Budget: $${c.dailyBudget ?? '—'}/day</div></div></div>`).join('');
+      wrap.innerHTML = campaigns.map(c => `<div style="border:1px solid var(--border);border-radius:8px;padding:0.9rem 1rem;margin-bottom:0.6rem;display:flex;justify-content:space-between;align-items:center"><div><strong style="font-size:0.88rem">${esc(c.name)}</strong><div style="font-size:0.75rem;color:var(--ink-faint);margin-top:0.1rem">Status: ${esc(c.status)} Â· Budget: $${c.dailyBudget ?? 'â€”'}/day</div></div></div>`).join('');
     }
   } catch(ex) {
     wrap.innerHTML = `<p style="font-size:0.83rem;color:var(--red-soft)">Error: ${esc(ex.message)}</p>`;
@@ -4000,9 +4001,9 @@ async function acLoadMeta() {
   wrap.innerHTML = '<p style="font-size:0.83rem;color:var(--ink-faint)">Meta campaign listing coming soon.</p>';
 }
 
-/* ═══════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    NEWSLETTER SUB-TABS + DRAFT / SCHEDULE FUNCTIONS
-═══════════════════════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 function switchNLTab(pane) {
   document.querySelectorAll('.nl-sub-tab').forEach(t => t.classList.toggle('active', t.dataset.nlpane === pane));
   document.querySelectorAll('.nl-pane').forEach(p => p.classList.toggle('active', p.id === 'nlp-' + pane));
@@ -4012,7 +4013,7 @@ function switchNLTab(pane) {
 
 async function loadNLDrafts() {
   const list = document.getElementById('nl-drafts-list');
-  list.innerHTML = '<p style="font-size:0.83rem;color:var(--ink-faint)">Loading…</p>';
+  list.innerHTML = '<p style="font-size:0.83rem;color:var(--ink-faint)">Loadingâ€¦</p>';
   try {
     const res  = await fetch(`${API}/nl-drafts`, { headers: authHeaders() });
     const data = await res.json();
@@ -4024,8 +4025,8 @@ async function loadNLDrafts() {
           <div>
             <div style="font-weight:600;font-size:0.9rem">${esc(d.subjectLine || '(no subject)')}</div>
             <div style="font-size:0.76rem;color:var(--ink-faint);margin-top:0.2rem">
-              ${d.status === 'scheduled' ? `📅 Scheduled: ${new Date(d.scheduledAt).toLocaleString()}` : '💾 Draft'}
-              · Saved ${new Date(d.createdAt).toLocaleDateString()}
+              ${d.status === 'scheduled' ? `ðŸ“… Scheduled: ${new Date(d.scheduledAt).toLocaleString()}` : 'ðŸ’¾ Draft'}
+              Â· Saved ${new Date(d.createdAt).toLocaleDateString()}
             </div>
           </div>
           <div style="display:flex;gap:0.4rem">
@@ -4058,7 +4059,7 @@ async function saveNLDraft(status = 'draft', scheduledAt = null) {
     const res  = await fetch(`${API}/nl-draft`, { method: 'POST', headers: authHeaders(), body: JSON.stringify(payload) });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error);
-    showStatus('nl-send-status', 'success', `✓ ${status === 'scheduled' ? 'Scheduled' : 'Draft saved'} successfully.`);
+    showStatus('nl-send-status', 'success', `âœ“ ${status === 'scheduled' ? 'Scheduled' : 'Draft saved'} successfully.`);
   } catch(e) {
     showStatus('nl-send-status', 'error', e.message);
   }
@@ -4072,7 +4073,7 @@ async function deleteNLDraft(draftId) {
 
 function loadNLDraftIntoEditor(draftId) {
   switchNLTab('write');
-  showStatus('nl-send-status', 'loading', 'Loading draft…');
+  showStatus('nl-send-status', 'loading', 'Loading draftâ€¦');
   fetch(`${API}/nl-drafts`, { headers: authHeaders() })
     .then(r => r.json())
     .then(arr => {
@@ -4125,9 +4126,9 @@ document.getElementById('btn-confirm-schedule')?.addEventListener('click', () =>
   saveNLDraft('scheduled', dt);
 });
 
-/* ═══════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    AUTOPILOT FUNCTIONS
-═══════════════════════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 async function saveAutopilotConfig() {
   const btn = document.getElementById('btn-ap-save');
   if (btn) btn.disabled = true;
@@ -4143,7 +4144,7 @@ async function saveAutopilotConfig() {
     const res  = await fetch(`${API}/nl-autopilot`, { method: 'POST', headers: authHeaders(), body: JSON.stringify(config) });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error);
-    showStatus('ap-status', 'success', `✓ Autopilot activated — every ${config.day} at ${config.time} ET.`);
+    showStatus('ap-status', 'success', `âœ“ Autopilot activated â€” every ${config.day} at ${config.time} ET.`);
     loadAutopilotConfig();
   } catch(e) {
     showStatus('ap-status', 'error', e.message);
@@ -4167,7 +4168,7 @@ async function loadAutopilotConfig() {
     const txt  = document.getElementById('ap-status-text');
     const tbtn = document.getElementById('btn-ap-toggle');
     if (dot) dot.style.background = data.enabled ? '#22c55e' : 'var(--ink-faint)';
-    if (txt) txt.textContent = data.enabled ? `Active — every ${data.day} at ${data.time} ET` : 'Paused';
+    if (txt) txt.textContent = data.enabled ? `Active â€” every ${data.day} at ${data.time} ET` : 'Paused';
     if (tbtn) { tbtn.style.display = ''; tbtn.textContent = data.enabled ? 'Pause' : 'Resume'; }
   } catch(e) {}
 }
@@ -4182,22 +4183,22 @@ async function toggleAutopilot() {
   } catch(e) {}
 }
 
-/* ═══════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    CONNECTIONS SUB-TABS
-═══════════════════════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 function switchConnTab(pane) {
   document.querySelectorAll('.conn-sub-tab').forEach(t => t.classList.toggle('active', t.dataset.cpane === pane));
   document.querySelectorAll('.conn-sub-pane').forEach(p => p.classList.toggle('active', p.id === 'conn-' + pane));
   if (pane === 'clients') loadClients();
 }
 
-/* ═══════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    S3 IMAGE UPLOAD + NEWSLETTER IMAGE PREVIEW
-═══════════════════════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 async function handleImgUpload(input, targetId, previewId) {
   const file = input.files[0];
   if (!file) return;
-  if (file.size > 10 * 1024 * 1024) { alert('File too large — max 10MB'); return; }
+  if (file.size > 10 * 1024 * 1024) { alert('File too large â€” max 10MB'); return; }
   try {
     const res = await fetch(`${API}/presigned-upload`, {
       method: 'POST', headers: authHeaders(),
@@ -4230,9 +4231,9 @@ function nlImgPreview() {
   else { p.style.display = 'none'; }
 }
 
-/* ═══════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    DRAGGABLE TABS
-═══════════════════════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 (function initDraggableTabs() {
   const tabsEl = document.querySelector('.tabs');
   let dragSrc = null;
@@ -4281,16 +4282,16 @@ function nlImgPreview() {
     tabsEl.insertBefore(dragSrc, insertBefore ? target : target.nextSibling);
   });
 
-  tabsEl.setAttribute('aria-label', 'Tabs — drag to reorder');
+  tabsEl.setAttribute('aria-label', 'Tabs â€” drag to reorder');
   [...tabsEl.querySelectorAll('.tab-btn')].forEach(btn => {
     btn.setAttribute('draggable', 'true');
     btn.title = btn.title || 'Drag to reorder';
   });
 })();
 
-/* ═══════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    WEB POSTS PANEL
-═══════════════════════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 let wpPosts = [];
 let wpEditingSlug = null; // null = new post
 
@@ -4308,13 +4309,13 @@ async function loadWebPosts() {
     loading.style.display = 'none';
     if (!wpPosts.length) { emptyEl.style.display = ''; return; }
     const rows = wpPosts.map(p => {
-      const date = p.publishedAt ? new Date(p.publishedAt).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }) : '—';
+      const date = p.publishedAt ? new Date(p.publishedAt).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }) : 'â€”';
       const safeSlug = p.slug.replace(/'/g, "\\'");
       const safeTitle = (p.subjectLine || '(untitled)').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
       const safePreview = (p.previewText || '').replace(/</g,'&lt;').replace(/>/g,'&gt;');
       return `<tr>
         <td class="wp-col-title"><div title="${safeTitle}">${safeTitle}</div></td>
-        <td class="wp-col-preview"><div title="${safePreview}">${safePreview || '<span style="color:var(--ink-faint)">—</span>'}</div></td>
+        <td class="wp-col-preview"><div title="${safePreview}">${safePreview || '<span style="color:var(--ink-faint)">â€”</span>'}</div></td>
         <td class="wp-col-date">${date}</td>
         <td class="wp-col-slug">/${p.slug}</td>
         <td style="white-space:nowrap">
@@ -4363,7 +4364,7 @@ function openPostEditor(slug) {
       document.getElementById('pd-slug').value    = post.slug || '';
       document.getElementById('pd-preview').value = post.previewText || '';
       document.getElementById('pd-image').value   = post.imageUrl || '';
-      // Load full body — needs a separate GET /post call since list doesn't return body
+      // Load full body â€” needs a separate GET /post call since list doesn't return body
       document.getElementById('pd-body').value    = ''; // will be loaded below
       fetchPostBody(slug);
       const viewLink = document.getElementById('pd-view-link');
@@ -4409,8 +4410,8 @@ async function savePostFromDrawer() {
   if (!body)  { statusEl.className = 'status-bar error'; statusEl.style.display = 'block'; statusEl.textContent = 'Post body cannot be empty.'; return; }
 
   const btn = document.getElementById('pd-save-btn');
-  btn.disabled = true; btn.textContent = 'Saving…';
-  statusEl.className = 'status-bar loading'; statusEl.style.display = 'block'; statusEl.textContent = 'Saving post…';
+  btn.disabled = true; btn.textContent = 'Savingâ€¦';
+  statusEl.className = 'status-bar loading'; statusEl.style.display = 'block'; statusEl.textContent = 'Saving postâ€¦';
 
   try {
     const res = await fetch(`${API}/update-post`, {
@@ -4420,7 +4421,7 @@ async function savePostFromDrawer() {
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Save failed');
     statusEl.className = 'status-bar success';
-    statusEl.innerHTML = `Saved! <a href="${data.url}" target="_blank">View post →</a>`;
+    statusEl.innerHTML = `Saved! <a href="${data.url}" target="_blank">View post â†’</a>`;
     const viewLink = document.getElementById('pd-view-link');
     viewLink.href = data.url; viewLink.style.display = '';
     document.getElementById('pd-delete-btn').style.display = '';
@@ -4438,7 +4439,7 @@ async function deletePostFromDrawer() {
   if (!wpEditingSlug) return;
   if (!confirm(`Delete "${document.getElementById('pd-title').value}"? This cannot be undone.`)) return;
   const btn = document.getElementById('pd-delete-btn');
-  btn.disabled = true; btn.textContent = 'Deleting…';
+  btn.disabled = true; btn.textContent = 'Deletingâ€¦';
   try {
     const res = await fetch(`${API}/delete-post?slug=${encodeURIComponent(wpEditingSlug)}`, {
       method: 'DELETE', headers: authHeaders(),
