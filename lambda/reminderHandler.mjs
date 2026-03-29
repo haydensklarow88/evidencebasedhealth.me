@@ -27,7 +27,7 @@ const smsV2 = new PinpointSMSVoiceV2Client({});
 const TABLE              = process.env.PREVENTION_TABLE     || 'PreventionProfiles';
 const FROM               = process.env.SES_FROM             || 'info@evidencebasedhealth.me';
 const ORIGIN             = process.env.SITE_ORIGIN          || 'https://evidencebasedhealth.me';
-const SMS_ORIGINATION_ID = process.env.SMS_ORIGINATION_ID   || 'phone-aa451571172f48d2b48072b3b0a0d5b2';
+const SMS_ORIGINATION_ID = process.env.SMS_ORIGINATION_ID   || 'pool-7ad57f44d3464b40a2fd4e695b7daf01';
 const SMS_ENABLED        = process.env.SMS_ENABLED === 'true';
 
 // Minimum months between reminders per topic (avoid repeat nagging)
@@ -341,7 +341,7 @@ function wrapEmail(subject, bodyHtml, yob, origin) {
         <p style="font-size:0.85rem;color:#5c6e65;line-height:1.65;font-style:italic;margin-bottom:24px">
           This reminder is based on your birth year (${yob}, approx. age ${age}) and the anatomy profile you saved. It is educational only — not personalized medical advice. Always confirm timing and approach with your own clinician.
         </p>
-        <a href="${origin}/prevention-roadmap.html" style="display:inline-block;background:#1a5c3a;color:#fff;padding:12px 24px;border-radius:2px;text-decoration:none;font-size:0.85rem;font-weight:500;letter-spacing:0.05em">View your roadmap &rarr;</a>
+        <a href="${origin}/my-roadmap.html" style="display:inline-block;background:#1a5c3a;color:#fff;padding:12px 24px;border-radius:2px;text-decoration:none;font-size:0.85rem;font-weight:500;letter-spacing:0.05em">View my roadmap &rarr;</a>
       </td></tr>
       <tr><td style="padding:20px 40px;background:#f7f5f0;border-top:1px solid #ede9e1;font-size:0.75rem;color:#9aada3;line-height:1.6">
         Educational content only. Not medical advice. To stop reminders, reply to this email with "STOP" or contact <a href="mailto:info@evidencebasedhealth.me" style="color:#5c6e65">info@evidencebasedhealth.me</a>. To delete your prevention profile, email us any time.
@@ -395,7 +395,7 @@ export async function handler() {
                 Subject: { Data: reminder.emailSubject, Charset: 'UTF-8' },
                 Body: {
                   Html: { Data: wrapEmail(reminder.emailSubject, reminder.emailBody, yob, ORIGIN), Charset: 'UTF-8' },
-                  Text: { Data: `${reminder.emailSubject}\n\n${reminder.smsBody}\n\nVisit: ${ORIGIN}/prevention-roadmap.html\n\nNot medical advice. To stop reminders reply STOP.`, Charset: 'UTF-8' },
+                  Text: { Data: `${reminder.emailSubject}\n\n${reminder.smsBody}\n\nVisit: ${ORIGIN}/my-roadmap.html\n\nNot medical advice. To stop reminders reply STOP.`, Charset: 'UTF-8' },
                 },
               },
             }));
@@ -412,7 +412,7 @@ export async function handler() {
             await smsV2.send(new SendTextMessageCommand({
               DestinationPhoneNumber: phone,
               OriginationIdentity:    SMS_ORIGINATION_ID,
-              MessageBody:            reminder.smsBody,
+              MessageBody:            reminder.smsBody.replace(/evidencebasedhealth\.me\s*$/, `evidencebasedhealth.me/my-roadmap.html`),
               MessageType:            'TRANSACTIONAL',
             }));
           } catch (err) {

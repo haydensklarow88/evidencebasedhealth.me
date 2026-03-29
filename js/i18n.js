@@ -346,6 +346,13 @@
       '@media(max-width:600px){',
       '#i18n-overlay.open{padding:56px 0 0;align-items:flex-end;justify-content:stretch}',
       '#i18n-modal{width:100%;max-height:60vh;border-bottom-left-radius:0;border-bottom-right-radius:0}}',
+      /* Nav layout: desktop — keep globe at far right after nav-links */
+      '@media(min-width:601px){nav{justify-content:flex-start!important}',
+      'nav .nav-links{margin-left:auto}',
+      '#i18n-btn{margin-left:1.5rem}}',
+      /* Nav layout: mobile — globe on same row as logo, nav-links below */
+      '@media(max-width:600px){.nav-logo{flex:1!important}',
+      '#i18n-btn{flex-shrink:0;align-self:center}}',
     ].join('');
     document.head.appendChild(style);
   }
@@ -370,14 +377,14 @@
     var savedCode = getSavedLang();
     var savedLang = LANGUAGES.filter(function (l) { return l.code === savedCode; })[0] || LANGUAGES[0];
 
-    // Globe button — appended to .nav-links
+    // Globe button — appended to nav (sibling of .nav-logo and .nav-links)
     var btn = document.createElement('button');
     btn.id = 'i18n-btn';
     btn.setAttribute('aria-label', 'Select language');
     btn.setAttribute('title', 'Select language');
     btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg><span id="i18n-label">' + (savedCode === 'en' ? 'Language' : savedLang.native) + '</span>';
-    var navLinks = document.querySelector('.nav-links');
-    if (navLinks) navLinks.appendChild(btn);
+    var navEl = document.querySelector('nav');
+    if (navEl) navEl.appendChild(btn);
 
     // Overlay + modal
     var overlay = document.createElement('div');

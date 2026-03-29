@@ -1,25 +1,37 @@
 /**
- * pretranslate.mjs
- * Pre-translates all HTML pages into all 80 languages and stores in DynamoDB.
- * Run once: node scripts/pretranslate.mjs
- * Re-run after content changes.
+ * fix-complex-langs.mjs
+ * Re-seeds languages that fail with the full batch size (lo, am, hy + any others)
+ * due to "Unterminated string in JSON" (response too long for complex scripts).
+ *
+ * Uses BATCH_SIZE=15 and max_tokens=16384 for robustness.
+ * Safe to re-run — uses merge writes (preserves existing entries).
+ *
+ * Usage:
+ *   node scripts/fix-complex-langs.mjs
+ *   node scripts/fix-complex-langs.mjs --langs lo,am,hy --pages index,prevention-roadmap
  */
 
 import { readFileSync } from 'fs';
 import { DynamoDBClient, GetItemCommand, UpdateItemCommand } from '@aws-sdk/client-dynamodb';
 
-const OPENAI_API_KEY   = process.env.OPENAI_API_KEY;
+const OPENAI_API_KEY     = process.env.OPENAI_API_KEY;
 const TRANSLATIONS_TABLE = process.env.TRANSLATIONS_TABLE || 'EBHTranslations';
-const REGION           = 'us-east-1';
-const CONCURRENCY      = 5;   // languages in parallel
-const BATCH_SIZE       = 40;  // strings per OpenAI call (no API GW limit here)
+const REGION             = 'us-east-1';
+const CONCURRENCY        = 1;   // lower concurrency — these calls are heavier
+const BATCH_SIZE         = 5;   // small batches to avoid response truncation for complex scripts
 
 if (!OPENAI_API_KEY) { console.error('Set OPENAI_API_KEY env var'); process.exit(1); }
 
 const dynamo = new DynamoDBClient({ region: REGION });
 
-// ── Language list (must match i18n.js) ─────────────────────────────────────
-const LANGUAGES = [
+// Parse CLI args: --langs lo,am,hy  --pages index,about
+const args = process.argv.slice(2);
+function getArg(name) {
+  const i = args.indexOf(`--${name}`);
+  return i >= 0 ? args[i + 1] : null;
+}
+
+const ALL_LANG_DEFS = [
   { code: 'es',    name: 'Spanish' },
   { code: 'fr',    name: 'French' },
   { code: 'de',    name: 'German' },
@@ -97,8 +109,7 @@ const LANGUAGES = [
   { code: 'cy',    name: 'Welsh' },
 ];
 
-// ── Pages to translate (slug → html file path) ──────────────────────────────
-const PAGES = [
+const ALL_PAGES = [
   { slug: 'index',              file: 'index.html' },
   { slug: 'about',              file: 'about.html' },
   { slug: 'newsletter',         file: 'newsletter.html' },
@@ -107,8 +118,16 @@ const PAGES = [
   // disclaimer, privacy, thanks are admin/legal pages — not translated
 ];
 
-// ── HTML text extraction ─────────────────────────────────────────────────────
-// Strip all HTML tags and decode common entities from a string.
+// Default: only the three consistently-failing complex-script languages
+const DEFAULT_LANGS = ['lo', 'am', 'hy'];
+
+const langFilter  = getArg('langs')  ? getArg('langs').split(',').map(s => s.trim())  : DEFAULT_LANGS;
+const pageFilter  = getArg('pages')  ? getArg('pages').split(',').map(s => s.trim())  : null;
+
+const LANGUAGES = ALL_LANG_DEFS.filter(l => langFilter.includes(l.code));
+const PAGES     = pageFilter ? ALL_PAGES.filter(p => pageFilter.includes(p.slug)) : ALL_PAGES;
+
+// ── Shared helpers (same as pretranslate.mjs) ────────────────────────────────
 function stripHtml(str) {
   return str
     .replace(/<[^>]+>/g, ' ')
@@ -120,21 +139,6 @@ function stripHtml(str) {
     .replace(/&#8209;/g, '‑').replace(/&#10003;/g, '✓')
     .replace(/&[a-z]+;/g, ' ')
     .replace(/\s+/g, ' ').trim();
-}
-
-// Extract inner text from a tag match, strip HTML.
-function extractTagContent(html, tagPattern) {
-  const texts = [];
-  const re = new RegExp(tagPattern, 'gis');
-  let m;
-  while ((m = re.exec(html)) !== null) {
-    const raw = m[1] || m[0];
-    const text = stripHtml(raw).trim();
-    if (text && text.length >= 2 && !/^[\d\s.,\-+%()]+$/.test(text) && !/^https?:\/\//.test(text)) {
-      texts.push(text);
-    }
-  }
-  return texts;
 }
 
 function extractStringsFromHtml(html) {
@@ -151,51 +155,31 @@ function extractStringsFromHtml(html) {
     result.push(clean);
   }
 
-  // Nav logo / nav links
   for (const m of html.matchAll(/<a[^>]+class="[^"]*nav[^"]*"[^>]*>([\s\S]*?)<\/a>/gi))
     add(stripHtml(m[1]));
-
-  // Page label
   for (const m of html.matchAll(/<div[^>]+class="[^"]*page-label[^"]*"[^>]*>([\s\S]*?)<\/div>/gi))
     add(stripHtml(m[1]));
-
-  // Hero heading & sub
   for (const m of html.matchAll(/<h1[^>]*>([\s\S]*?)<\/h1>/gi))
     add(stripHtml(m[1]));
   for (const m of html.matchAll(/<p[^>]+class="[^"]*hero-sub[^"]*"[^>]*>([\s\S]*?)<\/p>/gi))
     add(stripHtml(m[1]));
-
-  // All h2, h3, h4
   for (const m of html.matchAll(/<h[234][^>]*>([\s\S]*?)<\/h[234]>/gi))
     add(stripHtml(m[1]));
 
-  // All <p> not inside <script> / <style>
   const noScript = html.replace(/<script[\s\S]*?<\/script>/gi, '').replace(/<style[\s\S]*?<\/style>/gi, '');
   for (const m of noScript.matchAll(/<p[^>]*>([\s\S]*?)<\/p>/gi))
     add(stripHtml(m[1]));
-
-  // List items
   for (const m of noScript.matchAll(/<li[^>]*>([\s\S]*?)<\/li>/gi))
     add(stripHtml(m[1]));
-
-  // Buttons (not inside nav pill script)
   for (const m of noScript.matchAll(/<button[^>]*>([\s\S]*?)<\/button>/gi))
     add(stripHtml(m[1]));
-
-  // Labels with text nodes (skip pure-input labels)
   for (const m of noScript.matchAll(/<label[^>]*>([\s\S]*?)<\/label>/gi)) {
-    const inner = m[1];
-    // Only extract the text node part (after stripping input tags)
-    const textOnly = inner.replace(/<input[^>]*\/?>/gi, '').replace(/<[^>]+>/g, ' ');
+    const textOnly = m[1].replace(/<input[^>]*\/?>/gi, '').replace(/<[^>]+>/g, ' ');
     add(stripHtml(textOnly));
   }
-
-  // Footer text
   for (const m of noScript.matchAll(/<footer[^>]*>([\s\S]*?)<\/footer>/gi))
     for (const pm of m[1].matchAll(/<p[^>]*>([\s\S]*?)<\/p>/gi))
       add(stripHtml(pm[1]));
-
-  // field-hint, field-label, q-sub, results-summary placeholder, section-heading, optin-sub etc.
   for (const cls of ['field-hint', 'q-sub', 'results-disclaimer', 'hero-sub', 'optin-sub',
                       'edu-notice', 'info-section', 'references', 'cred-text', 'reason-text']) {
     const re = new RegExp(`class="[^"]*${cls}[^"]*"[^>]*>([\\s\\S]*?)<\\/(?:p|div|span)>`, 'gi');
@@ -206,8 +190,6 @@ function extractStringsFromHtml(html) {
   return result;
 }
 
-// ── Extract JS result-card strings from prevention-roadmap.html ─────────────
-// These are the dynamic strings rendered after form submit.
 function extractJsStrings(html) {
   const seen = new Set();
   const result = [];
@@ -227,29 +209,24 @@ function extractJsStrings(html) {
     result.push(clean);
   }
 
-  // Extract title: '...' and title: `...` patterns
   for (const m of html.matchAll(/title:\s*[`']([^`']+)[`']/g)) add(m[1]);
-  // Extract label: '...' patterns
   for (const m of html.matchAll(/label:\s*[`']([^`']+)[`']/g)) add(m[1]);
-  // Extract body template literal content (strip JS interpolation)
   for (const m of html.matchAll(/body:\s*`([\s\S]*?)`\s*,/g)) {
     const cleaned = m[1].replace(/\$\{[^}]+\}/g, '…');
     add(cleaned);
   }
-  // Extract ask strings
   for (const m of html.matchAll(/'([^']{8,}[?.!])'/g)) add(m[1]);
   for (const m of html.matchAll(/`([^`]{8,}[?.!])`/g)) {
     const s = m[1].replace(/\$\{[^}]+\}/g, '…');
     add(s);
   }
-  // button/message text
   for (const m of html.matchAll(/textContent\s*=\s*['`]([^'`]+)['`]/g)) add(m[1]);
   for (const m of html.matchAll(/\.textContent\s*=\s*['`]([^'`]+)['`]/g)) add(m[1]);
 
   return result;
 }
 
-// ── OpenAI translation ───────────────────────────────────────────────────────
+// ── OpenAI call with explicit max_tokens ─────────────────────────────────────
 async function translateBatch(texts, langCode, langName) {
   const res = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
@@ -257,6 +234,7 @@ async function translateBatch(texts, langCode, langName) {
     body: JSON.stringify({
       model: 'gpt-4o-mini',
       temperature: 0.1,
+      max_tokens: 16384,
       response_format: { type: 'json_object' },
       messages: [
         {
@@ -292,11 +270,15 @@ async function translateAllStrings(strings, langCode, langName) {
         for (let j = 0; j < batch.length; j++) {
           if (translated[j]) map[batch[j]] = translated[j];
         }
+        process.stdout.write('.');
         break;
       } catch (e) {
         attempts++;
-        if (attempts >= 3) { console.error(`  ✗ batch failed after 3 attempts: ${e.message}`); break; }
-        console.warn(`  ↻ retry ${attempts}/3 for lang=${langCode} batch ${i}–${i + batch.length}`);
+        if (attempts >= 3) {
+          console.error(`\n  ✗ batch ${i}–${i + batch.length} failed after 3 attempts: ${e.message}`);
+          break;
+        }
+        process.stdout.write(`↻`);
         await new Promise(r => setTimeout(r, 2000 * attempts));
       }
     }
@@ -304,9 +286,7 @@ async function translateAllStrings(strings, langCode, langName) {
   return map;
 }
 
-// ── DynamoDB write ───────────────────────────────────────────────────────────
 async function saveToDb(page, lang, map) {
-  // Load existing, merge, save
   let existing = {};
   try {
     const item = await dynamo.send(new GetItemCommand({
@@ -315,7 +295,6 @@ async function saveToDb(page, lang, map) {
     }));
     if (item.Item?.map?.S) existing = JSON.parse(item.Item.map.S);
   } catch {}
-
   const merged = { ...existing, ...map };
   await dynamo.send(new UpdateItemCommand({
     TableName: TRANSLATIONS_TABLE,
@@ -329,62 +308,48 @@ async function saveToDb(page, lang, map) {
   }));
 }
 
-// ── Pool helper (run N tasks in parallel with concurrency limit) ─────────────
 async function pool(items, fn, concurrency) {
-  const results = [];
   let idx = 0;
   async function worker() {
     while (idx < items.length) {
       const i = idx++;
-      results[i] = await fn(items[i], i);
+      await fn(items[i], i);
     }
   }
   await Promise.all(Array.from({ length: concurrency }, worker));
-  return results;
 }
 
-// ── Main ─────────────────────────────────────────────────────────────────────
 const BASE_DIR = new URL('..', import.meta.url).pathname.replace(/^\/([A-Z]:)/, '$1');
 
-async function processPage(pageSlug, htmlFile) {
-  console.log(`\n📄 Page: ${pageSlug}`);
-  let html;
-  try {
-    html = readFileSync(`${BASE_DIR}/${htmlFile}`, 'utf8');
-  } catch (e) {
-    console.warn(`  ⚠ Cannot read ${htmlFile}: ${e.message}`);
-    return;
-  }
-
-  const htmlStrings = extractStringsFromHtml(html);
-  const jsStrings   = pageSlug === 'prevention-roadmap' ? extractJsStrings(html) : [];
-  const allStrings  = [...new Set([...htmlStrings, ...jsStrings])];
-  console.log(`  ${allStrings.length} unique strings (${htmlStrings.length} HTML + ${jsStrings.length} JS)`);
-
-  if (allStrings.length === 0) { console.log('  ⚠ No strings found, skipping'); return; }
-
-  await pool(LANGUAGES, async (lang) => {
-    process.stdout.write(`  → ${lang.code.padEnd(6)}`);
-    try {
-      const map = await translateAllStrings(allStrings, lang.code, lang.name);
-      await saveToDb(pageSlug, lang.code, map);
-      process.stdout.write(` ✓ (${Object.keys(map).length} strings)\n`);
-    } catch (e) {
-      process.stdout.write(` ✗ ${e.message}\n`);
-    }
-  }, CONCURRENCY);
-}
-
 async function main() {
-  console.log('🌍 EBH Pre-translation seed script');
-  console.log(`   Table: ${TRANSLATIONS_TABLE} | Region: ${REGION}`);
-  console.log(`   Languages: ${LANGUAGES.length} | Pages: ${PAGES.length}\n`);
+  console.log('🔧 EBH complex-language fix script');
+  console.log(`   Langs: ${LANGUAGES.map(l => l.code).join(', ')}`);
+  console.log(`   Pages: ${PAGES.map(p => p.slug).join(', ')}`);
+  console.log(`   Batch size: ${BATCH_SIZE} | max_tokens: 16384\n`);
 
   for (const { slug, file } of PAGES) {
-    await processPage(slug, file);
+    let html;
+    try { html = readFileSync(`${BASE_DIR}/${file}`, 'utf8'); }
+    catch (e) { console.warn(`  ⚠ Cannot read ${file}: ${e.message}`); continue; }
+
+    const htmlStrings = extractStringsFromHtml(html);
+    const jsStrings   = slug === 'prevention-roadmap' ? extractJsStrings(html) : [];
+    const allStrings  = [...new Set([...htmlStrings, ...jsStrings])];
+    console.log(`📄 ${slug}: ${allStrings.length} strings`);
+
+    await pool(LANGUAGES, async (lang) => {
+      process.stdout.write(`  → ${lang.code.padEnd(5)} `);
+      try {
+        const map = await translateAllStrings(allStrings, lang.code, lang.name);
+        await saveToDb(slug, lang.code, map);
+        process.stdout.write(` ✓ (${Object.keys(map).length})\n`);
+      } catch (e) {
+        process.stdout.write(` ✗ ${e.message}\n`);
+      }
+    }, CONCURRENCY);
   }
 
-  console.log('\n✅ Done. All translations stored in DynamoDB.');
+  console.log('\n✅ Done.');
 }
 
 main().catch(e => { console.error('Fatal:', e); process.exit(1); });
