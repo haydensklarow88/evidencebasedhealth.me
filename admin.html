@@ -1366,7 +1366,7 @@ function renderPolicyViolations(violations) {
  for (const v of items) {
  const isHard = !v.isExemptible || !v.wasExempted;
  const statusHtml = isHard
- ? `<span style="background:#fde8e8;color:#c0392b;border-radius:12px;padding:0.1rem 0.45rem;font-size:0.72rem;white-space:nowrap">â›" Hard-blocked</span>`
+ ? `<span style="background:#fde8e8;color:#c0392b;border-radius:12px;padding:0.1rem 0.45rem;font-size:0.72rem;white-space:nowrap">Hard-blocked</span>`
  : `<span style="background:#e8f5e9;color:#1b7a3e;border-radius:12px;padding:0.1rem 0.45rem;font-size:0.72rem;white-space:nowrap"> Auto-exempted</span>`;
  html += `<tr style="border-bottom:1px solid var(--border)"> <td style="padding:0.35rem 0.4rem;word-break:break-all">${escHtml(v.text)}</td> <td style="padding:0.35rem 0.4rem;color:var(--ink-mid)">${escHtml(v.policyName)}</td> <td style="padding:0.35rem 0.4rem;text-align:center">${statusHtml}</td> <td style="padding:0.35rem 0.4rem;text-align:right"> <button type="button" class="btn-sm" style="padding:0.15rem 0.5rem;font-size:0.72rem;border-color:var(--border);color:var(--danger)" onclick="deletePolicyViolation('${escHtml(v.violationId)}')">Remove</button> </td> </tr>`;
  }
@@ -1481,7 +1481,7 @@ document.getElementById('btn-load-ga4').addEventListener('click', async () => {
  const wrap = document.getElementById('ga4-wrap');
  const btn = document.getElementById('btn-load-ga4');
  btn.disabled = true;
- wrap.innerHTML = '<p style="font-size:0.83rem;color:var(--ink-faint);margin:0">Loading analytics"¦</p>';
+ wrap.innerHTML = '<p style="font-size:0.83rem;color:var(--ink-faint);margin:0">Loading analytics...</p>';
  try {
  const res = await fetch(`${API}/ga4-report`, { headers: authHeaders() });
  const data = await res.json();
