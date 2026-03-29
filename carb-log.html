@@ -296,11 +296,11 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
 .drawer-close-btn:hover { background: var(--sage-light); color: var(--sage); border-color: var(--sage-mid); }
 
 /* BOTTOM NAV */
-.bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; height: var(--bnav-h); background: var(--warm-white); border-top: 1px solid var(--border); z-index: 100; padding: 0 0.5rem; padding-bottom: env(safe-area-inset-bottom); justify-content: space-around; align-items: center; }
-.bnav-btn { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 10px; border: none; background: none; color: var(--ink-muted); font-family: var(--font-body); font-size: 10px; font-weight: 600; letter-spacing: .04em; cursor: pointer; border-radius: var(--radius-sm); transition: color .15s; }
+.bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; min-height: var(--bnav-h); background: var(--warm-white); border-top: 1px solid var(--border); z-index: 110; padding: 0 0.5rem; padding-bottom: env(safe-area-inset-bottom, 0px); justify-content: space-around; align-items: center; flex-shrink: 0; }
+.bnav-btn { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px 10px; border: none; background: none; color: var(--ink-muted); font-family: var(--font-body); font-size: 10px; font-weight: 600; letter-spacing: .04em; cursor: pointer; border-radius: var(--radius-sm); transition: color .15s; flex: 1; }
+.bnav-btn svg { width: 22px; height: 22px; flex-shrink: 0; }
 .bnav-btn.active { color: var(--sage); }
-.bnav-btn svg { width: 22px; height: 22px; }
-.bnav-add { color: #fff; background: var(--sage); border-radius: var(--radius-sm); padding: 8px 14px; margin-top: -6px; }
+.bnav-add { color: #fff; background: var(--sage); border-radius: var(--radius-sm); padding: 8px 14px; flex: 0 0 auto; }
 
 /* TOAST */
 .toast { position: fixed; bottom: calc(var(--bnav-h) + 0.75rem); left: 50%; transform: translateX(-50%) translateY(10px); background: var(--ink); color: #fff; font-size: 13px; font-weight: 500; padding: 9px 18px; border-radius: var(--radius-sm); opacity: 0; transition: all .25s; z-index: 300; pointer-events: none; white-space: nowrap; max-width: 90vw; white-space: normal; text-align: center; }
@@ -372,7 +372,7 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
     <button class="btn-icon menu-toggle" id="drawer-toggle" onclick="toggleDrawer()" style="display:none;" aria-label="Menu">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     </button>
-    <div class="nav-logo"><div class="dot"></div>CarbCompanion</div>
+    <div class="nav-logo">CarbCompanion</div>
   </div>
 
   <div class="top-nav-site-links">
