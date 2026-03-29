@@ -344,27 +344,19 @@ export const handler = async (event) => {
   /* ── CARB LOG PROXY ENDPOINTS — public, no auth required ─────────────────
      These proxy USDA FDC and OpenAI so the client never sees API keys.     */
 
-  /* GET /barcode-lookup?code={barcode} — BarcodeFinder product identity lookup */
+  /* GET /barcode-lookup?code={barcode} — resolve barcode to product + nutrition */
   if (rawPath.endsWith('/barcode-lookup') && method === 'GET') {
     const code = (event.queryStringParameters?.code || '').trim();
     if (!code) return resp(400, { error: 'code is required' });
-    const BARCODEFINDER_API_KEY = process.env.BARCODEFINDER_API_KEY;
-    const bfHeaders = BARCODEFINDER_API_KEY ? { 'X-API-Key': BARCODEFINDER_API_KEY } : {};
-    const bfRes = await fetch(`https://barcodefinder.info/v1/product/${encodeURIComponent(code)}`, { headers: bfHeaders });
-    if (bfRes.status === 404) return resp(200, { found: false });
-    if (!bfRes.ok) return resp(200, { found: false });
-    const bfData = await bfRes.json();
-    const p = bfData.product;
-    if (!p || !p.title) return resp(200, { found: false });
-    // Extract inline nutrition from foods[] if available
-    let nutrition = null;
-    const food = Array.isArray(p.foods) && p.foods.length ? p.foods[0] : null;
-    if (food) {
+
+    // Helper: extract nutrition from a BarcodeFinder foods[] entry
+    const extractBFNutrition = (food) => {
+      if (!food) return null;
       const carbs = food.total_carbohydrate?.value ?? null;
       const fiber = food.dietary_fiber?.value ?? null;
       const servingG = food.serving_weight_grams ?? null;
-      if (carbs !== null && servingG) {
-        nutrition = {
+      if (carbs !== null && carbs > 0 && servingG) {
+        return {
           serving_grams: servingG,
           serving_description: food.serving_qty && food.serving_unit
             ? `${food.serving_qty} ${food.serving_unit}`
@@ -373,8 +365,81 @@ export const handler = async (event) => {
           fiber_g: fiber ?? 0,
         };
       }
+      return null;
+    };
+
+    // Step 1: Try BarcodeFinder
+    let bfTitle = null, bfBrand = null, bfNutrition = null;
+    try {
+      const BARCODEFINDER_API_KEY = process.env.BARCODEFINDER_API_KEY;
+      const bfHeaders = BARCODEFINDER_API_KEY ? { 'X-API-Key': BARCODEFINDER_API_KEY } : {};
+      const bfRes = await fetch(`https://barcodefinder.info/v1/product/${encodeURIComponent(code)}`, { headers: bfHeaders, signal: AbortSignal.timeout(5000) });
+      if (bfRes.ok) {
+        const bfData = await bfRes.json();
+        const p = bfData.product;
+        if (p && p.title) {
+          bfTitle = p.title;
+          bfBrand = p.brand || null;
+          const food0 = Array.isArray(p.foods) && p.foods.length ? p.foods[0] : null;
+          bfNutrition = extractBFNutrition(food0);
+        }
+      }
+    } catch {}
+
+    // If BarcodeFinder had a good product + nutrition, return it
+    if (bfTitle && bfNutrition) {
+      return resp(200, { found: true, title: bfTitle, brand: bfBrand, nutrition: bfNutrition });
     }
-    return resp(200, { found: true, title: p.title, brand: p.brand || null, description: p.description || null, nutrition });
+
+    // Step 2: Use Perplexity to resolve barcode → product name + nutrition
+    // (runs when BarcodeFinder is down OR returned 0 carbs)
+    if (PERPLEXITY_API_KEY) {
+      try {
+        const ppRes = await fetch('https://api.perplexity.ai/chat/completions', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${PERPLEXITY_API_KEY}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            model: 'sonar',
+            messages: [
+              { role: 'system', content: 'You are a barcode and nutrition lookup tool. Return ONLY valid JSON, no markdown, no code blocks.' },
+              { role: 'user', content: `Look up barcode ${code}. Return ONLY this JSON (no other text):\n{"found":true,"product_name":"exact name","brand":"brand name","serving_description":"e.g. 5 crackers","serving_grams":15,"carbs_g":11,"fiber_g":0}\nIf you cannot identify the product or find its nutrition with confidence, return: {"found":false}` },
+            ],
+            max_tokens: 200,
+          }),
+          signal: AbortSignal.timeout(8000),
+        });
+        if (ppRes.ok) {
+          const ppData = await ppRes.json();
+          const raw = ppData.choices?.[0]?.message?.content || '{"found":false}';
+          const cleaned = raw.replace(/```(?:json)?\s*/gi, '').replace(/```\s*/g, '').trim();
+          const parsed = JSON.parse(cleaned);
+          if (parsed.found && parsed.product_name && parsed.serving_grams > 0 && parsed.carbs_g > 0) {
+            return resp(200, {
+              found: true,
+              title: parsed.product_name,
+              brand: parsed.brand || bfBrand || null,
+              nutrition: {
+                serving_grams: parsed.serving_grams,
+                serving_description: parsed.serving_description || `${Math.round(parsed.serving_grams)}g`,
+                carbs_g: parsed.carbs_g,
+                fiber_g: parsed.fiber_g ?? 0,
+              },
+            });
+          }
+          // Perplexity found product name but no nutrition — pass name through for USDA search
+          if (parsed.found && parsed.product_name) {
+            return resp(200, { found: true, title: parsed.product_name, brand: parsed.brand || bfBrand || null, nutrition: null });
+          }
+        }
+      } catch {}
+    }
+
+    // Step 3: BarcodeFinder had product name but no nutrition — return name for USDA fallback
+    if (bfTitle) {
+      return resp(200, { found: true, title: bfTitle, brand: bfBrand, nutrition: null });
+    }
+
+    return resp(200, { found: false });
   }
 
   /* GET /fdc-search?q=oatmeal&n=8 */
