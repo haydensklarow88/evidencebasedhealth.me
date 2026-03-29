@@ -839,14 +839,14 @@ function openBarcodeScanner(meal) {
           }
         } catch {}
         showToast(productLabel ? 'Found: ' + productLabel : 'Barcode found — searching nutrition…');
-        // Step 2a: use inline nutrition from BarcodeFinder if available
-        if (bfNutrition && bfNutrition.serving_grams > 0) {
+        // Step 2a: use inline nutrition from BarcodeFinder only if carbs_g > 0 (skip bad/zero data)
+        if (bfNutrition && bfNutrition.serving_grams > 0 && bfNutrition.carbs_g > 0) {
           const sg = bfNutrition.serving_grams;
           const c100 = Math.round((bfNutrition.carbs_g / sg) * 1000) / 10;
           const f100 = Math.round(((bfNutrition.fiber_g || 0) / sg) * 1000) / 10;
           selectFoodForPortion({
             fdcId: null, name: productLabel || searchQuery,
-            brand: searchQuery, dataType: 'Branded',
+            brand: productLabel, dataType: 'Branded',
             carbs100g: c100, fiber100g: f100,
             portions: [
               { label: bfNutrition.serving_description + ' (~' + Math.round(sg) + 'g)', grams: sg },
@@ -856,27 +856,45 @@ function openBarcodeScanner(meal) {
           return;
         }
         if (input) input.value = searchQuery;
-        // Step 2b: search USDA FDC by product name (or raw barcode as fallback)
+        // Step 2b: search USDA FDC by product name
         const results = await fdcSearch(searchQuery, 8);
-        if (!results.length) {
-          showToast('No nutrition match — try searching by name');
-          if (input) { input.value = productLabel || ''; input.focus(); }
+        if (results.length) {
+          if (results.length === 1) {
+            selectFoodForPortion(results[0], meal);
+          } else {
+            const drop = document.getElementById('drop-' + meal);
+            drop.style.display = 'block';
+            drop.innerHTML = results.map(f => {
+              const net = Math.max(0, f.carbs100g - f.fiber100g);
+              return `<div class="search-result" onclick='selectFoodForPortion(${JSON.stringify(f)},"${meal}")'>
+                <div class="sr-name">${escHtml(f.name)}</div>
+                <div class="sr-meta">${escHtml(f.brand || f.dataType)} · per 100g</div>
+                <div class="sr-macros"><span class="sr-macro sage">${f.carbs100g}g carbs</span><span class="sr-macro blue">${f.fiber100g}g fiber</span><span class="sr-macro amber">${net}g net</span></div>
+              </div>`;
+            }).join('');
+          }
           return;
         }
-        if (results.length === 1) {
-          selectFoodForPortion(results[0], meal);
-        } else {
-          const drop = document.getElementById('drop-' + meal);
-          drop.style.display = 'block';
-          drop.innerHTML = results.map(f => {
-            const net = Math.max(0, f.carbs100g - f.fiber100g);
-            return `<div class="search-result" onclick='selectFoodForPortion(${JSON.stringify(f)},"${meal}")'>
-              <div class="sr-name">${escHtml(f.name)}</div>
-              <div class="sr-meta">${escHtml(f.brand || f.dataType)} · per 100g</div>
-              <div class="sr-macros"><span class="sr-macro sage">${f.carbs100g}g carbs</span><span class="sr-macro blue">${f.fiber100g}g fiber</span><span class="sr-macro amber">${net}g net</span></div>
-            </div>`;
-          }).join('');
+        // Step 2c: USDA found nothing — try Perplexity
+        showToast('Checking Perplexity for nutrition data…');
+        const ppData = await fetchPerplexityNutrition(searchQuery);
+        if (ppData && ppData.found && ppData.serving_grams > 0) {
+          const sg = ppData.serving_grams;
+          selectFoodForPortion({
+            fdcId: null, name: ppData.food_name || productLabel || searchQuery,
+            brand: productLabel, dataType: 'Branded',
+            carbs100g: Math.round(((ppData.carbs_g || 0) / sg) * 1000) / 10,
+            fiber100g: Math.round(((ppData.fiber_g || 0) / sg) * 1000) / 10,
+            portions: [
+              { label: (ppData.serving_description || Math.round(sg) + 'g') + ' (~' + Math.round(sg) + 'g)', grams: sg },
+              { label: '100g', grams: 100 },
+            ],
+          }, meal);
+          return;
         }
+        // Step 2d: nothing found
+        showToast('No nutrition match — try searching by name');
+        if (input) { input.value = productLabel || ''; input.focus(); }
       }
     ).catch(() => {
       showToast('Camera access denied — allow camera permission and try again');
