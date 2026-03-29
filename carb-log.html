@@ -488,7 +488,7 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
         <textarea class="ai-textarea" id="ai-input" rows="2" placeholder="e.g. 'I had a cup of oatmeal with half a banana and a glass of orange juice for breakfast'"></textarea>
         <button class="btn-ai" id="ai-btn" onclick="handleAILog()">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-          Parse
+          Find Nutrition
         </button>
       </div>
       <div class="ai-warning">
@@ -497,7 +497,7 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
       </div>
       <div class="ai-thinking" id="ai-thinking">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        <span>Parsing with OpenAI, looking up in USDA FDC…</span>
+        <span>Searching USDA &amp; web nutrition databases…</span>
         <span class="dots"><span>.</span><span>.</span><span>.</span></span>
       </div>
       <!-- AI REVIEW PANEL -->
@@ -1087,7 +1087,15 @@ function confirmAddFood() {
 }
 
 // ── OPENAI NATURAL LANGUAGE LOGGING (via Lambda proxy) ───────────
-let pendingAIItems = []; // [{description, fdcName, fdcFood, grams}]
+let pendingAIItems = []; // [{description, source, displayName, sourceName, portions, selectedPortionIdx, qty, carbs100g, fiber100g}]
+
+async function fetchPerplexityNutrition(query) {
+  try {
+    const r = await fetch(`${API}/perplexity-nutrition`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({query}) });
+    if (!r.ok) return null;
+    return await r.json();
+  } catch { return null; }
+}
 
 async function handleAILog() {
   const text = document.getElementById('ai-input').value.trim();
@@ -1098,9 +1106,7 @@ async function handleAILog() {
   document.getElementById('ai-review').classList.remove('show');
   try {
     const parseRes = await fetch(`${API}/ai-parse-food`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text }),
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text }),
     });
     const parsed = await parseRes.json();
     if (!parseRes.ok) throw new Error(parsed.error || 'AI parse error');
@@ -1110,16 +1116,66 @@ async function handleAILog() {
 
     pendingAIItems = [];
     for (const item of items) {
-      const results = await fdcSearch(item.search_query, 8);
-      if (!results.length) { pendingAIItems.push({ description: item.description, fdcName: 'No USDA match — enter manually', fdcFood: null, grams: item.quantity_grams || 100 }); continue; }
+      const descLower = item.description.toLowerCase();
+      const aiQtyRaw = parseFloat(descLower.match(/^(\d+(?:\.\d+)?)\s/)?.[1] || '1');
+      const qty = (aiQtyRaw >= 0.25 && aiQtyRaw <= 30) ? aiQtyRaw : 1;
+
+      // Search USDA and Perplexity in parallel
+      const [fdcResults, ppResult] = await Promise.all([
+        fdcSearch(item.search_query, 8),
+        fetchPerplexityNutrition(item.description + ' — ' + item.search_query),
+      ]);
+
+      // Prefer Perplexity when it finds specific data
+      if (ppResult && ppResult.found && ppResult.serving_grams > 0 && ppResult.carbs_g >= 0) {
+        const sg = ppResult.serving_grams;
+        const c100 = Math.round((ppResult.carbs_g / sg) * 1000) / 10;
+        const f100 = Math.round(((ppResult.fiber_g || 0) / sg) * 1000) / 10;
+        pendingAIItems.push({
+          description: item.description, source: 'web',
+          displayName: ppResult.food_name || item.search_query,
+          sourceName: ppResult.source || 'web search',
+          portions: [
+            { label: (ppResult.serving_description || '1 serving') + ' (~' + Math.round(sg) + 'g)', grams: sg },
+            { label: '100g', grams: 100 },
+          ],
+          selectedPortionIdx: 0, qty, carbs100g: c100, fiber100g: f100,
+        });
+        continue;
+      }
+
+      // Fall back to USDA
+      if (!fdcResults.length) {
+        pendingAIItems.push({ description: item.description, source: 'none', displayName: 'No match found', sourceName: '', portions: [{ label: '100g', grams: 100 }], selectedPortionIdx: 0, qty: 1, carbs100g: 0, fiber100g: 0 });
+        continue;
+      }
       const q = item.search_query.toLowerCase();
-      const queryWords = q.split(/\s+/).filter(w => w.length > 2);
-      const scored = results.map(f => { const n = f.name.toLowerCase(); return { f, hits: queryWords.filter(w => n.includes(w)).length }; });
+      const qWords = q.split(/\s+/).filter(w => w.length > 2);
+      const scored = fdcResults.map(f => ({ f, hits: qWords.filter(w => f.name.toLowerCase().includes(w)).length }));
       scored.sort((a, b) => b.hits - a.hits);
-      pendingAIItems.push({ description: item.description, fdcName: scored[0].f.name, fdcFood: scored[0].f, grams: item.quantity_grams || 100 });
+      const bestFood = scored[0].f;
+
+      // Get full food for named portions
+      const fullFood = await fdcGetFood(bestFood.fdcId);
+      const portions = (fullFood && fullFood.portions && fullFood.portions.length > 1) ? fullFood.portions : [{ label: '100g', grams: 100 }];
+
+      // Pick best default portion (match words from description to portion label)
+      let selectedPortionIdx = 0;
+      const descWords = descLower.split(/\s+/).filter(w => w.length > 3);
+      for (let pi = 0; pi < portions.length; pi++) {
+        if (descWords.some(w => portions[pi].label.toLowerCase().includes(w))) { selectedPortionIdx = pi; break; }
+      }
+
+      pendingAIItems.push({
+        description: item.description, source: 'usda',
+        displayName: bestFood.name,
+        sourceName: 'USDA FDC',
+        portions, selectedPortionIdx, qty,
+        carbs100g: fullFood ? fullFood.carbs100g : bestFood.carbs100g,
+        fiber100g: fullFood ? fullFood.fiber100g : bestFood.fiber100g,
+      });
     }
 
-    // Set meal selector
     document.getElementById('ai-review-meal').value = meal;
     renderAIReview();
     document.getElementById('ai-review').classList.add('show');
@@ -1135,18 +1191,29 @@ function renderAIReview() {
   const container = document.getElementById('ai-review-items');
   if (!pendingAIItems.length) { container.innerHTML = '<div style="padding:12px 14px;font-size:13px;color:var(--ink-muted);">No items to review.</div>'; return; }
   container.innerHTML = pendingAIItems.map((item, i) => {
-    const f = item.fdcFood;
-    const g = item.grams;
-    const carbs = f ? Math.round(f.carbs100g * g / 100) : 0;
-    const fiber = f ? Math.round(f.fiber100g * g / 100) : 0;
+    const g = item.portions[item.selectedPortionIdx].grams * item.qty;
+    const carbs = Math.round(item.carbs100g * g / 100);
+    const fiber = Math.round(item.fiber100g * g / 100);
     const net   = Math.max(0, carbs - fiber);
+
+    const sourceHtml = item.source === 'web'
+      ? `<div class="ai-review-source">Web search: <span>${escHtml(item.displayName)}</span> <span style="opacity:.6;font-weight:400;">via ${escHtml(item.sourceName)}</span></div>`
+      : item.source === 'usda'
+      ? `<div class="ai-review-source">USDA FDC: <span>${escHtml(item.displayName)}</span></div>`
+      : `<div class="ai-review-source" style="color:#B45309;">No match — verify manually</div>`;
+
+    const portionSelect = item.portions.length > 1
+      ? `<select class="ai-review-meal-select" style="max-width:180px;" onchange="updateAIReviewPortion(${i},this.value)">${item.portions.map((p,pi) => `<option value="${pi}"${pi===item.selectedPortionIdx?' selected':''}>${escHtml(p.label)}</option>`).join('')}</select>`
+      : `<span style="font-size:12px;color:var(--ink-muted);">${escHtml(item.portions[0].label)}</span>`;
+
     return `<div class="ai-review-item" id="ai-ri-${i}">
       <div class="ai-review-desc">${escHtml(item.description)}</div>
-      <div class="ai-review-source">USDA match: <span>${escHtml(item.fdcName)}</span></div>
+      ${sourceHtml}
       <div class="ai-review-row">
-        <input class="ai-review-grams" type="number" min="1" step="1" value="${Math.round(g)}" oninput="updateAIReviewItem(${i},this.value)" title="Edit grams">
-        <span style="font-size:12px;color:var(--ink-muted);">g</span>
-        <div class="ai-review-macros">
+        <input class="ai-review-grams" type="number" min="0.25" step="0.25" value="${item.qty}" oninput="updateAIReviewQty(${i},this.value)" title="How many servings?">
+        <span style="font-size:12px;color:var(--ink-muted);">×</span>
+        ${portionSelect}
+        <div class="ai-review-macros" id="ai-rm-${i}">
           <span class="c" id="ai-rc-${i}">${carbs}g carbs</span>
           <span class="f" id="ai-rf-${i}">${fiber}g fiber</span>
           <span class="n" id="ai-rn-${i}">${net}g net</span>
@@ -1157,17 +1224,26 @@ function renderAIReview() {
   }).join('');
 }
 
-function updateAIReviewItem(i, val) {
-  const g = Math.max(1, parseFloat(val) || 1);
-  pendingAIItems[i].grams = g;
-  const f = pendingAIItems[i].fdcFood;
-  if (!f) return;
-  const carbs = Math.round(f.carbs100g * g / 100);
-  const fiber = Math.round(f.fiber100g * g / 100);
+function refreshAIReviewMacros(i) {
+  const item = pendingAIItems[i];
+  const g = item.portions[item.selectedPortionIdx].grams * item.qty;
+  const carbs = Math.round(item.carbs100g * g / 100);
+  const fiber = Math.round(item.fiber100g * g / 100);
   const net   = Math.max(0, carbs - fiber);
   document.getElementById('ai-rc-' + i).textContent = carbs + 'g carbs';
   document.getElementById('ai-rf-' + i).textContent = fiber + 'g fiber';
   document.getElementById('ai-rn-' + i).textContent = net + 'g net';
+}
+
+function updateAIReviewQty(i, val) {
+  const qty = Math.max(0.25, parseFloat(val) || 1);
+  pendingAIItems[i].qty = qty;
+  refreshAIReviewMacros(i);
+}
+
+function updateAIReviewPortion(i, portionIdx) {
+  pendingAIItems[i].selectedPortionIdx = parseInt(portionIdx, 10);
+  refreshAIReviewMacros(i);
 }
 
 function removeAIReviewItem(i) {
@@ -1186,13 +1262,14 @@ function confirmAILog() {
   const meal = document.getElementById('ai-review-meal').value;
   let added = 0;
   for (const item of pendingAIItems) {
-    if (!item.fdcFood) continue;
-    const f = item.fdcFood, g = item.grams;
+    if (item.source === 'none') continue;
+    const g = item.portions[item.selectedPortionIdx].grams * item.qty;
     logs[meal].push({
-      name: item.description, brand: item.fdcFood.brand || 'USDA FDC',
+      name: item.description,
+      brand: item.sourceName,
       serving: item.description + ' (~' + Math.round(g) + 'g)',
-      carbs: Math.round(f.carbs100g * g / 100),
-      fiber: Math.round(f.fiber100g * g / 100),
+      carbs: Math.round(item.carbs100g * g / 100),
+      fiber: Math.round(item.fiber100g * g / 100),
       mult: 1,
     });
     added++;
