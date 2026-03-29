@@ -832,12 +832,26 @@ function openBarcodeScanner(meal) {
         const meal = barcodeMeal; // capture before close resets it
         closeBarcodeScanner();
         const input = document.getElementById('inline-search-' + meal);
-        if (input) input.value = rawValue;
-        showToast('Barcode found — searching USDA…');
-        const results = await fdcSearch(rawValue, 6);
+        // Step 1: resolve product name via BarcodeFinder
+        let searchQuery = rawValue;
+        let productLabel = null;
+        try {
+          const bfRes = await fetch(`${API}/barcode-lookup?code=${encodeURIComponent(rawValue)}`);
+          if (bfRes.ok) {
+            const bfData = await bfRes.json();
+            if (bfData.found && bfData.title) {
+              productLabel = bfData.title;
+              searchQuery = bfData.brand ? `${bfData.brand} ${bfData.title}` : bfData.title;
+            }
+          }
+        } catch {}
+        if (input) input.value = searchQuery;
+        showToast(productLabel ? 'Found: ' + productLabel : 'Barcode found — searching USDA…');
+        // Step 2: search USDA FDC by product name (or raw barcode as fallback)
+        const results = await fdcSearch(searchQuery, 8);
         if (!results.length) {
-          showToast('No match for this barcode — try searching by name');
-          if (input) input.value = '';
+          showToast('No nutrition match — try searching by name');
+          if (input) { input.value = productLabel || ''; input.focus(); }
           return;
         }
         if (results.length === 1) {

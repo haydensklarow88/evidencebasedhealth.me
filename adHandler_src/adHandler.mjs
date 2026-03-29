@@ -344,6 +344,21 @@ export const handler = async (event) => {
   /* ── CARB LOG PROXY ENDPOINTS — public, no auth required ─────────────────
      These proxy USDA FDC and OpenAI so the client never sees API keys.     */
 
+  /* GET /barcode-lookup?code={barcode} — BarcodeFinder product identity lookup */
+  if (rawPath.endsWith('/barcode-lookup') && method === 'GET') {
+    const code = (event.queryStringParameters?.code || '').trim();
+    if (!code) return resp(400, { error: 'code is required' });
+    const BARCODEFINDER_API_KEY = process.env.BARCODEFINDER_API_KEY;
+    const bfHeaders = BARCODEFINDER_API_KEY ? { 'X-API-Key': BARCODEFINDER_API_KEY } : {};
+    const bfRes = await fetch(`https://barcodefinder.info/v1/product/${encodeURIComponent(code)}`, { headers: bfHeaders });
+    if (bfRes.status === 404) return resp(200, { found: false });
+    if (!bfRes.ok) return resp(200, { found: false });
+    const bfData = await bfRes.json();
+    const p = bfData.product;
+    if (!p || !p.title) return resp(200, { found: false });
+    return resp(200, { found: true, title: p.title, brand: p.brand || null, description: p.description || null });
+  }
+
   /* GET /fdc-search?q=oatmeal&n=8 */
   if (rawPath.endsWith('/fdc-search') && method === 'GET') {
     const FDC_API_KEY = process.env.FDC_API_KEY;
