@@ -1061,12 +1061,21 @@ async function handleAILog() {
     // Step 2: look up each item in USDA FDC (also via proxy)
     let added = 0;
     for (const item of items) {
-      const results = await fdcSearch(item.search_query, 3);
+      const results = await fdcSearch(item.search_query, 8);
       if (!results.length) continue;
-      const f = results[0];
+      // Pick the result whose name best matches the search query (avoid wrong foods)
+      const q = item.search_query.toLowerCase();
+      const queryWords = q.split(/\s+/).filter(w => w.length > 2);
+      const scored = results.map(f => {
+        const n = f.name.toLowerCase();
+        const hits = queryWords.filter(w => n.includes(w)).length;
+        return { f, hits };
+      });
+      scored.sort((a, b) => b.hits - a.hits);
+      const f = scored[0].f;
       const g = item.quantity_grams || 100;
       logs[meal].push({
-        name: f.name, brand: f.brand || 'USDA FDC',
+        name: item.description, brand: f.brand || 'USDA FDC',
         serving: item.description + ' (~' + Math.round(g) + 'g)',
         carbs: Math.round(f.carbs100g * g / 100),
         fiber: Math.round(f.fiber100g * g / 100),
