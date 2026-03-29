@@ -349,26 +349,50 @@ export const handler = async (event) => {
     const code = (event.queryStringParameters?.code || '').trim();
     if (!code) return resp(400, { error: 'code is required' });
 
-    // Helper: extract nutrition from a BarcodeFinder foods[] entry
-    const extractBFNutrition = (food) => {
-      if (!food) return null;
-      const carbs = food.total_carbohydrate?.value ?? null;
-      const fiber = food.dietary_fiber?.value ?? null;
-      const servingG = food.serving_weight_grams ?? null;
-      if (carbs !== null && carbs > 0 && servingG) {
-        return {
-          serving_grams: servingG,
-          serving_description: food.serving_qty && food.serving_unit
-            ? `${food.serving_qty} ${food.serving_unit}`
-            : `${Math.round(servingG)}g`,
-          carbs_g: carbs,
-          fiber_g: fiber ?? 0,
-        };
+    // Step 1: Open Food Facts (free, no key, 3M+ products, great coverage)
+    try {
+      const offRes = await fetch(`https://world.openfoodfacts.org/api/v0/product/${encodeURIComponent(code)}.json`, {
+        headers: { 'User-Agent': 'EvidenceBasedHealth/1.0 (carbtracker@evidencebasedhealth.me)' },
+        signal: AbortSignal.timeout(6000),
+      });
+      if (offRes.ok) {
+        const offData = await offRes.json();
+        if (offData.status === 1 && offData.product) {
+          const p = offData.product;
+          const n = p.nutriments;
+          const carbs100g = n?.carbohydrates_100g ?? null;
+          const fiber100g = n?.fiber_100g ?? 0;
+          const servingQ = p.serving_quantity ? parseFloat(p.serving_quantity) : null;
+          const servingSize = p.serving_size || null;
+          // Build nutrition if carbs are valid
+          let nutrition = null;
+          if (carbs100g > 0) {
+            if (servingQ && servingQ > 0) {
+              nutrition = {
+                serving_grams: servingQ,
+                serving_description: servingSize || `${Math.round(servingQ)}g`,
+                carbs_g: Math.round((carbs100g * servingQ / 100) * 10) / 10,
+                fiber_g: Math.round((fiber100g * servingQ / 100) * 10) / 10,
+              };
+            } else {
+              // No serving size — return per-100g as the serving
+              nutrition = {
+                serving_grams: 100,
+                serving_description: '100g',
+                carbs_g: carbs100g,
+                fiber_g: fiber100g,
+              };
+            }
+          }
+          const title = p.product_name || p.abbreviated_product_name || null;
+          if (title) {
+            return resp(200, { found: true, title, brand: p.brands || null, nutrition });
+          }
+        }
       }
-      return null;
-    };
+    } catch {}
 
-    // Step 1: Try BarcodeFinder
+    // Step 2: BarcodeFinder
     let bfTitle = null, bfBrand = null, bfNutrition = null;
     try {
       const BARCODEFINDER_API_KEY = process.env.BARCODEFINDER_API_KEY;
@@ -381,18 +405,27 @@ export const handler = async (event) => {
           bfTitle = p.title;
           bfBrand = p.brand || null;
           const food0 = Array.isArray(p.foods) && p.foods.length ? p.foods[0] : null;
-          bfNutrition = extractBFNutrition(food0);
+          if (food0) {
+            const carbs = food0.total_carbohydrate?.value ?? null;
+            const fiber = food0.dietary_fiber?.value ?? null;
+            const servingG = food0.serving_weight_grams ?? null;
+            if (carbs > 0 && servingG) {
+              bfNutrition = {
+                serving_grams: servingG,
+                serving_description: food0.serving_qty && food0.serving_unit ? `${food0.serving_qty} ${food0.serving_unit}` : `${Math.round(servingG)}g`,
+                carbs_g: carbs,
+                fiber_g: fiber ?? 0,
+              };
+            }
+          }
         }
       }
     } catch {}
 
-    // If BarcodeFinder had a good product + nutrition, return it
-    if (bfTitle && bfNutrition) {
-      return resp(200, { found: true, title: bfTitle, brand: bfBrand, nutrition: bfNutrition });
-    }
+    if (bfTitle && bfNutrition) return resp(200, { found: true, title: bfTitle, brand: bfBrand, nutrition: bfNutrition });
+    if (bfTitle) return resp(200, { found: true, title: bfTitle, brand: bfBrand, nutrition: null });
 
-    // Step 2: Use Perplexity to resolve barcode → product name + nutrition
-    // (runs when BarcodeFinder is down OR returned 0 carbs)
+    // Step 3: Perplexity — ask AI to identify barcode + nutrition
     if (PERPLEXITY_API_KEY) {
       try {
         const ppRes = await fetch('https://api.perplexity.ai/chat/completions', {
@@ -402,7 +435,7 @@ export const handler = async (event) => {
             model: 'sonar',
             messages: [
               { role: 'system', content: 'You are a barcode and nutrition lookup tool. Return ONLY valid JSON, no markdown, no code blocks.' },
-              { role: 'user', content: `Look up barcode ${code}. Return ONLY this JSON (no other text):\n{"found":true,"product_name":"exact name","brand":"brand name","serving_description":"e.g. 5 crackers","serving_grams":15,"carbs_g":11,"fiber_g":0}\nIf you cannot identify the product or find its nutrition with confidence, return: {"found":false}` },
+              { role: 'user', content: `Look up barcode ${code}. Return ONLY this JSON (no other text):\n{"found":true,"product_name":"exact name","brand":"brand name","serving_description":"e.g. 5 crackers","serving_grams":15,"carbs_g":11,"fiber_g":0}\nIf you cannot identify the product with confidence, return: {"found":false}` },
             ],
             max_tokens: 200,
           }),
@@ -415,28 +448,19 @@ export const handler = async (event) => {
           const parsed = JSON.parse(cleaned);
           if (parsed.found && parsed.product_name && parsed.serving_grams > 0 && parsed.carbs_g > 0) {
             return resp(200, {
-              found: true,
-              title: parsed.product_name,
-              brand: parsed.brand || bfBrand || null,
+              found: true, title: parsed.product_name, brand: parsed.brand || null,
               nutrition: {
                 serving_grams: parsed.serving_grams,
                 serving_description: parsed.serving_description || `${Math.round(parsed.serving_grams)}g`,
-                carbs_g: parsed.carbs_g,
-                fiber_g: parsed.fiber_g ?? 0,
+                carbs_g: parsed.carbs_g, fiber_g: parsed.fiber_g ?? 0,
               },
             });
           }
-          // Perplexity found product name but no nutrition — pass name through for USDA search
           if (parsed.found && parsed.product_name) {
-            return resp(200, { found: true, title: parsed.product_name, brand: parsed.brand || bfBrand || null, nutrition: null });
+            return resp(200, { found: true, title: parsed.product_name, brand: parsed.brand || null, nutrition: null });
           }
         }
       } catch {}
-    }
-
-    // Step 3: BarcodeFinder had product name but no nutrition — return name for USDA fallback
-    if (bfTitle) {
-      return resp(200, { found: true, title: bfTitle, brand: bfBrand, nutrition: null });
     }
 
     return resp(200, { found: false });
