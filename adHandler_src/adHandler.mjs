@@ -490,7 +490,7 @@ export const handler = async (event) => {
     await ses.send(new SendEmailCommand({
       FromEmailAddress: SES_FROM_EMAIL,
       ReplyToAddresses: [SES_REPLY_TO],
-      Destination: { ToAddresses: ['hayden@evidencebasedhealth.me'] },
+      Destination: { ToAddresses: ['info@evidencebasedhealth.me', 'hayden.sklarow@realtimerx.org'] },
       Content: { Simple: {
         Subject: { Data: `Carb Tracker Feedback — ${safeName}`, Charset: 'UTF-8' },
         Body: {
