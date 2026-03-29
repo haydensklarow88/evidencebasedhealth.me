@@ -143,6 +143,15 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
 
 /* MEAL SECTIONS */
 .meal-section { background: var(--warm-white); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: visible; }
+.scan-btn { width: 32px; height: 32px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: none; color: var(--ink-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all .15s; }
+.scan-btn:hover { background: var(--sage-light); color: var(--sage); border-color: var(--sage-mid); }
+.barcode-video-wrap { position: relative; overflow: hidden; border-radius: var(--radius-md); background: #000; aspect-ratio: 4/3; }
+.barcode-video-wrap video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.barcode-aim { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+.barcode-aim-box { width: 60%; aspect-ratio: 2.5; border: 2px solid var(--sage); border-radius: 6px; box-shadow: 0 0 0 9999px rgba(0,0,0,.45); }
+.barcode-scan-line { position: absolute; left: 20%; right: 20%; height: 2px; background: var(--sage); box-shadow: 0 0 8px var(--sage); animation: barcode-sweep 2s ease-in-out infinite; }
+@keyframes barcode-sweep { 0%,100% { top: 25%; } 50% { top: 75%; } }
+.barcode-status { position: absolute; bottom: 10px; left: 0; right: 0; text-align: center; color: #fff; font-size: 12px; font-weight: 500; text-shadow: 0 1px 3px rgba(0,0,0,.8); padding: 0 1rem; }
 .meal-header { display: flex; align-items: center; justify-content: space-between; padding: 0.85rem 1.25rem; border-bottom: 1px solid var(--border); cursor: pointer; user-select: none; }
 .meal-header-left { display: flex; align-items: center; gap: 8px; min-width: 0; }
 .meal-time-badge { font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; padding: 3px 8px; border-radius: 20px; background: var(--sage-light); color: var(--sage); white-space: nowrap; flex-shrink: 0; }
@@ -502,6 +511,7 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
         <div class="meal-footer">Fiber: <span class="mfoot-val blue" id="mfoot-fiber-breakfast">0g</span>&nbsp;·&nbsp;Net carbs: <span class="mfoot-val sage" id="mfoot-net-breakfast">0g</span></div>
         <div class="add-food-row">
           <div class="search-wrap"><input class="add-food-input" id="inline-search-breakfast" placeholder="Search USDA database…" oninput="inlineSearch('breakfast',this)" onkeydown="if(event.key==='Escape')closeDropdown('breakfast')"><div class="search-dropdown" id="drop-breakfast" style="display:none;"></div></div>
+          <button class="scan-btn" onclick="openBarcodeScanner('breakfast')" title="Scan barcode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="4" height="16"/><rect x="8" y="4" width="2" height="16"/><rect x="12" y="4" width="3" height="16"/><rect x="17" y="4" width="2" height="16"/><rect x="21" y="4" width="1" height="16"/></svg></button>
         </div>
       </div>
     </div>
@@ -515,7 +525,7 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
         <div class="food-table-header"><span>Food</span><span class="col-serving col-r">Serving</span><span class="col-r">Carbs</span><span class="col-r">Fiber</span><span class="col-r">Net</span><span></span></div>
         <div class="food-table" id="table-lunch"></div>
         <div class="meal-footer">Fiber: <span class="mfoot-val blue" id="mfoot-fiber-lunch">0g</span>&nbsp;·&nbsp;Net carbs: <span class="mfoot-val sage" id="mfoot-net-lunch">0g</span></div>
-        <div class="add-food-row"><div class="search-wrap"><input class="add-food-input" id="inline-search-lunch" placeholder="Search USDA database…" oninput="inlineSearch('lunch',this)" onkeydown="if(event.key==='Escape')closeDropdown('lunch')"><div class="search-dropdown" id="drop-lunch" style="display:none;"></div></div></div>
+        <div class="add-food-row"><div class="search-wrap"><input class="add-food-input" id="inline-search-lunch" placeholder="Search USDA database…" oninput="inlineSearch('lunch',this)" onkeydown="if(event.key==='Escape')closeDropdown('lunch')"><div class="search-dropdown" id="drop-lunch" style="display:none;"></div></div><button class="scan-btn" onclick="openBarcodeScanner('lunch')" title="Scan barcode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="4" height="16"/><rect x="8" y="4" width="2" height="16"/><rect x="12" y="4" width="3" height="16"/><rect x="17" y="4" width="2" height="16"/><rect x="21" y="4" width="1" height="16"/></svg></button></div>
       </div>
     </div>
 
@@ -528,7 +538,7 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
         <div class="food-table-header"><span>Food</span><span class="col-serving col-r">Serving</span><span class="col-r">Carbs</span><span class="col-r">Fiber</span><span class="col-r">Net</span><span></span></div>
         <div class="food-table" id="table-dinner"></div>
         <div class="meal-footer">Fiber: <span class="mfoot-val blue" id="mfoot-fiber-dinner">0g</span>&nbsp;·&nbsp;Net carbs: <span class="mfoot-val sage" id="mfoot-net-dinner">0g</span></div>
-        <div class="add-food-row"><div class="search-wrap"><input class="add-food-input" id="inline-search-dinner" placeholder="Search USDA database…" oninput="inlineSearch('dinner',this)" onkeydown="if(event.key==='Escape')closeDropdown('dinner')"><div class="search-dropdown" id="drop-dinner" style="display:none;"></div></div></div>
+        <div class="add-food-row"><div class="search-wrap"><input class="add-food-input" id="inline-search-dinner" placeholder="Search USDA database…" oninput="inlineSearch('dinner',this)" onkeydown="if(event.key==='Escape')closeDropdown('dinner')"><div class="search-dropdown" id="drop-dinner" style="display:none;"></div></div><button class="scan-btn" onclick="openBarcodeScanner('dinner')" title="Scan barcode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="4" height="16"/><rect x="8" y="4" width="2" height="16"/><rect x="12" y="4" width="3" height="16"/><rect x="17" y="4" width="2" height="16"/><rect x="21" y="4" width="1" height="16"/></svg></button></div>
       </div>
     </div>
 
@@ -541,7 +551,7 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
         <div class="food-table-header"><span>Food</span><span class="col-serving col-r">Serving</span><span class="col-r">Carbs</span><span class="col-r">Fiber</span><span class="col-r">Net</span><span></span></div>
         <div class="food-table" id="table-snacks"></div>
         <div class="meal-footer">Fiber: <span class="mfoot-val blue" id="mfoot-fiber-snacks">0g</span>&nbsp;·&nbsp;Net carbs: <span class="mfoot-val sage" id="mfoot-net-snacks">0g</span></div>
-        <div class="add-food-row"><div class="search-wrap"><input class="add-food-input" id="inline-search-snacks" placeholder="Search USDA database…" oninput="inlineSearch('snacks',this)" onkeydown="if(event.key==='Escape')closeDropdown('snacks')"><div class="search-dropdown" id="drop-snacks" style="display:none;"></div></div></div>
+        <div class="add-food-row"><div class="search-wrap"><input class="add-food-input" id="inline-search-snacks" placeholder="Search USDA database…" oninput="inlineSearch('snacks',this)" onkeydown="if(event.key==='Escape')closeDropdown('snacks')"><div class="search-dropdown" id="drop-snacks" style="display:none;"></div></div><button class="scan-btn" onclick="openBarcodeScanner('snacks')" title="Scan barcode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="4" height="16"/><rect x="8" y="4" width="2" height="16"/><rect x="12" y="4" width="3" height="16"/><rect x="17" y="4" width="2" height="16"/><rect x="21" y="4" width="1" height="16"/></svg></button></div>
       </div>
     </div>
 
@@ -604,6 +614,23 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
 </div>
 
 <!-- SEARCH MODAL -->
+<!-- BARCODE SCANNER MODAL -->
+<div class="modal-backdrop" id="barcode-modal">
+  <div class="modal" style="max-width:400px;">
+    <div class="modal-drag"></div>
+    <div class="modal-title">Scan Barcode</div>
+    <div class="modal-sub">Point your camera at the barcode on the food package.</div>
+    <div class="barcode-video-wrap">
+      <video id="barcode-video" autoplay playsinline muted></video>
+      <div class="barcode-aim"><div class="barcode-aim-box"></div><div class="barcode-scan-line"></div></div>
+      <div class="barcode-status" id="barcode-status">Searching for barcode…</div>
+    </div>
+    <div style="margin-top:1rem;">
+      <button class="btn-ghost" style="width:100%;" onclick="closeBarcodeScanner()">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-backdrop" id="search-modal">
   <div class="modal">
     <div class="modal-drag"></div>
@@ -677,6 +704,72 @@ let selectedDate = todayStr();   // 'YYYY-MM-DD'
 let logs = emptyLogs();
 let pendingFood = null;
 let searchTimers = {};
+let barcodeStream = null, barcodeMeal = null, barcodeDetector = null, barcodeAnimFrame = null;
+
+// ── BARCODE SCANNER ───────────────────────────────────────────────
+async function openBarcodeScanner(meal) {
+  if (!('BarcodeDetector' in window)) {
+    showToast('Barcode scanning requires Chrome, Edge, or Safari 17.4+');
+    return;
+  }
+  barcodeMeal = meal;
+  document.getElementById('barcode-modal').classList.add('open');
+  try {
+    barcodeStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 } } });
+    const video = document.getElementById('barcode-video');
+    video.srcObject = barcodeStream;
+    await video.play();
+    barcodeDetector = new BarcodeDetector({ formats: ['ean_13','ean_8','upc_a','upc_e','code_128','code_39','itf'] });
+    scanBarcodeFrame(video);
+  } catch(e) {
+    showToast('Camera access denied — allow camera permission and try again');
+    closeBarcodeScanner();
+  }
+}
+
+async function scanBarcodeFrame(video) {
+  if (!barcodeStream) return;
+  try {
+    const codes = await barcodeDetector.detect(video);
+    if (codes.length > 0) {
+      const rawValue = codes[0].rawValue;
+      document.getElementById('barcode-status').textContent = '✓ ' + rawValue + ' — looking up…';
+      closeBarcodeScanner();
+      const input = document.getElementById('inline-search-' + barcodeMeal);
+      if (input) { input.value = rawValue; }
+      showToast('Barcode found — searching USDA…');
+      const results = await fdcSearch(rawValue, 6);
+      if (!results.length) {
+        showToast('No match for this barcode — try searching by name');
+        if (input) { document.getElementById('drop-' + barcodeMeal).style.display = 'none'; }
+        return;
+      }
+      if (results.length === 1) {
+        selectFoodForPortion(results[0], barcodeMeal);
+      } else {
+        const drop = document.getElementById('drop-' + barcodeMeal);
+        drop.style.display = 'block';
+        drop.innerHTML = results.map(f => {
+          const net = Math.max(0, f.carbs100g - f.fiber100g);
+          return `<div class="search-result" onclick='selectFoodForPortion(${JSON.stringify(f)},"${barcodeMeal}")'>
+            <div class="sr-name">${escHtml(f.name)}</div>
+            <div class="sr-meta">${escHtml(f.brand || f.dataType)} · per 100g</div>
+            <div class="sr-macros"><span class="sr-macro sage">${f.carbs100g}g carbs</span><span class="sr-macro blue">${f.fiber100g}g fiber</span><span class="sr-macro amber">${net}g net</span></div>
+          </div>`;
+        }).join('');
+      }
+      return;
+    }
+  } catch(e) { /* detection error, keep trying */ }
+  barcodeAnimFrame = requestAnimationFrame(() => scanBarcodeFrame(video));
+}
+
+function closeBarcodeScanner() {
+  document.getElementById('barcode-modal').classList.remove('open');
+  if (barcodeStream) { barcodeStream.getTracks().forEach(t => t.stop()); barcodeStream = null; }
+  if (barcodeAnimFrame) { cancelAnimationFrame(barcodeAnimFrame); barcodeAnimFrame = null; }
+  barcodeDetector = null;
+}
 
 // ── DATE HELPERS ─────────────────────────────────────────────────
 function todayStr() {
