@@ -1,11 +1,11 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<meta name="description" id="meta-desc" content="Evidence-Based Health â€” peer-reviewed health insights.">
-<title id="page-title">Loadingâ€¦ â€” Evidence-Based Health</title>
+<meta name="description" id="meta-desc" content="Evidence-Based Health — peer-reviewed health insights.">
+<title id="page-title">Loading… — Evidence-Based Health</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
@@ -175,7 +175,7 @@
 
   <div id="error-state" class="state-wrap" style="display:none">
     <p class="state-error" id="error-msg">Article not found.</p>
-    <p style="margin-top:0.75rem"><a href="index.html" style="color:var(--accent)">â† Back to home</a></p>
+    <p style="margin-top:0.75rem"><a href="index.html" style="color:var(--accent)">← Back to home</a></p>
   </div>
 </main>
 
@@ -198,7 +198,7 @@ async function loadPost() {
     if (!res.ok) return showError(data.error || 'Article not found.');
 
     // Update page metadata
-    document.getElementById('page-title').textContent = `${data.subjectLine} â€” Evidence-Based Health`;
+    document.getElementById('page-title').textContent = `${data.subjectLine} — Evidence-Based Health`;
     document.getElementById('meta-desc').content = data.previewText || data.subjectLine;
 
     // Populate article
@@ -222,7 +222,7 @@ async function loadPost() {
       const firstEl = articleBody.firstElementChild;
       if (firstEl && firstEl.tagName === 'H2') firstEl.remove();
     }
-    // Strip self-referential CTA links (email artifact: "Read the full evidence brief â†’")
+    // Strip self-referential CTA links (email artifact: "Read the full evidence brief →")
     articleBody.querySelectorAll('a[href*="post.html?slug="]').forEach(a => {
       const p = a.closest('p');
       if (p && p.textContent.trim().length < 80) p.remove();

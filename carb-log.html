@@ -1,10 +1,10 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<title>CarbCompanion â€” Diabetes Food Log</title>
+<title>CarbCompanion — Diabetes Food Log</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -311,7 +311,7 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
 .toast { position: fixed; bottom: calc(var(--bnav-h) + 0.75rem); left: 50%; transform: translateX(-50%) translateY(10px); background: var(--ink); color: #fff; font-size: 13px; font-weight: 500; padding: 9px 18px; border-radius: var(--radius-sm); opacity: 0; transition: all .25s; z-index: 300; pointer-events: none; white-space: nowrap; max-width: 90vw; white-space: normal; text-align: center; }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-/* PRINT STYLES â€” PDF export */
+/* PRINT STYLES — PDF export */
 @media print {
   .top-nav, aside, .bottom-nav, .mobile-drawer, .drawer-overlay,
   .ai-bar, .add-bar, .add-food-row, .del-btn,
@@ -393,7 +393,7 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
     <button class="date-nav-btn" id="btn-prev-day" onclick="changeDay(-1)" aria-label="Previous day">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
     </button>
-    <span class="date-nav-label" id="nav-date-label" onclick="jumpToDate()" title="Click to pick a date">â€”</span>
+    <span class="date-nav-label" id="nav-date-label" onclick="jumpToDate()" title="Click to pick a date">—</span>
     <button class="date-nav-btn" id="btn-next-day" onclick="changeDay(1)" aria-label="Next day">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
     </button>
@@ -440,7 +440,7 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
   <div class="sidebar-divider"></div>
   <!-- Daily summary -->
   <div class="date-header">Viewing</div>
-  <div class="date-display" id="drawer-date">â€”</div>
+  <div class="date-display" id="drawer-date">—</div>
   <div class="carb-ring-wrap">
     <div class="ring-label">Daily Carbs</div>
     <svg class="ring-svg" viewBox="0 0 108 108">
@@ -454,13 +454,13 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
   <div class="fiber-bar-wrap">
     <div class="fiber-bar-label"><span class="fiber-bar-title">Fiber</span><span class="fiber-bar-vals"><span id="d-fiber-total">0</span>g / 25g</span></div>
     <div class="fiber-track"><div class="fiber-fill" id="d-fiber-fill"></div></div>
-    <div class="fiber-goal-note" id="d-fiber-note">ADA: â‰¥14g per 1,000 kcal</div>
+    <div class="fiber-goal-note" id="d-fiber-note">ADA: ≥14g per 1,000 kcal</div>
   </div>
   <div class="meal-pills">
-    <div class="meal-pill" onclick="scrollToMeal('breakfast');closeDrawer()"><div class="meal-pill-left"><span>â˜€ï¸</span><span class="meal-name">Breakfast</span></div><div class="meal-pill-right"><span class="meal-carbs-pill" id="dpill-breakfast">0g</span><span class="pill-net" id="dpill-net-breakfast">net 0g</span></div></div>
-    <div class="meal-pill" onclick="scrollToMeal('lunch');closeDrawer()"><div class="meal-pill-left"><span>ðŸŒ¤</span><span class="meal-name">Lunch</span></div><div class="meal-pill-right"><span class="meal-carbs-pill" id="dpill-lunch">0g</span><span class="pill-net" id="dpill-net-lunch">net 0g</span></div></div>
-    <div class="meal-pill" onclick="scrollToMeal('dinner');closeDrawer()"><div class="meal-pill-left"><span>ðŸŒ™</span><span class="meal-name">Dinner</span></div><div class="meal-pill-right"><span class="meal-carbs-pill" id="dpill-dinner">0g</span><span class="pill-net" id="dpill-net-dinner">net 0g</span></div></div>
-    <div class="meal-pill" onclick="scrollToMeal('snacks');closeDrawer()"><div class="meal-pill-left"><span>ðŸŽ</span><span class="meal-name">Snacks</span></div><div class="meal-pill-right"><span class="meal-carbs-pill" id="dpill-snacks">0g</span><span class="pill-net" id="dpill-net-snacks">net 0g</span></div></div>
+    <div class="meal-pill" onclick="scrollToMeal('breakfast');closeDrawer()"><div class="meal-pill-left"><span>☀️</span><span class="meal-name">Breakfast</span></div><div class="meal-pill-right"><span class="meal-carbs-pill" id="dpill-breakfast">0g</span><span class="pill-net" id="dpill-net-breakfast">net 0g</span></div></div>
+    <div class="meal-pill" onclick="scrollToMeal('lunch');closeDrawer()"><div class="meal-pill-left"><span>🌤</span><span class="meal-name">Lunch</span></div><div class="meal-pill-right"><span class="meal-carbs-pill" id="dpill-lunch">0g</span><span class="pill-net" id="dpill-net-lunch">net 0g</span></div></div>
+    <div class="meal-pill" onclick="scrollToMeal('dinner');closeDrawer()"><div class="meal-pill-left"><span>🌙</span><span class="meal-name">Dinner</span></div><div class="meal-pill-right"><span class="meal-carbs-pill" id="dpill-dinner">0g</span><span class="pill-net" id="dpill-net-dinner">net 0g</span></div></div>
+    <div class="meal-pill" onclick="scrollToMeal('snacks');closeDrawer()"><div class="meal-pill-left"><span>🍎</span><span class="meal-name">Snacks</span></div><div class="meal-pill-right"><span class="meal-carbs-pill" id="dpill-snacks">0g</span><span class="pill-net" id="dpill-net-snacks">net 0g</span></div></div>
   </div>
   <div class="sidebar-divider"></div>
   <button class="share-btn" onclick="openShareModal();closeDrawer()">
@@ -472,7 +472,7 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
 <div class="app-shell">
   <aside>
     <div class="date-header">Viewing</div>
-    <div class="date-display" id="date-display">â€”</div>
+    <div class="date-display" id="date-display">—</div>
     <div class="carb-ring-wrap">
       <div class="ring-label">Daily Carbs</div>
       <svg class="ring-svg" viewBox="0 0 108 108">
@@ -486,13 +486,13 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
     <div class="fiber-bar-wrap">
       <div class="fiber-bar-label"><span class="fiber-bar-title">Fiber</span><span class="fiber-bar-vals"><span id="fiber-total-sidebar">0</span>g / 25g</span></div>
       <div class="fiber-track"><div class="fiber-fill" id="fiber-fill-sidebar"></div></div>
-      <div class="fiber-goal-note" id="fiber-note-sidebar">ADA: â‰¥14g per 1,000 kcal</div>
+      <div class="fiber-goal-note" id="fiber-note-sidebar">ADA: ≥14g per 1,000 kcal</div>
     </div>
     <div class="meal-pills">
-      <div class="meal-pill" onclick="scrollToMeal('breakfast')"><div class="meal-pill-left"><span>â˜€ï¸</span><span class="meal-name">Breakfast</span></div><div class="meal-pill-right"><span class="meal-carbs-pill" id="pill-breakfast">0g</span><span class="pill-net" id="pill-net-breakfast">net 0g</span></div></div>
-      <div class="meal-pill" onclick="scrollToMeal('lunch')"><div class="meal-pill-left"><span>ðŸŒ¤</span><span class="meal-name">Lunch</span></div><div class="meal-pill-right"><span class="meal-carbs-pill" id="pill-lunch">0g</span><span class="pill-net" id="pill-net-lunch">net 0g</span></div></div>
-      <div class="meal-pill" onclick="scrollToMeal('dinner')"><div class="meal-pill-left"><span>ðŸŒ™</span><span class="meal-name">Dinner</span></div><div class="meal-pill-right"><span class="meal-carbs-pill" id="pill-dinner">0g</span><span class="pill-net" id="pill-net-dinner">net 0g</span></div></div>
-      <div class="meal-pill" onclick="scrollToMeal('snacks')"><div class="meal-pill-left"><span>ðŸŽ</span><span class="meal-name">Snacks</span></div><div class="meal-pill-right"><span class="meal-carbs-pill" id="pill-snacks">0g</span><span class="pill-net" id="pill-net-snacks">net 0g</span></div></div>
+      <div class="meal-pill" onclick="scrollToMeal('breakfast')"><div class="meal-pill-left"><span>☀️</span><span class="meal-name">Breakfast</span></div><div class="meal-pill-right"><span class="meal-carbs-pill" id="pill-breakfast">0g</span><span class="pill-net" id="pill-net-breakfast">net 0g</span></div></div>
+      <div class="meal-pill" onclick="scrollToMeal('lunch')"><div class="meal-pill-left"><span>🌤</span><span class="meal-name">Lunch</span></div><div class="meal-pill-right"><span class="meal-carbs-pill" id="pill-lunch">0g</span><span class="pill-net" id="pill-net-lunch">net 0g</span></div></div>
+      <div class="meal-pill" onclick="scrollToMeal('dinner')"><div class="meal-pill-left"><span>🌙</span><span class="meal-name">Dinner</span></div><div class="meal-pill-right"><span class="meal-carbs-pill" id="pill-dinner">0g</span><span class="pill-net" id="pill-net-dinner">net 0g</span></div></div>
+      <div class="meal-pill" onclick="scrollToMeal('snacks')"><div class="meal-pill-left"><span>🍎</span><span class="meal-name">Snacks</span></div><div class="meal-pill-right"><span class="meal-carbs-pill" id="pill-snacks">0g</span><span class="pill-net" id="pill-net-snacks">net 0g</span></div></div>
     </div>
     <div class="sidebar-divider"></div>
     <button class="share-btn" onclick="openShareModal()">
@@ -508,8 +508,8 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
   <main>
     <!-- PRINT HEADER (hidden on screen) -->
     <div class="print-header" id="print-header">
-      <h1>CarbCompanion â€” Food Log</h1>
-      <p id="print-date-line">â€”</p>
+      <h1>CarbCompanion — Food Log</h1>
+      <p id="print-date-line">—</p>
     </div>
 
 
@@ -517,17 +517,17 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
     <div id="summary-anchor" class="summary-bar">
       <div class="summary-card"><div class="summary-label">Total Carbs</div><div class="summary-value sage" id="total-carbs-display">0</div><div class="summary-unit">grams</div></div>
       <div class="summary-card"><div class="summary-label">Fiber</div><div class="summary-value blue" id="fiber-display">0</div><div class="summary-unit">of 25g goal</div></div>
-      <div class="summary-card"><div class="summary-label">Net Carbs</div><div class="summary-value amber" id="net-carbs-display">0</div><div class="summary-unit">carbs âˆ’ fiber</div></div>
+      <div class="summary-card"><div class="summary-label">Net Carbs</div><div class="summary-value amber" id="net-carbs-display">0</div><div class="summary-unit">carbs − fiber</div></div>
       <div class="summary-card"><div class="summary-label">Goal Left</div><div class="summary-value" id="remaining-display">180</div><div class="summary-unit">net carbs</div></div>
     </div>
 
     <!-- NET CARB CALLOUT -->
     <div class="net-carb-callout">
       <div class="nc-left">
-        <div class="nc-icon">ðŸ§®</div>
+        <div class="nc-icon">🧮</div>
         <div>
-          <div class="nc-title">Net carbs = Total carbs âˆ’ Fiber</div>
-          <div class="nc-sub">Fiber doesn't raise blood sugar â€” net carbs are what matters for insulin dosing.</div>
+          <div class="nc-title">Net carbs = Total carbs − Fiber</div>
+          <div class="nc-sub">Fiber doesn't raise blood sugar — net carbs are what matters for insulin dosing.</div>
         </div>
       </div>
       <div class="nc-numbers">
@@ -542,15 +542,15 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
     <!-- AI LOG BAR -->
     <div class="ai-bar">
       <div class="ai-bar-top">
-        <div class="ai-icon">âœ¨</div>
+        <div class="ai-icon">✨</div>
         <div>
           <div class="ai-bar-title">Log with natural language</div>
-          <div class="ai-bar-sub">Chat to log food â€” AI asks questions for accuracy, then you review.</div>
+          <div class="ai-bar-sub">Chat to log food — AI asks questions for accuracy, then you review.</div>
         </div>
       </div>
       <div class="ai-chat-messages" id="ai-chat-msgs"></div>
       <div class="ai-input-row">
-        <textarea class="ai-textarea" id="ai-input" rows="1" placeholder="Type hereâ€¦" onkeydown="aiChatKeydown(event)" oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'"></textarea>
+        <textarea class="ai-textarea" id="ai-input" rows="1" placeholder="Type here…" onkeydown="aiChatKeydown(event)" oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'"></textarea>
         <button class="btn-ai" id="ai-btn" onclick="sendAIChat()">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
           Send
@@ -558,17 +558,17 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
       </div>
       <div class="ai-thinking" id="ai-thinking">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        <span>Searching USDA &amp; web nutrition databasesâ€¦</span>
+        <span>Searching USDA &amp; web nutrition databases…</span>
         <span class="dots"><span>.</span><span>.</span><span>.</span></span>
       </div>
       <div class="ai-chat-footer">
-        <span>âš ï¸ Always verify carb values before insulin dosing or medical decisions</span>
+        <span>⚠️ Always verify carb values before insulin dosing or medical decisions</span>
         <button class="ai-chat-reset" onclick="resetAIChat()">Start over</button>
       </div>
       <div class="ai-review" id="ai-review">
         <div class="ai-review-header">
           <span>Review before logging</span>
-          <button class="ai-remove-btn" onclick="cancelAIReview()">âœ• Cancel</button>
+          <button class="ai-remove-btn" onclick="cancelAIReview()">✕ Cancel</button>
         </div>
         <div class="ai-review-meal-row">
           <label>Log to meal:</label>
@@ -604,7 +604,7 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
 
     <!-- INSIGHT -->
     <div class="insight-strip">
-      <div class="insight-icon">ðŸ’¡</div>
+      <div class="insight-icon">💡</div>
       <div>
         <div class="insight-title" id="insight-title">Ready to log</div>
         <div class="insight-body" id="insight-text">Describe what you ate in plain English, or search the USDA database below. Logs are saved automatically in your browser for every day. Use "Share with PCP" to export a PDF, CSV, or email summary for your care team.</div>
@@ -614,7 +614,7 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
     <!-- MEAL SECTIONS -->
     <div id="section-breakfast" class="meal-section">
       <div class="meal-header" onclick="toggleSection('breakfast')">
-        <div class="meal-header-left"><span class="meal-time-badge">Breakfast</span><span class="meal-header-title">8:00 â€“ 9:30 AM</span></div>
+        <div class="meal-header-left"><span class="meal-time-badge">Breakfast</span><span class="meal-header-title">8:00 – 9:30 AM</span></div>
         <div class="meal-header-right"><div class="meal-header-stats"><span class="meal-total-carbs" id="header-breakfast">0g</span><span class="meal-net-badge" id="header-net-breakfast">net 0g</span></div><span class="chevron open" id="chev-breakfast">â–¼</span></div>
       </div>
       <div id="body-breakfast">
@@ -622,7 +622,7 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
         <div class="food-table" id="table-breakfast"></div>
         <div class="meal-footer">Fiber: <span class="mfoot-val blue" id="mfoot-fiber-breakfast">0g</span>&nbsp;·&nbsp;Net carbs: <span class="mfoot-val sage" id="mfoot-net-breakfast">0g</span></div>
         <div class="add-food-row">
-          <div class="search-wrap"><input class="add-food-input" id="inline-search-breakfast" placeholder="Search USDA databaseâ€¦" oninput="inlineSearch('breakfast',this)" onkeydown="if(event.key==='Escape')closeDropdown('breakfast')"><div class="search-dropdown" id="drop-breakfast" style="display:none;"></div></div>
+          <div class="search-wrap"><input class="add-food-input" id="inline-search-breakfast" placeholder="Search USDA database…" oninput="inlineSearch('breakfast',this)" onkeydown="if(event.key==='Escape')closeDropdown('breakfast')"><div class="search-dropdown" id="drop-breakfast" style="display:none;"></div></div>
           <button class="scan-btn" onclick="openBarcodeScanner('breakfast')" title="Scan barcode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="4" height="16"/><rect x="8" y="4" width="2" height="16"/><rect x="12" y="4" width="3" height="16"/><rect x="17" y="4" width="2" height="16"/><rect x="21" y="4" width="1" height="16"/></svg></button>
         </div>
       </div>
@@ -630,27 +630,27 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
 
     <div id="section-lunch" class="meal-section">
       <div class="meal-header" onclick="toggleSection('lunch')">
-        <div class="meal-header-left"><span class="meal-time-badge">Lunch</span><span class="meal-header-title">12:00 â€“ 1:30 PM</span></div>
+        <div class="meal-header-left"><span class="meal-time-badge">Lunch</span><span class="meal-header-title">12:00 – 1:30 PM</span></div>
         <div class="meal-header-right"><div class="meal-header-stats"><span class="meal-total-carbs" id="header-lunch">0g</span><span class="meal-net-badge" id="header-net-lunch">net 0g</span></div><span class="chevron open" id="chev-lunch">â–¼</span></div>
       </div>
       <div id="body-lunch">
         <div class="food-table-header"><span>Food</span><span class="col-serving col-r">Serving</span><span class="col-r">Carbs</span><span class="col-r">Fiber</span><span class="col-r">Net</span><span></span></div>
         <div class="food-table" id="table-lunch"></div>
         <div class="meal-footer">Fiber: <span class="mfoot-val blue" id="mfoot-fiber-lunch">0g</span>&nbsp;·&nbsp;Net carbs: <span class="mfoot-val sage" id="mfoot-net-lunch">0g</span></div>
-        <div class="add-food-row"><div class="search-wrap"><input class="add-food-input" id="inline-search-lunch" placeholder="Search USDA databaseâ€¦" oninput="inlineSearch('lunch',this)" onkeydown="if(event.key==='Escape')closeDropdown('lunch')"><div class="search-dropdown" id="drop-lunch" style="display:none;"></div></div><button class="scan-btn" onclick="openBarcodeScanner('lunch')" title="Scan barcode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="4" height="16"/><rect x="8" y="4" width="2" height="16"/><rect x="12" y="4" width="3" height="16"/><rect x="17" y="4" width="2" height="16"/><rect x="21" y="4" width="1" height="16"/></svg></button></div>
+        <div class="add-food-row"><div class="search-wrap"><input class="add-food-input" id="inline-search-lunch" placeholder="Search USDA database…" oninput="inlineSearch('lunch',this)" onkeydown="if(event.key==='Escape')closeDropdown('lunch')"><div class="search-dropdown" id="drop-lunch" style="display:none;"></div></div><button class="scan-btn" onclick="openBarcodeScanner('lunch')" title="Scan barcode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="4" height="16"/><rect x="8" y="4" width="2" height="16"/><rect x="12" y="4" width="3" height="16"/><rect x="17" y="4" width="2" height="16"/><rect x="21" y="4" width="1" height="16"/></svg></button></div>
       </div>
     </div>
 
     <div id="section-dinner" class="meal-section">
       <div class="meal-header" onclick="toggleSection('dinner')">
-        <div class="meal-header-left"><span class="meal-time-badge">Dinner</span><span class="meal-header-title">6:00 â€“ 7:30 PM</span></div>
+        <div class="meal-header-left"><span class="meal-time-badge">Dinner</span><span class="meal-header-title">6:00 – 7:30 PM</span></div>
         <div class="meal-header-right"><div class="meal-header-stats"><span class="meal-total-carbs" id="header-dinner">0g</span><span class="meal-net-badge" id="header-net-dinner">net 0g</span></div><span class="chevron open" id="chev-dinner">â–¼</span></div>
       </div>
       <div id="body-dinner">
         <div class="food-table-header"><span>Food</span><span class="col-serving col-r">Serving</span><span class="col-r">Carbs</span><span class="col-r">Fiber</span><span class="col-r">Net</span><span></span></div>
         <div class="food-table" id="table-dinner"></div>
         <div class="meal-footer">Fiber: <span class="mfoot-val blue" id="mfoot-fiber-dinner">0g</span>&nbsp;·&nbsp;Net carbs: <span class="mfoot-val sage" id="mfoot-net-dinner">0g</span></div>
-        <div class="add-food-row"><div class="search-wrap"><input class="add-food-input" id="inline-search-dinner" placeholder="Search USDA databaseâ€¦" oninput="inlineSearch('dinner',this)" onkeydown="if(event.key==='Escape')closeDropdown('dinner')"><div class="search-dropdown" id="drop-dinner" style="display:none;"></div></div><button class="scan-btn" onclick="openBarcodeScanner('dinner')" title="Scan barcode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="4" height="16"/><rect x="8" y="4" width="2" height="16"/><rect x="12" y="4" width="3" height="16"/><rect x="17" y="4" width="2" height="16"/><rect x="21" y="4" width="1" height="16"/></svg></button></div>
+        <div class="add-food-row"><div class="search-wrap"><input class="add-food-input" id="inline-search-dinner" placeholder="Search USDA database…" oninput="inlineSearch('dinner',this)" onkeydown="if(event.key==='Escape')closeDropdown('dinner')"><div class="search-dropdown" id="drop-dinner" style="display:none;"></div></div><button class="scan-btn" onclick="openBarcodeScanner('dinner')" title="Scan barcode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="4" height="16"/><rect x="8" y="4" width="2" height="16"/><rect x="12" y="4" width="3" height="16"/><rect x="17" y="4" width="2" height="16"/><rect x="21" y="4" width="1" height="16"/></svg></button></div>
       </div>
     </div>
 
@@ -663,7 +663,7 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
         <div class="food-table-header"><span>Food</span><span class="col-serving col-r">Serving</span><span class="col-r">Carbs</span><span class="col-r">Fiber</span><span class="col-r">Net</span><span></span></div>
         <div class="food-table" id="table-snacks"></div>
         <div class="meal-footer">Fiber: <span class="mfoot-val blue" id="mfoot-fiber-snacks">0g</span>&nbsp;·&nbsp;Net carbs: <span class="mfoot-val sage" id="mfoot-net-snacks">0g</span></div>
-        <div class="add-food-row"><div class="search-wrap"><input class="add-food-input" id="inline-search-snacks" placeholder="Search USDA databaseâ€¦" oninput="inlineSearch('snacks',this)" onkeydown="if(event.key==='Escape')closeDropdown('snacks')"><div class="search-dropdown" id="drop-snacks" style="display:none;"></div></div><button class="scan-btn" onclick="openBarcodeScanner('snacks')" title="Scan barcode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="4" height="16"/><rect x="8" y="4" width="2" height="16"/><rect x="12" y="4" width="3" height="16"/><rect x="17" y="4" width="2" height="16"/><rect x="21" y="4" width="1" height="16"/></svg></button></div>
+        <div class="add-food-row"><div class="search-wrap"><input class="add-food-input" id="inline-search-snacks" placeholder="Search USDA database…" oninput="inlineSearch('snacks',this)" onkeydown="if(event.key==='Escape')closeDropdown('snacks')"><div class="search-dropdown" id="drop-snacks" style="display:none;"></div></div><button class="scan-btn" onclick="openBarcodeScanner('snacks')" title="Scan barcode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="4" height="16"/><rect x="8" y="4" width="2" height="16"/><rect x="12" y="4" width="3" height="16"/><rect x="17" y="4" width="2" height="16"/><rect x="21" y="4" width="1" height="16"/></svg></button></div>
       </div>
     </div>
 
@@ -698,7 +698,7 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
     </div>
     <div style="margin-bottom:1rem;">
       <label style="font-size:13px;color:var(--ink-mid);display:block;margin-bottom:5px;">Message</label>
-      <textarea id="feedback-message" class="feedback-textarea" placeholder="Describe what happened, what you'd like to see, or anything elseâ€¦"></textarea>
+      <textarea id="feedback-message" class="feedback-textarea" placeholder="Describe what happened, what you'd like to see, or anything else…"></textarea>
     </div>
     <button class="btn-primary" id="feedback-send-btn" onclick="sendFeedback()" style="width:100%;justify-content:center;">Send</button>
     <button class="modal-cancel" onclick="document.getElementById('feedback-modal').classList.remove('open')" style="width:100%;margin-top:8px;text-align:center;">Cancel</button>
@@ -712,9 +712,9 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
     <div class="modal-title" id="pm-title">Add food</div>
     <div class="modal-sub" id="pm-source" style="font-size:11px;color:var(--ink-muted);margin-bottom:0.75rem;"></div>
     <div class="modal-macros">
-      <div class="modal-macro"><div class="modal-macro-val sage" id="pm-carbs">â€”</div><div class="modal-macro-label">Carbs</div></div>
-      <div class="modal-macro"><div class="modal-macro-val blue" id="pm-fiber">â€”</div><div class="modal-macro-label">Fiber</div></div>
-      <div class="modal-macro"><div class="modal-macro-val amber" id="pm-net">â€”</div><div class="modal-macro-label">Net</div></div>
+      <div class="modal-macro"><div class="modal-macro-val sage" id="pm-carbs">—</div><div class="modal-macro-label">Carbs</div></div>
+      <div class="modal-macro"><div class="modal-macro-val blue" id="pm-fiber">—</div><div class="modal-macro-label">Fiber</div></div>
+      <div class="modal-macro"><div class="modal-macro-val amber" id="pm-net">—</div><div class="modal-macro-label">Net</div></div>
     </div>
     <div style="font-size:12px;color:var(--ink-muted);margin-bottom:0.75rem;">Per <span id="pm-per-serving">100g</span> (from USDA FDC)</div>
     <div class="portion-row">
@@ -722,7 +722,7 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
       <select class="portion-unit" id="pm-unit" onchange="updatePortionPreview()"></select>
     </div>
     <div class="portion-preview" id="pm-preview">
-      Total: <b id="pm-total-carbs">â€”</b>g carbs · <b id="pm-total-fiber">â€”</b>g fiber · <b id="pm-total-net">â€”</b>g net
+      Total: <b id="pm-total-carbs">—</b>g carbs · <b id="pm-total-fiber">—</b>g fiber · <b id="pm-total-net">—</b>g net
     </div>
     <div style="margin-bottom:0.7rem;">
       <label style="font-size:13px;color:var(--ink-mid);display:block;margin-bottom:5px;">Add to meal:</label>
@@ -750,7 +750,7 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
     <div class="barcode-video-wrap">
       <video id="barcode-video" autoplay playsinline muted></video>
       <div class="barcode-aim"><div class="barcode-aim-box"></div><div class="barcode-scan-line"></div></div>
-      <div class="barcode-status" id="barcode-status">Searching for barcodeâ€¦</div>
+      <div class="barcode-status" id="barcode-status">Searching for barcode…</div>
     </div>
     <div style="margin-top:1rem;">
       <button class="btn-ghost" style="width:100%;" onclick="closeBarcodeScanner()">Cancel</button>
@@ -763,7 +763,7 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
     <div class="modal-drag"></div>
     <div class="modal-title">Search USDA FoodData Central</div>
     <div class="modal-sub">Real nutrition data for 400,000+ foods.</div>
-    <input class="modal-input" id="modal-search-input" type="text" placeholder="Search foods (e.g. brown rice, greek yogurt, lentils)â€¦" oninput="modalSearch(this.value)">
+    <input class="modal-input" id="modal-search-input" type="text" placeholder="Search foods (e.g. brown rice, greek yogurt, lentils)…" oninput="modalSearch(this.value)">
     <div id="modal-search-results" style="max-height:300px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--radius-md);margin-bottom:0.75rem;"></div>
     <button class="btn-ghost" style="width:100%;" onclick="closeSearchModal()">Close</button>
   </div>
@@ -795,19 +795,19 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
     <!-- Export buttons -->
     <div class="export-options">
       <div class="export-option" onclick="doExport('pdf')">
-        <span class="export-icon">ðŸ“„</span>
-        <div class="export-text"><div class="export-title">Print / Save as PDF</div><div class="export-desc">Opens browser print dialog â€” save as PDF for sharing</div></div>
-        <span class="export-arrow">â†’</span>
+        <span class="export-icon">📄</span>
+        <div class="export-text"><div class="export-title">Print / Save as PDF</div><div class="export-desc">Opens browser print dialog — save as PDF for sharing</div></div>
+        <span class="export-arrow">→</span>
       </div>
       <div class="export-option" onclick="doExport('csv')">
-        <span class="export-icon">ðŸ“Š</span>
-        <div class="export-text"><div class="export-title">Download as CSV</div><div class="export-desc">All food items in the selected range â€” EHR-ready</div></div>
-        <span class="export-arrow">â†’</span>
+        <span class="export-icon">📊</span>
+        <div class="export-text"><div class="export-title">Download as CSV</div><div class="export-desc">All food items in the selected range — EHR-ready</div></div>
+        <span class="export-arrow">→</span>
       </div>
       <div class="export-option" onclick="doExport('email')">
-        <span class="export-icon">âœ‰ï¸</span>
+        <span class="export-icon">✉️</span>
         <div class="export-text"><div class="export-title">Email to my doctor</div><div class="export-desc">Opens your mail app with a pre-filled summary</div></div>
-        <span class="export-arrow">â†’</span>
+        <span class="export-arrow">→</span>
       </div>
     </div>
 
@@ -820,7 +820,7 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
 <!-- ZXing barcode library: works on iOS Safari, Android Chrome, desktop -->
 <script src="https://cdn.jsdelivr.net/npm/@zxing/library@0.20.0/umd/index.min.js"></script>
 <script>
-// â”€â”€ CONSTANTS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── CONSTANTS ───────────────────────────────────────────────────
 const CARB_GOAL = 180, FIBER_GOAL = 25;
 const MEALS = ['breakfast','lunch','dinner','snacks'];
 const API = 'https://lvsofp8c9g.execute-api.us-east-1.amazonaws.com/prod';
@@ -828,27 +828,27 @@ const LS_PREFIX = 'carblog-';  // localStorage key prefix
 const NID_CARB = 1005;   // USDA nutrient ID: carbohydrates
 const NID_FIBER = 1079;  // USDA nutrient ID: dietary fiber
 
-// â”€â”€ STATE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── STATE ────────────────────────────────────────────────────────
 let selectedDate = todayStr();   // 'YYYY-MM-DD'
 let logs = emptyLogs();
 let pendingFood = null;
 let searchTimers = {};
 let barcodeStream = null, barcodeMeal = null, barcodeReader = null;
 
-// â”€â”€ BARCODE SCANNER (ZXing â€” iOS Safari, Android, desktop) â”€â”€â”€â”€â”€â”€â”€
+// ── BARCODE SCANNER (ZXing — iOS Safari, Android, desktop) ───────
 function openBarcodeScanner(meal) {
   barcodeMeal = meal;
   document.getElementById('barcode-modal').classList.add('open');
-  document.getElementById('barcode-status').textContent = 'Searching for barcodeâ€¦';
+  document.getElementById('barcode-status').textContent = 'Searching for barcode…';
   try {
     barcodeReader = new ZXing.BrowserMultiFormatReader();
     barcodeReader.decodeFromConstraints(
       { video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 } } },
       'barcode-video',
       async (result, err) => {
-        if (!result) return; // err fires on every frame with no barcode â€” normal
+        if (!result) return; // err fires on every frame with no barcode — normal
         const rawValue = result.getText();
-        document.getElementById('barcode-status').textContent = 'âœ“ ' + rawValue + ' â€” looking upâ€¦';
+        document.getElementById('barcode-status').textContent = '✓ ' + rawValue + ' — looking up…';
         const meal = barcodeMeal; // capture before close resets it
         closeBarcodeScanner();
         const input = document.getElementById('inline-search-' + meal);
@@ -867,7 +867,7 @@ function openBarcodeScanner(meal) {
             }
           }
         } catch {}
-        showToast(productLabel ? 'Found: ' + productLabel : 'Barcode found â€” searching nutritionâ€¦');
+        showToast(productLabel ? 'Found: ' + productLabel : 'Barcode found — searching nutrition…');
         // Step 2a: use inline nutrition from BarcodeFinder only if carbs_g > 0 (skip bad/zero data)
         if (bfNutrition && bfNutrition.serving_grams > 0 && bfNutrition.carbs_g > 0) {
           const sg = bfNutrition.serving_grams;
@@ -904,8 +904,8 @@ function openBarcodeScanner(meal) {
           }
           return;
         }
-        // Step 2c: USDA found nothing â€” try Perplexity
-        showToast('Checking Perplexity for nutrition dataâ€¦');
+        // Step 2c: USDA found nothing — try Perplexity
+        showToast('Checking Perplexity for nutrition data…');
         const ppData = await fetchPerplexityNutrition(searchQuery);
         if (ppData && ppData.found && ppData.serving_grams > 0) {
           const sg = ppData.serving_grams;
@@ -922,15 +922,15 @@ function openBarcodeScanner(meal) {
           return;
         }
         // Step 2d: nothing found
-        showToast('No nutrition match â€” try searching by name');
+        showToast('No nutrition match — try searching by name');
         if (input) { input.value = productLabel || ''; input.focus(); }
       }
     ).catch(() => {
-      showToast('Camera access denied â€” allow camera permission and try again');
+      showToast('Camera access denied — allow camera permission and try again');
       closeBarcodeScanner();
     });
   } catch(e) {
-    showToast('Barcode scanner unavailable â€” try searching by name instead');
+    showToast('Barcode scanner unavailable — try searching by name instead');
     closeBarcodeScanner();
   }
 }
@@ -940,7 +940,7 @@ function closeBarcodeScanner() {
   if (barcodeReader) { try { barcodeReader.reset(); } catch {} barcodeReader = null; }
 }
 
-// â”€â”€ DATE HELPERS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── DATE HELPERS ─────────────────────────────────────────────────
 function todayStr() {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
@@ -964,7 +964,7 @@ function offsetDate(str, days) {
   return `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}-${String(dt.getDate()).padStart(2,'0')}`;
 }
 
-// â”€â”€ LOCALSTORAGE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── LOCALSTORAGE ─────────────────────────────────────────────────
 function saveDay() {
   try { localStorage.setItem(LS_PREFIX + selectedDate, JSON.stringify(logs)); } catch(e) {}
 }
@@ -997,7 +997,7 @@ function getDaySummary(dateStr) {
 }
 
 
-// â”€â”€ DATE NAVIGATION â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── DATE NAVIGATION ──────────────────────────────────────────────
 function changeDay(delta) {
   selectedDate = offsetDate(selectedDate, delta);
   loadAndRender();
@@ -1048,7 +1048,7 @@ function updateDateUI() {
   document.getElementById('print-date-line').textContent  = 'Generated ' + new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'}) + ' · CarbCompanion log for ' + label;
 }
 
-// â”€â”€ USDA FDC (via Lambda proxy â€” keys never exposed to browser) â”€â”€
+// ── USDA FDC (via Lambda proxy — keys never exposed to browser) ──
 async function fdcSearch(query, pageSize = 8) {
   try {
     const r = await fetch(`${API}/fdc-search?q=${encodeURIComponent(query)}&n=${pageSize}`);
@@ -1086,17 +1086,17 @@ function parseFullFdcFood(f) {
   return { fdcId: f.fdcId, name: f.description || 'Unknown food', brand: f.brandOwner || f.dataType || '', carbs100g: carbs, fiber100g: fiber, portions };
 }
 
-// â”€â”€ INLINE SEARCH â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── INLINE SEARCH ─────────────────────────────────────────────────
 function inlineSearch(meal, input) {
   const q = input.value.trim();
   const drop = document.getElementById('drop-' + meal);
   if (!q || q.length < 2) { drop.style.display = 'none'; return; }
   clearTimeout(searchTimers[meal]);
   drop.style.display = 'block';
-  drop.innerHTML = '<div class="search-loading">Searching USDA FDCâ€¦</div>';
+  drop.innerHTML = '<div class="search-loading">Searching USDA FDC…</div>';
   searchTimers[meal] = setTimeout(async () => {
     const results = await fdcSearch(q, 6);
-    if (!results.length) { drop.innerHTML = '<div class="search-empty">No results â€” try a different term</div>'; return; }
+    if (!results.length) { drop.innerHTML = '<div class="search-empty">No results — try a different term</div>'; return; }
     drop.innerHTML = results.map(f => {
       const net = Math.max(0, f.carbs100g - f.fiber100g);
       return `<div class="search-result" onclick='selectFoodForPortion(${JSON.stringify(f)}, "${meal}")'>
@@ -1109,7 +1109,7 @@ function inlineSearch(meal, input) {
 }
 function closeDropdown(meal) { document.getElementById('drop-' + meal).style.display = 'none'; }
 
-// â”€â”€ MODAL SEARCH â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── MODAL SEARCH ─────────────────────────────────────────────────
 let modalSearchTimer = null;
 function openSearchModal() { document.getElementById('search-modal').classList.add('open'); setTimeout(() => document.getElementById('modal-search-input').focus(), 100); }
 function closeSearchModal() { document.getElementById('search-modal').classList.remove('open'); }
@@ -1117,7 +1117,7 @@ function modalSearch(q) {
   const el = document.getElementById('modal-search-results');
   if (!q || q.length < 2) { el.innerHTML = ''; return; }
   clearTimeout(modalSearchTimer);
-  el.innerHTML = '<div class="search-loading">Searching USDA FDCâ€¦</div>';
+  el.innerHTML = '<div class="search-loading">Searching USDA FDC…</div>';
   modalSearchTimer = setTimeout(async () => {
     const results = await fdcSearch(q, 10);
     if (!results.length) { el.innerHTML = '<div class="search-empty">No results</div>'; return; }
@@ -1132,7 +1132,7 @@ function modalSearch(q) {
   }, 400);
 }
 
-// â”€â”€ PORTION MODAL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── PORTION MODAL ─────────────────────────────────────────────────
 async function selectFoodForPortion(food, meal) {
   MEALS.forEach(m => closeDropdown(m));
   document.getElementById('search-modal').classList.remove('open');
@@ -1197,7 +1197,7 @@ function confirmAddFood() {
   const entry = {
     name:    pendingFood.name,
     brand:   pendingFood.brand || 'USDA FDC',
-    serving: qty === 1 ? unitLabel : qty + ' Ã— ' + unitLabel,
+    serving: qty === 1 ? unitLabel : qty + ' × ' + unitLabel,
     carbs:   Math.round(pendingFood.carbs100g * totalG / 100),
     fiber:   Math.round(pendingFood.fiber100g * totalG / 100),
     mult:    1,
@@ -1211,7 +1211,7 @@ function confirmAddFood() {
   showToast(entry.name + ' added to ' + meal);
 }
 
-// â”€â”€ OPENAI NATURAL LANGUAGE LOGGING (via Lambda proxy) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── OPENAI NATURAL LANGUAGE LOGGING (via Lambda proxy) ───────────
 let pendingAIItems = []; // [{description, source, displayName, sourceName, portions, selectedPortionIdx, qty, carbs100g, fiber100g}]
 let aiChatHistory = []; // [{role:'user'|'assistant', content}]
 
@@ -1275,7 +1275,7 @@ async function sendAIChat() {
       aiChatHistory.push({ role: 'assistant', content: data.text });
       renderAIChat();
     } else if (data.type === 'ready') {
-      aiChatHistory.push({ role: 'assistant', content: 'Got it! Looking up nutrition info nowâ€¦' });
+      aiChatHistory.push({ role: 'assistant', content: 'Got it! Looking up nutrition info now…' });
       renderAIChat();
       document.getElementById('ai-thinking').classList.remove('show');
       await resolveAIItems(data.meal || 'lunch', data.items || []);
@@ -1300,7 +1300,7 @@ async function resolveAIItems(meal, items) {
     const qty = (aiQtyRaw >= 0.25 && aiQtyRaw <= 30) ? aiQtyRaw : 1;
     const [fdcResults, ppResult] = await Promise.all([
       fdcSearch(item.search_query, 8),
-      fetchPerplexityNutrition(item.description + ' â€” ' + item.search_query),
+      fetchPerplexityNutrition(item.description + ' — ' + item.search_query),
     ]);
     if (ppResult && ppResult.found && ppResult.serving_grams > 0 && ppResult.carbs_g >= 0) {
       const sg = ppResult.serving_grams;
@@ -1319,7 +1319,7 @@ async function resolveAIItems(meal, items) {
       continue;
     }
     if (!fdcResults.length) {
-      pendingAIItems.push({ description: item.description, source: 'none', displayName: 'No match found â€” verify manually', sourceName: '', portions: [{ label: '100g', grams: 100 }], selectedPortionIdx: 0, qty: 1, carbs100g: 0, fiber100g: 0 });
+      pendingAIItems.push({ description: item.description, source: 'none', displayName: 'No match found — verify manually', sourceName: '', portions: [{ label: '100g', grams: 100 }], selectedPortionIdx: 0, qty: 1, carbs100g: 0, fiber100g: 0 });
       continue;
     }
     const q = item.search_query.toLowerCase();
@@ -1360,7 +1360,7 @@ function renderAIReview() {
       ? `<div class="ai-review-source">Web search: <span>${escHtml(item.displayName)}</span> <span style="opacity:.6;font-weight:400;">via ${escHtml(item.sourceName)}</span></div>`
       : item.source === 'usda'
       ? `<div class="ai-review-source">USDA FDC: <span>${escHtml(item.displayName)}</span></div>`
-      : `<div class="ai-review-source" style="color:#B45309;">No match â€” verify manually</div>`;
+      : `<div class="ai-review-source" style="color:#B45309;">No match — verify manually</div>`;
 
     const portionSelect = item.portions.length > 1
       ? `<select class="ai-review-meal-select" style="max-width:180px;" onchange="updateAIReviewPortion(${i},this.value)">${item.portions.map((p,pi) => `<option value="${pi}"${pi===item.selectedPortionIdx?' selected':''}>${escHtml(p.label)}</option>`).join('')}</select>`
@@ -1371,7 +1371,7 @@ function renderAIReview() {
       ${sourceHtml}
       <div class="ai-review-row">
         <input class="ai-review-grams" type="number" min="0.25" step="0.25" value="${item.qty}" oninput="updateAIReviewQty(${i},this.value)" title="How many servings?">
-        <span style="font-size:12px;color:var(--ink-muted);">Ã—</span>
+        <span style="font-size:12px;color:var(--ink-muted);">×</span>
         ${portionSelect}
         <div class="ai-review-macros" id="ai-rm-${i}">
           <span class="c" id="ai-rc-${i}">${carbs}g carbs</span>
@@ -1441,7 +1441,7 @@ function confirmAILog() {
   scrollToMeal(meal);
 }
 
-// â”€â”€ RENDER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── RENDER ────────────────────────────────────────────────────────
 function mealCarbs(m) { return logs[m].reduce((s,f)=>s+Math.round(f.carbs*f.mult),0); }
 function mealFiber(m) { return logs[m].reduce((s,f)=>s+Math.round(f.fiber*f.mult),0); }
 function mealNet(m)   { return Math.max(0, mealCarbs(m)-mealFiber(m)); }
@@ -1462,7 +1462,7 @@ function renderMeal(meal) {
       <div class="food-carbs col-r ${cCls}">${fc}g</div>
       <div class="food-fiber col-r">${ff}g</div>
       <div class="food-net col-r">${fn}g</div>
-      <button class="del-btn" onclick="removeFood('${meal}',${i})" aria-label="Remove">Ã—</button>
+      <button class="del-btn" onclick="removeFood('${meal}',${i})" aria-label="Remove">×</button>
     </div>`;
   }).join('') || '<div style="padding:.75rem 1.25rem;font-size:13px;color:var(--ink-muted);">No items yet.</div>';
 
@@ -1499,7 +1499,7 @@ function updateSummary() {
   [['fiber-fill-sidebar','fiber-total-sidebar','fiber-note-sidebar'],['d-fiber-fill','d-fiber-total','d-fiber-note']].forEach(([fid,tid,nid])=>{
     const fe=document.getElementById(fid); if(fe) fe.style.width=fiberPct+'%';
     const te=document.getElementById(tid); if(te) te.textContent=tf;
-    const ne=document.getElementById(nid); if(ne) ne.textContent=tf>=FIBER_GOAL?'Fiber goal met!':'ADA: â‰¥14g per 1,000 kcal · '+(FIBER_GOAL-tf)+'g to go';
+    const ne=document.getElementById(nid); if(ne) ne.textContent=tf>=FIBER_GOAL?'Fiber goal met!':'ADA: ≥14g per 1,000 kcal · '+(FIBER_GOAL-tf)+'g to go';
   });
   updateInsight(tc, tf, tn);
 }
@@ -1508,11 +1508,11 @@ function updateInsight(tc, tf, tn) {
   let title, text;
   if (tc===0) {
     title='Ready to log';
-    text='Describe your meal in plain English or search the USDA database. Logs save automatically in your browser â€” use "Share with PCP" to export a PDF or CSV.';
+    text='Describe your meal in plain English or search the USDA database. Logs save automatically in your browser — use "Share with PCP" to export a PDF or CSV.';
   } else if (tn<60) {
     title = tf>=14?'Great fiber intake':'Good start';
     text = tf>=14
-      ? `${tf}g fiber logged â€” excellent. High-fiber foods slow glucose absorption and improve time-in-range. Net carbs: ${tn}g.`
+      ? `${tf}g fiber logged — excellent. High-fiber foods slow glucose absorption and improve time-in-range. Net carbs: ${tn}g.`
       : `${tn}g net carbs so far. Add high-fiber foods (legumes, vegetables, whole grains) to lower your net carb impact.`;
   } else if (tn<130) {
     title='On track';
@@ -1530,7 +1530,7 @@ function updateInsight(tc, tf, tn) {
 
 function removeFood(meal, i) { logs[meal].splice(i,1); saveDay(); renderAll(); showToast('Entry removed'); }
 
-// â”€â”€ HISTORY TABLE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── HISTORY TABLE ─────────────────────────────────────────────────
 function renderHistoryTable() {
   const days = parseInt(document.getElementById('export-range').value) || 7;
   const container = document.getElementById('history-table-container');
@@ -1561,12 +1561,12 @@ function renderHistoryTable() {
     </table>`;
 }
 
-// â”€â”€ EXPORTS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── EXPORTS ────────────────────────────────────────────────────────
 function doExport(type) {
   closeShareModal();
   const days = parseInt(document.getElementById('export-range')?.value) || 7;
   if (type === 'pdf') {
-    showToast('Opening print dialogâ€¦');
+    showToast('Opening print dialog…');
     setTimeout(() => window.print(), 350);
   } else if (type === 'csv') {
     downloadCSV(days);
@@ -1605,7 +1605,7 @@ function downloadCSV(days) {
 
 function emailExport(days) {
   const lines = [];
-  lines.push('CarbCompanion â€” Food Log Summary');
+  lines.push('CarbCompanion — Food Log Summary');
   lines.push('Generated: ' + new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'}));
   lines.push('');
   for (let i = 0; i < days; i++) {
@@ -1620,13 +1620,13 @@ function emailExport(days) {
       const mealCap = meal.charAt(0).toUpperCase() + meal.slice(1);
       l[meal].forEach(f => {
         const fc=Math.round(f.carbs*f.mult), ff=Math.round(f.fiber*f.mult);
-        lines.push(`  [${mealCap}] ${f.name} (${f.serving}) â€” ${fc}g carbs, ${ff}g fiber, ${Math.max(0,fc-ff)}g net`);
+        lines.push(`  [${mealCap}] ${f.name} (${f.serving}) — ${fc}g carbs, ${ff}g fiber, ${Math.max(0,fc-ff)}g net`);
       });
     });
     lines.push('');
   }
   const body    = encodeURIComponent(lines.join('\n'));
-  const subject = encodeURIComponent('My Carb Log â€” ' + formatDateLabel(todayStr()));
+  const subject = encodeURIComponent('My Carb Log — ' + formatDateLabel(todayStr()));
   window.location.href = `mailto:?subject=${subject}&body=${body}`;
 }
 
@@ -1641,7 +1641,7 @@ function escHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-// â”€â”€ UI HELPERS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── UI HELPERS ────────────────────────────────────────────────────
 function toggleSection(meal) {
   const b=document.getElementById('body-'+meal), c=document.getElementById('chev-'+meal);
   const h=b.style.display==='none'; b.style.display=h?'':'none'; c.classList.toggle('open',h);
@@ -1671,7 +1671,7 @@ async function sendFeedback() {
   const name    = document.getElementById('feedback-name').value.trim();
   if (!message) { document.getElementById('feedback-message').focus(); return; }
   const btn = document.getElementById('feedback-send-btn');
-  btn.textContent = 'Sendingâ€¦';
+  btn.textContent = 'Sending…';
   btn.disabled = true;
   try {
     const r = await fetch(`${API}/carb-feedback`, {
@@ -1681,16 +1681,16 @@ async function sendFeedback() {
     });
     if (r.ok) {
       document.getElementById('feedback-modal').classList.remove('open');
-      showToast('Thanks! Your message was sent âœ“');
+      showToast('Thanks! Your message was sent ✓');
     } else {
       btn.textContent = 'Send';
       btn.disabled = false;
-      showToast('Something went wrong â€” please try again');
+      showToast('Something went wrong — please try again');
     }
   } catch {
     btn.textContent = 'Send';
     btn.disabled = false;
-    showToast('Could not send â€” check your connection');
+    showToast('Could not send — check your connection');
   }
 }
 
@@ -1711,7 +1711,7 @@ document.querySelectorAll('.modal-backdrop').forEach(el => {
   el.addEventListener('click', e => { if(e.target===el) el.classList.remove('open'); });
 });
 
-// â”€â”€ INIT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── INIT ──────────────────────────────────────────────────────────
 function init() {
   loadAndRender();
   initAIChat();
