@@ -1194,6 +1194,9 @@ async function sendAIChat() {
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Server error');
+    const MEAL_NAMES = ['breakfast', 'lunch', 'dinner', 'snacks'];
+    // Normalize: if Lambda returns type=meal-name (GPT misformat) treat as ready
+    if (MEAL_NAMES.includes(data.type)) { data.meal = data.meal || data.type; data.type = 'ready'; }
     if (data.type === 'question') {
       aiChatHistory.push({ role: 'assistant', content: data.text });
       renderAIChat();
