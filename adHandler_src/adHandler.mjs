@@ -356,7 +356,25 @@ export const handler = async (event) => {
     const bfData = await bfRes.json();
     const p = bfData.product;
     if (!p || !p.title) return resp(200, { found: false });
-    return resp(200, { found: true, title: p.title, brand: p.brand || null, description: p.description || null });
+    // Extract inline nutrition from foods[] if available
+    let nutrition = null;
+    const food = Array.isArray(p.foods) && p.foods.length ? p.foods[0] : null;
+    if (food) {
+      const carbs = food.total_carbohydrate?.value ?? null;
+      const fiber = food.dietary_fiber?.value ?? null;
+      const servingG = food.serving_weight_grams ?? null;
+      if (carbs !== null && servingG) {
+        nutrition = {
+          serving_grams: servingG,
+          serving_description: food.serving_qty && food.serving_unit
+            ? `${food.serving_qty} ${food.serving_unit}`
+            : `${Math.round(servingG)}g`,
+          carbs_g: carbs,
+          fiber_g: fiber ?? 0,
+        };
+      }
+    }
+    return resp(200, { found: true, title: p.title, brand: p.brand || null, description: p.description || null, nutrition });
   }
 
   /* GET /fdc-search?q=oatmeal&n=8 */
