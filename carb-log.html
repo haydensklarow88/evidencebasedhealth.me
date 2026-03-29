@@ -300,6 +300,11 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
 .bnav-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 6px 12px; border: none; background: none; color: var(--ink-muted); font-family: var(--font-body); font-size: 10px; font-weight: 600; letter-spacing: .04em; cursor: pointer; border-radius: var(--radius-sm); transition: color .15s; }
 .bnav-add { position: absolute; left: 50%; transform: translateX(-50%); color: #fff; background: var(--sage); border-radius: var(--radius-sm); padding: 8px 20px; }
 .bnav-share { margin-left: auto; margin-right: 1.25rem; }
+.bnav-help { margin-left: 1.25rem; }
+
+/* FEEDBACK MODAL */
+.feedback-textarea { width: 100%; min-height: 120px; resize: vertical; border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: 10px 12px; font-family: var(--font-body); font-size: 14px; color: var(--ink); background: var(--warm-white); box-sizing: border-box; outline: none; transition: border-color .15s; }
+.feedback-textarea:focus { border-color: var(--sage); }
 
 /* TOAST */
 .toast { position: fixed; bottom: calc(var(--bnav-h) + 0.75rem); left: 50%; transform: translateX(-50%) translateY(10px); background: var(--ink); color: #fff; font-size: 13px; font-weight: 500; padding: 9px 18px; border-radius: var(--radius-sm); opacity: 0; transition: all .25s; z-index: 300; pointer-events: none; white-space: nowrap; max-width: 90vw; white-space: normal; text-align: center; }
@@ -666,6 +671,10 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
 
 <!-- BOTTOM NAV -->
 <nav class="bottom-nav">
+  <button class="bnav-btn bnav-help" onclick="openFeedbackModal()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17" stroke-linecap="round" stroke-width="2.5"/></svg>
+    Help
+  </button>
   <button class="bnav-btn bnav-add" onclick="openSearchModal()">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
     Add
@@ -675,6 +684,25 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
     Share
   </button>
 </nav>
+
+<!-- FEEDBACK MODAL -->
+<div class="modal-backdrop" id="feedback-modal">
+  <div class="modal" style="max-width:480px;">
+    <div class="modal-drag"></div>
+    <div class="modal-title">Help &amp; Feedback</div>
+    <div class="modal-sub">Report a bug, suggest a feature, or ask a question. We read every message.</div>
+    <div style="margin-bottom:0.75rem;">
+      <label style="font-size:13px;color:var(--ink-mid);display:block;margin-bottom:5px;">Your name (optional)</label>
+      <input id="feedback-name" type="text" placeholder="e.g. Hayden" style="width:100%;box-sizing:border-box;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:9px 12px;font-family:var(--font-body);font-size:14px;color:var(--ink);background:var(--warm-white);outline:none;" onfocus="this.style.borderColor='var(--sage)'" onblur="this.style.borderColor='var(--border)'">
+    </div>
+    <div style="margin-bottom:1rem;">
+      <label style="font-size:13px;color:var(--ink-mid);display:block;margin-bottom:5px;">Message</label>
+      <textarea id="feedback-message" class="feedback-textarea" placeholder="Describe what happened, what you'd like to see, or anything else…"></textarea>
+    </div>
+    <button class="btn-primary" id="feedback-send-btn" onclick="sendFeedback()" style="width:100%;justify-content:center;">Send</button>
+    <button class="modal-cancel" onclick="document.getElementById('feedback-modal').classList.remove('open')" style="width:100%;margin-top:8px;text-align:center;">Cancel</button>
+  </div>
+</div>
 
 <!-- PORTION MODAL -->
 <div class="modal-backdrop" id="portion-modal">
@@ -1628,6 +1656,42 @@ function closeDrawer()   {
 }
 function openShareModal()  { renderHistoryTable(); document.getElementById('share-modal').classList.add('open'); }
 function closeShareModal() { document.getElementById('share-modal').classList.remove('open'); }
+
+function openFeedbackModal() {
+  document.getElementById('feedback-name').value = '';
+  document.getElementById('feedback-message').value = '';
+  document.getElementById('feedback-send-btn').textContent = 'Send';
+  document.getElementById('feedback-send-btn').disabled = false;
+  document.getElementById('feedback-modal').classList.add('open');
+}
+
+async function sendFeedback() {
+  const message = document.getElementById('feedback-message').value.trim();
+  const name    = document.getElementById('feedback-name').value.trim();
+  if (!message) { document.getElementById('feedback-message').focus(); return; }
+  const btn = document.getElementById('feedback-send-btn');
+  btn.textContent = 'Sending…';
+  btn.disabled = true;
+  try {
+    const r = await fetch(`${API}/carb-feedback`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message, name: name || 'Anonymous' }),
+    });
+    if (r.ok) {
+      document.getElementById('feedback-modal').classList.remove('open');
+      showToast('Thanks! Your message was sent ✓');
+    } else {
+      btn.textContent = 'Send';
+      btn.disabled = false;
+      showToast('Something went wrong — please try again');
+    }
+  } catch {
+    btn.textContent = 'Send';
+    btn.disabled = false;
+    showToast('Could not send — check your connection');
+  }
+}
 
 function showToast(msg) {
   const t=document.getElementById('toast');

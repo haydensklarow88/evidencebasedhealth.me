@@ -466,6 +466,43 @@ export const handler = async (event) => {
     return resp(200, { found: false });
   }
 
+  /* POST /carb-feedback  { message, name? } — stores in DynamoDB + emails Hayden */
+  if (rawPath.endsWith('/carb-feedback') && method === 'POST') {
+    const { message, name } = body;
+    if (!message || !message.trim()) return resp(400, { error: 'message is required' });
+    const safeMsg  = String(message).trim().slice(0, 2000);
+    const safeName = name ? String(name).trim().slice(0, 100) : 'Anonymous';
+    const id       = `fb_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+    const ts       = new Date().toISOString();
+
+    // Store in DynamoDB (fire-and-forget — don't fail if table missing)
+    dynamo.send(new PutItemCommand({
+      TableName: 'CarbFeedback',
+      Item: {
+        id:        { S: id },
+        message:   { S: safeMsg },
+        name:      { S: safeName },
+        createdAt: { S: ts },
+      },
+    })).catch(err => console.error('CarbFeedback DynamoDB write failed:', err));
+
+    // Email Hayden
+    await ses.send(new SendEmailCommand({
+      FromEmailAddress: SES_FROM_EMAIL,
+      ReplyToAddresses: [SES_REPLY_TO],
+      Destination: { ToAddresses: ['hayden@evidencebasedhealth.me'] },
+      Content: { Simple: {
+        Subject: { Data: `Carb Tracker Feedback — ${safeName}`, Charset: 'UTF-8' },
+        Body: {
+          Text: { Data: `New feedback from carb tracker\n\nFrom: ${safeName}\nTime: ${ts}\n\n---\n${safeMsg}\n---`, Charset: 'UTF-8' },
+          Html: { Data: `<!DOCTYPE html><html><body style="font-family:Arial,sans-serif;max-width:600px;margin:auto;padding:24px;color:#333"><h2 style="color:#3d7a5c">Carb Tracker Feedback</h2><p><strong>From:</strong> ${safeName}</p><p><strong>Time:</strong> ${ts}</p><hr style="border:none;border-top:1px solid #e0e0e0;margin:16px 0"><p style="background:#f7f5f0;border-left:4px solid #3d7a5c;padding:16px;border-radius:4px;white-space:pre-wrap">${safeMsg.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</p></body></html>`, Charset: 'UTF-8' },
+        },
+      }},
+    }));
+
+    return resp(200, { ok: true });
+  }
+
   /* GET /fdc-search?q=oatmeal&n=8 */
   if (rawPath.endsWith('/fdc-search') && method === 'GET') {
     const FDC_API_KEY = process.env.FDC_API_KEY;
