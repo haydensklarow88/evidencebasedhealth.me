@@ -128,6 +128,14 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
 @keyframes blink { 0%,80%,100%{opacity:.2} 40%{opacity:1} }
 .ai-warning { display: flex; align-items: flex-start; gap: 8px; background: #FEF3C7; border: 1px solid #FDE68A; border-radius: var(--radius-sm); padding: 8px 12px; font-size: 12px; color: #92400E; margin-top: 8px; line-height: 1.5; }
 .ai-warning svg { flex-shrink: 0; margin-top: 1px; }
+/* AI CHAT BUBBLES */
+.ai-chat-messages { display: flex; flex-direction: column; gap: 8px; max-height: 240px; overflow-y: auto; padding: 2px 0; }
+.ai-msg { max-width: 88%; padding: 9px 13px; border-radius: 16px; font-size: 13px; line-height: 1.55; word-break: break-word; }
+.ai-msg.ai { align-self: flex-start; background: var(--cream); border: 1px solid var(--border); border-bottom-left-radius: 4px; color: var(--ink); }
+.ai-msg.user { align-self: flex-end; background: var(--purple); color: #fff; border-bottom-right-radius: 4px; }
+.ai-chat-footer { display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--ink-muted); gap: 8px; }
+.ai-chat-reset { font-size: 11px; color: var(--ink-muted); background: none; border: none; cursor: pointer; text-decoration: underline; padding: 0; }
+.ai-chat-reset:hover { color: var(--ink); }
 /* AI REVIEW PANEL */
 .ai-review { display: none; margin-top: 10px; border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; }
 .ai-review.show { display: block; }
@@ -481,26 +489,26 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
         <div class="ai-icon">✨</div>
         <div>
           <div class="ai-bar-title">Log with natural language</div>
-          <div class="ai-bar-sub">AI estimates portions — <strong>always review before confirming.</strong></div>
+          <div class="ai-bar-sub">Chat to log food — AI asks questions for accuracy, then you review.</div>
         </div>
       </div>
+      <div class="ai-chat-messages" id="ai-chat-msgs"></div>
       <div class="ai-input-row">
-        <textarea class="ai-textarea" id="ai-input" rows="2" placeholder="e.g. 'I had a cup of oatmeal with half a banana and a glass of orange juice for breakfast'"></textarea>
-        <button class="btn-ai" id="ai-btn" onclick="handleAILog()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-          Find Nutrition
+        <textarea class="ai-textarea" id="ai-input" rows="1" placeholder="Type here…" onkeydown="aiChatKeydown(event)" oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'"></textarea>
+        <button class="btn-ai" id="ai-btn" onclick="sendAIChat()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          Send
         </button>
-      </div>
-      <div class="ai-warning">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-        <span>AI estimates are <strong>approximations only</strong>. Portion weights and food matches may be incorrect. Always verify carb values before using for insulin dosing or medical decisions.</span>
       </div>
       <div class="ai-thinking" id="ai-thinking">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
         <span>Searching USDA &amp; web nutrition databases…</span>
         <span class="dots"><span>.</span><span>.</span><span>.</span></span>
       </div>
-      <!-- AI REVIEW PANEL -->
+      <div class="ai-chat-footer">
+        <span>⚠️ Always verify carb values before insulin dosing or medical decisions</span>
+        <button class="ai-chat-reset" onclick="resetAIChat()">Start over</button>
+      </div>
       <div class="ai-review" id="ai-review">
         <div class="ai-review-header">
           <span>Review before logging</span>
@@ -1088,6 +1096,7 @@ function confirmAddFood() {
 
 // ── OPENAI NATURAL LANGUAGE LOGGING (via Lambda proxy) ───────────
 let pendingAIItems = []; // [{description, source, displayName, sourceName, portions, selectedPortionIdx, qty, carbs100g, fiber100g}]
+let aiChatHistory = []; // [{role:'user'|'assistant', content}]
 
 async function fetchPerplexityNutrition(query) {
   try {
@@ -1097,94 +1106,125 @@ async function fetchPerplexityNutrition(query) {
   } catch { return null; }
 }
 
-async function handleAILog() {
-  const text = document.getElementById('ai-input').value.trim();
-  if (!text) { showToast('Describe what you ate first'); return; }
+function initAIChat() {
+  aiChatHistory = [];
+  renderAIChat();
+}
 
+function renderAIChat() {
+  const box = document.getElementById('ai-chat-msgs');
+  if (!box) return;
+  if (!aiChatHistory.length) {
+    box.innerHTML = '<div class="ai-msg ai">What did you eat? Describe it naturally \u2014 include the restaurant or brand, roughly how much, and when you ate it.</div>';
+    return;
+  }
+  box.innerHTML = aiChatHistory.map(m =>
+    `<div class="ai-msg ${m.role === 'assistant' ? 'ai' : 'user'}">${escHtml(m.content)}</div>`
+  ).join('');
+  box.scrollTop = box.scrollHeight;
+}
+
+function aiChatKeydown(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendAIChat(); }
+}
+
+function resetAIChat() {
+  initAIChat();
+  cancelAIReview();
+}
+
+async function sendAIChat() {
+  const input = document.getElementById('ai-input');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  input.style.height = 'auto';
+  aiChatHistory.push({ role: 'user', content: text });
+  renderAIChat();
   document.getElementById('ai-btn').disabled = true;
   document.getElementById('ai-thinking').classList.add('show');
   document.getElementById('ai-review').classList.remove('show');
   try {
-    const parseRes = await fetch(`${API}/ai-parse-food`, {
-      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text }),
+    const res = await fetch(`${API}/ai-chat-nutrition`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: aiChatHistory }),
     });
-    const parsed = await parseRes.json();
-    if (!parseRes.ok) throw new Error(parsed.error || 'AI parse error');
-    const meal  = parsed.meal  || 'breakfast';
-    const items = parsed.items || [];
-    if (!items.length) throw new Error('No food items found in description');
-
-    pendingAIItems = [];
-    for (const item of items) {
-      const descLower = item.description.toLowerCase();
-      const aiQtyRaw = parseFloat(descLower.match(/^(\d+(?:\.\d+)?)\s/)?.[1] || '1');
-      const qty = (aiQtyRaw >= 0.25 && aiQtyRaw <= 30) ? aiQtyRaw : 1;
-
-      // Search USDA and Perplexity in parallel
-      const [fdcResults, ppResult] = await Promise.all([
-        fdcSearch(item.search_query, 8),
-        fetchPerplexityNutrition(item.description + ' — ' + item.search_query),
-      ]);
-
-      // Prefer Perplexity when it finds specific data
-      if (ppResult && ppResult.found && ppResult.serving_grams > 0 && ppResult.carbs_g >= 0) {
-        const sg = ppResult.serving_grams;
-        const c100 = Math.round((ppResult.carbs_g / sg) * 1000) / 10;
-        const f100 = Math.round(((ppResult.fiber_g || 0) / sg) * 1000) / 10;
-        pendingAIItems.push({
-          description: item.description, source: 'web',
-          displayName: ppResult.food_name || item.search_query,
-          sourceName: ppResult.source || 'web search',
-          portions: [
-            { label: (ppResult.serving_description || '1 serving') + ' (~' + Math.round(sg) + 'g)', grams: sg },
-            { label: '100g', grams: 100 },
-          ],
-          selectedPortionIdx: 0, qty, carbs100g: c100, fiber100g: f100,
-        });
-        continue;
-      }
-
-      // Fall back to USDA
-      if (!fdcResults.length) {
-        pendingAIItems.push({ description: item.description, source: 'none', displayName: 'No match found', sourceName: '', portions: [{ label: '100g', grams: 100 }], selectedPortionIdx: 0, qty: 1, carbs100g: 0, fiber100g: 0 });
-        continue;
-      }
-      const q = item.search_query.toLowerCase();
-      const qWords = q.split(/\s+/).filter(w => w.length > 2);
-      const scored = fdcResults.map(f => ({ f, hits: qWords.filter(w => f.name.toLowerCase().includes(w)).length }));
-      scored.sort((a, b) => b.hits - a.hits);
-      const bestFood = scored[0].f;
-
-      // Get full food for named portions
-      const fullFood = await fdcGetFood(bestFood.fdcId);
-      const portions = (fullFood && fullFood.portions && fullFood.portions.length > 1) ? fullFood.portions : [{ label: '100g', grams: 100 }];
-
-      // Pick best default portion (match words from description to portion label)
-      let selectedPortionIdx = 0;
-      const descWords = descLower.split(/\s+/).filter(w => w.length > 3);
-      for (let pi = 0; pi < portions.length; pi++) {
-        if (descWords.some(w => portions[pi].label.toLowerCase().includes(w))) { selectedPortionIdx = pi; break; }
-      }
-
-      pendingAIItems.push({
-        description: item.description, source: 'usda',
-        displayName: bestFood.name,
-        sourceName: 'USDA FDC',
-        portions, selectedPortionIdx, qty,
-        carbs100g: fullFood ? fullFood.carbs100g : bestFood.carbs100g,
-        fiber100g: fullFood ? fullFood.fiber100g : bestFood.fiber100g,
-      });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Server error');
+    if (data.type === 'question') {
+      aiChatHistory.push({ role: 'assistant', content: data.text });
+      renderAIChat();
+    } else if (data.type === 'ready') {
+      aiChatHistory.push({ role: 'assistant', content: 'Got it! Looking up nutrition info now…' });
+      renderAIChat();
+      document.getElementById('ai-thinking').classList.remove('show');
+      await resolveAIItems(data.meal || 'lunch', data.items || []);
+    } else {
+      aiChatHistory.push({ role: 'assistant', content: data.text || 'Something went wrong, please try again.' });
+      renderAIChat();
     }
-
-    document.getElementById('ai-review-meal').value = meal;
-    renderAIReview();
-    document.getElementById('ai-review').classList.add('show');
   } catch(e) {
     showToast('Error: ' + e.message);
   } finally {
     document.getElementById('ai-btn').disabled = false;
     document.getElementById('ai-thinking').classList.remove('show');
   }
+}
+
+async function resolveAIItems(meal, items) {
+  if (!items.length) { showToast('No food items found'); return; }
+  pendingAIItems = [];
+  for (const item of items) {
+    const descLower = item.description.toLowerCase();
+    const aiQtyRaw = parseFloat(descLower.match(/^(\d+(?:\.\d+)?)\s/)?.[1] || '1');
+    const qty = (aiQtyRaw >= 0.25 && aiQtyRaw <= 30) ? aiQtyRaw : 1;
+    const [fdcResults, ppResult] = await Promise.all([
+      fdcSearch(item.search_query, 8),
+      fetchPerplexityNutrition(item.description + ' — ' + item.search_query),
+    ]);
+    if (ppResult && ppResult.found && ppResult.serving_grams > 0 && ppResult.carbs_g >= 0) {
+      const sg = ppResult.serving_grams;
+      const c100 = Math.round((ppResult.carbs_g / sg) * 1000) / 10;
+      const f100 = Math.round(((ppResult.fiber_g || 0) / sg) * 1000) / 10;
+      pendingAIItems.push({
+        description: item.description, source: 'web',
+        displayName: ppResult.food_name || item.search_query,
+        sourceName: ppResult.source || 'web search',
+        portions: [
+          { label: (ppResult.serving_description || '1 serving') + ' (~' + Math.round(sg) + 'g)', grams: sg },
+          { label: '100g', grams: 100 },
+        ],
+        selectedPortionIdx: 0, qty, carbs100g: c100, fiber100g: f100,
+      });
+      continue;
+    }
+    if (!fdcResults.length) {
+      pendingAIItems.push({ description: item.description, source: 'none', displayName: 'No match found — verify manually', sourceName: '', portions: [{ label: '100g', grams: 100 }], selectedPortionIdx: 0, qty: 1, carbs100g: 0, fiber100g: 0 });
+      continue;
+    }
+    const q = item.search_query.toLowerCase();
+    const qWords = q.split(/\s+/).filter(w => w.length > 2);
+    const scored = fdcResults.map(f => ({ f, hits: qWords.filter(w => f.name.toLowerCase().includes(w)).length }));
+    scored.sort((a, b) => b.hits - a.hits);
+    const bestFood = scored[0].f;
+    const fullFood = await fdcGetFood(bestFood.fdcId);
+    const portions = (fullFood && fullFood.portions && fullFood.portions.length > 1) ? fullFood.portions : [{ label: '100g', grams: 100 }];
+    let selectedPortionIdx = 0;
+    const descWords = descLower.split(/\s+/).filter(w => w.length > 3);
+    for (let pi = 0; pi < portions.length; pi++) {
+      if (descWords.some(w => portions[pi].label.toLowerCase().includes(w))) { selectedPortionIdx = pi; break; }
+    }
+    pendingAIItems.push({
+      description: item.description, source: 'usda',
+      displayName: bestFood.name, sourceName: 'USDA FDC',
+      portions, selectedPortionIdx, qty,
+      carbs100g: fullFood ? fullFood.carbs100g : bestFood.carbs100g,
+      fiber100g: fullFood ? fullFood.fiber100g : bestFood.fiber100g,
+    });
+  }
+  document.getElementById('ai-review-meal').value = meal;
+  renderAIReview();
+  document.getElementById('ai-review').classList.add('show');
 }
 
 function renderAIReview() {
@@ -1275,8 +1315,8 @@ function confirmAILog() {
     added++;
   }
   saveDay(); renderAll();
-  document.getElementById('ai-input').value = '';
   cancelAIReview();
+  resetAIChat();
   showToast(added + ' item' + (added !== 1 ? 's' : '') + ' logged to ' + meal);
   scrollToMeal(meal);
 }
@@ -1512,6 +1552,7 @@ document.querySelectorAll('.modal-backdrop').forEach(el => {
 // ── INIT ──────────────────────────────────────────────────────────
 function init() {
   loadAndRender();
+  initAIChat();
   if(window.innerWidth<=720) document.getElementById('drawer-toggle').style.display='flex';
   window.addEventListener('resize',()=>{ document.getElementById('drawer-toggle').style.display=window.innerWidth<=720?'flex':'none'; });
 }
