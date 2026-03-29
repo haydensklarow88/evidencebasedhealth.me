@@ -296,8 +296,8 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
 .drawer-close-btn:hover { background: var(--sage-light); color: var(--sage); border-color: var(--sage-mid); }
 
 /* BOTTOM NAV */
-.bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; height: calc(var(--bnav-h) + env(safe-area-inset-bottom, 0px)); background: var(--warm-white); border-top: 1px solid var(--border); z-index: 110; padding: 0 0.25rem; padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; justify-content: space-evenly; align-items: center; flex-shrink: 0; }
-.bnav-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 6px 8px; border: none; background: none; color: var(--ink-muted); font-family: var(--font-body); font-size: 10px; font-weight: 600; letter-spacing: .04em; cursor: pointer; border-radius: var(--radius-sm); transition: color .15s; flex: 1; }
+.bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; height: calc(var(--bnav-h) + env(safe-area-inset-bottom, 0px)); background: var(--warm-white); border-top: 1px solid var(--border); z-index: 110; padding: 0; padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; grid-template-columns: repeat(4, 1fr); align-items: center; flex-shrink: 0; }
+.bnav-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 6px 4px; border: none; background: none; color: var(--ink-muted); font-family: var(--font-body); font-size: 10px; font-weight: 600; letter-spacing: .04em; cursor: pointer; border-radius: var(--radius-sm); transition: color .15s; width: 100%; }
 .bnav-btn svg { width: 22px; height: 22px; flex-shrink: 0; }
 .bnav-btn.active { color: var(--sage); }
 .bnav-add { color: #fff; background: var(--sage); border-radius: var(--radius-sm); padding: 8px 14px; }
@@ -347,7 +347,7 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
   main { padding: 1rem; padding-bottom: calc(var(--bnav-h) + 1rem); gap: 1rem; }
   .summary-bar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .summary-value { font-size: 1.75rem; }
-  .bottom-nav { display: flex; }
+  .bottom-nav { display: grid; }
   .food-table-header, .food-row { grid-template-columns: 1fr 50px 46px 44px 28px; }
   .col-serving { display: none; }
   .meal-header-title { display: none; }
