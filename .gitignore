@@ -17,3 +17,7 @@ scripts/package.json
 tmp*.json
 adcp.json
 adclients-policy.json
+
+# Extracted Lambda working folders
+deployed_extracted/
+adHandler_extracted/
