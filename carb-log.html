@@ -157,6 +157,12 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
 .ai-review-meal-row label { color: var(--ink-muted); font-size: 12px; }
 .ai-review-meal-select { border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 4px 8px; font-family: var(--font-body); font-size: 13px; background: var(--warm-white); color: var(--ink); cursor: pointer; }
 .ai-review-meal-select:focus { outline: none; border-color: var(--sage); }
+.ai-fix-btn { font-family: var(--font-body); font-size: 11px; color: var(--sage); background: none; border: 1px solid var(--sage-mid); border-radius: 4px; padding: 2px 7px; cursor: pointer; white-space: nowrap; }
+.ai-fix-btn:hover { background: var(--sage-light); }
+.ai-manual-row { display: flex; align-items: center; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
+.ai-manual-input { width: 58px; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 3px 6px; font-family: var(--font-body); font-size: 13px; background: var(--warm-white); color: var(--ink); }
+.ai-manual-input:focus { outline: none; border-color: var(--sage); }
+.ai-fdc-picker { }
 .ai-review-footer { padding: 10px 14px; display: flex; gap: 8px; background: var(--cream); }
 
 /* ADD BAR */
@@ -1298,9 +1304,11 @@ async function resolveAIItems(meal, items) {
     const descLower = item.description.toLowerCase();
     const aiQtyRaw = parseFloat(descLower.match(/^(\d+(?:\.\d+)?)\s/)?.[1] || '1');
     const qty = (aiQtyRaw >= 0.25 && aiQtyRaw <= 30) ? aiQtyRaw : 1;
+    // Use web_query (brand-specific) for Perplexity, search_query (generic) for USDA
+    const perplexityQ = (item.web_query || item.description);
     const [fdcResults, ppResult] = await Promise.all([
-      fdcSearch(item.search_query, 8),
-      fetchPerplexityNutrition(item.description + ' — ' + item.search_query),
+      fdcSearch(item.search_query, 10),
+      fetchPerplexityNutrition(perplexityQ),
     ]);
     if (ppResult && ppResult.found && ppResult.serving_grams > 0 && ppResult.carbs_g >= 0) {
       const sg = ppResult.serving_grams;
@@ -1315,11 +1323,13 @@ async function resolveAIItems(meal, items) {
           { label: '100g', grams: 100 },
         ],
         selectedPortionIdx: 0, qty, carbs100g: c100, fiber100g: f100,
+        fdcCandidates: fdcResults.slice(0, 5),
+        manualOverride: false,
       });
       continue;
     }
     if (!fdcResults.length) {
-      pendingAIItems.push({ description: item.description, source: 'none', displayName: 'No match found — verify manually', sourceName: '', portions: [{ label: '100g', grams: 100 }], selectedPortionIdx: 0, qty: 1, carbs100g: 0, fiber100g: 0 });
+      pendingAIItems.push({ description: item.description, source: 'none', displayName: 'No match found', sourceName: '', portions: [{ label: '100g', grams: 100 }], selectedPortionIdx: 0, qty: 1, carbs100g: 0, fiber100g: 0, fdcCandidates: [], manualOverride: true });
       continue;
     }
     const q = item.search_query.toLowerCase();
@@ -1340,6 +1350,8 @@ async function resolveAIItems(meal, items) {
       portions, selectedPortionIdx, qty,
       carbs100g: fullFood ? fullFood.carbs100g : bestFood.carbs100g,
       fiber100g: fullFood ? fullFood.fiber100g : bestFood.fiber100g,
+      fdcCandidates: scored.slice(0, 5).map(s => s.f),
+      manualOverride: false,
     });
   }
   document.getElementById('ai-review-meal').value = meal;
@@ -1352,44 +1364,85 @@ function renderAIReview() {
   if (!pendingAIItems.length) { container.innerHTML = '<div style="padding:12px 14px;font-size:13px;color:var(--ink-muted);">No items to review.</div>'; return; }
   container.innerHTML = pendingAIItems.map((item, i) => {
     const g = item.portions[item.selectedPortionIdx].grams * item.qty;
-    const carbs = Math.round(item.carbs100g * g / 100);
-    const fiber = Math.round(item.fiber100g * g / 100);
+    const carbs = item.manualOverride ? (item.manualCarbs || 0) : Math.round(item.carbs100g * g / 100);
+    const fiber = item.manualOverride ? (item.manualFiber || 0) : Math.round(item.fiber100g * g / 100);
     const net   = Math.max(0, carbs - fiber);
 
-    const sourceHtml = item.source === 'web'
-      ? `<div class="ai-review-source">Web search: <span>${escHtml(item.displayName)}</span> <span style="opacity:.6;font-weight:400;">via ${escHtml(item.sourceName)}</span></div>`
-      : item.source === 'usda'
-      ? `<div class="ai-review-source">USDA FDC: <span>${escHtml(item.displayName)}</span></div>`
-      : `<div class="ai-review-source" style="color:#B45309;">No match — verify manually</div>`;
+    // Source label + USDA candidate switcher
+    let sourceHtml;
+    if (item.source === 'web') {
+      sourceHtml = `<div class="ai-review-source">Web: <span>${escHtml(item.displayName)}</span> <span style="opacity:.6;font-weight:400;">via ${escHtml(item.sourceName)}</span>`;
+      if (item.fdcCandidates && item.fdcCandidates.length) {
+        sourceHtml += ` <button class="ai-fix-btn" onclick="toggleFDCPicker(${i})" title="Wrong food? Pick from USDA results">wrong food?</button>`;
+      }
+      sourceHtml += `</div>`;
+    } else if (item.source === 'usda') {
+      sourceHtml = `<div class="ai-review-source">USDA FDC: <span>${escHtml(item.displayName)}</span>`;
+      if (item.fdcCandidates && item.fdcCandidates.length > 1) {
+        sourceHtml += ` <button class="ai-fix-btn" onclick="toggleFDCPicker(${i})" title="Wrong food? Switch USDA match">wrong food?</button>`;
+      }
+      sourceHtml += `</div>`;
+    } else {
+      sourceHtml = `<div class="ai-review-source" style="color:#B45309;">No match found — enter carbs manually below</div>`;
+    }
+
+    // USDA candidate picker (hidden by default)
+    const fdcPickerHtml = (item.fdcCandidates && item.fdcCandidates.length > 1 && !item.manualOverride)
+      ? `<div class="ai-fdc-picker" id="ai-fdc-picker-${i}" style="display:none;margin:4px 0 6px;">
+          <select class="ai-review-meal-select" style="max-width:100%;font-size:11px;" onchange="switchFDCCandidate(${i},this.value)">
+            <option value="">— Pick a different USDA match —</option>
+            ${item.fdcCandidates.map((c,ci) => `<option value="${ci}">${escHtml(c.name)}</option>`).join('')}
+          </select>
+        </div>`
+      : '';
 
     const portionSelect = item.portions.length > 1
       ? `<select class="ai-review-meal-select" style="max-width:180px;" onchange="updateAIReviewPortion(${i},this.value)">${item.portions.map((p,pi) => `<option value="${pi}"${pi===item.selectedPortionIdx?' selected':''}>${escHtml(p.label)}</option>`).join('')}</select>`
       : `<span style="font-size:12px;color:var(--ink-muted);">${escHtml(item.portions[0].label)}</span>`;
 
+    // Manual override fields
+    const manualHtml = item.manualOverride
+      ? `<div class="ai-manual-row" id="ai-manual-${i}">
+          <label style="font-size:11px;color:var(--ink-muted);">Carbs (g):</label>
+          <input class="ai-manual-input" type="number" min="0" step="1" value="${item.manualCarbs || 0}" oninput="updateAIManual(${i},'carbs',this.value)">
+          <label style="font-size:11px;color:var(--ink-muted);">Fiber (g):</label>
+          <input class="ai-manual-input" type="number" min="0" step="1" value="${item.manualFiber || 0}" oninput="updateAIManual(${i},'fiber',this.value)">
+          <button class="ai-fix-btn" onclick="toggleManualOverride(${i})">use database</button>
+        </div>`
+      : `<button class="ai-fix-btn" style="margin-left:auto;" onclick="toggleManualOverride(${i})" title="Enter carbs manually">enter manually</button>`;
+
     return `<div class="ai-review-item" id="ai-ri-${i}">
       <div class="ai-review-desc">${escHtml(item.description)}</div>
       ${sourceHtml}
+      ${fdcPickerHtml}
       <div class="ai-review-row">
-        <input class="ai-review-grams" type="number" min="0.25" step="0.25" value="${item.qty}" oninput="updateAIReviewQty(${i},this.value)" title="How many servings?">
+        <input class="ai-review-grams" type="number" min="0.25" step="0.25" value="${item.qty}" oninput="updateAIReviewQty(${i},this.value)" title="Quantity / servings" ${item.manualOverride ? 'style="opacity:.4;pointer-events:none;"' : ''}>
         <span style="font-size:12px;color:var(--ink-muted);">×</span>
-        ${portionSelect}
+        ${item.manualOverride ? `<span style="font-size:12px;color:var(--ink-muted);opacity:.4;">manual</span>` : portionSelect}
         <div class="ai-review-macros" id="ai-rm-${i}">
           <span class="c" id="ai-rc-${i}">${carbs}g carbs</span>
           <span class="f" id="ai-rf-${i}">${fiber}g fiber</span>
           <span class="n" id="ai-rn-${i}">${net}g net</span>
         </div>
-        <button class="ai-remove-btn" onclick="removeAIReviewItem(${i})">Remove</button>
+        <button class="ai-remove-btn" onclick="removeAIReviewItem(${i})">✕</button>
       </div>
+      ${manualHtml}
     </div>`;
   }).join('');
 }
 
 function refreshAIReviewMacros(i) {
   const item = pendingAIItems[i];
-  const g = item.portions[item.selectedPortionIdx].grams * item.qty;
-  const carbs = Math.round(item.carbs100g * g / 100);
-  const fiber = Math.round(item.fiber100g * g / 100);
-  const net   = Math.max(0, carbs - fiber);
+  let carbs, fiber;
+  if (item.manualOverride) {
+    carbs = item.manualCarbs || 0;
+    fiber = item.manualFiber || 0;
+  } else {
+    const g = item.portions[item.selectedPortionIdx].grams * item.qty;
+    carbs = Math.round(item.carbs100g * g / 100);
+    fiber = Math.round(item.fiber100g * g / 100);
+  }
+  const net = Math.max(0, carbs - fiber);
   document.getElementById('ai-rc-' + i).textContent = carbs + 'g carbs';
   document.getElementById('ai-rf-' + i).textContent = fiber + 'g fiber';
   document.getElementById('ai-rn-' + i).textContent = net + 'g net';
@@ -1403,6 +1456,47 @@ function updateAIReviewQty(i, val) {
 
 function updateAIReviewPortion(i, portionIdx) {
   pendingAIItems[i].selectedPortionIdx = parseInt(portionIdx, 10);
+  refreshAIReviewMacros(i);
+}
+
+function toggleFDCPicker(i) {
+  const picker = document.getElementById('ai-fdc-picker-' + i);
+  if (picker) picker.style.display = picker.style.display === 'none' ? 'block' : 'none';
+}
+
+async function switchFDCCandidate(i, candidateIdx) {
+  if (candidateIdx === '') return;
+  const item = pendingAIItems[i];
+  const candidate = item.fdcCandidates[parseInt(candidateIdx, 10)];
+  if (!candidate) return;
+  const fullFood = await fdcGetFood(candidate.fdcId);
+  item.source = 'usda';
+  item.displayName = candidate.name;
+  item.sourceName = 'USDA FDC';
+  item.carbs100g = fullFood ? fullFood.carbs100g : candidate.carbs100g;
+  item.fiber100g = fullFood ? fullFood.fiber100g : candidate.fiber100g;
+  item.portions = (fullFood && fullFood.portions && fullFood.portions.length > 1) ? fullFood.portions : [{ label: '100g', grams: 100 }];
+  item.selectedPortionIdx = 0;
+  item.manualOverride = false;
+  renderAIReview();
+}
+
+function toggleManualOverride(i) {
+  const item = pendingAIItems[i];
+  item.manualOverride = !item.manualOverride;
+  if (item.manualOverride) {
+    // Pre-fill with current calculated value
+    const g = item.portions[item.selectedPortionIdx].grams * item.qty;
+    item.manualCarbs = Math.round(item.carbs100g * g / 100);
+    item.manualFiber = Math.round(item.fiber100g * g / 100);
+  }
+  renderAIReview();
+}
+
+function updateAIManual(i, field, val) {
+  const v = Math.max(0, parseFloat(val) || 0);
+  if (field === 'carbs') pendingAIItems[i].manualCarbs = v;
+  else pendingAIItems[i].manualFiber = v;
   refreshAIReviewMacros(i);
 }
 
@@ -1422,14 +1516,24 @@ function confirmAILog() {
   const meal = document.getElementById('ai-review-meal').value;
   let added = 0;
   for (const item of pendingAIItems) {
-    if (item.source === 'none') continue;
-    const g = item.portions[item.selectedPortionIdx].grams * item.qty;
+    let carbs, fiber, servingLabel;
+    if (item.manualOverride) {
+      carbs = item.manualCarbs || 0;
+      fiber = item.manualFiber || 0;
+      servingLabel = item.description + ' (manual entry)';
+    } else {
+      if (item.source === 'none') continue;
+      const g = item.portions[item.selectedPortionIdx].grams * item.qty;
+      carbs = Math.round(item.carbs100g * g / 100);
+      fiber = Math.round(item.fiber100g * g / 100);
+      servingLabel = item.description + ' (~' + Math.round(g) + 'g)';
+    }
     logs[meal].push({
       name: item.description,
-      brand: item.sourceName,
-      serving: item.description + ' (~' + Math.round(g) + 'g)',
-      carbs: Math.round(item.carbs100g * g / 100),
-      fiber: Math.round(item.fiber100g * g / 100),
+      brand: item.sourceName || (item.manualOverride ? 'manual' : ''),
+      serving: servingLabel,
+      carbs,
+      fiber,
       mult: 1,
     });
     added++;
