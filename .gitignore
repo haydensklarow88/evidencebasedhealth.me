@@ -9,6 +9,8 @@ Thumbs.db
 
 # Node modules (if ever added)
 node_modules/
+scripts/package-lock.json
+scripts/package.json
 
 # Build artifacts
 *.zip
