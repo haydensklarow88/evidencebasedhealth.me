@@ -296,11 +296,10 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
 .drawer-close-btn:hover { background: var(--sage-light); color: var(--sage); border-color: var(--sage-mid); }
 
 /* BOTTOM NAV */
-.bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; height: calc(var(--bnav-h) + env(safe-area-inset-bottom, 0px)); background: var(--warm-white); border-top: 1px solid var(--border); z-index: 110; padding: 0; padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; grid-template-columns: repeat(4, 1fr); align-items: center; flex-shrink: 0; }
-.bnav-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 6px 4px; border: none; background: none; color: var(--ink-muted); font-family: var(--font-body); font-size: 10px; font-weight: 600; letter-spacing: .04em; cursor: pointer; border-radius: var(--radius-sm); transition: color .15s; width: 100%; }
-.bnav-btn svg { width: 22px; height: 22px; flex-shrink: 0; }
-.bnav-btn.active { color: var(--sage); }
-.bnav-add { color: #fff; background: var(--sage); border-radius: var(--radius-sm); padding: 8px 14px; }
+.bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; height: calc(var(--bnav-h) + env(safe-area-inset-bottom, 0px)); background: var(--warm-white); border-top: 1px solid var(--border); z-index: 110; padding: 0; padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; align-items: center; flex-shrink: 0; }
+.bnav-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 6px 12px; border: none; background: none; color: var(--ink-muted); font-family: var(--font-body); font-size: 10px; font-weight: 600; letter-spacing: .04em; cursor: pointer; border-radius: var(--radius-sm); transition: color .15s; }
+.bnav-add { position: absolute; left: 50%; transform: translateX(-50%); color: #fff; background: var(--sage); border-radius: var(--radius-sm); padding: 8px 20px; }
+.bnav-share { margin-left: auto; margin-right: 1.25rem; }
 
 /* TOAST */
 .toast { position: fixed; bottom: calc(var(--bnav-h) + 0.75rem); left: 50%; transform: translateX(-50%) translateY(10px); background: var(--ink); color: #fff; font-size: 13px; font-weight: 500; padding: 9px 18px; border-radius: var(--radius-sm); opacity: 0; transition: all .25s; z-index: 300; pointer-events: none; white-space: nowrap; max-width: 90vw; white-space: normal; text-align: center; }
@@ -347,7 +346,7 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
   main { padding: 1rem; padding-bottom: calc(var(--bnav-h) + 1rem); gap: 1rem; }
   .summary-bar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .summary-value { font-size: 1.75rem; }
-  .bottom-nav { display: grid; }
+  .bottom-nav { display: flex; }
   .food-table-header, .food-row { grid-template-columns: 1fr 50px 46px 44px 28px; }
   .col-serving { display: none; }
   .meal-header-title { display: none; }
@@ -667,19 +666,11 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
 
 <!-- BOTTOM NAV -->
 <nav class="bottom-nav">
-  <button class="bnav-btn" id="bnav-summary" onclick="document.getElementById('summary-anchor').scrollIntoView({behavior:'smooth',block:'start'})">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="12" width="4" height="8" rx="1"/><rect x="10" y="7" width="4" height="13" rx="1"/><rect x="17" y="3" width="4" height="17" rx="1"/></svg>
-    Summary
-  </button>
   <button class="bnav-btn bnav-add" onclick="openSearchModal()">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
     Add
   </button>
-  <button class="bnav-btn" onclick="scrollToMeal('breakfast')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
-    Log
-  </button>
-  <button class="bnav-btn" onclick="openShareModal()">
+  <button class="bnav-btn bnav-share" onclick="openShareModal()">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13"/></svg>
     Share
   </button>
