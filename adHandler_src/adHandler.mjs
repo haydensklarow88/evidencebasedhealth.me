@@ -538,12 +538,12 @@ export const handler = async (event) => {
       method: 'POST',
       headers: { 'Authorization': `Bearer ${PERPLEXITY_API_KEY}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'sonar',
+        model: 'sonar-pro',
         messages: [
-          { role: 'system', content: 'You are a nutrition data lookup tool. Search the web for exact nutrition facts for the food described. Return ONLY valid JSON with no markdown formatting, no code blocks, no explanation.' },
-          { role: 'user', content: `Find the nutrition facts for: "${query.trim().slice(0, 300)}"\n\nReturn ONLY this JSON (no other text, no markdown): {"found": true, "food_name": "exact product name", "serving_description": "e.g. 1 slice", "serving_grams": 107, "carbs_g": 36, "fiber_g": 2, "source": "source website domain"}\n\nOnly return found:true if you found specific carb numbers with confidence. Otherwise return: {"found": false}` },
+          { role: 'system', content: 'You are a precise nutrition data lookup tool. Search the web for exact nutrition facts for the food described. Return ONLY valid JSON with no markdown formatting, no code blocks, no explanation. Be accurate — people use this for medical carb counting.' },
+          { role: 'user', content: `Find the exact nutrition facts for: "${query.trim().slice(0, 300)}"\n\nReturn ONLY this JSON (no other text, no markdown): {"found": true, "food_name": "exact product name", "serving_description": "e.g. 1 biscuit (57g)", "serving_grams": 57, "carbs_g": 26, "fiber_g": 1, "source": "source website domain"}\n\nImportant: serving_grams must be the weight of ONE serving. carbs_g and fiber_g are for that ONE serving. Only return found:true if you found specific carb numbers with high confidence from a reliable source (USDA, manufacturer, nutrition label). Otherwise return: {"found": false}` },
         ],
-        max_tokens: 300,
+        max_tokens: 400,
       }),
     });
     if (!ppNutRes.ok) return resp(502, { error: 'Search error: ' + ppNutRes.status });
@@ -570,7 +570,7 @@ export const handler = async (event) => {
 Your behavior:
 1. If the user's food description is ambiguous (unclear brand, restaurant vs homemade, or vague portion), ask ONE short clarifying question in plain conversational English.
 2. Once you have enough detail to identify the food and portion accurately, respond ONLY with this exact JSON structure (no other text, no markdown, no code fences):
-{"type":"ready","meal":"lunch","items":[{"search_query":"brand + specific food type","quantity_grams":number,"description":"human-readable e.g. 2 slices Costco Food Court cheese pizza"}]}
+{"type":"ready","meal":"lunch","items":[{"search_query":"generic food name for USDA database","web_query":"brand-specific name for web search","quantity_grams":number,"description":"human-readable e.g. 2 Wegmans buttermilk biscuits"}]}
 
 CRITICAL JSON rules:
 - "type" field MUST always be the literal string "ready" (never a meal name).
@@ -578,8 +578,10 @@ CRITICAL JSON rules:
 - Do not wrap JSON in markdown code blocks.
 - If food is clearly specified (brand + portion + type known), skip questions and go straight to JSON.
 - Ask at most 2 clarifying questions across the whole conversation.
-- search_query must be specific enough for a nutrition database (include brand, exact product, preparation method).
-- quantity_grams is your best estimate of the total grams consumed.
+- SPLIT compound/combo dishes into SEPARATE items. "Biscuits and gravy" = two items: one for biscuits, one for gravy. "Chicken nuggets with sauce" = two items.
+- search_query is for USDA FoodData Central — use GENERIC food names only, NO brand names (e.g. "buttermilk biscuit" not "Wegmans biscuit", "sausage gravy" not "homemade gravy"). Generic names match USDA better.
+- web_query is for branded web nutrition lookup — include brand/restaurant name here (e.g. "Wegmans buttermilk biscuits nutrition facts").
+- quantity_grams is your best estimate of the total grams for that single component.
 - Infer meal from time context; default to "lunch" if unclear.
 - Keep questions short (one sentence, no bullets or formatting).`;
     const oRes = await fetch('https://api.openai.com/v1/chat/completions', {
