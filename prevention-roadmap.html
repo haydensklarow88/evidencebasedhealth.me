@@ -1,20 +1,20 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- Google tag (gtag.js) — GA4 + Google Ads -->
+<!-- Google tag (gtag.js) � GA4 + Google Ads -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-S5Y2CMJM4K"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
   gtag('config', 'G-S5Y2CMJM4K');
-  gtag('config', 'AW-18001526983');
+  gtag('config', 'AW-18001391402');
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <meta name="description" content="A personalized prevention roadmap based on your age and anatomy. Find out which cancer screenings and preventive conversations are most relevant for you right now.">
-<meta property="og:title" content="Prevention Roadmap — Evidence-Based Health">
+<meta property="og:title" content="Prevention Roadmap � Evidence-Based Health">
 <meta property="og:description" content="See which cancer screenings and preventive conversations match your age and anatomy. Private, evidence-based.">
 <meta property="og:url" content="https://evidencebasedhealth.me/prevention-roadmap.html">
 <meta property="og:type" content="website">
@@ -53,7 +53,7 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* ── NAV ── */
+  /* -- NAV -- */
   nav {
     background: rgba(247,245,240,0.95);
     border-bottom: 1px solid var(--paper-warm);
@@ -74,7 +74,7 @@
   .nav-link:hover { color: var(--accent); }
   .nav-link-cta { color: var(--accent); font-weight: 500; }
 
-  /* ── PAGE HERO ── */
+  /* -- PAGE HERO -- */
   .page-hero {
     background: var(--paper-card);
     border-bottom: 1px solid var(--paper-warm);
@@ -108,7 +108,7 @@
     margin-bottom: 1.5rem;
   }
 
-  /* ── EDUCATION DISCLAIMER BOX ── */
+  /* -- EDUCATION DISCLAIMER BOX -- */
   .edu-notice {
     background: var(--accent-light);
     border: 1px solid var(--accent-rule);
@@ -125,10 +125,10 @@
   }
   .edu-notice strong { color: var(--ink); font-weight: 500; }
 
-  /* ── MAIN CONTENT ── */
+  /* -- MAIN CONTENT -- */
   main { max-width: var(--max); margin: 0 auto; padding: 3rem 2rem 5rem; }
 
-  /* ── QUESTIONNAIRE CARD ── */
+  /* -- QUESTIONNAIRE CARD -- */
   .q-card {
     background: var(--paper-card);
     border: 1px solid var(--paper-warm);
@@ -271,7 +271,7 @@
   .btn-primary:hover { background: var(--accent-mid); transform: translateY(-1px); }
   .btn-primary:active { transform: translateY(0); }
 
-  /* ── RESULTS SECTION ── */
+  /* -- RESULTS SECTION -- */
   #results {
     display: none;
     margin-bottom: 2rem;
@@ -366,7 +366,7 @@
     align-items: flex-start;
   }
   .ask-list li::before {
-    content: '→';
+    content: '?';
     color: var(--accent-mid);
     flex-shrink: 0;
     font-size: 0.8rem;
@@ -390,7 +390,7 @@
     line-height: 1.75;
   }
 
-  /* ── PROFILE OPT-IN ── */
+  /* -- PROFILE OPT-IN -- */
   #opt-in {
     display: none;
     margin-bottom: 2rem;
@@ -404,7 +404,7 @@
     padding: 2.4rem;
     box-shadow: 0 4px 24px rgba(15,26,20,0.05);
   }
-  /* ── PERPLEXITY RENDERED SECTIONS ── */
+  /* -- PERPLEXITY RENDERED SECTIONS -- */
   .pp-section-body p {
     font-size: 0.88rem;
     color: var(--ink-mid);
@@ -490,7 +490,7 @@
     font-size: 1rem;
   }
 
-  /* ── LEGAL/INFO SECTION ── */
+  /* -- LEGAL/INFO SECTION -- */
   .info-section {
     background: var(--paper-warm);
     border: 1px solid var(--paper-warm);
@@ -512,7 +512,7 @@
   }
   .info-section a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
 
-  /* ── FOOTER ── */
+  /* -- FOOTER -- */
   footer {
     background: var(--paper-warm);
     border-top: 1px solid var(--paper-warm);
@@ -525,7 +525,7 @@
   footer a { color: var(--ink-light); text-decoration: none; }
   footer a:hover { color: var(--accent); }
 
-  /* ── RESPONSIVE ── */
+  /* -- RESPONSIVE -- */
   @media (max-width: 600px) {
     nav { padding: 0.6rem 1rem; height: auto; flex-wrap: wrap; gap: 0.3rem 0; }
     .nav-logo { flex: 0 0 100%; }
@@ -897,11 +897,11 @@
 </footer>
 
 <script>
-  // ── CONFIG ────────────────────────────────────────────────────────────────
+  // -- CONFIG ----------------------------------------------------------------
   const PREVENTION_API = 'https://lvsofp8c9g.execute-api.us-east-1.amazonaws.com/prod/prevention-profile';
-  // ─────────────────────────────────────────────────────────────────────────
+  // -------------------------------------------------------------------------
 
-  // Set year-of-birth max dynamically so it always reflects ≥18 requirement
+  // Set year-of-birth max dynamically so it always reflects =18 requirement
   document.getElementById('yob').max = new Date().getFullYear() - 18;
 
   // Highlight selected radio/checkbox rows
@@ -917,7 +917,7 @@
     });
   });
 
-  // ── PREVENTION LOGIC ─────────────────────────────────────────────────────
+  // -- PREVENTION LOGIC -----------------------------------------------------
   function computeRoadmap(e) {
     e.preventDefault();
 
@@ -935,9 +935,9 @@
 
     const items = [];
 
-    // ── COLORECTAL ──────────────────────────────────────────────────────────
+    // -- COLORECTAL ----------------------------------------------------------
     // Sources: USPSTF 2021 (avg-risk start 45, end 75); ACS 2023 (high-risk start 40);
-    //          ACG 2021 / NCCN (Lynch syndrome start 20–25, colonoscopy every 1–2 yr)
+    //          ACG 2021 / NCCN (Lynch syndrome start 20�25, colonoscopy every 1�2 yr)
     if (organs.includes('colon')) {
       const lynchRisk = risks.includes('lynch-syndrome');
       const highRisk  = !lynchRisk && (risks.includes('crc-family') || risks.includes('crc-polyps'));
@@ -990,11 +990,11 @@
           ]
         });
       } else if (age > 85) {
-        // No card — USPSTF recommends against screening above 85
+        // No card � USPSTF recommends against screening above 85
       }
     }
 
-    // ── CERVICAL ────────────────────────────────────────────────────────────
+    // -- CERVICAL ------------------------------------------------------------
     if (organs.includes('cervix')) {
       const highRisk = risks.includes('cervix-hpv');
 
@@ -1033,14 +1033,14 @@
       }
     }
 
-    // ── PROSTATE ────────────────────────────────────────────────────────────
-    // Sources: USPSTF 2018 Grade C (shared decision-making, ages 55–69);
-    //          ACS 2023 (high-risk: family history or Black race → discuss at 40–45)
+    // -- PROSTATE ------------------------------------------------------------
+    // Sources: USPSTF 2018 Grade C (shared decision-making, ages 55�69);
+    //          ACS 2023 (high-risk: family history or Black race ? discuss at 40�45)
     if (organs.includes('prostate')) {
       const prostateHighRisk = risks.includes('prostate-family');
 
-      // USPSTF 2018: Grade C SDM ages 55–69; Grade D (against routine) ≥70
-      // ACS 2023: high-risk (family history) → begin SDM at 40–45
+      // USPSTF 2018: Grade C SDM ages 55�69; Grade D (against routine) =70
+      // ACS 2023: high-risk (family history) ? begin SDM at 40�45
       if (prostateHighRisk && age >= 38 && age < 45) {
         items.push({
           badge: 'due',
@@ -1100,10 +1100,10 @@
       }
     }
 
-    // ── BREAST / CHEST TISSUE ───────────────────────────────────────────────
-    // Sources: USPSTF 2024 Grade B — biennial mammo ages 40–74
-    //          NCCN — BRCA carriers: MRI from age 25, annual mammo from age 30
-    //          ACS 2023 — ≥20% lifetime risk: annual MRI + mammo from age 30
+    // -- BREAST / CHEST TISSUE -----------------------------------------------
+    // Sources: USPSTF 2024 Grade B � biennial mammo ages 40�74
+    //          NCCN � BRCA carriers: MRI from age 25, annual mammo from age 30
+    //          ACS 2023 � =20% lifetime risk: annual MRI + mammo from age 30
     if (organs.includes('breasts')) {
       const brcaRisk   = risks.includes('brca');
       const familyRisk = risks.includes('breast-family');
@@ -1181,8 +1181,8 @@
       }
     }
 
-    // ── LUNG CANCER ─────────────────────────────────────────────────────────
-    // Source: USPSTF 2021 Grade B — annual LDCT ages 50–80, ≥20 pack-years, current or quit <15 yr
+    // -- LUNG CANCER ---------------------------------------------------------
+    // Source: USPSTF 2021 Grade B � annual LDCT ages 50�80, =20 pack-years, current or quit <15 yr
     if (risks.includes('smoker-ldct')) {
       if (age >= 48 && age < 50) {
         items.push({
@@ -1210,17 +1210,17 @@
       }
     }
 
-    // ── ABDOMINAL AORTIC ANEURYSM ────────────────────────────────────────────
-    // Source: USPSTF 2019 Grade B  — one-time US, men 65–75 who EVER smoked
-    //         USPSTF 2019 Grade C  — selective, men 65–75 who NEVER smoked (consider if FDR AAA)
-    //         ACC/AHA 2022 Class I — any person ≥65 with first-degree relative with AAA
+    // -- ABDOMINAL AORTIC ANEURYSM --------------------------------------------
+    // Source: USPSTF 2019 Grade B  � one-time US, men 65�75 who EVER smoked
+    //         USPSTF 2019 Grade C  � selective, men 65�75 who NEVER smoked (consider if FDR AAA)
+    //         ACC/AHA 2022 Class I � any person =65 with first-degree relative with AAA
     const aaaMale   = organs.includes('prostate');
     const aaaSmoked = risks.includes('ever-smoker');
     const aaaFamily = risks.includes('aaa-family');
 
     if (aaaMale || aaaFamily) {
       if (aaaSmoked && aaaMale) {
-        // Grade B — strongest recommendation
+        // Grade B � strongest recommendation
         if (age >= 63 && age < 65) {
           items.push({
             badge: 'soon', label: 'Coming up at 65',
@@ -1237,7 +1237,7 @@
           });
         }
       } else if (aaaMale && !aaaSmoked && aaaFamily && age >= 65 && age <= 75) {
-        // ACC/AHA 2022 Class I — FDR with AAA regardless of smoking; also USPSTF Grade C for never-smoker men
+        // ACC/AHA 2022 Class I � FDR with AAA regardless of smoking; also USPSTF Grade C for never-smoker men
         items.push({
           badge: 'due', label: 'Screening recommended',
           title: 'Abdominal aortic aneurysm (AAA) screening &mdash; family history',
@@ -1255,8 +1255,8 @@
       }
     }
 
-    // ── OSTEOPOROSIS ─────────────────────────────────────────────────────────
-    // Source: USPSTF 2025 Grade B — DXA bone density screening, women ≥65
+    // -- OSTEOPOROSIS ---------------------------------------------------------
+    // Source: USPSTF 2025 Grade B � DXA bone density screening, women =65
     if ((organs.includes('cervix') || organs.includes('breasts')) && !organs.includes('prostate')) {
       if (age >= 63 && age < 65) {
         items.push({
@@ -1284,13 +1284,13 @@
       }
     }
 
-    // ── PANCREATIC CANCER (HIGH-RISK HEREDITARY SURVEILLANCE) ───────────────
+    // -- PANCREATIC CANCER (HIGH-RISK HEREDITARY SURVEILLANCE) ---------------
     // Source: NCCN Genetic/Familial High-Risk Assessment: Breast, Ovarian, Pancreatic, Prostate (2026)
     //         NCCN/ASGE: Pancreatic Adenocarcinoma; USPSTF: no recommendation for general population
-    // STK11 (Peutz-Jeghers): start age 30–35 or 10 yr before youngest affected relative, annual EUS/MRI
+    // STK11 (Peutz-Jeghers): start age 30�35 or 10 yr before youngest affected relative, annual EUS/MRI
     // CDKN2A (FAMMM): start age 40 or 10 yr before youngest affected relative, annual EUS/MRI
     // BRCA2, ATM, PALB2: start age 50 (regardless of family history), annual EUS/MRI
-    // BRCA1, Lynch, TP53: start age 50 ONLY if ≥1 first- or second-degree relative with pancreatic cancer
+    // BRCA1, Lynch, TP53: start age 50 ONLY if =1 first- or second-degree relative with pancreatic cancer
     // Hereditary pancreatitis (PRSS1/SPINK1): 20 yr after pancreatitis onset or age 40, whichever earlier
     // Family history only (no mutation): discuss referral to high-risk pancreatic program
     {
@@ -1351,8 +1351,8 @@
           ]
         });
       } else if (hasBRCA && age >= 48) {
-        // BRCA2 → surveillance regardless of family history
-        // BRCA1 → NCCN recommends surveillance only with ≥1 FDR/SDR with pancreatic cancer
+        // BRCA2 ? surveillance regardless of family history
+        // BRCA1 ? NCCN recommends surveillance only with =1 FDR/SDR with pancreatic cancer
         // Since we can't distinguish BRCA1 from BRCA2 here, show the card but explain the distinction
         items.push({
           badge: age >= 50 ? (hasFamilyPanc ? 'due' : 'discuss') : 'soon',
@@ -1387,7 +1387,7 @@ If you are unsure which variant you carry, review your genetic testing report or
           badge: 'discuss',
           label: 'Discuss with clinician',
           title: 'Pancreatic cancer risk &mdash; family history',
-          body: `Having a first-degree relative with pancreatic cancer increases your lifetime risk. Without a known hereditary gene variant, NCCN does not specify a routine surveillance protocol &mdash; but referral to a <strong>hereditary cancer or high-risk pancreatic program</strong> is reasonable to assess your personal risk, consider germline genetic testing (BRCA2, PALB2, ATM, Lynch genes), and determine whether surveillance is appropriate. Familial pancreatic cancer clusters (≥2 affected FDRs) may qualify for surveillance protocols.`,
+          body: `Having a first-degree relative with pancreatic cancer increases your lifetime risk. Without a known hereditary gene variant, NCCN does not specify a routine surveillance protocol &mdash; but referral to a <strong>hereditary cancer or high-risk pancreatic program</strong> is reasonable to assess your personal risk, consider germline genetic testing (BRCA2, PALB2, ATM, Lynch genes), and determine whether surveillance is appropriate. Familial pancreatic cancer clusters (=2 affected FDRs) may qualify for surveillance protocols.`,
           asks: [
             'Given my family history, could I benefit from germline genetic testing?',
             'Should I be referred to a high-risk pancreatic cancer surveillance program?',
@@ -1397,8 +1397,8 @@ If you are unsure which variant you carry, review your genetic testing report or
       }
     }
 
-    // ── OVARIAN CANCER (Grade D — screening not recommended) ─────────────────
-    // Source: USPSTF 2018 Grade D — CA-125 and transvaginal ultrasound do not reduce mortality
+    // -- OVARIAN CANCER (Grade D � screening not recommended) -----------------
+    // Source: USPSTF 2018 Grade D � CA-125 and transvaginal ultrasound do not reduce mortality
     // Show only for women (cervix or breasts selected)
     if ((organs.includes('cervix') || organs.includes('breasts')) && age >= 40) {
       items.push({
@@ -1413,8 +1413,8 @@ If you are unsure which variant you carry, review your genetic testing report or
       });
     }
 
-    // ── TESTICULAR CANCER (Grade D — screening not recommended) ──────────────
-    // Source: USPSTF Grade D — routine self-examination or clinical examination not beneficial
+    // -- TESTICULAR CANCER (Grade D � screening not recommended) --------------
+    // Source: USPSTF Grade D � routine self-examination or clinical examination not beneficial
     if (organs.includes('prostate') && age >= 15 && age <= 55) {
       items.push({
         badge: 'discuss',
@@ -1427,8 +1427,8 @@ If you are unsure which variant you carry, review your genetic testing report or
       });
     }
 
-    // ── THYROID CANCER (Grade D — screening not recommended) ─────────────────
-    // Source: USPSTF 2017 Grade D — overdiagnosis and overtreatment substantial
+    // -- THYROID CANCER (Grade D � screening not recommended) -----------------
+    // Source: USPSTF 2017 Grade D � overdiagnosis and overtreatment substantial
     // Show once, for adults; suppress above age 70 to avoid clutter
     if (age >= 25 && age <= 70) {
       items.push({
@@ -1443,8 +1443,8 @@ If you are unsure which variant you carry, review your genetic testing report or
       });
     }
 
-    // ── BLADDER CANCER (Grade I — insufficient evidence) ─────────────────────
-    // Source: USPSTF Grade I — even in high-risk (smoking, occupational exposures)
+    // -- BLADDER CANCER (Grade I � insufficient evidence) ---------------------
+    // Source: USPSTF Grade I � even in high-risk (smoking, occupational exposures)
     // Only surface for smokers since this is contextually relevant
     if (risks.includes('ever-smoker') && age >= 40) {
       items.push({
@@ -1459,8 +1459,8 @@ If you are unsure which variant you carry, review your genetic testing report or
       });
     }
 
-    // ── SKIN CANCER (Grade I — high-risk discussion) ──────────────────────────
-    // Source: USPSTF 2023 Grade I — insufficient evidence for visual skin exam by clinician
+    // -- SKIN CANCER (Grade I � high-risk discussion) --------------------------
+    // Source: USPSTF 2023 Grade I � insufficient evidence for visual skin exam by clinician
     // Show informational card for high-risk individuals
     if (risks.includes('skin-high-risk')) {
       items.push({
@@ -1476,8 +1476,8 @@ If you are unsure which variant you carry, review your genetic testing report or
       });
     }
 
-    // ── ORAL CANCER (Grade I — tobacco/alcohol users) ────────────────────────
-    // Source: USPSTF Grade I — insufficient evidence; tobacco/alcohol users at highest risk
+    // -- ORAL CANCER (Grade I � tobacco/alcohol users) ------------------------
+    // Source: USPSTF Grade I � insufficient evidence; tobacco/alcohol users at highest risk
     // Trigger for any tobacco user (ever-smoker OR tobacco-alcohol flag)
     if (risks.includes('tobacco-alcohol') || risks.includes('ever-smoker')) {
       items.push({
@@ -1493,10 +1493,10 @@ If you are unsure which variant you carry, review your genetic testing report or
       });
     }
 
-    // ── UNIVERSAL SCREENINGS ──────────────────────────────────────────────────
+    // -- UNIVERSAL SCREENINGS --------------------------------------------------
     // These apply to all adults regardless of organ selection, based on age only.
 
-    // HEPATITIS C (HCV) — USPSTF 2020 Grade B — one-time screening ages 18–79
+    // HEPATITIS C (HCV) � USPSTF 2020 Grade B � one-time screening ages 18�79
     if (age >= 18 && age <= 79) {
       items.push({
         badge: 'due',
@@ -1510,7 +1510,7 @@ If you are unsure which variant you carry, review your genetic testing report or
       });
     }
 
-    // HIV — USPSTF 2019 Grade A — at least once, ages 15–65
+    // HIV � USPSTF 2019 Grade A � at least once, ages 15�65
     if (age >= 15 && age <= 65) {
       items.push({
         badge: 'due',
@@ -1525,11 +1525,11 @@ If you are unsure which variant you carry, review your genetic testing report or
       });
     }
 
-    // HYPERTENSION — USPSTF 2021 Grade A — all adults ≥18; annually ≥40 or high-risk
+    // HYPERTENSION � USPSTF 2021 Grade A � all adults =18; annually =40 or high-risk
     if (age >= 18) {
       items.push({
         badge: age >= 40 ? 'due' : 'due',
-        label: age >= 40 ? 'Annual check' : 'Every 3–5 years',
+        label: age >= 40 ? 'Annual check' : 'Every 3�5 years',
         title: 'Blood pressure screening (hypertension)',
         body: `The USPSTF (2021, <strong>Grade A</strong>) recommends blood pressure screening for <strong>all adults aged 18 and older</strong>. For adults aged 40 and older, or those at increased risk (Black race, high-normal readings, overweight/obese), <strong>annual screening</strong> is recommended. For lower-risk adults aged 18&ndash;39, every 3&ndash;5 years is sufficient. Blood pressure screening is typically done at any routine clinical visit. If elevated readings are found outside a clinical setting, confirmation with ambulatory or home monitoring is recommended before starting treatment.`,
         asks: [
@@ -1539,11 +1539,11 @@ If you are unsure which variant you carry, review your genetic testing report or
       });
     }
 
-    // LIPIDS — ACC/AHA 2026 — start age 19, every 5 yr; more frequent if risk factors
+    // LIPIDS � ACC/AHA 2026 � start age 19, every 5 yr; more frequent if risk factors
     if (age >= 19) {
       items.push({
         badge: 'due',
-        label: age < 40 ? 'Every 4–6 years' : 'Every 1–5 years',
+        label: age < 40 ? 'Every 4�6 years' : 'Every 1�5 years',
         title: 'Cholesterol / lipid panel',
         body: `The ACC/AHA (2026 guidelines) recommend a <strong>fasting or non-fasting lipid panel starting at age 19</strong>, repeated at least every 4&ndash;6 years for average-risk adults. More frequent testing (every 1&ndash;2 years) is indicated if you have risk factors like diabetes, hypertension, obesity, smoking, or a family history of early heart disease. Lipid levels are a key input into cardiovascular risk calculators that guide prevention decisions.`,
         asks: [
@@ -1554,7 +1554,7 @@ If you are unsure which variant you carry, review your genetic testing report or
       });
     }
 
-    // DIABETES / PREDIABETES — USPSTF 2021 Grade B — ages 35–70; ADA starts at 35
+    // DIABETES / PREDIABETES � USPSTF 2021 Grade B � ages 35�70; ADA starts at 35
     if (age >= 35 && age <= 70) {
       items.push({
         badge: 'due',
@@ -1569,7 +1569,7 @@ If you are unsure which variant you carry, review your genetic testing report or
       });
     }
 
-    // FALL RISK — CDC STEADI / AGS / USPSTF Grade B — adults ≥65, annually
+    // FALL RISK � CDC STEADI / AGS / USPSTF Grade B � adults =65, annually
     if (age >= 65) {
       items.push({
         badge: 'due',
@@ -1584,7 +1584,7 @@ If you are unsure which variant you carry, review your genetic testing report or
       });
     }
 
-    // ── RENDER ──────────────────────────────────────────────────────────────
+    // -- RENDER --------------------------------------------------------------
     const resultsEl   = document.getElementById('results');
     const summaryEl   = document.getElementById('results-summary');
     const listEl      = document.getElementById('screening-list');
@@ -1642,7 +1642,7 @@ If you are unsure which variant you carry, review your genetic testing report or
     }
   }
 
-  // ── Profile token validity check (client-side only) ──────────────────────
+  // -- Profile token validity check (client-side only) ----------------------
   function isProfileTokenValid(token) {
     try {
       const p = JSON.parse(atob(token.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));
@@ -1650,7 +1650,7 @@ If you are unsure which variant you carry, review your genetic testing report or
     } catch { return false; }
   }
 
-  // ── Opt-in tab switcher ──────────────────────────────────────────────────
+  // -- Opt-in tab switcher --------------------------------------------------
   function switchOptinTab(tab) {
     document.getElementById('oi-register-form').style.display = tab === 'register' ? 'block' : 'none';
     document.getElementById('oi-login-form').style.display    = tab === 'login'    ? 'block' : 'none';
@@ -1669,7 +1669,7 @@ If you are unsure which variant you carry, review your genetic testing report or
     el.style.display = 'block';
   }
 
-  // ── Create account from roadmap ──────────────────────────────────────────
+  // -- Create account from roadmap ------------------------------------------
   function toggleRegSmsPhone(checked) {
     document.getElementById('reg-sms-phone-wrap').style.display = checked ? 'block' : 'none';
   }
@@ -1713,7 +1713,7 @@ If you are unsure which variant you carry, review your genetic testing report or
     }
   }
 
-  // ── Log in from roadmap ──────────────────────────────────────────────────
+  // -- Log in from roadmap --------------------------------------------------
   async function oiLogin(e) {
     e.preventDefault();
     const form = e.target;
@@ -1738,7 +1738,7 @@ If you are unsure which variant you carry, review your genetic testing report or
     }
   }
 
-  // ── Update profile from current roadmap (logged-in user) ────────────────
+  // -- Update profile from current roadmap (logged-in user) ----------------
   async function updateProfileFromRoadmap() {
     const rd  = window._roadmapData || {};
     const tok = localStorage.getItem('ebh-profile-jwt');
@@ -1764,7 +1764,7 @@ If you are unsure which variant you carry, review your genetic testing report or
     } catch (err) { console.error('Profile update error:', err); }
   }
 
-  // ── Basic email-only opt-in (no account) ────────────────────────────────
+  // -- Basic email-only opt-in (no account) --------------------------------
   async function handleOptIn(e) {
     e.preventDefault();
     const form = e.target;
@@ -1804,7 +1804,7 @@ If you are unsure which variant you carry, review your genetic testing report or
     }
   }
 
-  // ── On load: if logged in, immediately show logged-in state in opt-in ────
+  // -- On load: if logged in, immediately show logged-in state in opt-in ----
   document.addEventListener('DOMContentLoaded', () => {
     const tok = localStorage.getItem('ebh-profile-jwt');
     if (tok && isProfileTokenValid && isProfileTokenValid(tok)) {

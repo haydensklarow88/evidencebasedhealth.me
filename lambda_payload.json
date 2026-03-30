@@ -1,0 +1,1 @@
+﻿{"requestContext":{"http":{"method":"GET"}},"headers":{"Authorization":"Bearer test_invalid"},"rawPath":"/policy-violations"}

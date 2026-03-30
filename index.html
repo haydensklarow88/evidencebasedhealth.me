@@ -1,10 +1,10 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Weekly evidence-based insights on hormones, strength, and metabolic health — from an acute care surgery PA. Plain language, no hype, no agenda.">
-<meta property="og:title" content="Evidence-Based Health — Hormones, Strength &amp; Metabolic Health">
+<meta name="description" content="Weekly evidence-based insights on hormones, strength, and metabolic health � from an acute care surgery PA. Plain language, no hype, no agenda.">
+<meta property="og:title" content="Evidence-Based Health � Hormones, Strength &amp; Metabolic Health">
 <meta property="og:description" content="Weekly insights on TRT, peptides, GLP-1s, fitness, and metabolic health. Evidence-based. No agenda.">
 <meta property="og:url" content="https://evidencebasedhealth.me">
 <meta property="og:type" content="website">
@@ -12,16 +12,16 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<!-- Google tag (gtag.js) — GA4 + Google Ads -->
+<!-- Google tag (gtag.js) � GA4 + Google Ads -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-S5Y2CMJM4K"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
   gtag('config', 'G-S5Y2CMJM4K');
-  gtag('config', 'AW-18001526983');
+  gtag('config', 'AW-18001391402');
 </script>
-<title>Evidence-Based Health — Hormones, Strength &amp; Metabolic Health</title>
+<title>Evidence-Based Health � Hormones, Strength &amp; Metabolic Health</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
@@ -55,7 +55,7 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* ── NAV ── */
+  /* -- NAV -- */
   nav {
     position: sticky; top: 0; z-index: 100;
     background: var(--paper);
@@ -90,7 +90,7 @@
   .nav-link.active { color: var(--accent); font-weight: 600; border-bottom-color: var(--accent); }
   .nav-link-cta { color: var(--accent); font-weight: 500; }
 
-  /* ── PAGE ── */
+  /* -- PAGE -- */
   .page {
     padding: 5rem 2rem 4rem;
   }
@@ -100,7 +100,7 @@
     margin: 0 auto;
   }
 
-  /* ── EYEBROW ── */
+  /* -- EYEBROW -- */
   .eyebrow {
     display: inline-flex;
     align-items: center;
@@ -119,7 +119,7 @@
     background: var(--accent-mid);
   }
 
-  /* ── HEADLINE ── */
+  /* -- HEADLINE -- */
   h1 {
     font-family: var(--serif);
     font-size: clamp(1.75rem, 5vw, 2.5rem);
@@ -139,7 +139,7 @@
     font-weight: 300;
   }
 
-  /* ── CREDENTIAL LINE ── */
+  /* -- CREDENTIAL LINE -- */
   .cred {
     border-left: 2px solid var(--accent-rule);
     padding-left: 1rem;
@@ -152,7 +152,7 @@
   }
   .cred strong { font-weight: 500; color: var(--ink-mid); }
 
-  /* ── FORM ── */
+  /* -- FORM -- */
   .email-form { display: flex; flex-direction: column; gap: 0.6rem; }
   .email-form input[type="email"] {
     width: 100%;
@@ -187,7 +187,7 @@
   }
   .btn-primary:hover { background: var(--accent-mid); }
 
-  /* ── CONSENT ── */
+  /* -- CONSENT -- */
   .consent-row {
     display: flex;
     align-items: flex-start;
@@ -223,7 +223,7 @@
   footer a { color: var(--ink-light); text-decoration: none; }
   footer a:hover { color: var(--accent); }
 
-  /* ── COOKIE BANNER ── */
+  /* -- COOKIE BANNER -- */
   .cookie-banner {
     position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
     background: var(--ink);
@@ -272,7 +272,7 @@
     .cookie-btn { flex: 1; text-align: center; }
   }
 
-  /* ── WHAT TO EXPECT ── */
+  /* -- WHAT TO EXPECT -- */
   .wtx-section {
     border-top: 2px solid var(--paper-warm);
     padding: 4rem 2rem 5rem;
@@ -457,7 +457,7 @@
 <script>
   const API_ENDPOINT    = 'https://lvsofp8c9g.execute-api.us-east-1.amazonaws.com/prod/subscribe';
   const META_PIXEL_ID   = '4452359758334243';
-  const GOOGLE_ADS_ID   = 'AW-18001526983';
+  const GOOGLE_ADS_ID   = 'AW-18001391402';
   const GOOGLE_CONV_LBL = 'PdCTCNjOkZAcEKre3YdD';
 
   function getConsent() { return localStorage.getItem('cookieConsent'); }
@@ -533,7 +533,7 @@
       }
     }
 
-    // Time-on-page ≥ 45s → engaged_session
+    // Time-on-page = 45s ? engaged_session
     let engagedFired = false;
     setTimeout(() => {
       if (!engagedFired) {
@@ -543,7 +543,7 @@
       }
     }, 45000);
 
-    // Scroll depth ≥ 75%
+    // Scroll depth = 75%
     let scroll75Fired = false;
     function onScroll() {
       if (scroll75Fired) return;

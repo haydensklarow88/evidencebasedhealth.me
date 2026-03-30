@@ -8,7 +8,7 @@
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
   gtag('config', 'G-S5Y2CMJM4K');
-  gtag('config', 'AW-18001526983');
+  gtag('config', 'AW-18001391402');
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -332,7 +332,7 @@ async function handleSubscribe(e) {
     if (res.ok) {
       btn.textContent = 'Subscribed ✓';
       e.target.email.value = '';
-      gtag('event', 'conversion', { send_to: 'AW-18001526983' });
+      gtag('event', 'conversion', { send_to: 'AW-18001391402' });
     } else {
       btn.textContent = 'Try again';
       btn.disabled = false;
