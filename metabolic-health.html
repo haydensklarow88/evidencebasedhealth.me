@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) — GA4 + Google Ads -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-S5Y2CMJM4K"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-S5Y2CMJM4K');
+  gtag('config', 'AW-18001526983');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="description" content="What is metabolic health, and why does it matter? A clinician with 10+ years in acute care explains the evidence on blood sugar, insulin resistance, and how to improve your metabolic health starting today.">
+<meta property="og:title" content="What Is Metabolic Health? A Clinician Explains — Evidence-Based Health">
+<meta property="og:description" content="Plain-language breakdown of metabolic health, insulin resistance, and what the research says about improving it. Written by a practicing PA.">
+<meta property="og:url" content="https://evidencebasedhealth.me/metabolic-health">
+<meta property="og:type" content="article">
+<title>What Is Metabolic Health? A Clinician Explains &mdash; Evidence-Based Health</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f1a14; --ink-mid: #2d3d35; --ink-light: #5c6e65; --ink-faint: #9aada3;
+    --paper: #f7f5f0; --paper-warm: #ede9e1; --paper-card: #ffffff;
+    --accent: #1a5c3a; --accent-mid: #2d7a52; --accent-light: #e8f2ec; --accent-rule: #c2d9cb;
+    --serif: 'Libre Baskerville', Georgia, serif;
+    --sans: 'DM Sans', system-ui, sans-serif;
+    --max: 720px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 16px; scroll-behavior: smooth; }
+  body { background: var(--paper); color: var(--ink); font-family: var(--sans); font-weight: 300; line-height: 1.8; -webkit-font-smoothing: antialiased; }
+
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--paper); border-bottom: 1px solid var(--paper-warm);
+    padding: 0 2rem; height: 58px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-logo { font-family: var(--serif); font-size: 0.95rem; color: var(--accent); font-style: italic; text-decoration: none; letter-spacing: 0.01em; }
+  .nav-logo span { font-style: normal; font-weight: 700; }
+  .nav-links { display: flex; align-items: center; gap: 1.5rem; }
+  .nav-link { font-size: 0.8rem; color: var(--ink-light); text-decoration: none; letter-spacing: 0.02em; padding-bottom: 3px; border-bottom: 2px solid transparent; }
+  .nav-link:hover { color: var(--accent); }
+  .nav-link.active { color: var(--accent); font-weight: 600; border-bottom-color: var(--accent); }
+  .nav-link-cta { color: var(--accent); font-weight: 500; }
+
+  main { max-width: var(--max); margin: 0 auto; padding: 3.5rem 2rem 6rem; }
+
+  .article-label {
+    font-size: 0.68rem; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--accent-mid); margin-bottom: 1rem; display: block;
+  }
+  h1 {
+    font-family: var(--serif);
+    font-size: clamp(1.85rem, 4vw, 2.6rem);
+    line-height: 1.15; font-weight: 700; color: var(--ink);
+    letter-spacing: -0.02em; margin-bottom: 0.75rem;
+  }
+  .article-meta {
+    font-size: 0.78rem; color: var(--ink-faint); margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem; border-bottom: 1px solid var(--paper-warm);
+  }
+
+  .article-body { color: var(--ink-mid); font-size: 1rem; line-height: 1.85; }
+  .article-body p { margin-bottom: 1.2rem; }
+  .article-body h2 {
+    font-family: var(--sans); font-size: 0.7rem; font-weight: 600;
+    color: var(--ink-light); margin: 2.6rem 0 0.7rem;
+    text-transform: uppercase; letter-spacing: 0.12em;
+  }
+  .article-body h3 {
+    font-family: var(--serif); font-size: 1.05rem; font-weight: 700;
+    color: var(--ink); margin: 1.8rem 0 0.6rem;
+  }
+  .article-body ul, .article-body ol { padding-left: 1.4rem; margin-bottom: 1.2rem; }
+  .article-body li { margin-bottom: 0.5rem; }
+  .article-body sup { font-size: 0.68rem; color: var(--accent-mid); font-weight: 600; }
+  .article-body a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+  .article-body strong { font-weight: 600; color: var(--ink); }
+
+  .key-box {
+    background: var(--accent-light); border-left: 3px solid var(--accent);
+    border-radius: 0 6px 6px 0; padding: 1.1rem 1.4rem;
+    margin: 1.8rem 0; font-size: 0.95rem;
+  }
+  .key-box strong { display: block; font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-mid); margin-bottom: 0.4rem; }
+
+  .stat-row {
+    display: flex; gap: 1.5rem; margin: 2rem 0; flex-wrap: wrap;
+  }
+  .stat-card {
+    flex: 1 1 140px; background: var(--paper-card);
+    border: 1px solid var(--paper-warm); border-radius: 8px;
+    padding: 1rem 1.2rem; text-align: center;
+  }
+  .stat-card .stat-num { font-family: var(--serif); font-size: 2rem; font-weight: 700; color: var(--accent); line-height: 1; }
+  .stat-card .stat-label { font-size: 0.75rem; color: var(--ink-light); margin-top: 0.3rem; line-height: 1.4; }
+
+  .subscribe-cta {
+    margin-top: 3rem; padding: 2rem 2.5rem;
+    background: var(--accent); border-radius: 10px; text-align: center;
+  }
+  .subscribe-cta h3 { font-family: var(--serif); font-size: 1.25rem; color: #fff; margin-bottom: 0.6rem; }
+  .subscribe-cta p { font-size: 0.95rem; color: rgba(255,255,255,0.85); margin-bottom: 1.4rem; line-height: 1.6; }
+  .subscribe-form { display: flex; gap: 0.6rem; justify-content: center; flex-wrap: wrap; }
+  .subscribe-form input[type="email"] {
+    padding: 0.65rem 1rem; border: none; border-radius: 4px;
+    font-size: 0.95rem; width: 280px; max-width: 100%;
+    font-family: var(--sans);
+  }
+  .subscribe-form button {
+    padding: 0.65rem 1.5rem; background: #fff; color: var(--accent);
+    border: none; border-radius: 4px; font-size: 0.88rem; font-weight: 600;
+    letter-spacing: 0.04em; cursor: pointer; font-family: var(--sans);
+    transition: background 0.2s;
+  }
+  .subscribe-form button:hover { background: var(--accent-light); }
+  .subscribe-cta .fine { font-size: 0.72rem; color: rgba(255,255,255,0.55); margin-top: 0.8rem; }
+
+  .references-section {
+    margin-top: 3rem; padding-top: 2rem; border-top: 2px solid var(--paper-warm);
+  }
+  .references-section h2 {
+    font-family: var(--serif); font-size: 0.88rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-light); margin-bottom: 1rem;
+  }
+  .references-section ol { padding-left: 1.4rem; }
+  .references-section li { font-size: 0.82rem; color: var(--ink-light); margin-bottom: 0.5rem; line-height: 1.6; }
+  .references-section a { color: var(--accent-mid); word-break: break-all; }
+
+  footer {
+    border-top: 1px solid var(--paper-warm); padding: 1.5rem 2rem;
+    text-align: center; font-size: 0.75rem; color: var(--ink-faint);
+  }
+  footer a { color: var(--ink-light); text-decoration: none; }
+  footer a:hover { color: var(--accent); }
+
+  @media (max-width: 600px) {
+    nav { padding: 0.6rem 1rem; height: auto; flex-wrap: wrap; gap: 0.3rem 0; }
+    .nav-logo { flex: 0 0 100%; }
+    .nav-links { flex: 0 0 100%; gap: 0.75rem; padding-bottom: 0.4rem; }
+    .nav-link { font-size: 0.72rem; }
+    main { padding: 2rem 1.25rem 4rem; }
+    .stat-row { gap: 0.75rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo"><span>Evidence&#8209;Based</span> Health</a>
+  <div class="nav-links">
+    <a href="/about" class="nav-link">About</a>
+    <a href="/newsletter" class="nav-link">Newsletter</a>
+    <a href="/prevention-roadmap" class="nav-link">Prevention Roadmap</a>
+    <a href="/carb-log" class="nav-link">Carb Log</a>
+    <a href="/" class="nav-link nav-link-cta">Get the brief &rarr;</a>
+  </div>
+</nav>
+
+<main>
+  <article>
+    <span class="article-label">Evidence Brief &mdash; Metabolic Health</span>
+    <h1>What Is Metabolic Health? A Clinician Explains</h1>
+    <div class="article-meta">By a Physician Assistant &nbsp;&middot;&nbsp; Acute Care Surgery, 10+ years &nbsp;&middot;&nbsp; Updated March 2026 &nbsp;&middot;&nbsp; <a href="/disclaimer" style="color:inherit">Educational content only &mdash; not medical advice</a></div>
+
+    <div class="article-body">
+
+      <p>Most people assume they&rsquo;re metabolically healthy because they feel fine and their doctor hasn&rsquo;t flagged anything. <strong>The evidence says otherwise.</strong> Only about 6.8% of American adults qualify as metabolically healthy by all five clinical markers.<sup>1</sup> The other 93% have at least one metabolic abnormality&mdash;often without any symptoms.</p>
+
+      <p>This isn&rsquo;t scare-mongering. It&rsquo;s a useful starting point for understanding what metabolic health actually means, why it matters long before you develop diabetes or heart disease, and what the research says you can do about it.</p>
+
+      <h2>The definition</h2>
+      <h3>What metabolic health actually means</h3>
+
+      <p>Clinically, &ldquo;metabolic health&rdquo; means your body is efficiently processing and using energy without accumulating harmful byproducts. Researchers define it by five markers&mdash;all within optimal range, without medication:</p>
+
+      <ul>
+        <li><strong>Blood glucose (fasting):</strong> &lt;100 mg/dL</li>
+        <li><strong>Triglycerides:</strong> &lt;150 mg/dL</li>
+        <li><strong>HDL cholesterol:</strong> &ge;40 mg/dL (men) / &ge;50 mg/dL (women)</li>
+        <li><strong>Blood pressure:</strong> &lt;120/80 mmHg</li>
+        <li><strong>Waist circumference:</strong> &lt;40 inches (men) / &lt;35 inches (women)</li>
+      </ul>
+
+      <p>These five aren&rsquo;t arbitrary checkboxes. They&rsquo;re upstream indicators for cardiovascular disease, type 2 diabetes, certain cancers, cognitive decline, and all-cause mortality. Moving them in the right direction matters whether or not you ever cross a diagnostic threshold.</p>
+
+      <div class="stat-row">
+        <div class="stat-card">
+          <div class="stat-num">6.8%</div>
+          <div class="stat-label">of U.S. adults meet all 5 optimal metabolic health markers<sup>1</sup></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">88M</div>
+          <div class="stat-label">Americans have prediabetes &mdash; 84% don&rsquo;t know it<sup>2</sup></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">~50%</div>
+          <div class="stat-label">of adults have insulin resistance in some form<sup>3</sup></div>
+        </div>
+      </div>
+
+      <h2>The mechanism</h2>
+      <h3>Insulin resistance: the common thread</h3>
+
+      <p>Most metabolic dysfunction traces back to <strong>insulin resistance</strong>&mdash;a state where your cells stop responding normally to insulin, forcing your pancreas to produce more and more to get the same glucose-lowering effect. Over time, your fasting glucose climbs, your triglycerides rise, your HDL falls, and your blood pressure creeps up.</p>
+
+      <p>Insulin resistance doesn&rsquo;t happen overnight. It develops gradually over years, driven by a combination of excess visceral fat (the kind that wraps around your organs), chronic low-grade inflammation, physical inactivity, poor sleep, and a diet high in ultra-processed carbohydrates. By the time fasting glucose hits the &ldquo;prediabetes&rdquo; threshold of 100 mg/dL, significant metabolic dysfunction has usually been present for years.</p>
+
+      <div class="key-box">
+        <strong>Key takeaway</strong>
+        Insulin resistance is a spectrum. You don&rsquo;t flip from &ldquo;healthy&rdquo; to &ldquo;diabetic&rdquo;&mdash;you slide along a continuum. Intervening earlier has a larger effect on long-term outcomes.
+      </div>
+
+      <h2>The evidence</h2>
+      <h3>What the research actually shows works</h3>
+
+      <p>The evidence on improving metabolic health is unusually consistent across different types of studies. Several interventions have strong, replicated support:</p>
+
+      <h3>1. Resistance training</h3>
+      <p>Skeletal muscle is the largest insulin-sensitive tissue in the body. Building and maintaining muscle mass improves glucose disposal independent of weight loss.<sup>4</sup> Two to three sessions per week of progressive resistance training shows consistent improvements in fasting glucose, insulin sensitivity, and triglycerides in randomized controlled trials.</p>
+
+      <h3>2. Post-meal walks</h3>
+      <p>A 10-minute walk within 30 minutes of a meal blunts the postprandial glucose spike by up to 30% compared to sitting.<sup>5</sup> This is one of the highest-yield, lowest-effort interventions in the metabolic health literature. It requires no equipment and no gym membership.</p>
+
+      <h3>3. Protein-forward eating</h3>
+      <p>Higher protein intake (&ge;1.2g/kg body weight) reduces appetite, preserves muscle during caloric restriction, and has minimal effect on blood glucose. There is no evidence that moderate-to-high protein intake harms kidneys in people without pre-existing kidney disease.<sup>6</sup></p>
+
+      <h3>4. Sleep optimization</h3>
+      <p>A single night of 4&ndash;5 hours of sleep impairs insulin sensitivity by approximately 25%.<sup>7</sup> Chronic short sleep is independently associated with insulin resistance, weight gain, and elevated cortisol. Seven to nine hours is the evidence-supported target for most adults.</p>
+
+      <h3>5. Reducing ultra-processed carbohydrates</h3>
+      <p>The evidence here isn&rsquo;t &ldquo;don&rsquo;t eat carbs.&rdquo; It&rsquo;s more specific: ultra-processed foods engineered to spike glucose rapidly (refined flour, added sugar, sweetened beverages) drive postprandial glucose variability and increase visceral fat accumulation over time. Whole-food carbohydrate sources&mdash;legumes, vegetables, whole grains&mdash;have consistently different metabolic effects.</p>
+
+      <div class="key-box">
+        <strong>The practical summary</strong>
+        The highest-yield starting point for most people: lift weights 2&ndash;3x/week, take a short walk after meals, prioritize protein, and get 7+ hours of sleep. These four habits address the upstream drivers of insulin resistance without requiring any supplements, prescriptions, or expensive interventions.
+      </div>
+
+      <h2>What to ask your clinician</h2>
+      <h3>Tests worth requesting</h3>
+
+      <p>Standard annual labs don&rsquo;t always catch early metabolic dysfunction. Consider asking about:</p>
+
+      <ul>
+        <li><strong>Fasting insulin</strong> &mdash; not in the standard metabolic panel, but the most sensitive early marker of insulin resistance. A fasting insulin above 10 &mu;IU/mL warrants attention even with a normal fasting glucose.</li>
+        <li><strong>Hemoglobin A1c</strong> &mdash; reflects average glucose over 3 months. More clinically useful than a single fasting glucose.</li>
+        <li><strong>Triglyceride-to-HDL ratio</strong> &mdash; a ratio above 3.0 is a reliable proxy for insulin resistance in most populations.<sup>8</sup></li>
+        <li><strong>DEXA scan or waist circumference</strong> &mdash; visceral fat is more metabolically harmful than subcutaneous fat; body weight alone is an inadequate proxy.</li>
+      </ul>
+
+      <p>Most of these are low-cost, covered by insurance, and readily available. None of them require a specialist referral.</p>
+
+      <h2>The bottom line</h2>
+      <p>Metabolic health isn&rsquo;t a binary. It&rsquo;s not something you either have or don&rsquo;t have. It&rsquo;s a set of biomarkers that move in response to your habits&mdash;and the evidence is remarkably clear on which habits move them in the right direction.</p>
+
+      <p>The goal isn&rsquo;t perfection. It&rsquo;s getting enough of the right information to make a few high-leverage changes before the system sends a louder signal.</p>
+
+    </div><!-- /article-body -->
+
+    <!-- NEWSLETTER CTA -->
+    <div class="subscribe-cta" id="subscribe">
+      <h3>Get the weekly brief &mdash; free</h3>
+      <p>One short email a week. Evidence-based insights on metabolic health, hormones, and longevity&mdash;written by a clinician. No products. No agenda.</p>
+      <form class="subscribe-form" onsubmit="handleSubscribe(event)">
+        <input type="email" name="email" placeholder="your@email.com" required autocomplete="email">
+        <button type="submit">Subscribe &rarr;</button>
+      </form>
+      <p class="fine">Unsubscribe anytime. <a href="/privacy" style="color:rgba(255,255,255,0.6)">Privacy Policy</a></p>
+    </div>
+
+    <!-- REFERENCES -->
+    <div class="references-section">
+      <h2>References</h2>
+      <ol>
+        <li>Araújo J, et al. <em>Metabolic syndrome and cardiovascular risk factors.</em> Metabolic Syndrome Research 2019. Prevalence of optimal metabolic health in American adults: National Health and Nutrition Examination Survey 2009&ndash;2016.</li>
+        <li>Centers for Disease Control and Prevention. <em>National Diabetes Statistics Report 2022.</em> <a href="https://www.cdc.gov/diabetes/data/statistics-report/index.html" target="_blank" rel="noopener">cdc.gov</a></li>
+        <li>Crofts C, et al. <em>Hyperinsulinemia: A unifying theory of chronic disease?</em> Diabesity 2015;1(4):34&ndash;43.</li>
+        <li>Strasser B, Schobersberger W. <em>Evidence for resistance training as a treatment therapy in obesity.</em> J Obes 2011;2011:482564.</li>
+        <li>Buffey AJ, et al. <em>The acute effect of interrupting prolonged sitting time in adults with standing and light-intensity walking on biomarkers of cardiometabolic health.</em> Sports Med 2022;52(8):1765&ndash;1787.</li>
+        <li>Antonio J, et al. <em>A high protein diet has no harmful effects: a one-year crossover study in resistance-trained males.</em> J Nutr Metab 2016;2016:9104792.</li>
+        <li>Spiegel K, et al. <em>Sleep curtailment in healthy young men is associated with decreased leptin levels, elevated ghrelin levels, and increased hunger and appetite.</em> Ann Intern Med 2004;141(11):846&ndash;850.</li>
+        <li>McLaughlin T, et al. <em>Use of metabolic markers to identify overweight individuals who are insulin resistant.</em> Ann Intern Med 2003;139(10):802&ndash;809.</li>
+      </ol>
+    </div>
+
+  </article>
+</main>
+
+<footer>
+  <p>&copy; 2026 Evidence-Based Health &nbsp;&middot;&nbsp;
+    <a href="/privacy">Privacy</a> &nbsp;&middot;&nbsp;
+    <a href="/disclaimer">Disclaimer</a> &nbsp;&middot;&nbsp;
+    <a href="mailto:info@evidencebasedhealth.me">info@evidencebasedhealth.me</a>
+    &nbsp;&middot;&nbsp; Educational content only. Not medical advice.
+  </p>
+</footer>
+
+<script>
+const API = 'https://lvsofp8c9g.execute-api.us-east-1.amazonaws.com/prod';
+
+async function handleSubscribe(e) {
+  e.preventDefault();
+  const btn = e.target.querySelector('button');
+  const email = e.target.email.value.trim();
+  btn.disabled = true;
+  btn.textContent = 'Subscribing…';
+  try {
+    const res = await fetch(`${API}/subscribe`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    });
+    if (res.ok) {
+      btn.textContent = 'Subscribed ✓';
+      e.target.email.value = '';
+      gtag('event', 'conversion', { send_to: 'AW-18001526983' });
+    } else {
+      btn.textContent = 'Try again';
+      btn.disabled = false;
+    }
+  } catch {
+    btn.textContent = 'Try again';
+    btn.disabled = false;
+  }
+}
+</script>
+</body>
+</html>
