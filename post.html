@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- Google tag (gtag.js) — GA4 + Google Ads -->
+<!-- Google tag (gtag.js) â€” GA4 + Google Ads -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18001391402"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -13,8 +13,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<meta name="description" id="meta-desc" content="Evidence-Based Health — peer-reviewed health insights.">
-<title id="page-title">Loading… — Evidence-Based Health</title>
+<meta name="description" id="meta-desc" content="Evidence-Based Health â€” peer-reviewed health insights.">
+<title id="page-title">Loadingâ€” â€” Evidence-Based Health</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
@@ -207,7 +207,7 @@ async function loadPost() {
     if (!res.ok) return showError(data.error || 'Article not found.');
 
     // Update page metadata
-    document.getElementById('page-title').textContent = `${data.subjectLine} — Evidence-Based Health`;
+    document.getElementById('page-title').textContent = `${data.subjectLine} â€” Evidence-Based Health`;
     document.getElementById('meta-desc').content = data.previewText || data.subjectLine;
 
     // Populate article
