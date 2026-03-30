@@ -146,6 +146,13 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
 .ai-chat-footer { display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--ink-muted); gap: 8px; }
 .ai-chat-reset { font-size: 11px; color: var(--ink-muted); background: none; border: none; cursor: pointer; text-decoration: underline; padding: 0; }
 .ai-chat-reset:hover { color: var(--ink); }
+.ai-tips { background: #fffdf5; border: 1px solid #e8e0c8; border-radius: 8px; padding: 12px 14px; margin-top: 10px; font-size: 12px; }
+.ai-tips-title { font-weight: 600; color: var(--ink); margin-bottom: 6px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; }
+.ai-tips-list { padding-left: 16px; color: var(--ink-mid); line-height: 1.7; margin-bottom: 8px; }
+.ai-tips-list li { margin-bottom: 2px; }
+.ai-tips-disclaimer { font-size: 11px; color: var(--ink-muted); line-height: 1.6; border-top: 1px solid #e8e0c8; padding-top: 8px; margin-top: 6px; }
+.ai-tips-close { margin-top: 10px; font-size: 11px; font-weight: 600; background: var(--ink); color: #fff; border: none; border-radius: 4px; padding: 5px 14px; cursor: pointer; }
+.ai-tips-close:hover { background: var(--ink-mid); }
 /* AI REVIEW PANEL */
 .ai-review { display: none; margin-top: 10px; border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; }
 .ai-review.show { display: block; }
@@ -559,13 +566,13 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
       <div class="ai-bar-top">
         <div class="ai-icon">✨</div>
         <div>
-          <div class="ai-bar-title">Log with natural language</div>
-          <div class="ai-bar-sub">Chat to log food — AI asks questions for accuracy, then you review.</div>
+          <div class="ai-bar-title">Log with natural language <span style="font-size:10px;font-weight:500;background:#f0f0e8;color:#7a6e50;border-radius:3px;padding:2px 6px;letter-spacing:0.04em;vertical-align:middle">BETA</span></div>
+          <div class="ai-bar-sub">Describe what you ate — AI looks up carb values, then you review before logging.</div>
         </div>
       </div>
       <div class="ai-chat-messages" id="ai-chat-msgs"></div>
       <div class="ai-input-row">
-        <textarea class="ai-textarea" id="ai-input" rows="1" placeholder="Type here…" onkeydown="aiChatKeydown(event)" oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'"></textarea>
+        <textarea class="ai-textarea" id="ai-input" rows="1" placeholder="e.g. 2 scrambled eggs and a slice of whole wheat toast"   onkeydown="aiChatKeydown(event)" oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'"></textarea>
         <button class="btn-ai" id="ai-btn" onclick="sendAIChat()">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
           Send
@@ -579,6 +586,17 @@ main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; min
       <div class="ai-chat-footer">
         <span>⚠️ Always verify carb values before insulin dosing or medical decisions</span>
         <button class="ai-chat-reset" onclick="resetAIChat()">Start over</button>
+      </div>
+      <div class="ai-tips" id="ai-tips">
+        <div class="ai-tips-title">Tips for best results</div>
+        <ul class="ai-tips-list">
+          <li><strong>Be specific about brands &amp; portions</strong> — e.g. "1 cup Chobani plain greek yogurt" works better than "yogurt"</li>
+          <li><strong>List one food at a time</strong> for combo meals — e.g. log the biscuit and gravy separately</li>
+          <li><strong>Include cooking method when it matters</strong> — "white rice cooked" vs "white rice dry"</li>
+          <li><strong>For restaurant food</strong>, name the restaurant — e.g. "Chipotle chicken bowl with rice and black beans"</li>
+        </ul>
+        <div class="ai-tips-disclaimer">This tool is experimental — carb estimates may be off, especially for homemade dishes or unfamiliar brands. Always double-check values before any medical decision. We're actively working to improve accuracy.</div>
+        <button class="ai-tips-close" onclick="document.getElementById('ai-tips').style.display='none'">Got it</button>
       </div>
       <div class="ai-review" id="ai-review">
         <div class="ai-review-header">
@@ -1241,6 +1259,8 @@ async function fetchPerplexityNutrition(query) {
 function initAIChat() {
   aiChatHistory = [];
   renderAIChat();
+  const tips = document.getElementById('ai-tips');
+  if (tips) tips.style.display = '';
 }
 
 function renderAIChat() {
@@ -1266,6 +1286,8 @@ function resetAIChat() {
 }
 
 async function sendAIChat() {
+  const tips = document.getElementById('ai-tips');
+  if (tips) tips.style.display = 'none';
   const input = document.getElementById('ai-input');
   const text = input.value.trim();
   if (!text) return;
