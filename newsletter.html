@@ -199,7 +199,7 @@
   <a href="/" style="color:var(--accent);text-decoration:underline;text-underline-offset:2px">Subscribe to get them in your inbox &rarr;</a></p>
 
   <!-- Featured first post -->
-  <a class="featured-card" href="post.html?slug=why-preventive-medicine-cant-wait">
+  <a class="featured-card" href="/post?slug=why-preventive-medicine-cant-wait">
     <img src="https://ebh-media-uploads.s3.amazonaws.com/uploads/1774700708687_founderphoto.png" alt="Hayden Slarow, PA-C">
     <div>
       <div class="featured-label">Inaugural Issue &mdash; Mar 28, 2026</div>
@@ -210,7 +210,22 @@
   </a>
 
   <div class="archive-section">
-    <h2>The weekly briefs</h2>
+    <h2>Evidence articles</h2>
+    <a class="archive-post" href="/metabolic-health">
+      <div>
+        <div class="archive-title">What Is Metabolic Health? A Clinician Explains</div>
+        <div class="archive-preview">Only 6.8% of American adults meet all five optimal metabolic health markers. A clinician breaks down what that means, why insulin resistance is the common thread, and what the research says works.</div>
+      </div>
+      <div class="archive-date">Mar 2026</div>
+    </a>
+    <a class="archive-post" href="/blood-sugar-guide">
+      <div>
+        <div class="archive-title">How to Improve Blood Sugar Naturally: An Evidence-Based Guide</div>
+        <div class="archive-preview">What actually works for blood sugar — ranked by strength of evidence. Post-meal walks, resistance training, meal composition, sleep, and what popular supplements actually show in trials.</div>
+      </div>
+      <div class="archive-date">Mar 2026</div>
+    </a>
+    <h2 style="margin-top:2rem">The weekly briefs</h2>
     <div id="archive-loading" class="archive-loading"><span class="spinner"></span> Loading&hellip;</div>
     <div id="archive-list"></div>
     <div id="archive-empty" style="display:none;font-size:0.9rem;color:var(--ink-faint);padding:1rem 0">No posts published yet.</div>
@@ -246,7 +261,7 @@ const API = 'https://lvsofp8c9g.execute-api.us-east-1.amazonaws.com/prod';
         : '';
       const title   = (p.subjectLine || '').replace(/</g,'&lt;').replace(/>/g,'&gt;');
       const preview = (p.previewText || '').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-      return `<a class="archive-post" href="post.html?slug=${encodeURIComponent(p.slug)}">
+      return `<a class="archive-post" href="/post?slug=${encodeURIComponent(p.slug)}">
         <div>
           <div class="archive-title">${title}</div>
           ${preview ? `<div class="archive-preview">${preview}</div>` : ''}
