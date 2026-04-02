@@ -2469,6 +2469,22 @@ async function loadAutopilotConfig() {
  if (dot) dot.style.background = data.enabled ? '#22c55e' : 'var(--ink-faint)';
  if (txt) txt.textContent = data.enabled ? `Active — every ${data.day} at ${data.time} ET` : 'Paused';
  if (tbtn) { tbtn.style.display = ''; tbtn.textContent = data.enabled ? 'Pause' : 'Resume'; }
+ const nextEl = document.getElementById('ap-next-send');
+ if (nextEl) {
+  if (!data.enabled) {
+   nextEl.textContent = 'Autopilot is paused.';
+  } else {
+   const dayMap = { Sunday:0, Monday:1, Tuesday:2, Wednesday:3, Thursday:4, Friday:5, Saturday:6 };
+   const targetDay = dayMap[data.day] ?? 3;
+   const [hour, minute] = (data.time || '09:00').split(':').map(Number);
+   const now = new Date();
+   const next = new Date(now);
+   next.setHours(hour, minute, 0, 0);
+   const diff = (targetDay - now.getDay() + 7) % 7;
+   next.setDate(now.getDate() + (diff === 0 && next <= now ? 7 : diff));
+   nextEl.textContent = `Next send: ${next.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' })} at ${data.time} ET`;
+  }
+ }
  } catch(e) {}
 }
 
